@@ -921,14 +921,14 @@
                                 </template>
                             </p>
 
-                            <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeNextHint !== ''" class="border p-2 rounded mb-2">
-                                <legend class="font-bold">تلميح الحلقة القادمة</legend>
-                                <p class="text-lg text-center">{{ selectedEpisode.EpisodeNextHint }}</p>
-                            </fieldset>
-
                             <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeStory !== ''" class="border p-2 rounded mb-2">
                                 <legend class="font-bold">القصة</legend>
                                 <p class="text-lg">{{ selectedEpisode.EpisodeStory }}</p>
+                            </fieldset>
+
+                            <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeNextHint !== ''" class="border p-2 rounded mb-2">
+                                <legend class="font-bold">تلميح الحلقة القادمة</legend>
+                                <p class="text-lg text-center">{{ selectedEpisode.EpisodeNextHint }}</p>
                             </fieldset>
 
                             <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeNotes !== ''" class="border border-red-500 p-2 rounded mb-2">
