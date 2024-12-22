@@ -922,24 +922,24 @@
                             </p>
 
                             <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeStory !== ''" class="border p-2 rounded mb-2">
-                                <legend class="font-bold">القصة</legend>
+                                <legend class="font-bold text-lg">القصة</legend>
                                 <p class="text-lg">{{ selectedEpisode.EpisodeStory }}</p>
                             </fieldset>
 
                             <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeSummary !== ''" class="border p-2 border-orange-400 rounded mb-2">
                                 <legend class="font-bold cursor-pointer" @click="toggleSpoiler">
-                                    <span class="text-red-500 font-bold">{{ spoilerVisible ? "إخفاء الملخص" : "عرض الملخص" }}</span>
+                                    <span class="text-red-500 font-bold text-lg">{{ spoilerVisible ? "إخفاء الملخص" : "عرض الملخص" }}</span>
                                 </legend>
                                 <p v-if="spoilerVisible" class="text-lg">{{ selectedEpisode.EpisodeSummary }}</p>
                             </fieldset>                            
 
                             <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeNextHint !== ''" class="border p-2 rounded mb-2">
-                                <legend class="font-bold">تلميح الحلقة القادمة</legend>
+                                <legend class="font-bold text-lg">تلميح الحلقة القادمة</legend>
                                 <p class="text-lg text-center">{{ selectedEpisode.EpisodeNextHint }}</p>
                             </fieldset>
 
                             <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeNotes !== ''" class="border border-red-500 p-2 rounded mb-2">
-                                <legend class="font-bold">ملاحظة</legend>
+                                <legend class="font-bold text-lg">ملاحظة</legend>
                                 <p class="text-lg">{{ selectedEpisode.EpisodeNotes }}</p>
                             </fieldset>
                         </div>
