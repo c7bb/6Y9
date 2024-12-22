@@ -926,6 +926,13 @@
                                 <p class="text-lg">{{ selectedEpisode.EpisodeStory }}</p>
                             </fieldset>
 
+                            <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeSummary !== ''" class="border p-2 rounded mb-2">
+                                <legend class="font-bold cursor-pointer" @click="toggleSpoiler">
+                                    <span>{{ spoilerVisible ? "إخفاء الملخص" : "عرض الملخص" }}</span>
+                                </legend>
+                                <p v-if="spoilerVisible" class="text-lg">{{ selectedEpisode.EpisodeSummary }}</p>
+                            </fieldset>                            
+
                             <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeNextHint !== ''" class="border p-2 rounded mb-2">
                                 <legend class="font-bold">تلميح الحلقة القادمة</legend>
                                 <p class="text-lg text-center">{{ selectedEpisode.EpisodeNextHint }}</p>
@@ -1036,6 +1043,7 @@
                     filterHeijiHattoriEpisodes: false,
                     filterWakasaRumiEpisodes: false,
                     filterYusakuKudoEpisodes: false,
+                    spoilerVisible: false,
                 };
             },
             computed: {
@@ -1519,7 +1527,7 @@
                         }
                         this.loading = false;
                     });
-            },
+                },
 
                 startTimer() {
                     if (this.waitTime > 0) {
@@ -1641,6 +1649,9 @@
                     this.filterHeijiHattoriEpisodes = false;
                     this.filterWakasaRumiEpisodes = false;
                     this.filterYusakuKudoEpisodes = false;
+                },
+                toggleSpoiler() {
+                    this.spoilerVisible = !this.spoilerVisible; // Toggle visibility
                 },
             },
             mounted() {
