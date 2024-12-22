@@ -1739,6 +1739,17 @@ if (window.Telegram && window.Telegram.WebApp) {
                 this.closeEmptyPopup();
             }
         }).mount('#app');
-    </script>         
+    </script>
+     <script>
+        if (window.Telegram || window.Telegram.WebApp) {
+          console.log("Running as a Telegram Mini App");
+          // Proceed with your application logic
+        } else {
+          console.log("Not running as a Telegram Mini App");
+          const botUsername = 'DCRef_bot';
+          const redirectionUrl = `https://t.me/${botUsername}`;
+          window.location.replace(redirectionUrl);
+        }
+      </script>         
 </body>
 </html>
