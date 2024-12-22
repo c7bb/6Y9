@@ -32,6 +32,15 @@ document.addEventListener("DOMContentLoaded", () => {
       // document.body.innerHTML = "This application is designed to be used only within Telegram. Redirecting you now...";
     }
   </script> -->
+  <script>
+    if (typeof window.Telegram !== 'undefined') {
+  // Access Telegram API and load mini app content
+} else {
+  // Display a message or redirect to Telegram
+  alert("Please access this mini app within the Telegram app.");
+  window.location.href = "https://t.me/DCRef_bot/"; 
+}
+  </script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KNKPH3ZEY5"></script>
 <script>
