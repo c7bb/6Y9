@@ -1,6 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" dir="rtl">
 <head>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+    if (!window.Telegram || !window.Telegram.WebApp) {
+        // If not accessed via Telegram, redirect or show an error
+        document.body.innerHTML = `
+            <div style="text-align: center; margin-top: 50px;">
+                <h1>Access Denied</h1>
+                <p>This app can only be accessed through Telegram.</p>
+            </div>`;
+    } else {
+        // Initialize the Telegram Web App
+        const tg = window.Telegram.WebApp;
+        tg.ready(); // Notify Telegram that the app is ready
+    }
+});
+</script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KNKPH3ZEY5"></script>
 <script>
