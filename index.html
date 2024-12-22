@@ -1649,9 +1649,9 @@
                     const modal = document.getElementById('episodeModal');
                     if (event.target == modal) {
                         this.closeModal();
-                        this.closeEmptyPopup();
                     }
                 });
+                this.closeEmptyPopup();
             }
         }).mount('#app');
     </script>         
