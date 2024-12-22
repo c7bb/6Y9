@@ -2,26 +2,6 @@
 <html lang="en" dir="rtl">
 <head>
 <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const isTelegramWebApp = window.Telegram && window.Telegram.WebApp;
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    const isTelegramAgent = /Telegram/i.test(userAgent);
-
-    if (!isTelegramWebApp && !isTelegramAgent) {
-        // If not accessed via Telegram, redirect or block access
-        document.body.innerHTML = `
-            <div style="text-align: center; margin-top: 100px; font-weight: bold;">
-                <h1>Access Denied</h1>
-                <p>This app can only be accessed through Telegram</p>
-            </div>`;
-    } else if (isTelegramWebApp) {
-        // Initialize Telegram Web App
-        const tg = window.Telegram.WebApp;
-        tg.ready(); // Notify Telegram that the app is ready
-    }
-});
-</script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KNKPH3ZEY5"></script>
 <script>
@@ -1687,6 +1667,26 @@ document.addEventListener("DOMContentLoaded", () => {
                 this.closeEmptyPopup();
             }
         }).mount('#app');
-    </script>         
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const isTelegramWebApp = window.Telegram && window.Telegram.WebApp;
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            const isTelegramAgent = /Telegram/i.test(userAgent);
+        
+            if (!isTelegramWebApp && !isTelegramAgent) {
+                // If not accessed via Telegram, redirect or block access
+                document.body.innerHTML = `
+                    <div style="text-align: center; margin-top: 100px; font-weight: bold;">
+                        <h1>Access Denied</h1>
+                        <p>This app can only be accessed through Telegram</p>
+                    </div>`;
+            } else if (isTelegramWebApp) {
+                // Initialize Telegram Web App
+                const tg = window.Telegram.WebApp;
+                tg.ready(); // Notify Telegram that the app is ready
+            }
+        });
+        </script>         
 </body>
 </html>
