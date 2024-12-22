@@ -41,6 +41,39 @@ document.addEventListener("DOMContentLoaded", () => {
   window.location.href = "https://t.me/DCRef_bot/"; 
 }
   </script> -->
+  <script>
+    // Check if the Telegram Web App API is available
+if (window.Telegram && window.Telegram.WebApp) {
+    const webApp = window.Telegram.WebApp;
+
+    // Initialize the web app (important!)
+    webApp.ready();
+
+    // Access web app data (e.g., initData)
+    const initData = webApp.initDataUnsafe || {}; // Use initDataUnsafe with caution
+
+    if (initData.user) {
+        console.log("User ID:", initData.user.id);
+        // User is logged in within Telegram
+    } else {
+        console.log("No user data available.");
+    }
+
+    // Handle events (optional)
+    webApp.onEvent("themeChanged", function() {
+        // Handle theme changes
+    });
+
+        // if you want to close the web app
+        // webApp.close();
+
+} else {
+    // This code will execute if the web app is NOT opened within Telegram
+    alert("Please open this web app within Telegram.");
+    // Optionally redirect to your bot's chat (not directly opening the web app):
+    // window.location.href = "https://t.me/your_bot_username"; // This opens the chat, not the web app!
+}
+  </script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KNKPH3ZEY5"></script>
 <script>
