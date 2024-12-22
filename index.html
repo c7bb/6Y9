@@ -1741,7 +1741,7 @@ if (window.Telegram && window.Telegram.WebApp) {
         }).mount('#app');
     </script>
      <script>
-        if (window.Telegram || window.Telegram.WebApp) {
+        if (window.Telegram && window.Telegram.WebApp) {
           console.log("Running as a Telegram Mini App");
           // Proceed with your application logic
         } else {
