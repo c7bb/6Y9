@@ -1750,6 +1750,13 @@ if (window.Telegram && window.Telegram.WebApp) {
                 toggleSpoiler() {
                     this.spoilerVisible = !this.spoilerVisible; // Toggle visibility
                 },
+
+                highlightSpoilerText() {
+                    const text = this.spoilerVisible ? "عرض الملخص (حرق)" : "إخفاء الملخص";
+                    
+                    // Highlight "حرق" in red
+                    return text.replace('حرق', '<span class="text-red-500">حرق</span>');
+                },
             },
             mounted() {
                 this.loadData();
