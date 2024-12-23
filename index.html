@@ -659,6 +659,11 @@ if (window.Telegram && window.Telegram.WebApp) {
                                 <input type="checkbox" v-model="filterWakasaRumiEpisodes" class="scale-150">
                                 <span class="px-2 font-bold">واكاسا رومي ({{ WakasaRumiEpisodesCount }})</span>
                             </label>
+                            <br />
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" v-model="filterMakotoKyogokuEpisodes" class="scale-150">
+                                <span class="px-2 font-bold">ماكوتو كيوغوكو ({{ MakotoKyogokuEpisodesCount }})</span>
+                            </label>
                         </fieldset>
 
                         <!-- <div class="text-center mt-4">
@@ -1117,6 +1122,7 @@ if (window.Telegram && window.Telegram.WebApp) {
                     filterWakasaRumiEpisodes: false,
                     filterYusakuKudoEpisodes: false,
                     spoilerVisible: false,
+                    filterMakotoKyogokuEpisodes: false,
                 };
             },
             computed: {
@@ -1184,6 +1190,10 @@ if (window.Telegram && window.Telegram.WebApp) {
 
                     if (this.filterWakasaRumiEpisodes) {
                         filteredByType = filteredByType.filter(episode => episode.EpisodeEventsAdvanced.includes("واكاسارومي"));
+                    }
+
+                    if (this.filterMakotoKyogokuEpisodes) {
+                        filteredByType = filteredByType.filter(episode => episode.EpisodeEventsAdvanced.includes("ماكوتوكيوغوكو"));
                     }
 
                     if (this.filterYusakuKudoEpisodes) {
@@ -1325,6 +1335,10 @@ if (window.Telegram && window.Telegram.WebApp) {
                     return this.episodes.filter(episode => episode.EpisodeEventsAdvanced.includes("واكاسارومي")).length;
                 },
 
+                MakotoKyogokuEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeEventsAdvanced.includes("ماكوتوكيوغوكو")).length;
+                },
+
                 GinEpisodesCount() {
                     return this.episodes.filter(episode => episode.EpisodeEventsAdvanced.includes("جين")).length;
                 },
@@ -1417,6 +1431,7 @@ if (window.Telegram && window.Telegram.WebApp) {
                         this.filterHanedaShukichiEpisodes ||
                         this.filterHeijiHattoriEpisodes ||
                         this.filterWakasaRumiEpisodes ||
+                        this.filterMakotoKyogokuEpisodes ||
                         this.filterYusakuKudoEpisodes);
                     },
             },
@@ -1723,6 +1738,7 @@ if (window.Telegram && window.Telegram.WebApp) {
                     this.filterHeijiHattoriEpisodes = false;
                     this.filterWakasaRumiEpisodes = false;
                     this.filterYusakuKudoEpisodes = false;
+                    this.filterMakotoKyogokuEpisodes = false;
                 },
                 toggleSpoiler() {
                     this.spoilerVisible = !this.spoilerVisible; // Toggle visibility
