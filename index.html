@@ -1752,7 +1752,7 @@ if (window.Telegram && window.Telegram.WebApp) {
                 },
 
                 highlightSpoilerText() {
-                    const text = this.spoilerVisible ? "إخفاء الملخص" : "عرض الملخص (حرق)";
+                    const text = this.spoilerVisible ? "إخفاء الملخص" : "الملخص (حرق)";
                     
                     // Highlight "حرق" in red
                     return text.replace('حرق', '<span class="text-red-500">حرق</span>');
