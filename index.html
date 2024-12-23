@@ -998,7 +998,13 @@ if (window.Telegram && window.Telegram.WebApp) {
                                     </template>
                                 </template>
                             </p>
-                         
+
+                            <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeNextHint !== ''" class="border p-2 rounded mb-2">
+                                <legend class="font-bold text-lg">تلميح الحلقة الحالية</legend>
+                                <p class="text-lg text-center">
+                                    {{ selectedEpisode.EpisodeNumber.includes('الفيلم') ? '' : selectedEpisode.EpisodeNextHint + 1 }}
+                                </p>
+                            </fieldset>                            
 
                             <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeStory !== ''" class="border p-2 rounded mb-2">
                                 <legend class="font-bold text-lg">القصة</legend>
