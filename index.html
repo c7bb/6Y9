@@ -1011,10 +1011,12 @@ if (window.Telegram && window.Telegram.WebApp) {
 
                             <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeSummary !== ''" class="border p-2 border-orange-400 rounded mb-2">
                                 <legend class="font-bold cursor-pointer" @click="toggleSpoiler">
-                                    <span class="text-red-500 font-bold text-lg">{{ spoilerVisible ? "إخفاء الملخص" : "عرض الملخص" }}</span>
+                                    <span class="text-lg">
+                                        <span v-html="highlightSpoilerText()"></span>
+                                    </span>
                                 </legend>
                                 <p v-if="spoilerVisible" class="text-lg">{{ selectedEpisode.EpisodeSummary }}</p>
-                            </fieldset>                            
+                            </fieldset>                                                    
 
                             <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeNextHint !== ''" class="border p-2 rounded mb-2">
                                 <legend class="font-bold text-lg">تلميح الحلقة القادمة</legend>
