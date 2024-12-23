@@ -998,14 +998,11 @@ if (window.Telegram && window.Telegram.WebApp) {
                                     </template>
                                 </template>
                             </p>
-                            
-                            <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeNextHint !== ''" class="border p-2 rounded mb-2">
+
+                            <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeCurrentHint !== ''" class="border p-2 rounded mb-2">
                                 <legend class="font-bold text-lg">تلميح الحلقة الحالية</legend>
-                                <p class="text-lg text-center">
-                                    <!-- Check if the hint contains 'الفيلم'. If not, increment the value -->
-                                    {{ getNextHint(selectedEpisode.EpisodeNextHint) }}
-                                </p>
-                            </fieldset>                                                                        
+                                <p class="text-lg text-center">{{ selectedEpisode.EpisodeCurrentHint }}</p>
+                            </fieldset>
 
                             <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeStory !== ''" class="border p-2 rounded mb-2">
                                 <legend class="font-bold text-lg">القصة</legend>
@@ -1750,21 +1747,6 @@ if (window.Telegram && window.Telegram.WebApp) {
                 },
                 toggleSpoiler() {
                     this.spoilerVisible = !this.spoilerVisible; // Toggle visibility
-                },
-                getNextHint(hint) {
-                    // Check if the hint contains 'الفيلم'
-                    if (hint.includes('الفيلم')) {
-                        return '';  // Do nothing if the hint contains 'الفيلم'
-                    }
-
-                    // Try to increment the hint if it's a numeric value
-                    const numericHint = parseInt(hint, 10);
-                    if (!isNaN(numericHint)) {
-                        return numericHint + 1;  // Return the incremented number
-                    }
-
-                    // If it's not a number, return the hint as is (adjust as necessary)
-                    return hint;
                 },
             },
             mounted() {
