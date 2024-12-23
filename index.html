@@ -1754,7 +1754,7 @@ if (window.Telegram && window.Telegram.WebApp) {
                 getNextHint(hint) {
                     // Check if hint is a number and not containing "الفيلم"
                     if (!isNaN(hint)) {
-                        return parseInt(hint) + 1;  // Return the next episode number
+                        return parseInt(hint) + 2;  // Return the next episode number
                     } else {
                         // If it's not numeric, you can implement another logic based on the format.
                         return hint;  // Return the hint as is if no numeric increment logic applies
