@@ -1003,7 +1003,7 @@ if (window.Telegram && window.Telegram.WebApp) {
                                 <legend class="font-bold text-lg">تلميح الحلقة الحالية</legend>
                                 <p class="text-lg text-center">
                                     <!-- Check if "الفيلم" is not in the hint -->
-                                    {{ selectedEpisode.includes('الفيلم') ? '' : selectedEpisode.EpisodeNextHint + 1 }}
+                                    {{ selectedEpisode.includes('الفيلم') ? 'selectedEpisode.EpisodeNextHint' : selectedEpisode.EpisodeNextHint + 1 }}
                                 </p>
                             </fieldset>                            
 
