@@ -854,11 +854,12 @@ if (window.Telegram && window.Telegram.WebApp) {
                                     <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/close.png" alt="Close" class="h-8 w-8"/>
                                 </button>
                                 <!-- Next Episode Button -->
-                                    <button 
-                                    v-if="selectedEpisode.EpisodeParts" 
+                                <button 
+                                    v-if="nextEpisodeExists" 
                                     @click="fetchNextEpisode" 
-                                    class="text-blue-600 hover:text-yellow-300 font-bold focus:outline-none ml-2">
-                                    التالي
+                                    class="focus:outline-none ml-2"
+                                >
+                                    <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/next.png" alt="Next Episode" class="h-8 w-8" />
                                 </button>
                             </div>                            
                     
@@ -1137,6 +1138,7 @@ if (window.Telegram && window.Telegram.WebApp) {
                     filterYusakuKudoEpisodes: false,
                     spoilerVisible: false,
                     filterMakotoKyogokuEpisodes: false,
+                    nextEpisodeExists: false,
                 };
             },
             computed: {
@@ -1766,23 +1768,24 @@ if (window.Telegram && window.Telegram.WebApp) {
                 },
 
                 fetchNextEpisode() {
-                // Find the next episode matching the same EpisodeParts
-                const currentIndex = this.episodes.findIndex(
-                    (ep) => ep.EpisodeNumber === this.selectedEpisode.EpisodeNumber
-                );
+                    // Find the current episode's index
+                    const currentIndex = this.episodes.findIndex(
+                        (ep) => ep.EpisodeNumber === this.selectedEpisode.EpisodeNumber
+                    );
 
-                const nextEpisode = this.episodes.find(
-                    (ep, index) => 
-                        index > currentIndex && 
-                        ep.EpisodeParts === this.selectedEpisode.EpisodeParts
-                );
+                    // Find the next episode with the same EpisodeParts
+                    const nextEpisode = this.episodes.find(
+                        (ep, index) => 
+                            index > currentIndex && 
+                            ep.EpisodeParts === this.selectedEpisode.EpisodeParts
+                    );
 
-                if (nextEpisode) {
-                    this.openModal(nextEpisode); // Open modal with the next episode
-                } else {
-                    alert("لا توجد حلقات أخرى في نفس القسم.");
-                }
-            },
+                    if (nextEpisode) {
+                        this.openModal(nextEpisode); // Open the modal with the next episode
+                    } else {
+                        this.nextEpisodeExists = false; // Hide the button
+                    }
+                },
             },
             mounted() {
                 this.loadData();
