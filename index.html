@@ -1713,6 +1713,16 @@ if (window.Telegram && window.Telegram.WebApp) {
                 openModal(episode) {
                     this.selectedEpisode = episode;
                     this.showModal = true;
+
+                    // Determine if there are further episodes with the same EpisodeParts
+                    const currentIndex = this.episodes.findIndex(
+                        (ep) => ep.EpisodeNumber === episode.EpisodeNumber
+                    );
+                    this.nextEpisodeExists = this.episodes.some(
+                        (ep, index) => 
+                            index > currentIndex && 
+                            ep.EpisodeParts === episode.EpisodeParts
+                    );
                 },
                 closeModal() {
                     this.showModal = false;
