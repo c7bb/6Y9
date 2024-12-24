@@ -1740,33 +1740,33 @@ if (window.Telegram && window.Telegram.WebApp) {
                     return ''; // Default case
                 },
                 openModal(episode) { 
-                this.selectedEpisode = episode;
-                this.showModal = true;
+                    this.selectedEpisode = episode;
+                    this.showModal = true;
 
-                // Check if there are more episodes with the same EpisodeParts
-                if (episode.EpisodeParts) {
-                    const currentIndex = this.episodes.findIndex(
-                        (ep) => ep.EpisodeNumber === episode.EpisodeNumber
-                    );
+                    // Check if there are more episodes with the same EpisodeParts
+                    if (episode.EpisodeParts) {
+                        const currentIndex = this.episodes.findIndex(
+                            (ep) => ep.EpisodeNumber === episode.EpisodeNumber
+                        );
 
-                    // Check for next episode existence
-                    this.nextEpisodeExists = this.episodes.some(
-                        (ep, index) =>
-                            index > currentIndex &&
-                            ep.EpisodeParts.some(part => episode.EpisodeParts.includes(part))
-                    );
+                        // Check for next episode existence
+                        this.nextEpisodeExists = this.episodes.some(
+                            (ep, index) =>
+                                index > currentIndex &&
+                                ep.EpisodeParts === episode.EpisodeParts
+                        );
 
-                    // Check for previous episode existence
-                    this.previousEpisodeExists = this.episodes.some(
-                        (ep, index) =>
-                            index < currentIndex &&
-                            ep.EpisodeParts.some(part => episode.EpisodeParts.includes(part))
-                    );
-                } else {
-                    this.nextEpisodeExists = false; // Hide button if EpisodeParts is null/undefined
-                    this.previousEpisodeExists = false;
-                }
-            },
+                        // Check for previous episode existence
+                        this.previousEpisodeExists = this.episodes.some(
+                            (ep, index) =>
+                                index < currentIndex &&
+                                ep.EpisodeParts === episode.EpisodeParts
+                        );
+                    } else {
+                        this.nextEpisodeExists = false; // Hide button if EpisodeParts is null/undefined
+                        this.previousEpisodeExists = false;
+                    }
+                },
                 closeModal() {
                     this.showModal = false;
                     this.selectedEpisode = null;
@@ -1821,44 +1821,44 @@ if (window.Telegram && window.Telegram.WebApp) {
                 },
 
                 fetchNextEpisode() {
-                // Find the current episode's index
-                const currentIndex = this.episodes.findIndex(
-                    (ep) => ep.EpisodeNumber === this.selectedEpisode.EpisodeNumber
-                );
+                    // Find the current episode's index
+                    const currentIndex = this.episodes.findIndex(
+                        (ep) => ep.EpisodeNumber === this.selectedEpisode.EpisodeNumber
+                    );
 
-                // Find the next episode with the same EpisodeParts
-                const nextEpisode = this.episodes.find(
-                    (ep, index) =>
-                        index > currentIndex &&
-                        ep.EpisodeParts.some(part => this.selectedEpisode.EpisodeParts.includes(part))
-                );
+                    // Find the next episode with the same EpisodeParts
+                    const nextEpisode = this.episodes.find(
+                        (ep, index) =>
+                            index > currentIndex &&
+                            ep.EpisodeParts === this.selectedEpisode.EpisodeParts
+                    );
 
-                if (nextEpisode) {
-                    this.openModal(nextEpisode); // Open the modal for the next episode
-                } else {
-                    this.nextEpisodeExists = false; // Hide the button
-                }
-            },
+                    if (nextEpisode) {
+                        this.openModal(nextEpisode); // Open the modal for the next episode
+                    } else {
+                        this.nextEpisodeExists = false; // Hide the button
+                    }
+                },
 
-            fetchPreviousEpisode() {
-                // Find the current episode's index
-                const currentIndex = this.episodes.findIndex(
-                    (ep) => ep.EpisodeNumber === this.selectedEpisode.EpisodeNumber
-                );
+                fetchPreviousEpisode() {
+                    // Find the current episode's index
+                    const currentIndex = this.episodes.findIndex(
+                        (ep) => ep.EpisodeNumber === this.selectedEpisode.EpisodeNumber
+                    );
 
-                // Find the previous episode with the same EpisodeParts
-                const previousEpisode = [...this.episodes].reverse().find(
-                    (ep, index) =>
-                        index > this.episodes.length - 1 - currentIndex &&
-                        ep.EpisodeParts.some(part => this.selectedEpisode.EpisodeParts.includes(part))
-                );
+                    // Find the previous episode with the same EpisodeParts
+                    const previousEpisode = [...this.episodes].reverse().find(
+                        (ep, index) =>
+                            index > this.episodes.length - 1 - currentIndex &&
+                            ep.EpisodeParts === this.selectedEpisode.EpisodeParts
+                    );
 
-                if (previousEpisode) {
-                    this.openModal(previousEpisode); // Open the modal for the previous episode
-                } else {
-                    this.previousEpisodeExists = false; // Hide the button
-                }
-            },
+                    if (previousEpisode) {
+                        this.openModal(previousEpisode); // Open the modal for the previous episode
+                    } else {
+                        this.previousEpisodeExists = false; // Hide the button
+                    }
+                },
             },
             mounted() {
                 this.loadData();
