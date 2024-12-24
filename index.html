@@ -847,207 +847,216 @@ if (window.Telegram && window.Telegram.WebApp) {
                     </tbody>
             
                     <div v-if="showModal" class="fixed z-10 inset-0 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center">
-                        <div class="bg-cyan-900 text-slate-200 font-bold rounded-lg p-6 w-4/5 md:w-1/2 lg:w-1/3 max-h-[80vh] overflow-y-auto">
-                            <div class="flex justify-between items-center mb-4">
-                                <h2 class="text-xl font-bold max-w-[calc(100%-2rem)] overflow-hidden text-ellipsis" v-if="selectedEpisode">{{ selectedEpisode.EpisodeTitle }}</h2>
-                                <div class="flex flex-col items-center">
-                                    <!-- Close Modal Button -->
-                                    <button @click="closeModal" class="text-red-600 hover:text-yellow-300 font-bold focus:outline-none mb-6">
-                                        <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/close.png" alt="Close" class="h-8 w-8" />
-                                    </button>
-                                    
-                                    <!-- Next Episode Button -->
-                                    <button 
-                                        v-if="selectedEpisode.EpisodeParts && nextEpisodeExists" 
-                                        @click="fetchNextEpisode" 
-                                        class="focus:outline-none mb-6"
-                                    >
-                                        <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/next.png" alt="Next Episode" class="h-8 w-8" />
-                                    </button>
-                                    
-                                    <!-- Previous Episode Button -->
-                                    <button 
-                                        v-if="selectedEpisode.EpisodeParts && previousEpisodeExists" 
-                                        @click="fetchPreviousEpisode" 
-                                        class="focus:outline-none"
-                                    >
-                                        <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/previous.png" alt="Previous Episode" class="h-8 w-8" />
-                                    </button>
+                        <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-1/2 lg:w-1/3 max-h-[80vh] overflow-hidden flex flex-col">
+                            
+                            <!-- Sticky Header Section -->
+                            <div class="sticky top-0 z-50 bg-cyan-900 p-4">
+                                <div class="flex justify-between items-center">
+                                    <h2 class="text-xl font-bold max-w-[calc(100%-2rem)] overflow-hidden text-ellipsis" v-if="selectedEpisode">
+                                        {{ selectedEpisode.EpisodeTitle }}
+                                    </h2>
+                                    <div class="flex flex-col items-center">
+                                        <!-- Close Modal Button -->
+                                        <button @click="closeModal" class="text-red-600 hover:text-yellow-300 font-bold focus:outline-none mb-6">
+                                            <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/close.png" alt="Close" class="h-8 w-8" />
+                                        </button>
+                    
+                                        <!-- Next Episode Button -->
+                                        <button 
+                                            v-if="selectedEpisode.EpisodeParts && nextEpisodeExists" 
+                                            @click="fetchNextEpisode" 
+                                            class="focus:outline-none mb-6"
+                                        >
+                                            <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/next.png" alt="Next Episode" class="h-8 w-8" />
+                                        </button>
+                                        
+                                        <!-- Previous Episode Button -->
+                                        <button 
+                                            v-if="selectedEpisode.EpisodeParts && previousEpisodeExists" 
+                                            @click="fetchPreviousEpisode" 
+                                            class="focus:outline-none"
+                                        >
+                                            <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/previous.png" alt="Previous Episode" class="h-8 w-8" />
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>                            
-                    
-                            <p v-if="selectedEpisode" class="mb-2 text-lg">
-                            <span v-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">رقم الفيلم:</span>
-                            <span v-else>رقم الحلقة:</span>
-                            {{ selectedEpisode.EpisodeNumber.replace('الفيلم', '') }}
-                            </p>
-                    
-                            <p v-if="selectedEpisode" class="mb-2 text-lg">
-                                <span v-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">نوع الفيلم: </span>
-                                <span v-else>نوع الحلقة: </span>
-                                <span v-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">
-                                    <span v-if="selectedEpisode.EpisodeType === 'ف'">فِلر</span>
-                                    <span v-else-if="selectedEpisode.EpisodeType === 'م'">مانغا</span>
-                                    <span v-else-if="selectedEpisode.EpisodeType === 'ث'">مانغا</span>
-                                    <span v-else>{{ selectedEpisode.EpisodeType }}</span>
-                                </span>
-                                <span v-else>
-                                    <span v-if="selectedEpisode.EpisodeType === 'ف'">فِلر</span>
-                                    <span v-else-if="selectedEpisode.EpisodeType === 'م'">مانغا</span>
-                                    <span v-else-if="selectedEpisode.EpisodeType === 'ث'">مانغا</span>
-                                    <span v-else>{{ selectedEpisode.EpisodeType }}</span>
-                                </span>
-                            </p>
-
-                            <p v-if="selectedEpisode && selectedEpisode.EpisodeSpecial !== ''" class="mb-2 text-lg">
-                                <span>خاصة: </span>
-                                <span v-if="selectedEpisode.EpisodeSpecial === '1'"> (ساعة)</span>
-                                <span v-else-if="selectedEpisode.EpisodeSpecial === '2'"> (ساعتين)</span>
-                                <span v-else>لايوجد</span>
-                            </p>
-
-                            <p v-if="selectedEpisode && selectedEpisode.EpisodeMangaQuoted !== ''" class="mb-2 text-lg">
-                                <span dir="ltr">:الفصول المقتبسة</span> {{ selectedEpisode.EpisodeMangaQuoted }}
-                            </p>
-
-                            <p v-if="selectedEpisode && selectedEpisode.EpisodeSeason !== ''" class="mb-2 text-lg">
-                                <span>الموسم: </span>{{ selectedEpisode.EpisodeSeason }} ({{ selectedEpisode.EpisodeSeasonCount }} حلقة)
-                            </p>
-
-                            <p v-if="selectedEpisode && selectedEpisode.EpisodeBCDate !== ''" class="mb-2 text-lg">
-                                <span dir="ltr">:تاريخ العرض</span> {{ selectedEpisode.EpisodeBCDate }}
-                            </p>
-
-                            <p v-if="selectedEpisode && selectedEpisode.EpisodeRRDate !== ''" class="mb-2 text-lg">
-                                <span dir="ltr">:تاريخ إعادة العرض</span> {{ selectedEpisode.EpisodeRRDate }}
-                            </p>
-
-                            <p v-if="selectedEpisode && selectedEpisode.EpisodeRMDate !== ''" class="mb-2 text-lg">
-                                <span dir="ltr">:تاريخ إعادة الإنتاج</span> {{ selectedEpisode.EpisodeRMDate }}
-                            </p>
-
-                            <p v-if="selectedEpisode && selectedEpisode.EpisodeRMDate2 !== ''" class="mb-2 text-lg">
-                                <span dir="ltr">:إعادة الإنتاج الثاني</span> {{ selectedEpisode.EpisodeRMDate2 }}
-                            </p>
-
-                            <p v-if="selectedEpisode && selectedEpisode.EpisodeEvents !== ''" class="mb-2 text-lg">
-                                <span>الأحداث : </span>
-                                <template v-for="(char, index) in selectedEpisode.EpisodeEvents" :key="index" class="text-lg">
-                                    <template v-if="char === 'س'">
-                                        <div class="tooltip-container inline-block h-6 w-6 mr-1">
-                                            <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/Plot-BO.png" 
-                                                alt="المنظمة السوداء، " 
-                                                class="inline-block h-6 w-6">
-                                            <span class="tooltip-text">المنظمة السوداء</span>
-                                        </div>
-                                    </template>
-                                    <template v-else-if="char === 'ج'">
-                                        <div class="tooltip-container inline-block h-6 w-6 mr-1">
-                                            <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/Plot-New.png" 
-                                                alt="شخصية جديدة، " 
-                                                class="inline-block h-6 w-6">
-                                            <span class="tooltip-text">شخصية جديدة</span>
-                                        </div>
-                                    </template>
-                                    <template v-else-if="char === 'ر'">
-                                        <div class="tooltip-container inline-block h-6 w-6 mr-1">
-                                            <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/Plot-Romance.png" 
-                                                alt="قصة رومانسية، " 
-                                                class="inline-block h-6 w-6">
-                                            <span class="tooltip-text">قصة رومانسية</span>
-                                        </div>
-                                    </template>
-                                    <template v-else-if="char === 'ت'">
-                                        <div class="tooltip-container inline-block h-6 w-6 mr-1">
-                                            <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/Plot-Char.png" 
-                                                alt="تطور شخصية، " 
-                                                class="inline-block h-6 w-6">
-                                            <span class="tooltip-text">تطور شخصية</span>
-                                        </div>
-                                    </template>
-                                    <template v-else-if="char === 'ط'">
-                                        <div class="tooltip-container inline-block h-6 w-6 mr-1">
-                                            <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/Plot-DB.png" 
-                                                alt="فريق المتحرين الصغار، " 
-                                                class="inline-block h-6 w-6">
-                                            <span class="tooltip-text">فريق المتحرين الصغار</span>
-                                        </div>
-                                    </template>
-                                    <template v-else-if="char === 'م'">
-                                        <div class="tooltip-container inline-block h-6 w-6 mr-1">
-                                            <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/Plot-Past.png" 
-                                                alt="ذكريات من الماضي، " 
-                                                class="inline-block h-6 w-6">
-                                            <span class="tooltip-text">ذكريات من الماضي</span>
-                                        </div>
-                                    </template>
-                                    <template v-else-if="char === 'ه'">
-                                        <div class="tooltip-container inline-block h-6 w-6 mr-1">
-                                            <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/PlotHH.png" 
-                                                alt="هيجي هاتوري، " 
-                                                class="inline-block h-6 w-6">
-                                            <span class="tooltip-text">هيجي هاتوري</span>
-                                        </div>
-                                    </template>
-                                    <template v-else-if="char === 'ك'">
-                                        <div class="tooltip-container inline-block h-6 w-6 mr-1">
-                                            <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/Plot-MK.png" 
-                                                alt="كايتو كيد، " 
-                                                class="inline-block h-6 w-6">
-                                            <span class="tooltip-text">كايتو كيد</span>
-                                        </div>
-                                    </template>
-                                    <template v-else-if="char === 'ف'">
-                                        <div class="tooltip-container inline-block h-6 w-6 mr-1">
-                                            <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/Plot-FBI.png" 
-                                                alt="مكتب التحقيقات الفيدرالي (FBI)، " 
-                                                class="inline-block h-6 w-6">
-                                            <span class="tooltip-text">مكتب التحقيقات الفيدرالي (FBI)</span>
-                                        </div>
-                                    </template>
-
-                                    <template v-else-if="char === 'ع'">
-                                        <div class="tooltip-container inline-block h-6 w-6 mr-1">
-                                            <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/Plot-PSB.png" 
-                                                alt="مكتب الأمن العام (PSB)، " 
-                                                class="inline-block h-6 w-6">
-                                            <span class="tooltip-text">مكتب الأمن العام (PSB)</span>
-                                        </div>
-                                    </template>
-                                    <template v-else>
-                                        {{ char }}
-                                    </template>
-                                </template>
-                            </p>
-
-                            <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeCurrentHint !== ''" class="border p-2 rounded mb-2">
-                                <legend class="font-bold text-lg">تلميح الحلقة</legend>
-                                <p class="text-lg text-center">{{ selectedEpisode.EpisodeCurrentHint }}</p>
-                            </fieldset>
-
-                            <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeStory !== ''" class="border p-2 rounded mb-2">
-                                <legend class="font-bold text-lg">القصة</legend>
-                                <p class="text-lg">{{ selectedEpisode.EpisodeStory }}</p>
-                            </fieldset>
-
-                            <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeSummary !== ''" class="border p-2 border-orange-400 rounded mb-2">
-                                <legend class="font-bold cursor-pointer" @click="toggleSpoiler">
-                                    <span class="text-lg">
-                                        <span v-html="highlightSpoilerText()"></span>
+                            </div>                           
+                            
+                            <!-- Scrollable Content -->
+                            <div class="overflow-y-auto p-4 flex-1">
+                                <p v-if="selectedEpisode" class="mb-2 text-lg">
+                                <span v-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">رقم الفيلم:</span>
+                                <span v-else>رقم الحلقة:</span>
+                                {{ selectedEpisode.EpisodeNumber.replace('الفيلم', '') }}
+                                </p>
+                        
+                                <p v-if="selectedEpisode" class="mb-2 text-lg">
+                                    <span v-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">نوع الفيلم: </span>
+                                    <span v-else>نوع الحلقة: </span>
+                                    <span v-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">
+                                        <span v-if="selectedEpisode.EpisodeType === 'ف'">فِلر</span>
+                                        <span v-else-if="selectedEpisode.EpisodeType === 'م'">مانغا</span>
+                                        <span v-else-if="selectedEpisode.EpisodeType === 'ث'">مانغا</span>
+                                        <span v-else>{{ selectedEpisode.EpisodeType }}</span>
                                     </span>
-                                </legend>
-                                <p v-if="spoilerVisible" class="text-lg">{{ selectedEpisode.EpisodeSummary }}</p>
-                            </fieldset>                                                    
+                                    <span v-else>
+                                        <span v-if="selectedEpisode.EpisodeType === 'ف'">فِلر</span>
+                                        <span v-else-if="selectedEpisode.EpisodeType === 'م'">مانغا</span>
+                                        <span v-else-if="selectedEpisode.EpisodeType === 'ث'">مانغا</span>
+                                        <span v-else>{{ selectedEpisode.EpisodeType }}</span>
+                                    </span>
+                                </p>
 
-                            <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeNextHint !== ''" class="border p-2 rounded mb-2">
-                                <legend class="font-bold text-lg">تلميح الحلقة القادمة</legend>
-                                <p class="text-lg text-center">{{ selectedEpisode.EpisodeNextHint }}</p>
-                            </fieldset>
+                                <p v-if="selectedEpisode && selectedEpisode.EpisodeSpecial !== ''" class="mb-2 text-lg">
+                                    <span>خاصة: </span>
+                                    <span v-if="selectedEpisode.EpisodeSpecial === '1'"> (ساعة)</span>
+                                    <span v-else-if="selectedEpisode.EpisodeSpecial === '2'"> (ساعتين)</span>
+                                    <span v-else>لايوجد</span>
+                                </p>
 
-                            <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeNotes !== ''" class="border border-red-500 p-2 rounded mb-2">
-                                <legend class="font-bold text-lg">ملاحظة</legend>
-                                <p class="text-lg">{{ selectedEpisode.EpisodeNotes }}</p>
-                            </fieldset>
+                                <p v-if="selectedEpisode && selectedEpisode.EpisodeMangaQuoted !== ''" class="mb-2 text-lg">
+                                    <span dir="ltr">:الفصول المقتبسة</span> {{ selectedEpisode.EpisodeMangaQuoted }}
+                                </p>
+
+                                <p v-if="selectedEpisode && selectedEpisode.EpisodeSeason !== ''" class="mb-2 text-lg">
+                                    <span>الموسم: </span>{{ selectedEpisode.EpisodeSeason }} ({{ selectedEpisode.EpisodeSeasonCount }} حلقة)
+                                </p>
+
+                                <p v-if="selectedEpisode && selectedEpisode.EpisodeBCDate !== ''" class="mb-2 text-lg">
+                                    <span dir="ltr">:تاريخ العرض</span> {{ selectedEpisode.EpisodeBCDate }}
+                                </p>
+
+                                <p v-if="selectedEpisode && selectedEpisode.EpisodeRRDate !== ''" class="mb-2 text-lg">
+                                    <span dir="ltr">:تاريخ إعادة العرض</span> {{ selectedEpisode.EpisodeRRDate }}
+                                </p>
+
+                                <p v-if="selectedEpisode && selectedEpisode.EpisodeRMDate !== ''" class="mb-2 text-lg">
+                                    <span dir="ltr">:تاريخ إعادة الإنتاج</span> {{ selectedEpisode.EpisodeRMDate }}
+                                </p>
+
+                                <p v-if="selectedEpisode && selectedEpisode.EpisodeRMDate2 !== ''" class="mb-2 text-lg">
+                                    <span dir="ltr">:إعادة الإنتاج الثاني</span> {{ selectedEpisode.EpisodeRMDate2 }}
+                                </p>
+
+                                <p v-if="selectedEpisode && selectedEpisode.EpisodeEvents !== ''" class="mb-2 text-lg">
+                                    <span>الأحداث : </span>
+                                    <template v-for="(char, index) in selectedEpisode.EpisodeEvents" :key="index" class="text-lg">
+                                        <template v-if="char === 'س'">
+                                            <div class="tooltip-container inline-block h-6 w-6 mr-1">
+                                                <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/Plot-BO.png" 
+                                                    alt="المنظمة السوداء، " 
+                                                    class="inline-block h-6 w-6">
+                                                <span class="tooltip-text">المنظمة السوداء</span>
+                                            </div>
+                                        </template>
+                                        <template v-else-if="char === 'ج'">
+                                            <div class="tooltip-container inline-block h-6 w-6 mr-1">
+                                                <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/Plot-New.png" 
+                                                    alt="شخصية جديدة، " 
+                                                    class="inline-block h-6 w-6">
+                                                <span class="tooltip-text">شخصية جديدة</span>
+                                            </div>
+                                        </template>
+                                        <template v-else-if="char === 'ر'">
+                                            <div class="tooltip-container inline-block h-6 w-6 mr-1">
+                                                <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/Plot-Romance.png" 
+                                                    alt="قصة رومانسية، " 
+                                                    class="inline-block h-6 w-6">
+                                                <span class="tooltip-text">قصة رومانسية</span>
+                                            </div>
+                                        </template>
+                                        <template v-else-if="char === 'ت'">
+                                            <div class="tooltip-container inline-block h-6 w-6 mr-1">
+                                                <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/Plot-Char.png" 
+                                                    alt="تطور شخصية، " 
+                                                    class="inline-block h-6 w-6">
+                                                <span class="tooltip-text">تطور شخصية</span>
+                                            </div>
+                                        </template>
+                                        <template v-else-if="char === 'ط'">
+                                            <div class="tooltip-container inline-block h-6 w-6 mr-1">
+                                                <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/Plot-DB.png" 
+                                                    alt="فريق المتحرين الصغار، " 
+                                                    class="inline-block h-6 w-6">
+                                                <span class="tooltip-text">فريق المتحرين الصغار</span>
+                                            </div>
+                                        </template>
+                                        <template v-else-if="char === 'م'">
+                                            <div class="tooltip-container inline-block h-6 w-6 mr-1">
+                                                <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/Plot-Past.png" 
+                                                    alt="ذكريات من الماضي، " 
+                                                    class="inline-block h-6 w-6">
+                                                <span class="tooltip-text">ذكريات من الماضي</span>
+                                            </div>
+                                        </template>
+                                        <template v-else-if="char === 'ه'">
+                                            <div class="tooltip-container inline-block h-6 w-6 mr-1">
+                                                <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/PlotHH.png" 
+                                                    alt="هيجي هاتوري، " 
+                                                    class="inline-block h-6 w-6">
+                                                <span class="tooltip-text">هيجي هاتوري</span>
+                                            </div>
+                                        </template>
+                                        <template v-else-if="char === 'ك'">
+                                            <div class="tooltip-container inline-block h-6 w-6 mr-1">
+                                                <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/Plot-MK.png" 
+                                                    alt="كايتو كيد، " 
+                                                    class="inline-block h-6 w-6">
+                                                <span class="tooltip-text">كايتو كيد</span>
+                                            </div>
+                                        </template>
+                                        <template v-else-if="char === 'ف'">
+                                            <div class="tooltip-container inline-block h-6 w-6 mr-1">
+                                                <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/Plot-FBI.png" 
+                                                    alt="مكتب التحقيقات الفيدرالي (FBI)، " 
+                                                    class="inline-block h-6 w-6">
+                                                <span class="tooltip-text">مكتب التحقيقات الفيدرالي (FBI)</span>
+                                            </div>
+                                        </template>
+
+                                        <template v-else-if="char === 'ع'">
+                                            <div class="tooltip-container inline-block h-6 w-6 mr-1">
+                                                <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/Plot-PSB.png" 
+                                                    alt="مكتب الأمن العام (PSB)، " 
+                                                    class="inline-block h-6 w-6">
+                                                <span class="tooltip-text">مكتب الأمن العام (PSB)</span>
+                                            </div>
+                                        </template>
+                                        <template v-else>
+                                            {{ char }}
+                                        </template>
+                                    </template>
+                                </p>
+
+                                <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeCurrentHint !== ''" class="border p-2 rounded mb-2">
+                                    <legend class="font-bold text-lg">تلميح الحلقة</legend>
+                                    <p class="text-lg text-center">{{ selectedEpisode.EpisodeCurrentHint }}</p>
+                                </fieldset>
+
+                                <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeStory !== ''" class="border p-2 rounded mb-2">
+                                    <legend class="font-bold text-lg">القصة</legend>
+                                    <p class="text-lg">{{ selectedEpisode.EpisodeStory }}</p>
+                                </fieldset>
+
+                                <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeSummary !== ''" class="border p-2 border-orange-400 rounded mb-2">
+                                    <legend class="font-bold cursor-pointer" @click="toggleSpoiler">
+                                        <span class="text-lg">
+                                            <span v-html="highlightSpoilerText()"></span>
+                                        </span>
+                                    </legend>
+                                    <p v-if="spoilerVisible" class="text-lg">{{ selectedEpisode.EpisodeSummary }}</p>
+                                </fieldset>                                                    
+
+                                <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeNextHint !== ''" class="border p-2 rounded mb-2">
+                                    <legend class="font-bold text-lg">تلميح الحلقة القادمة</legend>
+                                    <p class="text-lg text-center">{{ selectedEpisode.EpisodeNextHint }}</p>
+                                </fieldset>
+
+                                <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeNotes !== ''" class="border border-red-500 p-2 rounded mb-2">
+                                    <legend class="font-bold text-lg">ملاحظة</legend>
+                                    <p class="text-lg">{{ selectedEpisode.EpisodeNotes }}</p>
+                                </fieldset>
+                            </div>
                         </div>
                     </div>
             </table>
