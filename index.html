@@ -856,13 +856,22 @@ if (window.Telegram && window.Telegram.WebApp) {
                                         <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/close.png" alt="Close" class="h-8 w-8" />
                                     </button>
                                     
-                                    <!-- Next Episode Button (shown only if EpisodeParts exists) -->
+                                    <!-- Next Episode Button -->
                                     <button 
                                         v-if="selectedEpisode.EpisodeParts && nextEpisodeExists" 
                                         @click="fetchNextEpisode" 
-                                        class="focus:outline-none"
+                                        class="focus:outline-none mb-2"
                                     >
                                         <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/next.png" alt="Next Episode" class="h-8 w-8" />
+                                    </button>
+                                    
+                                    <!-- Previous Episode Button -->
+                                    <button 
+                                        v-if="selectedEpisode.EpisodeParts && previousEpisodeExists" 
+                                        @click="fetchPreviousEpisode" 
+                                        class="focus:outline-none"
+                                    >
+                                        <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/res/previous.png" alt="Previous Episode" class="h-8 w-8" />
                                     </button>
                                 </div>
                             </div>                            
@@ -1143,6 +1152,7 @@ if (window.Telegram && window.Telegram.WebApp) {
                     spoilerVisible: false,
                     filterMakotoKyogokuEpisodes: false,
                     nextEpisodeExists: false,
+                    previousEpisodeExists: false,
                 };
             },
             computed: {
@@ -1714,7 +1724,7 @@ if (window.Telegram && window.Telegram.WebApp) {
                     }
                     return ''; // Default case
                 },
-                openModal(episode) {
+                openModal(episode) { 
                     this.selectedEpisode = episode;
                     this.showModal = true;
 
@@ -1723,13 +1733,23 @@ if (window.Telegram && window.Telegram.WebApp) {
                         const currentIndex = this.episodes.findIndex(
                             (ep) => ep.EpisodeNumber === episode.EpisodeNumber
                         );
+
+                        // Check for next episode existence
                         this.nextEpisodeExists = this.episodes.some(
                             (ep, index) =>
                                 index > currentIndex &&
                                 ep.EpisodeParts === episode.EpisodeParts
                         );
+
+                        // Check for previous episode existence
+                        this.previousEpisodeExists = this.episodes.some(
+                            (ep, index) =>
+                                index < currentIndex &&
+                                ep.EpisodeParts === episode.EpisodeParts
+                        );
                     } else {
                         this.nextEpisodeExists = false; // Hide button if EpisodeParts is null/undefined
+                        this.previousEpisodeExists = false;
                     }
                 },
                 closeModal() {
@@ -1802,6 +1822,26 @@ if (window.Telegram && window.Telegram.WebApp) {
                         this.openModal(nextEpisode); // Open the modal for the next episode
                     } else {
                         this.nextEpisodeExists = false; // Hide the button
+                    }
+                },
+
+                fetchPreviousEpisode() {
+                    // Find the current episode's index
+                    const currentIndex = this.episodes.findIndex(
+                        (ep) => ep.EpisodeNumber === this.selectedEpisode.EpisodeNumber
+                    );
+
+                    // Find the previous episode with the same EpisodeParts
+                    const previousEpisode = [...this.episodes].reverse().find(
+                        (ep, index) =>
+                            index > this.episodes.length - 1 - currentIndex &&
+                            ep.EpisodeParts === this.selectedEpisode.EpisodeParts
+                    );
+
+                    if (previousEpisode) {
+                        this.openModal(previousEpisode); // Open the modal for the previous episode
+                    } else {
+                        this.previousEpisodeExists = false; // Hide the button
                     }
                 },
             },
