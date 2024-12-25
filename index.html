@@ -1,99 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" dir="rtl">
 <head>
-<!-- <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const isTelegramWebApp = window.Telegram && window.Telegram.WebApp;
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    const isTelegramAgent = /Telegram/i.test(userAgent);
-
-    if (!isTelegramWebApp && !isTelegramAgent) {
-        // If not accessed via Telegram, redirect or block access
-        document.body.innerHTML = `
-            <div style="text-align: center; margin-top: 100px; font-weight: bold;">
-                <h1>Access Denied</h1>
-                <p>This app can only be accessed through Telegram</p>
-            </div>`;
-    } else if (isTelegramWebApp) {
-        // Initialize Telegram Web App
-        const tg = window.Telegram.WebApp;
-        tg.ready(); // Notify Telegram that the app is ready
-    }
-});
-</script> -->
-<!-- <script>
-    if (window.Telegram && window.Telegram.WebApp) {
-      console.log("Running as a Telegram Mini App");
-    } else {
-      console.log("Not running as a Telegram Mini App");
-      const botUsername = 'DCRef_bot';
-      const redirectionUrl = `https://t.me/${botUsername}`;
-      window.location.replace(redirectionUrl);
-      // document.body.innerHTML = "This application is designed to be used only within Telegram. Redirecting you now...";
-    }
-  </script> -->
-  <!-- <script>
-    if (typeof window.Telegram !== 'undefined') {
-  // Access Telegram API and load mini app content
-} else {
-  // Display a message or redirect to Telegram
-  alert("Please access this mini app within the Telegram app.");
-  window.location.href = "https://t.me/DCRef_bot/"; 
-}
-  </script> -->
-  <!-- <script>
-    // Check if the Telegram Web App API is available
-if (window.Telegram && window.Telegram.WebApp) {
-    const webApp = window.Telegram.WebApp;
-
-    // Initialize the web app (important!)
-    webApp.ready();
-
-    // Access web app data (e.g., initData)
-    const initData = webApp.initDataUnsafe || {}; // Use initDataUnsafe with caution
-
-    if (initData.user) {
-        console.log("User ID:", initData.user.id);
-        // User is logged in within Telegram
-    } else {
-        console.log("No user data available.");
-    }
-
-    // Handle events (optional)
-    webApp.onEvent("themeChanged", function() {
-        // Handle theme changes
-    });
-
-        // if you want to close the web app
-        // webApp.close();
-
-} else {
-    // This code will execute if the web app is NOT opened within Telegram
-    alert("Please open this web app within Telegram.");
-    // Optionally redirect to your bot's chat (not directly opening the web app):
-    // window.location.href = "https://t.me/your_bot_username"; // This opens the chat, not the web app!
-}
-  </script> -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Function to check if the page is loaded in a Telegram environment
-        function isTelegramEnvironment() {
-            const userAgent = navigator.userAgent.toLowerCase();
-            return (
-                userAgent.includes("telegram") || // Checks if 'telegram' exists in userAgent
-                window.Telegram !== undefined ||  // Checks for Telegram Web App
-                window.tgWebApp !== undefined     // Checks for Telegram Mini App
-            );
-        }
-
-        // Redirect if not in Telegram environment
-        if (!isTelegramEnvironment()) {
-            window.location.href = "https://t.me/DCRef_bot/";
-        }
-    });
-</script>
-  
-<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KNKPH3ZEY5"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -110,7 +17,7 @@ if (window.Telegram && window.Telegram.WebApp) {
         function isInput(event) {
             return event.target.tagName === 'INPUT' ||
                 event.target.tagName === 'TEXTAREA' ||
-                event.target.isContentEditable; // Handle contenteditable elements
+                event.target.isContentEditable;
         }
 
         document.addEventListener('contextmenu', (event) => {
