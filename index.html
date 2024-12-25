@@ -74,6 +74,25 @@ if (window.Telegram && window.Telegram.WebApp) {
     // window.location.href = "https://t.me/your_bot_username"; // This opens the chat, not the web app!
 }
   </script> -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Function to check if the page is loaded in Telegram
+        function isTelegramEnvironment() {
+            // Check the User-Agent for Telegram indicators
+            const userAgent = navigator.userAgent.toLowerCase();
+            return (
+                userAgent.includes("telegram") ||
+                window.Telegram !== undefined ||
+                window.tgWebApp !== undefined
+            );
+        }
+
+        // If not in Telegram environment, redirect
+        if (!isTelegramEnvironment()) {
+            window.location.href = "https://t.me/DCRef_bot/";
+        }
+    });
+</script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KNKPH3ZEY5"></script>
 <script>
