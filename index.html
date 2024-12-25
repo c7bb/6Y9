@@ -524,20 +524,7 @@
 
                             <!-- <fieldset class="border p-4 rounded">
                                 <legend class="font-bold text-lg px-2 mb-2">الأبطال</legend>
-                                <label class="flex items-center space-x-2">
-                                    <input type="checkbox" v-model="filterKaitoKidEpisodes" class="scale-150">
-                                    <span class="px-2 font-bold">كايتو كيد ({{ KaitoKidEpisodesCount }})</span>
-                                </label>
-                                <br />
-                                <label class="flex items-center space-x-2">
-                                    <input type="checkbox" v-model="filterHeijiHattoriEpisodes" class="scale-150">
-                                    <span class="px-2 font-bold">هيجي هاتوري ({{ HeijiHattoriEpisodesCount }})</span>
-                                </label>
-                                <br />
-                                <label class="flex items-center space-x-2">
-                                    <input type="checkbox" v-model="filterAkaiShuichiEpisodes" class="scale-150">
-                                    <span class="px-2 font-bold">أكاي شويتشي ({{ AkaiShuichiEpisodesCount }})</span>
-                                </label>
+
                             </fieldset> -->
 
                             <label class="flex items-center space-x-2">
@@ -700,9 +687,12 @@
 
         <!-- Table -->
         <div v-if="loading" class="text-center py-4">
-            <div class="spinner-border animate-spin inline-block w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
-            جاري التحميل...
-        </div>
+            <div class="spinner-border animate-spin inline-block w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full relative">
+                <span class="absolute inset-0 flex items-center justify-center text-sm font-bold text-blue-500">
+                    {{ loadingPercentage }}%
+                </span>
+            </div>
+        </div>        
         <div v-else>
             <table class="min-w-full border-collapse border border-gray-300">
                 <thead>
@@ -1113,6 +1103,7 @@
                     filterMakotoKyogokuEpisodes: false,
                     nextEpisodeExists: false,
                     previousEpisodeExists: false,
+                    loadingPercentage: 0, // Initialize at 0
                 };
             },
             computed: {
@@ -1766,6 +1757,7 @@
                 },
 
                 fetchNextEpisode() {
+                    this.spoilerVisible = false;
                     // Find the current episode's index
                     const currentIndex = this.episodes.findIndex(
                         (ep) => ep.EpisodeNumber === this.selectedEpisode.EpisodeNumber
@@ -1786,6 +1778,7 @@
                 },
 
                 fetchPreviousEpisode() {
+                    this.spoilerVisible = false;
                     // Find the current episode's index
                     const currentIndex = this.episodes.findIndex(
                         (ep) => ep.EpisodeNumber === this.selectedEpisode.EpisodeNumber
@@ -1804,8 +1797,20 @@
                         this.previousEpisodeExists = false; // Hide the button
                     }
                 },
+
+                simulateLoading() {
+                    const interval = setInterval(() => {
+                        if (this.loadingPercentage < 100) {
+                            this.loadingPercentage += 10; // Increment by 10% (adjust as needed)
+                        } else {
+                            clearInterval(interval);
+                            this.loading = false; // Stop loading
+                        }
+                    }, 500); // Update every 500ms
+                },
             },
             mounted() {
+                this.simulateLoading(); // Simulate loading on component mount
                 this.loadData();
                 window.addEventListener('click', (event) => {
                     const modal = document.getElementById('episodeModal');
