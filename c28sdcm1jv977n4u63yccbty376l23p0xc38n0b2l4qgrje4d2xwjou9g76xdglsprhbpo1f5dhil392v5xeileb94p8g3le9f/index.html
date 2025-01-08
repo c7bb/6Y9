@@ -4,7 +4,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const MAX_ATTEMPTS = 3;
-            const LOCKOUT_DURATION = 60 * 1000; // 1 minute in milliseconds
+            const LOCKOUT_DURATION = 60 * 1000; // 1 minute in millisecondss
 
             let AreTheUserJoinToTheChannel = localStorage.getItem('AreTheUserJoinToTheChannel') || '';
             let attempts = parseInt(localStorage.getItem('attempts') || '0', 10);
