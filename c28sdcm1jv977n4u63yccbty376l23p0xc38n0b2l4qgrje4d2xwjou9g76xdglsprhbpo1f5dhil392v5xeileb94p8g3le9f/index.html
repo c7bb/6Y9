@@ -225,9 +225,9 @@
                             showValidationBody();
                         }
                     })
-                    .catch(() => console.error("Error during initial token validation."));
+                    .catch(() => showValidationBody());
             } else {
-                //showValidationBody();
+                showValidationBody();
             }
         });
     </script>          
