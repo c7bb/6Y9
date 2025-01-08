@@ -1,6 +1,233 @@
 <!DOCTYPE html>
 <html lang="en" dir="rtl">
 <head>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const MAX_ATTEMPTS = 3;
+            const LOCKOUT_DURATION = 10 * 1000; // 1 hour in milliseconds
+
+            let AreTheUserJoinToTheChannel = localStorage.getItem('AreTheUserJoinToTheChannel') || '';
+            let attempts = parseInt(localStorage.getItem('attempts') || '0', 10);
+            let lockoutEnd = localStorage.getItem('lockoutEnd');
+
+            // Function to decrypt the provided token
+            function decryptCode(encryptedString) {
+                try {
+                    const secretKey = "Db4WIRUmh0nYP9GxjF";
+                    const salt = "aRandomSaltString"; // Must be the same as in encryptCode
+
+                    const encryptedBytes = [];
+                    for (let i = 0; i < encryptedString.length; i += 2) {
+                        encryptedBytes.push(parseInt(encryptedString.substr(i, 2), 16));
+                    }
+
+                    let decryptedChars = [];
+                    for (let i = 0; i < encryptedBytes.length; i++) {
+                        const encryptedByte = encryptedBytes[i];
+                        // Reverse the operations from encryptCode
+                        const reversedCode = ((encryptedByte + 256) % 256) ^ (i * 7);
+                        const originalCharCode = Math.round((reversedCode - 15) / 3);
+                        decryptedChars.push(String.fromCharCode(originalCharCode));
+                    }
+
+                    // The decrypted string might still have the secretKey and salt
+                    const combinedStringLength = decryptedChars.length;
+                    const saltLength = salt.length;
+                    const secretKeyLength = secretKey.length;
+                    const userIdLength = combinedStringLength - secretKeyLength - saltLength;
+
+                    // Extract the userId (assuming a fixed structure)
+                    const decryptedUserId = decryptedChars.slice(0, userIdLength).join('');
+
+                    return String(decryptedUserId);
+                } catch (error) {
+                    return null;
+                }
+            }
+
+            // Helper function to check lockout state
+            function isLockedOut() {
+                const now = Date.now();
+                return lockoutEnd && now < parseInt(lockoutEnd, 10);
+            }
+
+            // Function to update the lockout timer in real-time
+            function startLockoutCountdown() {
+                const responseMessage = document.getElementById('responseMessage');
+                const interval = setInterval(() => {
+                    const now = Date.now();
+                    const remainingTime = parseInt(lockoutEnd, 10) - now;
+
+                    if (remainingTime <= 0) {
+                        clearInterval(interval);
+                        responseMessage.textContent = '';
+                        localStorage.removeItem('lockoutEnd');
+                        attempts = 0;
+                        localStorage.setItem('attempts', attempts);
+                        enableButtons();
+                        location.reload();
+                    } else {
+                        const minutes = Math.floor(remainingTime / (10 * 1000));
+                        const seconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
+                        responseMessage.textContent =
+                            `تم حظر المحاولات. الرجاء الانتظار ${minutes} دقيقة و ${seconds} ثانية.`;
+                    }
+                }, 1000);
+            }
+
+            // Function to disable buttons
+            function disableButtons() {
+                document.getElementById('validateButton').disabled = true;
+                document.getElementById('pasteButton').disabled = true;
+            }
+
+            // Function to enable buttons
+            function enableButtons() {
+                document.getElementById('validateButton').disabled = false;
+                document.getElementById('pasteButton').disabled = false;
+            }
+
+            // Function to display the validation form
+            function showValidationBody() {
+                document.body.innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <div class="flex flex-col items-center" style="margin-bottom: 20px;">
+                            <a href="https://t.me/DCRef_Channel" target="_blank" rel="noopener noreferrer" class="icon-pointer" title="Channel">
+                                <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/TelegramChannel.png" alt="Channel" class="h-12 w-12">
+                                <span class="text-center m-1 font-bold text-lg block">القناة</span>
+                            </a>
+                        </div>
+                        <h1>لست منضماً إلى القناة. الرجاء الانضمام والذهاب إلى البوت للحصول على رمز التفعيل.</h1>
+                        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+                            <input type="password" id="userToken" placeholder="أدخل رمز التفعيل"
+                                style="padding: 10px; margin: 10px; width: 80%; max-width: 300px; font-size: 16px;
+                                border: 2px solid white; border-radius: 5px;">
+                            <button id="pasteButton"
+                                style="padding: 10px 20px; background-color: #28a745; color: white;
+                                border: none; border-radius: 5px; cursor: pointer;">لصق</button>
+                        </div>
+                        <button id="validateButton"
+                            style="padding: 10px 20px; background-color: #007BFF; color: white;
+                            border: none; border-radius: 5px; cursor: pointer;">تحقق</button>
+                        <p id="responseMessage" style="color: red; margin-top: 10px;"></p>
+                    </div>
+                `;
+
+                if (isLockedOut()) {
+                    disableButtons();
+                    startLockoutCountdown();
+                    return;
+                }
+
+                const validateButton = document.getElementById('validateButton');
+                const pasteButton = document.getElementById('pasteButton');
+                const responseMessage = document.getElementById('responseMessage');
+                const userTokenInput = document.getElementById('userToken');
+
+                //responseMessage.textContent = `لديك ${MAX_ATTEMPTS - attempts} محاولات متبقية.`;
+
+                // Clipboard paste functionality
+                pasteButton.addEventListener('click', async () => {
+                    try {
+                        const clipboardText = await navigator.clipboard.readText();
+                        userTokenInput.value = clipboardText;
+                    } catch (error) {
+                        // Consider a less verbose or user-facing error handling here if needed
+                    }
+                });
+
+                // Token validation functionality
+                validateButton.addEventListener('click', async () => {
+                    if (isLockedOut()) {
+                        startLockoutCountdown();
+                        return;
+                    }
+
+                    const userToken = userTokenInput.value;
+                    if (!userToken) {
+                        responseMessage.textContent = 'الرجاء إدخال رمز التفعيل.';
+                        return;
+                    }
+
+                    responseMessage.textContent = 'جارٍ التحقق...';
+
+                    let decryptedToken;
+                    if (userToken.startsWith("bypass")) {
+                        decryptedToken = userToken.substring(6); // Remove "bypass" prefix
+                    } else {
+                        decryptedToken = decryptCode(userToken);
+                    }
+
+                    try {
+                        const response = await fetch('https://ccuid.mdccxxixix.workers.dev', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ token: decryptedToken, userToken: userToken })
+                        });
+
+                        const result = await response.json();
+
+                        //window.dispatchEvent(new CustomEvent('validation-result', { detail: result }));
+
+                        if (result.valid) {
+                            AreTheUserJoinToTheChannel = decryptedToken;
+                            localStorage.setItem('AreTheUserJoinToTheChannel', AreTheUserJoinToTheChannel);
+                            responseMessage.innerHTML = '<span style="color: green; font-weight: bold;">تم التحقق بنجاح.</span>';
+
+                            // Start countdown before redirection
+                            let countdown = 5; // Countdown in seconds
+                            responseMessage.innerHTML = `<span style="color: green; font-weight: bold;">تم التحقق بنجاح.</span> سوف يتم تحويلك للدليل بعد ${countdown} ثانية.`;
+
+                            const countdownInterval = setInterval(() => {
+                                countdown--;
+                                responseMessage.innerHTML = `<span style="color: green; font-weight: bold;">تم التحقق بنجاح.</span> سوف يتم تحويلك للدليل بعد ${countdown} ثانية.`;
+
+                                if (countdown === 0) {
+                                    clearInterval(countdownInterval);
+                                    location.reload(); // Redirect after countdown
+                                }
+                            }, 1000); // Update every second
+                        } else {
+                            attempts++;
+                            localStorage.setItem('attempts', attempts);
+                            if (attempts >= MAX_ATTEMPTS) {
+                                lockoutEnd = Date.now() + LOCKOUT_DURATION;
+                                localStorage.setItem('lockoutEnd', lockoutEnd);
+                                disableButtons();
+                                startLockoutCountdown();
+                            } else {
+                                userTokenInput.value = '';
+                                responseMessage.textContent = `رمز التفعيل غير صحيح. لديك ${MAX_ATTEMPTS - attempts} محاولات متبقية.`;
+                            }
+                        }
+                    } catch (error) {
+                        responseMessage.textContent = 'حدث خطأ أثناء التحقق. الرجاء المحاولة لاحقًا.';
+                    }
+                });
+            }
+
+            // Check if the user is already joined
+            if (AreTheUserJoinToTheChannel) {
+                localStorage.removeItem('AreTheUserJoinToTheChannel');
+                fetch('https://ccuid.mdccxxixix.workers.dev', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: AreTheUserJoinToTheChannel })
+                })
+                    .then(response => response.json())
+                    .then(result => {
+                        //localStorage.removeItem('AreTheUserJoinToTheChannel');
+                        if (!result.valid) {
+                            localStorage.removeItem('AreTheUserJoinToTheChannel');
+                            showValidationBody();
+                        }
+                    })
+                    .catch(() => showValidationBody());
+            } else {
+                showValidationBody();
+            }
+        });
+    </script>          
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KNKPH3ZEY5"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -9,7 +236,7 @@
 
   gtag('config', 'G-KNKPH3ZEY5');
 </script>
-<script data-goatcounter="https://dcref.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script data-goatcounter="https://dcref.goatcounter.com/count"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
     <title>.</title>
@@ -589,11 +816,11 @@
                                         <div class="ml-4 flex space-x-2">
                                             <label class="flex items-center">
                                                 <input type="radio" value="All" v-model="filterLogicShinichiKudo" class="scale-150">
-                                                <span class="px-2">دمج ح</span>
+                                                <span class="px-2">دمج</span>
                                             </label>
                                             <label class="flex items-center px-4">
                                                 <input type="radio" value="Some" v-model="filterLogicShinichiKudo" class="scale-150">
-                                                <span class="px-2">ح مشترك</span>
+                                                <span class="px-2">مشترك</span>
                                             </label>
                                         </div>
                                         <br />
@@ -2552,7 +2779,7 @@
                                                 <span class="tooltip-text">ذكريات من الماضي</span>
                                             </div>
                                         </template>
-                                        <template v-else-if="selectedEpisode.EpisodeFilterAdvanced.includes('14HH')">
+                                        <template v-else-if="char === 'ه'">
                                             <div class="tooltip-container inline-block h-6 w-6 mr-1">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/PlotHH.png" 
                                                     alt="هيجي هاتوري، " 
@@ -2619,6 +2846,25 @@
                                     <legend class="font-bold text-lg">ملاحظة</legend>
                                     <p class="text-lg">{{ selectedEpisode.EpisodeNotes }}</p>
                                 </fieldset>
+
+                                <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeVideosIDs !== null" class="border p-2 rounded mb-2">
+                                    <legend class="font-bold text-lg">مشاهدة (عبر البوت)</legend>
+                                    <div class="flex flex-col justify-center gap-4">
+                                        <button
+                                            v-for="(video, index) in selectedEpisode.EpisodeVideosIDs"
+                                            :key="video.VideoID"
+                                            :disabled="video.status === 'success'"
+                                            @click="() => { console.log('Button clicked'); sendEpisodeToBot(video.VideoID, video.Resolution, index); }"
+                                            class="relative bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50"
+                                        >
+                                            {{ video.Resolution }} ({{ video.Size }} MB)
+                                            <img v-if="video.status === 'success'" src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/true.png" 
+                                                class="absolute right-0 top-0 w-6 h-6 ml-2" />
+                                            <img v-if="video.status === 'error'" src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png" 
+                                                class="absolute right-0 top-0 w-6 h-6 ml-2" />
+                                        </button>
+                                    </div>
+                                </fieldset>                                                                                                                                
                             </div>
                         </div>
                     </div>
@@ -5218,76 +5464,85 @@
                 },
 
                 loadData() {
-                // Reset states before attempting to fetch
-                this.episodes = [];
-                this.error = null;
-                this.loading = true;
+                    const areJoined = localStorage.getItem('AreTheUserJoinToTheChannel');
 
-                // Check if the countdown was already stored in localStorage
-                const storedWaitTime = localStorage.getItem('waitTime');
-                if (storedWaitTime) {
-                    this.waitTime = parseInt(storedWaitTime, 10);
-                    // If the countdown is still active, show the error message
-                    this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
-                    this.startTimer();  // Continue the countdown
-                    return;  // Exit early to avoid unnecessary fetch
-                }
+                    if (areJoined && areJoined.trim() !== '') {
 
-                // Add a dynamic cache-busting query parameter
-                const urlWithCacheBust = `${this.jsonUrl}?t=${new Date().getTime()}`;
+                        console.log("loading data...");
+                        // Reset states before attempting to fetch
+                        this.episodes = [];
+                        this.error = null;
+                        this.loading = true;
 
-                fetch(urlWithCacheBust, { cache: 'no-store' })
-                    .then(response => {
-                        if (response.status === 429) {
-                            // Parse JSON response for rate-limit details
-                            return response.json().then(data => {
-                                this.loading = false;
+                        // Check if the countdown was already stored in localStorage
+                        const storedWaitTime = localStorage.getItem('waitTime');
+                        if (storedWaitTime) {
+                            this.waitTime = parseInt(storedWaitTime, 10);
+                            // If the countdown is still active, show the error message
+                            this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
+                            this.startTimer();  // Continue the countdown
+                            return;  // Exit early to avoid unnecessary fetch
+                        }
 
-                                if (data.error === "User blocked") {
-                                    // User is blocked for the rest of the day
-                                    this.error = "لقد تجاوزت الحد المسموح به من الطلبات لهذا اليوم.";
-                                    return;
+                        // Add a dynamic cache-busting query parameter
+                        const urlWithCacheBust = `${this.jsonUrl}?t=${new Date().getTime()}`;
+
+                        fetch(urlWithCacheBust, { cache: 'no-store' })
+                            .then(response => {
+                                if (response.status === 429) {
+                                    // Parse JSON response for rate-limit details
+                                    return response.json().then(data => {
+                                        this.loading = false;
+
+                                        if (data.error === "User blocked") {
+                                            // User is blocked for the rest of the day
+                                            this.error = "لقد تجاوزت الحد المسموح به من الطلبات لهذا اليوم.";
+                                            return;
+                                        }
+
+                                        // Set a waitTime based on the rate-limiting information from the server
+                                        const resetTime = data.resetTime || Date.now() + 60000; // Adjust as needed
+                                        this.waitTime = Math.max(0, Math.floor((resetTime - Date.now()) / 1000)); // Convert to seconds
+
+                                        // Show initial error message with wait time
+                                        this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
+
+                                        // Store waitTime in localStorage
+                                        localStorage.setItem('waitTime', this.waitTime);
+
+                                        console.warn(data.message); // Optional: Log additional server message
+
+                                        // Start a timer to update the wait time
+                                        this.startTimer();
+                                    });
                                 }
 
-                                // Set a waitTime based on the rate-limiting information from the server
-                                const resetTime = data.resetTime || Date.now() + 60000; // Adjust as needed
-                                this.waitTime = Math.max(0, Math.floor((resetTime - Date.now()) / 1000)); // Convert to seconds
+                                if (!response.ok) {
+                                    throw new Error(`HTTP error! status: ${response.status}`);
+                                }
 
-                                // Show initial error message with wait time
-                                this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
-
-                                // Store waitTime in localStorage
-                                localStorage.setItem('waitTime', this.waitTime);
-
-                                console.warn(data.message); // Optional: Log additional server message
-
-                                // Start a timer to update the wait time
-                                this.startTimer();
+                                return response.json();
+                            })
+                            .then(data => {
+                                if (data) {
+                                    // Successfully fetched data
+                                    this.episodes = data;
+                                    this.loading = false;
+                                    // Clear the stored waitTime when data is successfully fetched
+                                    localStorage.removeItem('waitTime');
+                                }
+                            })
+                            .catch(error => {
+                                // General error handling
+                                if (!this.error) {
+                                    this.error = 'حدث خطأ أثناء محاولة تحميل البيانات. قد تكون هناك مشكلة مؤقتة في الاتصال أو الخادم. يُرجى التحقق من اتصالك بالإنترنت أو أستخدم VPN والمحاولة مرة أخرى.';
+                                }
+                                this.loading = false;
                             });
-                        }
-
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data) {
-                            // Successfully fetched data
-                            this.episodes = data;
-                            this.loading = false;
-                            // Clear the stored waitTime when data is successfully fetched
-                            localStorage.removeItem('waitTime');
-                        }
-                    })
-                    .catch(error => {
-                        // General error handling
-                        if (!this.error) {
-                            this.error = 'حدث خطأ أثناء محاولة تحميل البيانات. قد تكون هناك مشكلة مؤقتة في الاتصال أو الخادم. يُرجى التحقق من اتصالك بالإنترنت أو أستخدم VPN والمحاولة مرة أخرى.';
-                        }
+                    } else {
+                        console.log("not loading data.");
                         this.loading = false;
-                    });
+                    }    
                 },
 
                 startTimer() {
@@ -5914,9 +6169,59 @@
                         this.previousEpisodeExists = false; // Hide the button
                     }
                 },
+                async sendEpisodeToBot(videoID, resolution, index) {
+                    if (!this.selectedEpisode.EpisodeNumber) {
+                        return;
+                    }
+
+                    const token = '7518282241:AAF06PXBA0a0kY2z-Sh7Wm4kj9_kkyRRFk8';
+                    const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
+                    const caption = `*رقم الحلقة: ${this.selectedEpisode.EpisodeNumber} (${resolution})*`;
+
+                    this.selectedEpisode.EpisodeVideosIDs[index].status = 'sending';
+
+                    try {
+                        await this.sendVideoResponse(chatId, videoID, caption, token);
+                        this.selectedEpisode.EpisodeVideosIDs[index].status = 'success';
+                    } catch (error) {
+                        this.selectedEpisode.EpisodeVideosIDs[index].status = 'error';
+                    }
+                    setTimeout(() => {
+                        this.selectedEpisode.EpisodeVideosIDs[index].status = null;
+                    }, 5000);
+                },
+
+                async sendVideoResponse(chatId, fileId, caption, token) {
+                    console.log("Sending API request:", { chatId, fileId, caption, token });
+
+                    const url = `https://api.telegram.org/bot${token}/sendVideo`;
+                    const body = {
+                        chat_id: chatId,
+                        video: fileId,
+                        caption: caption,
+                        parse_mode: "Markdown",
+                        protect_content: true,
+                    };
+
+                    const response = await fetch(url, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(body),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Failed to send video: ${response.statusText}`);
+                    }
+                },
+
             },
             mounted() {
-                this.loadData();
+                const areJoined = localStorage.getItem('AreTheUserJoinToTheChannel');
+                if (areJoined && areJoined.trim() !== '') {
+                    this.loadData();
+                }
                 window.addEventListener('click', (event) => {
                     const modal = document.getElementById('episodeModal');
                     if (event.target == modal) {
