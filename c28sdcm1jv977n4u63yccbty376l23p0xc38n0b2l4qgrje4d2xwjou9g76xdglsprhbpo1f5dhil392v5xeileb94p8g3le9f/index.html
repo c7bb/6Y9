@@ -225,10 +225,9 @@
                             showValidationBody();
                         }
                     })
-                    .catch(() => {
-                        // Handle the error case, maybe log it or display a different message
-                        console.error("Error during initial token validation.");
-                    });
+                    .catch(() => console.error("Error during initial token validation."));
+            } else {
+                //showValidationBody();
             }
         });
     </script>          
