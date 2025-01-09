@@ -5490,9 +5490,6 @@
                 },
 
                 loadData() {
-                    const areJoined = getCookie('AreTheUserJoinToTheChannel');
-
-                    if (areJoined && areJoined.trim() !== '') {
                         // Reset states before attempting to fetch
                         this.episodes = [];
                         this.error = null;
@@ -5563,10 +5560,7 @@
                                 }
                                 this.loading = false;
                             });
-                    } else {
-                        console.log("not loading data.");
-                        this.loading = false;
-                    }    
+                    }   
                 },
 
                 startTimer() {
@@ -6241,10 +6235,6 @@
 
             },
             mounted() {
-                const areJoined = getCookie('AreTheUserJoinToTheChannel');
-                if (areJoined && areJoined.trim() !== '') {
-                    this.loadData();
-                }
                 window.addEventListener('click', (event) => {
                     const modal = document.getElementById('episodeModal');
                     if (event.target == modal) {
