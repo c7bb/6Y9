@@ -1,6 +1,53 @@
 <!DOCTYPE html>
 <html lang="en" dir="rtl">
-<head>
+<head>          
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KNKPH3ZEY5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KNKPH3ZEY5');
+</script>
+<script data-goatcounter="https://dcref.goatcounter.com/count"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <title>.</title>
+    <script>
+        function isInput(event) {
+            return event.target.tagName === 'INPUT' ||
+                event.target.tagName === 'TEXTAREA' ||
+                event.target.isContentEditable;
+        }
+
+        document.addEventListener('contextmenu', (event) => {
+            if (!isInput(event)) {
+                event.preventDefault();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (!isInput(event) && (event.ctrlKey || event.metaKey) && ['c', 'x', 'v', 'a', 's', 'p'].includes(event.key.toLowerCase())) {
+                event.preventDefault();
+            }
+        });
+
+        document.addEventListener('selectstart', (event) => {
+            if (!isInput(event)) {
+                event.preventDefault();
+            }
+        });
+    
+            // Disable Ctrl+U (View Source), Ctrl+Shift+I (DevTools)
+            // if (event.ctrlKey && 
+            //     (event.key.toLowerCase() === 'u' || 
+            //     (event.shiftKey && event.key.toLowerCase() === 'i'))) {
+            //     event.preventDefault();
+            // }
+    </script>    
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+    <script src="episodes.json" type="application/json"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
         const MAX_ATTEMPTS = 3;
@@ -271,54 +318,7 @@
                     showValidationBody();
                 }
             });
-        </script>          
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-KNKPH3ZEY5"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-KNKPH3ZEY5');
-</script>
-<script data-goatcounter="https://dcref.goatcounter.com/count"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
-    <title>.</title>
-    <script>
-        function isInput(event) {
-            return event.target.tagName === 'INPUT' ||
-                event.target.tagName === 'TEXTAREA' ||
-                event.target.isContentEditable;
-        }
-
-        document.addEventListener('contextmenu', (event) => {
-            if (!isInput(event)) {
-                event.preventDefault();
-            }
-        });
-
-        document.addEventListener('keydown', (event) => {
-            if (!isInput(event) && (event.ctrlKey || event.metaKey) && ['c', 'x', 'v', 'a', 's', 'p'].includes(event.key.toLowerCase())) {
-                event.preventDefault();
-            }
-        });
-
-        document.addEventListener('selectstart', (event) => {
-            if (!isInput(event)) {
-                event.preventDefault();
-            }
-        });
-    
-            // Disable Ctrl+U (View Source), Ctrl+Shift+I (DevTools)
-            // if (event.ctrlKey && 
-            //     (event.key.toLowerCase() === 'u' || 
-            //     (event.shiftKey && event.key.toLowerCase() === 'i'))) {
-            //     event.preventDefault();
-            // }
-    </script>    
-    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
-    <script src="episodes.json" type="application/json"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+        </script>
     <style>
         /* Disable text selection */
 
