@@ -1,53 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" dir="rtl">
-<head>          
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-KNKPH3ZEY5"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-KNKPH3ZEY5');
-</script>
-<script data-goatcounter="https://dcref.goatcounter.com/count"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
-    <title>.</title>
-    <script>
-        function isInput(event) {
-            return event.target.tagName === 'INPUT' ||
-                event.target.tagName === 'TEXTAREA' ||
-                event.target.isContentEditable;
-        }
-
-        document.addEventListener('contextmenu', (event) => {
-            if (!isInput(event)) {
-                event.preventDefault();
-            }
-        });
-
-        document.addEventListener('keydown', (event) => {
-            if (!isInput(event) && (event.ctrlKey || event.metaKey) && ['c', 'x', 'v', 'a', 's', 'p'].includes(event.key.toLowerCase())) {
-                event.preventDefault();
-            }
-        });
-
-        document.addEventListener('selectstart', (event) => {
-            if (!isInput(event)) {
-                event.preventDefault();
-            }
-        });
-    
-            // Disable Ctrl+U (View Source), Ctrl+Shift+I (DevTools)
-            // if (event.ctrlKey && 
-            //     (event.key.toLowerCase() === 'u' || 
-            //     (event.shiftKey && event.key.toLowerCase() === 'i'))) {
-            //     event.preventDefault();
-            // }
-    </script>    
-    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
-    <script src="episodes.json" type="application/json"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+<head>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
         const MAX_ATTEMPTS = 3;
@@ -318,7 +271,54 @@
                     showValidationBody();
                 }
             });
-        </script>
+        </script>          
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KNKPH3ZEY5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KNKPH3ZEY5');
+</script>
+<script data-goatcounter="https://dcref.goatcounter.com/count"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <title>.</title>
+    <script>
+        function isInput(event) {
+            return event.target.tagName === 'INPUT' ||
+                event.target.tagName === 'TEXTAREA' ||
+                event.target.isContentEditable;
+        }
+
+        document.addEventListener('contextmenu', (event) => {
+            if (!isInput(event)) {
+                event.preventDefault();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (!isInput(event) && (event.ctrlKey || event.metaKey) && ['c', 'x', 'v', 'a', 's', 'p'].includes(event.key.toLowerCase())) {
+                event.preventDefault();
+            }
+        });
+
+        document.addEventListener('selectstart', (event) => {
+            if (!isInput(event)) {
+                event.preventDefault();
+            }
+        });
+    
+            // Disable Ctrl+U (View Source), Ctrl+Shift+I (DevTools)
+            // if (event.ctrlKey && 
+            //     (event.key.toLowerCase() === 'u' || 
+            //     (event.shiftKey && event.key.toLowerCase() === 'i'))) {
+            //     event.preventDefault();
+            // }
+    </script>    
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+    <script src="episodes.json" type="application/json"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Disable text selection */
 
@@ -2972,6 +2972,14 @@
                     showTooltip5: false,
                     showTooltip6: false,
                     episodeTypeFilter: 'All',
+                    AreTheUserJoinToTheChannel: this.getCookie('AreTheUserJoinToTheChannel'),
+                    attempts: parseInt(localStorage.getItem('attempts') || '0', 10),
+                    lockoutEnd: localStorage.getItem('lockoutEnd'),
+                    waitTime: 0,
+                    responseMessage: '',
+                    userToken: '',
+                    MAX_ATTEMPTS: 3,
+                    LOCKOUT_DURATION: 60 * 1000, // 1 minute in milliseconds
                     episodes: [],
                     loading: true,
                     error: null,
@@ -5505,84 +5513,61 @@
                 },
 
                 loadData() {
+                if (this.AreTheUserJoinToTheChannel && this.AreTheUserJoinToTheChannel.trim() !== '') {
+                    this.episodes = [];
+                    this.error = null;
+                    this.loading = true;
 
-                    const areJoined = window.getCookie('AreTheUserJoinToTheChannel');
-                    if (areJoined && areJoined.trim() !== '') {
-                        // Reset states before attempting to fetch
-                        this.episodes = [];
-                        this.error = null;
-                        this.loading = true;
+                    const storedWaitTime = localStorage.getItem('waitTime');
+                    if (storedWaitTime) {
+                        this.waitTime = parseInt(storedWaitTime, 10);
+                        this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
+                        this.startTimer();
+                        return;
+                    }
 
-                        // Check if the countdown was already stored in localStorage
-                        const storedWaitTime = localStorage.getItem('waitTime');
-                        if (storedWaitTime) {
-                            this.waitTime = parseInt(storedWaitTime, 10);
-                            // If the countdown is still active, show the error message
-                            this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
-                            this.startTimer();  // Continue the countdown
-                            return;  // Exit early to avoid unnecessary fetch
-                        }
+                    const urlWithCacheBust = `${this.jsonUrl}?t=${new Date().getTime()}`;
 
-                        // Add a dynamic cache-busting query parameter
-                        const urlWithCacheBust = `${this.jsonUrl}?t=${new Date().getTime()}`;
-
-                        fetch(urlWithCacheBust, { cache: 'no-store' })
-                            .then(response => {
-                                if (response.status === 429) {
-                                    // Parse JSON response for rate-limit details
-                                    return response.json().then(data => {
-                                        this.loading = false;
-
-                                        if (data.error === "User blocked") {
-                                            // User is blocked for the rest of the day
-                                            this.error = "لقد تجاوزت الحد المسموح به من الطلبات لهذا اليوم.";
-                                            return;
-                                        }
-
-                                        // Set a waitTime based on the rate-limiting information from the server
-                                        const resetTime = data.resetTime || Date.now() + 60000; // Adjust as needed
-                                        this.waitTime = Math.max(0, Math.floor((resetTime - Date.now()) / 1000)); // Convert to seconds
-
-                                        // Show initial error message with wait time
-                                        this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
-
-                                        // Store waitTime in localStorage
-                                        localStorage.setItem('waitTime', this.waitTime);
-
-                                        console.warn(data.message); // Optional: Log additional server message
-
-                                        // Start a timer to update the wait time
-                                        this.startTimer();
-                                    });
-                                }
-
-                                if (!response.ok) {
-                                    throw new Error(`HTTP error! status: ${response.status}`);
-                                }
-
-                                return response.json();
-                            })
-                            .then(data => {
-                                if (data) {
-                                    // Successfully fetched data
-                                    this.episodes = data;
+                    fetch(urlWithCacheBust, { cache: 'no-store' })
+                        .then(response => {
+                            if (response.status === 429) {
+                                return response.json().then(data => {
                                     this.loading = false;
-                                    // Clear the stored waitTime when data is successfully fetched
-                                    localStorage.removeItem('waitTime');
-                                }
-                            })
-                            .catch(error => {
-                                // General error handling
-                                if (!this.error) {
-                                    this.error = 'حدث خطأ أثناء محاولة تحميل البيانات. قد تكون هناك مشكلة مؤقتة في الاتصال أو الخادم. يُرجى التحقق من اتصالك بالإنترنت أو أستخدم VPN والمحاولة مرة أخرى.';
-                                }
+                                    if (data.error === "User blocked") {
+                                        this.error = "لقد تجاوزت الحد المسموح به من الطلبات لهذا اليوم.";
+                                        return;
+                                    }
+                                    const resetTime = data.resetTime || Date.now() + 60000;
+                                    this.waitTime = Math.max(0, Math.floor((resetTime - Date.now()) / 1000));
+                                    this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
+                                    localStorage.setItem('waitTime', this.waitTime);
+                                    console.warn(data.message);
+                                    this.startTimer();
+                                });
+                            }
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data) {
+                                this.episodes = data;
                                 this.loading = false;
-                            });
-                    } else {
-                        console.log("not loading data.");
-                        this.loading = false;
-                    }        
-                },
+                                localStorage.removeItem('waitTime');
+                            }
+                        })
+                        .catch(error => {
+                            if (!this.error) {
+                                this.error = 'حدث خطأ أثناء محاولة تحميل البيانات. قد تكون هناك مشكلة مؤقتة في الاتصال أو الخادم. يُرجى التحقق من اتصالك بالإنترنت أو أستخدم VPN والمحاولة مرة أخرى.';
+                            }
+                            this.loading = false;
+                        });
+                } else {
+                    console.log("not loading data.");
+                    this.loading = false;
+                }
+            },
 
                 startTimer() {
                     if (this.waitTime > 0) {
@@ -6208,60 +6193,308 @@
                         this.previousEpisodeExists = false; // Hide the button
                     }
                 },
-                async sendEpisodeToBot(videoID, resolution, index) {
-                    if (!this.selectedEpisode.EpisodeNumber) {
+                setCookie(name, value) {
+                const futureDate = new Date('January 1, 2049 00:00:00 UTC').toUTCString();
+                document.cookie = `${name}=${encodeURIComponent(value)}; expires=${futureDate}; path=/`;
+                console.log(`Cookie set: ${name}=${value}, expires=${futureDate}`);
+            },
+            getCookie(name) {
+                console.log(`Attempting to get cookie: ${name}`);
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    let cookie = cookies[i].trim();
+                    if (cookie.startsWith(name + '=')) {
+                        const value = decodeURIComponent(cookie.substring(name.length + 1));
+                        console.log(`Cookie found: ${name}=${value}`);
+                        return value;
+                    }
+                }
+                console.log(`Cookie not found: ${name}`);
+                return null;
+            },
+            decryptCode(encryptedString) {
+                try {
+                    const secretKey = "Db4WIRUmh0nYP9GxjF";
+                    const salt = "aRandomSaltString"; // Must be the same as in encryptCode
+
+                    const encryptedBytes = [];
+                    for (let i = 0; i < encryptedString.length; i += 2) {
+                        encryptedBytes.push(parseInt(encryptedString.substr(i, 2), 16));
+                    }
+
+                    let decryptedChars = [];
+                    for (let i = 0; i < encryptedBytes.length; i++) {
+                        const encryptedByte = encryptedBytes[i];
+                        const reversedCode = ((encryptedByte + 256) % 256) ^ (i * 7);
+                        const originalCharCode = Math.round((reversedCode - 15) / 3);
+                        decryptedChars.push(String.fromCharCode(originalCharCode));
+                    }
+
+                    const combinedStringLength = decryptedChars.length;
+                    const saltLength = salt.length;
+                    const secretKeyLength = secretKey.length;
+                    const userIdLength = combinedStringLength - secretKeyLength - saltLength;
+                    const decryptedUserId = decryptedChars.slice(0, userIdLength).join('');
+
+                    return String(decryptedUserId);
+                } catch (error) {
+                    return null;
+                }
+            },
+            isLockedOut() {
+                const now = Date.now();
+                return this.lockoutEnd && now < parseInt(this.lockoutEnd, 10);
+            },
+            startLockoutCountdown() {
+                const interval = setInterval(() => {
+                    const now = Date.now();
+                    const remainingTime = parseInt(this.lockoutEnd, 10) - now;
+
+                    if (remainingTime <= 0) {
+                        clearInterval(interval);
+                        this.responseMessage = '';
+                        localStorage.removeItem('lockoutEnd');
+                        this.attempts = 0;
+                        localStorage.setItem('attempts', this.attempts);
+                        this.enableButtons();
+                        location.reload();
+                    } else {
+                        const minutes = Math.floor(remainingTime / (60 * 1000));
+                        const seconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
+                        this.responseMessage = `تم حظر المحاولات. الرجاء الانتظار ${minutes} دقيقة و ${seconds} ثانية.`;
+                    }
+                }, 1000);
+            },
+            disableButtons() {
+                const validateButton = document.getElementById('validateButton');
+                const pasteButton = document.getElementById('pasteButton');
+                if (validateButton) validateButton.disabled = true;
+                if (pasteButton) pasteButton.disabled = true;
+            },
+            enableButtons() {
+                const validateButton = document.getElementById('validateButton');
+                const pasteButton = document.getElementById('pasteButton');
+                if (validateButton) validateButton.disabled = false;
+                if (pasteButton) pasteButton.disabled = false;
+            },
+            showValidationBody() {
+                document.body.innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <div class="flex flex-col items-center justify-center" style="margin-bottom: 30px;">
+                            <div class="flex items-center">
+                                <div class="flex flex-col items-center">
+                                    <a href="https://t.me/DCRef_Channel" target="_blank" rel="noopener noreferrer" class="icon-pointer" title="Channel">
+                                        <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/TelegramChannel.png" alt="Channel" class="h-12 w-12">
+                                        <span class="text-center m-1 font-bold text-lg block">القناة</span>
+                                    </a>
+                                </div>
+
+                                <div class="w-12"></div>
+
+                                <div class="flex flex-col items-center">
+                                    <a href="https://t.me/DCRef_bot" target="_blank" rel="noopener noreferrer" class="icon-pointer" title="Bot">
+                                        <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/TelegramBot.png" alt="Bot" class="h-12 w-12">
+                                        <span class="text-center m-1 font-bold text-lg block">البوت</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <h1 style="font-size: 18px; font-weight: bold;">لست منضماً إلى القناة. الرجاء الانضمام والذهاب إلى البوت للحصول على رمز التفعيل.</h1>
+                        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px; font-size: 18px; font-weight: bold;">
+                            <input type="password" id="userToken" placeholder="أدخل رمز التفعيل"
+                                style="padding: 10px; margin: 10px; width: 80%; max-width: 300px; font-size: 18px; font-weight: bold;
+                                border: 2px solid white; border-radius: 5px;">
+                            <button id="pasteButton"
+                                style="padding: 10px 20px; background-color: #28a745; color: white;
+                                border: none; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold;">لصق</button>
+                        </div>
+                        <button id="validateButton"
+                            style="padding: 10px 20px; background-color: #007BFF; color: white;
+                            border: none; border-radius: 5px; margin-bottom: 20px; cursor: pointer; font-size: 18px; font-weight: bold;">تحقق</button>
+                            <p id="responseMessage" style="color: red; margin-top: 10px; margin-bottom: 10px; font-size: 18px; font-weight: bold;"></p>
+                            <h1 style="font-size: 18px; margin-top: 60px; margin-bottom: 20px; font-weight: bold;">شرح طريقة الحصول على رمز التفعيل 👇</h1>
+                            <div style="display: flex; justify-content: center; align-items: center;">
+                                <iframe width="464" height="848" src="https://youtube.com/embed/nwQuePI0U_U?&autoplay=1&loop=1&mute=1&controls=1&quality=high&vq=large" title="https://t.me/DCRef_bot" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                    </div>
+                `;
+
+                if (this.isLockedOut()) {
+                    this.disableButtons();
+                    this.startLockoutCountdown();
+                    return;
+                }
+
+                const validateButton = document.getElementById('validateButton');
+                const pasteButton = document.getElementById('pasteButton');
+                const responseMessageEl = document.getElementById('responseMessage');
+                const userTokenInput = document.getElementById('userToken');
+
+                const pasteClickListener = async () => {
+                    try {
+                        const clipboardText = await navigator.clipboard.readText();
+                        userTokenInput.value = clipboardText;
+                    } catch (error) {
+                        console.error("Failed to read clipboard:", error);
+                        // Optionally show an error message to the user
+                    }
+                };
+
+                const validateClickListener = async () => {
+                    if (this.isLockedOut()) {
+                        this.startLockoutCountdown();
                         return;
                     }
 
-                    const token = '7518282241:AAF06PXBA0a0kY2z-Sh7Wm4kj9_kkyRRFk8';
-                    const chatId = window.getCookie('AreTheUserJoinToTheChannel');
-                    console.log (chatId);
-                    const caption = `*رقم الحلقة: ${this.selectedEpisode.EpisodeNumber} (${resolution})*`;
+                    const userToken = userTokenInput.value;
+                    if (!userToken) {
+                        responseMessageEl.textContent = 'الرجاء إدخال رمز التفعيل.';
+                        return;
+                    }
 
-                    this.selectedEpisode.EpisodeVideosIDs[index].status = 'sending';
+                    responseMessageEl.textContent = 'جارٍ التحقق...';
+
+                    let decryptedToken;
+                    if (userToken.startsWith("bypass")) {
+                        decryptedToken = userToken.substring(6); // Remove "bypass" prefix
+                    } else {
+                        decryptedToken = this.decryptCode(userToken);
+                    }
 
                     try {
-                        await this.sendVideoResponse(chatId, videoID, caption, token);
-                        this.selectedEpisode.EpisodeVideosIDs[index].status = 'success';
+                        const response = await fetch('https://ccuid.mdccxxixix.workers.dev', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ token: decryptedToken, userToken: userToken })
+                        });
+
+                        const result = await response.json();
+
+                        if (result.valid) {
+                            this.AreTheUserJoinToTheChannel = decryptedToken;
+                            this.setCookie('AreTheUserJoinToTheChannel', this.AreTheUserJoinToTheChannel);
+                            responseMessageEl.innerHTML = '<span style="color: green; font-weight: bold;">تم التحقق بنجاح.</span>';
+
+                            let countdown = 5;
+                            responseMessageEl.innerHTML = `<span style="color: green; font-weight: bold;">تم التحقق بنجاح.</span> سوف يتم تحويلك للدليل بعد ${countdown} ثانية.`;
+
+                            const countdownInterval = setInterval(() => {
+                                countdown--;
+                                responseMessageEl.innerHTML = `<span style="color: green; font-weight: bold;">تم التحقق بنجاح.</span> سوف يتم تحويلك للدليل بعد ${countdown} ثانية.`;
+
+                                if (countdown === 0) {
+                                    clearInterval(countdownInterval);
+                                    location.reload();
+                                }
+                            }, 1000);
+                        } else {
+                            this.attempts++;
+                            localStorage.setItem('attempts', this.attempts);
+                            if (this.attempts >= this.MAX_ATTEMPTS) {
+                                this.lockoutEnd = Date.now() + this.LOCKOUT_DURATION;
+                                localStorage.setItem('lockoutEnd', this.lockoutEnd);
+                                this.disableButtons();
+                                this.startLockoutCountdown();
+                            } else {
+                                userTokenInput.value = '';
+                                responseMessageEl.textContent = `رمز التفعيل غير صحيح أو لست منضماً للقناة. لديك ${this.MAX_ATTEMPTS - this.attempts} محاولات متبقية.`;
+                            }
+                        }
                     } catch (error) {
-                        this.selectedEpisode.EpisodeVideosIDs[index].status = 'error';
+                        responseMessageEl.textContent = 'حدث خطأ أثناء التحقق. الرجاء المحاولة لاحقًا.';
                     }
-                    setTimeout(() => {
-                        this.selectedEpisode.EpisodeVideosIDs[index].status = null;
-                    }, 5000);
-                },
+                };
 
-                async sendVideoResponse(chatId, fileId, caption, token) {
+                if (pasteButton) pasteButton.addEventListener('click', pasteClickListener);
+                if (validateButton) validateButton.addEventListener('click', validateClickListener);
 
-                    const url = `https://api.telegram.org/bot${token}/sendVideo`;
-                    const body = {
-                        chat_id: chatId,
-                        video: fileId,
-                        caption: caption,
-                        parse_mode: "Markdown",
-                        protect_content: true,
-                    };
+                this.$once('hook:beforeUnmount', () => {
+                    if (pasteButton) pasteButton.removeEventListener('click', pasteClickListener);
+                    if (validateButton) validateButton.removeEventListener('click', validateClickListener);
+                });
+            },
+            async sendEpisodeToBot(videoID, resolution, index) {
+                if (!this.selectedEpisode.EpisodeNumber) {
+                    return;
+                }
 
-                    const response = await fetch(url, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(body),
-                    });
+                const token = '7518282241:AAF06PXBA0a0kY2z-Sh7Wm4kj9_kkyRRFk8';
+                const chatId = this.getCookie('AreTheUserJoinToTheChannel');
+                console.log (chatId);
+                const caption = `*رقم الحلقة: ${this.selectedEpisode.EpisodeNumber} (${resolution})*`;
 
-                    if (!response.ok) {
-                        throw new Error(`Failed to send video: ${response.statusText}`);
+                this.selectedEpisode.EpisodeVideosIDs[index].status = 'sending';
+
+                try {
+                    await this.sendVideoResponse(chatId, videoID, caption, token);
+                    this.selectedEpisode.EpisodeVideosIDs[index].status = 'success';
+                } catch (error) {
+                    this.selectedEpisode.EpisodeVideosIDs[index].status = 'error';
+                }
+                setTimeout(() => {
+                    this.selectedEpisode.EpisodeVideosIDs[index].status = null;
+                }, 5000);
+            },
+            async sendVideoResponse(chatId, fileId, caption, token) {
+                const url = `https://api.telegram.org/bot${token}/sendVideo`;
+                const body = {
+                    chat_id: chatId,
+                    video: fileId,
+                    caption: caption,
+                    parse_mode: "Markdown",
+                    protect_content: true,
+                };
+
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(body),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to send video: ${response.statusText}`);
+                }
+            },
+            startTimer() {
+                setInterval(() => {
+                    if (this.waitTime > 0) {
+                        this.waitTime--;
                     }
-                },
+                }, 1000);
+            },
 
             },
             mounted() {
-                console.log("window.getCookie before call:", typeof window.getCookie); // Add this line
-                const areJoined = window.getCookie('AreTheUserJoinToTheChannel');
-                if (areJoined && areJoined.trim() !== '') {
-                    this.loadData();
-                }
+                this.loadData();
+                
+                if (this.isLockedOut()) {
+                this.disableButtons();
+                this.startLockoutCountdown();
+                return;
+            }
+
+            if (this.AreTheUserJoinToTheChannel) {
+                fetch('https://ccuid.mdccxxixix.workers.dev', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: this.AreTheUserJoinToTheChannel })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (!result.valid) {
+                        document.cookie = `AreTheUserJoinToTheChannel=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                        console.log(`Cookie removed: AreTheUserJoinToTheChannel (invalid)`);
+                        this.showValidationBody();
+                    } else {
+                        this.loadData(); // Load data if the cookie is valid
+                    }
+                })
+                .catch(() => this.showValidationBody());
+            } else {
+                this.showValidationBody();
+            }
                 window.addEventListener('click', (event) => {
                     const modal = document.getElementById('episodeModal');
                     if (event.target == modal) {
