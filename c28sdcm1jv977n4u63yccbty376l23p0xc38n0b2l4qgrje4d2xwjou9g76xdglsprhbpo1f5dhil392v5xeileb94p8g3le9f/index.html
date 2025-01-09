@@ -5561,7 +5561,7 @@
                                     this.error = 'حدث خطأ أثناء محاولة تحميل البيانات. قد تكون هناك مشكلة مؤقتة في الاتصال أو الخادم. يُرجى التحقق من اتصالك بالإنترنت أو أستخدم VPN والمحاولة مرة أخرى.';
                                 }
                                 this.loading = false;
-                            }); 
+                            });   
                 },
 
                 startTimer() {
@@ -6236,6 +6236,7 @@
 
             },
             mounted() {
+                    this.loadData();
                 window.addEventListener('click', (event) => {
                     const modal = document.getElementById('episodeModal');
                     if (event.target == modal) {
