@@ -7,28 +7,27 @@
         const LOCKOUT_DURATION = 60 * 1000; // 1 minute in milliseconds
         
         // Helper functions for setting and getting cookies
-                function setCookie(name, value, days = 365 * 20) {
-        const date = new Date();
-        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000); // Default to 20 years
-        const expires = `expires=${date.toUTCString()}`;
-        document.cookie = `${name}=${encodeURIComponent(value)}; ${expires}; path=/; SameSite=Lax`;
-        console.log(`Cookie set: ${name}=${value}, expires=${date.toUTCString()}`);
-    }
-
-    function getCookie(name) {
-        console.log(`Attempting to get cookie: ${name}`);
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            let cookie = cookies[i].trim();
-            if (cookie.startsWith(`${name}=`)) {
-                const value = decodeURIComponent(cookie.substring(name.length + 1));
-                console.log(`Cookie found: ${name}=${value}`);
-                return value;
-            }
-        }
-        console.log(`Cookie not found: ${name}`);
-        return null;
-    }
+                function setCookie(name, value) {
+                    const futureDate = new Date('January 1, 2049 00:00:00 UTC').toUTCString();
+                    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${futureDate}; path=/`;
+                    console.log(`Cookie set: ${name}=${value}, expires=${futureDate}`);
+                }
+        
+                function getCookie(name) {
+                    console.log(`Attempting to get cookie: ${name}`);
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        let cookie = cookies[i].trim();
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.startsWith(name + '=')) {
+                            const value = decodeURIComponent(cookie.substring(name.length + 1));
+                            console.log(`Cookie found: ${name}=${value}`);
+                            return value;
+                        }
+                    }
+                    console.log(`Cookie not found: ${name}`);
+                    return null;
+                }
         
                 let AreTheUserJoinToTheChannel = getCookie('AreTheUserJoinToTheChannel');
         
@@ -5491,7 +5490,7 @@
                 },
 
                 loadData() {
-                    const areJoined = localStorage.getItem('AreTheUserJoinToTheChannel');
+                    const areJoined = AreTheUserJoinToTheChannel = getCookie('AreTheUserJoinToTheChannel');
 
                     if (areJoined && areJoined.trim() !== '') {
                         // Reset states before attempting to fetch
@@ -6242,7 +6241,7 @@
 
             },
             mounted() {
-                const areJoined = localStorage.getItem('AreTheUserJoinToTheChannel');
+                const areJoined = AreTheUserJoinToTheChannel = getCookie('AreTheUserJoinToTheChannel');
                 if (areJoined && areJoined.trim() !== '') {
                     this.loadData();
                 }
