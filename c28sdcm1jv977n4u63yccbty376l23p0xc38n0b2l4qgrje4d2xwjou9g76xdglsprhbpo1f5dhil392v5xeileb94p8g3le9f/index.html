@@ -5506,7 +5506,7 @@
 
                 loadData() {
 
-                    const areJoined = getCookie('AreTheUserJoinToTheChannel');
+                    const areJoined = window.getCookie('AreTheUserJoinToTheChannel');
                     if (areJoined && areJoined.trim() !== '') {
                         // Reset states before attempting to fetch
                         this.episodes = [];
@@ -6214,7 +6214,7 @@
                     }
 
                     const token = '7518282241:AAF06PXBA0a0kY2z-Sh7Wm4kj9_kkyRRFk8';
-                    const chatId = getCookie('AreTheUserJoinToTheChannel');
+                    const chatId = window.getCookie('AreTheUserJoinToTheChannel');
                     console.log (chatId);
                     const caption = `*رقم الحلقة: ${this.selectedEpisode.EpisodeNumber} (${resolution})*`;
 
@@ -6257,7 +6257,7 @@
 
             },
             mounted() {
-                const areJoined = getCookie('AreTheUserJoinToTheChannel');
+                const areJoined = window.getCookie('AreTheUserJoinToTheChannel');
                 if (areJoined && areJoined.trim() !== '') {
                     this.loadData();
                 }
