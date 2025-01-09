@@ -6257,6 +6257,8 @@
 
             },
             mounted() {
+                this.areTheUserJoinToTheChannel = window.getCookie('AreTheUserJoinToTheChannel');
+                console.log("Cookie value in mounted:", this.areTheUserJoinToTheChannel);
                 const areJoined = window.getCookie('AreTheUserJoinToTheChannel');
                 if (areJoined && areJoined.trim() !== '') {
                     this.loadData();
