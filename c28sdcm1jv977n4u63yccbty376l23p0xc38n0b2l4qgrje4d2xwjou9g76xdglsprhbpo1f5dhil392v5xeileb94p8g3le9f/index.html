@@ -6207,7 +6207,7 @@
                     }
 
                     const token = '7518282241:AAF06PXBA0a0kY2z-Sh7Wm4kj9_kkyRRFk8';
-                    const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
+                    const chatId = getCookie('AreTheUserJoinToTheChannel');
                     const caption = `*رقم الحلقة: ${this.selectedEpisode.EpisodeNumber} (${resolution})*`;
 
                     this.selectedEpisode.EpisodeVideosIDs[index].status = 'sending';
