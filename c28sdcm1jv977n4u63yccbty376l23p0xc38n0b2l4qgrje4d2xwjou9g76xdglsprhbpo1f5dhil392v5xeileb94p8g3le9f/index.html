@@ -2949,7 +2949,7 @@
         </div>
     </div>
 
-    <script defer>
+    <script>
         const { createApp } = Vue;
     
         createApp({
@@ -6257,6 +6257,7 @@
 
             },
             mounted() {
+                console.log("window.getCookie before call:", typeof window.getCookie); // Add this line
                 const areJoined = window.getCookie('AreTheUserJoinToTheChannel');
                 if (areJoined && areJoined.trim() !== '') {
                     this.loadData();
