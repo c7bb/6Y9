@@ -2780,6 +2780,7 @@
                                         <button
                                             v-for="(manga, index) in selectedEpisode.EpisodeMangasIDs"
                                             :key="manga.MangaNumber"
+                                            :disabled="manga.status === 'success'"
                                             @click="() => { sendMangaToBot(manga.MangaFileID, manga.MangaNumber, index); }"
                                             class="relative bg-green-500 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center justify-center shadow-md"
                                         >
@@ -6306,7 +6307,7 @@
                     const token = '7518282241:AAF06PXBA0a0kY2z-Sh7Wm4kj9_kkyRRFk8';
                     const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
                     console.log(chatId);
-                    const caption = `*الفصل: <span dir="ltr">${mangaNumber}</span>*`;
+                    const caption = `*رقم الفصل: ${mangaNumber}*`;
 
                     this.selectedEpisode.EpisodeMangasIDs[index].status = 'sending';
 
