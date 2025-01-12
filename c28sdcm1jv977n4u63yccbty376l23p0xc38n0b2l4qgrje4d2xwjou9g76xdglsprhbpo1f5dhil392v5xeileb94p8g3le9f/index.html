@@ -2783,7 +2783,7 @@
                                             @click="() => { sendMangaToBot(manga.MangaFileID, manga.MangaNumber, index); }"
                                             class="relative bg-green-500 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center justify-center shadow-md"
                                         >
-                                            {{ manga.MangaNumber }} ({{ manga.MangaFileSize }} MB)
+                                            ({{ manga.MangaFileSize }} MB) {{ manga.MangaNumber }}
                                             <img v-if="manga.status === 'success'" src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/true.png"
                                                 class="absolute right-0 top-0 w-6 h-6 ml-2" />
                                             <img v-if="manga.status === 'error'" src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png"
