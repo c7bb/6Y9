@@ -2768,7 +2768,9 @@
                                 </p>
 
                                 <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeMangasIDs && selectedEpisode.EpisodeMangasIDs.length > 0" class="border p-2 rounded mb-2">
-                                    <legend class="font-bold text-lg">قراءة الفصول (عبر البوت)</legend>
+                                    <p v-if="selectedEpisode && selectedEpisode.EpisodeMangaQuoted !== ''" class="mb-2 text-lg">
+                                        <span dir="ltr">:الفصول المقتبسة</span> {{ selectedEpisode.EpisodeMangaQuoted }}
+                                    </p>
                                     <div class="flex flex-col justify-center gap-4">
                                         <button
                                             v-for="(manga, index) in selectedEpisode.EpisodeMangasIDs"
