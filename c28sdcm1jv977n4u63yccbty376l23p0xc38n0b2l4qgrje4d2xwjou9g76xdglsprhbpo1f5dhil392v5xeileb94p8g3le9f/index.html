@@ -2767,15 +2767,9 @@
                                     <span v-else>لايوجد</span>
                                 </p>
 
-                                <template>
-                                    <div>
-                                    <p v-if="selectedEpisode && selectedEpisode.EpisodeMangaQuoted !== ''" class="mb-2 text-lg cursor-pointer" @click="showMangaButtons = true">
-                                        <span dir="ltr">:الفصول المقتبسة</span> {{ selectedEpisode.EpisodeMangaQuoted }}
-                                    </p>
-                                
-                                    <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeMangasIDs && selectedEpisode.EpisodeMangasIDs.length > 0 && showMangaButtons" class="border p-2 rounded mb-2">
-                                        <legend class="font-bold text-lg">قراءة الفصول (عبر البوت)</legend>
-                                        <div class="flex flex-col justify-center gap-4">
+                                <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeMangasIDs && selectedEpisode.EpisodeMangasIDs.length > 0" class="border p-2 rounded mb-2">
+                                    <legend class="font-bold text-lg">قراءة الفصول (عبر البوت)</legend>
+                                    <div class="flex flex-col justify-center gap-4">
                                         <button
                                             v-for="(manga, index) in selectedEpisode.EpisodeMangasIDs"
                                             :key="manga.MangaNumber"
@@ -2788,13 +2782,8 @@
                                             <img v-if="manga.status === 'error'" src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png"
                                                 class="absolute right-0 top-0 w-6 h-6 ml-2" />
                                         </button>
-                                        </div>
-                                        <button @click="showMangaButtons = false" class="mt-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
-                                        <span>إخفاء</span>
-                                        </button>
-                                    </fieldset>
                                     </div>
-                                </template>
+                                </fieldset>
 
                                 <p v-if="selectedEpisode && selectedEpisode.EpisodeSeason !== ''" class="mb-2 text-lg">
                                     <span>الموسم: </span>{{ selectedEpisode.EpisodeSeason }} ({{ selectedEpisode.EpisodeSeasonCount }} حلقة)
