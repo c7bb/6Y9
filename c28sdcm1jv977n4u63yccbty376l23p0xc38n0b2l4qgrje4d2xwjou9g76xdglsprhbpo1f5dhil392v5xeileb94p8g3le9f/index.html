@@ -2783,7 +2783,7 @@
                                     <div 
                                     v-for="(manga, index) in selectedEpisode.EpisodeMangasIDs" 
                                     :key="manga.MangaNumber" 
-                                    class="relative flex items-center"
+                                    class="relative flex flex-col gap-4"
                                     >
                                     <button
                                         :disabled="manga.status === 'success'"
