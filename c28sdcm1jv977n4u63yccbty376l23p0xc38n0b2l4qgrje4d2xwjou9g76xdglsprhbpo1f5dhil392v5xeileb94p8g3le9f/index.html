@@ -6333,7 +6333,7 @@
                     const token = '7518282241:AAF06PXBA0a0kY2z-Sh7Wm4kj9_kkyRRFk8';
                     const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
                     console.log(chatId);
-                    const caption = `الفصل: <span dir="ltr">${mangaNumber}</span>`;
+                    const caption = `*الفصل: ${mangaNumber}*`;
 
                     this.selectedEpisode.EpisodeMangasIDs[index].status = 'sending';
 
@@ -6353,7 +6353,7 @@
                         chat_id: chatId,
                         document: fileId,
                         caption: caption,
-                        parse_mode: "HTML",
+                        parse_mode: "Markdown",
                         protect_content: true,
                     };
 
