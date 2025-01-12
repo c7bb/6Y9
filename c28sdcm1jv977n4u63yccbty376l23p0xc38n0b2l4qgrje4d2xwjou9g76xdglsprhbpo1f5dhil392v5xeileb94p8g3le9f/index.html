@@ -2769,7 +2769,7 @@
 
                                 <template>
                                     <div>
-                                    <p v-if="selectedEpisode && selectedEpisode.EpisodeMangaQuoted !== '' && !showMangaButtons" class="mb-2 text-lg cursor-pointer" @click="showMangaButtons = true">
+                                    <p v-if="selectedEpisode && selectedEpisode.EpisodeMangaQuoted !== '' class="mb-2 text-lg cursor-pointer" @click="showMangaButtons = true">
                                         <span dir="ltr">:الفصول المقتبسة</span> {{ selectedEpisode.EpisodeMangaQuoted }}
                                     </p>
                                 
@@ -3031,6 +3031,7 @@
                     showModal: false,
                     selectedEpisode: null,
                     showEmptyPopup: false,
+                    showMangaButtons: false,
                     filterBlackOrganization: false,
                     filterDetectiveBoys: false,
                     filterScaryEpisodes: false,
