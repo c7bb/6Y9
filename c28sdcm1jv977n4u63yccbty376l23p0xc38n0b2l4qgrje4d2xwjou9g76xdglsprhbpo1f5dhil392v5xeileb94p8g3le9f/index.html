@@ -2767,36 +2767,43 @@
                                     <span v-else>لايوجد</span>
                                 </p>
 
-                                <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeMangasIDs && selectedEpisode.EpisodeMangasIDs.length > 0" class="border p-2 rounded mb-2">
-                                    <legend class="font-bold text-lg">
-                                        <p v-if="selectedEpisode && selectedEpisode.EpisodeMangaQuoted !== ''">
-                                            <span dir="ltr">:الفصول المقتبسة</span> {{ selectedEpisode.EpisodeMangaQuoted }}
-                                        </p>
-                                        <template v-else>
-                                            قراءة الفصول (عبر البوت)
-                                        </template>
-                                    </legend>
-                                    <div class="flex flex-col justify-center gap-4">
-                                        <button
-                                          v-for="(manga, index) in selectedEpisode.EpisodeMangasIDs"
-                                          :key="manga.MangaNumber"
-                                          :disabled="manga.status === 'success'"
-                                          @click="() => { sendMangaToBot(manga.MangaFileID, manga.MangaNumber, index); }"
-                                          class="group relative bg-green-500 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center justify-center shadow-md disabled:opacity-50"
-                                        >
-                                          ({{ manga.MangaFileSize }} MB) {{ manga.MangaNumber }}
-                                          <img 
-                                            v-if="manga.status === 'success'" 
-                                            src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/true.png" 
-                                            class="absolute right-0 top-0 w-6 h-6 ml-2 group-disabled:opacity-100"
-                                          />
-                                          <img 
-                                            v-if="manga.status === 'error'" 
-                                            src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png" 
-                                            class="absolute right-0 top-0 w-6 h-6 ml-2 group-disabled:opacity-100"
-                                          />
-                                        </button>
-                                      </div>                                                                            
+                                <fieldset
+                                v-if="selectedEpisode && selectedEpisode.EpisodeMangasIDs && selectedEpisode.EpisodeMangasIDs.length > 0"
+                                class="border p-2 rounded mb-2"
+                                >
+                                <legend class="font-bold text-lg">
+                                    <p v-if="selectedEpisode && selectedEpisode.EpisodeMangaQuoted !== ''">
+                                    <span dir="ltr">:الفصول المقتبسة</span> {{ selectedEpisode.EpisodeMangaQuoted }}
+                                    </p>
+                                    <template v-else>
+                                    قراءة الفصول (عبر البوت)
+                                    </template>
+                                </legend>
+                                <div class="flex flex-col justify-center gap-4">
+                                    <div 
+                                    v-for="(manga, index) in selectedEpisode.EpisodeMangasIDs" 
+                                    :key="manga.MangaNumber" 
+                                    class="relative flex items-center"
+                                    >
+                                    <button
+                                        :disabled="manga.status === 'success'"
+                                        @click="() => { sendMangaToBot(manga.MangaFileID, manga.MangaNumber, index); }"
+                                        class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center justify-center shadow-md disabled:opacity-50"
+                                    >
+                                        ({{ manga.MangaFileSize }} MB) {{ manga.MangaNumber }}
+                                    </button>
+                                    <img 
+                                        v-if="manga.status === 'success'" 
+                                        src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/true.png"
+                                        class="absolute right-0 top-0 w-6 h-6 ml-2"
+                                    />
+                                    <img 
+                                        v-if="manga.status === 'error'" 
+                                        src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png"
+                                        class="absolute right-0 top-0 w-6 h-6 ml-2"
+                                    />
+                                    </div>
+                                </div>
                                 </fieldset>
 
                                 <p v-if="selectedEpisode && selectedEpisode.EpisodeSeason !== ''" class="mb-2 text-lg">
