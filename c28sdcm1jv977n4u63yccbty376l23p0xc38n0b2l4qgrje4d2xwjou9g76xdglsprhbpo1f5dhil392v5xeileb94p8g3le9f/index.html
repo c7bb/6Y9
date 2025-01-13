@@ -117,13 +117,11 @@
             // Function to disable buttons
             function disableButtons() {
                 document.getElementById('validateButton').disabled = true;
-                document.getElementById('pasteButton').disabled = true;
             }
 
             // Function to enable buttons
             function enableButtons() {
                 document.getElementById('validateButton').disabled = false;
-                document.getElementById('pasteButton').disabled = false;
             }
 
             // Function to display the validation form
@@ -154,9 +152,6 @@
                                 <input type="password" id="userToken" placeholder="أدخل رمز التفعيل"
                                     style="padding: 10px; margin: 10px; width: 80%; max-width: 300px; font-size: 18px; font-weight: bold;
                                     border: 2px solid white; border-radius: 5px;">
-                                <button id="pasteButton"
-                                    style="padding: 10px 20px; background-color: #28a745; color: white;
-                                    border: none; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold;">لصق</button>
                             </div>
                             <button id="validateButton"
                                 style="padding: 10px 20px; background-color: #007BFF; color: white;
@@ -169,6 +164,8 @@
                         </div>
                     `;
                 const userTokenInput = document.getElementById('userToken');
+                const validateButton = document.getElementById('validateButton');
+                const responseMessage = document.getElementById('responseMessage');
                 // Get the URL parameters
                 const urlParams = new URLSearchParams(window.location.search);
                 const codeParam = urlParams.get('code');
@@ -176,6 +173,7 @@
                 // If the 'code' parameter exists, fill the input field
                 if (codeParam) {
                     userTokenInput.value = codeParam;
+                    validateButton.click(); // Trigger the click event
                 }
 
                 if (isLockedOut()) {
@@ -183,21 +181,9 @@
                     startLockoutCountdown();
                     return;
                 }
-                const validateButton = document.getElementById('validateButton');
-                const pasteButton = document.getElementById('pasteButton');
-                const responseMessage = document.getElementById('responseMessage');
 
                 //responseMessage.textContent = `لديك ${MAX_ATTEMPTS - attempts} محاولات متبقية.`;
-                // Clipboard paste functionality
-                pasteButton.addEventListener('click', async () => {
-                    try {
-                        const clipboardText = await navigator.clipboard.readText();
-                        userTokenInput.value = clipboardText;
-                    } catch (error) {
-                        console.error("Failed to read clipboard text:", error);
-                        // Consider a less verbose or user-facing error handling here if needed
-                    }
-                });
+
                 // Token validation functionality
                 validateButton.addEventListener('click', async () => {
                     if (isLockedOut()) {
@@ -254,8 +240,7 @@
                                 disableButtons();
                                 startLockoutCountdown();
                             } else {
-                                userTokenInput.value = '';
-                                responseMessage.textContent = `رمز التفعيل غير صحيح أو لست منضماً للقناة. لديك ${MAX_ATTEMPTS - attempts} محاولات متبقية.`;
+                                responseMessage.textContent = `لست منضماً للقناة. لديك ${MAX_ATTEMPTS - attempts} محاولات متبقية.`;
                             }
                         }
                     } catch (error) {
