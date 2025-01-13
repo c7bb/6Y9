@@ -255,6 +255,18 @@
                 });
             }
 
+                // Get the encrypted code from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const encryptedCode = urlParams.get('code');
+
+            // Get the userToken input element
+            const userTokenInput = document.getElementById('userToken');
+
+            // If an encrypted code is present, set the input field's value
+            if (encryptedCode) {
+                userTokenInput.value = encryptedCode;
+            }
+
             // Initial check: if the user is already validated
             if (AreTheUserJoinToTheChannel) {
                 fetch('https://ccuid.mdccxxixix.workers.dev', {
@@ -280,15 +292,6 @@
                 // If no token in localStorage or cookie, show the validation body
                 showValidationBody();
             }
-
-            // Add event listener for when localStorage is cleared (e.g., by the user)
-            // window.addEventListener('storage', function(event) {
-            //     if (event.key === 'AreTheUserJoinToTheChannel' && event.newValue === null) {
-            //         // If AreTheUserJoinToTheChannel is removed from localStorage, also remove the cookie
-            //         removeCookie('AreTheUserJoinToTheChannel');
-            //         console.log('AreTheUserJoinToTheChannel removed from localStorage, cookie also removed.');
-            //     }
-            // });
         });
     </script>    
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KNKPH3ZEY5"></script>
