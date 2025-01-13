@@ -2,7 +2,7 @@
 <html lang="en" dir="rtl">
 <head>
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
+                document.addEventListener("DOMContentLoaded", () => {
             const MAX_ATTEMPTS = 3;
             const LOCKOUT_DURATION = 60 * 1000; // 1 minute in milliseconds
 
@@ -168,6 +168,16 @@
                                 </div>
                         </div>
                     `;
+                const userTokenInput = document.getElementById('userToken');
+                // Get the URL parameters
+                const urlParams = new URLSearchParams(window.location.search);
+                const codeParam = urlParams.get('code');
+
+                // If the 'code' parameter exists, fill the input field
+                if (codeParam) {
+                    userTokenInput.value = codeParam;
+                }
+
                 if (isLockedOut()) {
                     disableButtons();
                     startLockoutCountdown();
@@ -176,7 +186,7 @@
                 const validateButton = document.getElementById('validateButton');
                 const pasteButton = document.getElementById('pasteButton');
                 const responseMessage = document.getElementById('responseMessage');
-                const userTokenInput = document.getElementById('userToken');
+
                 //responseMessage.textContent = `لديك ${MAX_ATTEMPTS - attempts} محاولات متبقية.`;
                 // Clipboard paste functionality
                 pasteButton.addEventListener('click', async () => {
