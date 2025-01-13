@@ -173,8 +173,9 @@
                 // If the 'code' parameter exists, fill the input field
                 if (codeParam) {
                     userTokenInput.value = codeParam;
-                    validateButton.click(); // Trigger the click event
                 }
+
+                validateButton.click(); // Trigger the click event
 
                 if (isLockedOut()) {
                     disableButtons();
