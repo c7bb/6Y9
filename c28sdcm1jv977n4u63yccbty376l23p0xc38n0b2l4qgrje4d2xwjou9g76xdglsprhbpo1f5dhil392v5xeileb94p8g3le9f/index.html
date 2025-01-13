@@ -255,18 +255,6 @@
                 });
             }
 
-                // Get the encrypted code from the URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const encryptedCode = urlParams.get('code');
-
-            // Get the userToken input element
-            const userTokenInput = document.getElementById('userToken');
-
-            // If an encrypted code is present, set the input field's value
-            if (encryptedCode) {
-                userTokenInput.value = encryptedCode;
-            }
-
             // Initial check: if the user is already validated
             if (AreTheUserJoinToTheChannel) {
                 fetch('https://ccuid.mdccxxixix.workers.dev', {
