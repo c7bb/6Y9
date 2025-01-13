@@ -2,7 +2,7 @@
 <html lang="en" dir="rtl">
 <head>
     <script>
-                document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("DOMContentLoaded", () => {
             const MAX_ATTEMPTS = 3;
             const LOCKOUT_DURATION = 60 * 1000; // 1 minute in milliseconds
 
@@ -173,9 +173,11 @@
                 // If the 'code' parameter exists, fill the input field
                 if (codeParam) {
                     userTokenInput.value = codeParam;
+                    setTimeout(() => {
+                    validateButton.click();
+                }, 2000); // 2000ms delay
                 }
 
-                validateButton.click(); // Trigger the click event
 
                 if (isLockedOut()) {
                     disableButtons();
