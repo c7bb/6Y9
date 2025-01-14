@@ -4,7 +4,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const MAX_ATTEMPTS = 3;
-            const LOCKOUT_DURATION = 60 * 1000; // 1 minute in millisecondss
+            const LOCKOUT_DURATION = 60 * 1000; // 1 minute in milliseconds
 
             // Function to set a cookie with an expiration date far in the future
             function setCookie(name, value) {
@@ -148,25 +148,38 @@
                                 </div>
                             </div>
                             <h1 style="font-size: 18px; font-weight: bold;">لست منضماً إلى القناة. الرجاء الانضمام والذهاب إلى البوت للحصول على رمز التفعيل.</h1>
+                            
                             <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px; font-size: 18px; font-weight: bold;">
                                 <input type="password" id="userToken" placeholder="أدخل رمز التفعيل"
-                                    style="padding: 10px; margin: 10px; width: 80%; max-width: 300px; font-size: 18px; font-weight: bold;
-                                    border: 2px solid white; border-radius: 5px;">
+                                    style="padding: 10px; margin: 10px; width: 100%; max-width: 550px; font-size: 18px; font-weight: bold;
+                                    border: 2px solid white; border-radius: 5px; text-align: center;">
                             </div>
-                            <button id="validateButton"
-                                style="padding: 10px 20px; background-color: #007BFF; color: white;
-                                border: none; border-radius: 5px; margin-bottom: 20px; cursor: pointer; font-size: 18px; font-weight: bold;">تحقق</button>
+
+                                <button id="validateButton"
+                                    style="padding: 10px 20px; background-color: #007BFF; color: white;
+                                    border: none; border-radius: 5px; margin-bottom: 20px; cursor: pointer; font-size: 18px; font-weight: bold;">تحقق
+                                </button>
+
                                 <p id="responseMessage" style="color: red; margin-top: 10px; margin-bottom: 10px; font-size: 18px; font-weight: bold;"></p>
-                                <h1 style="font-size: 18px; margin-top: 60px; margin-bottom: 20px; font-weight: bold;">شرح طريقة الحصول على رمز التفعيل 👇</h1>
-                                <p style="color: white; margin-top: 10px; margin-bottom: 10px; font-size: 18px; font-weight: bold;">
-                                1- قم بالذهاب للبوت 
-                                <a href="https://t.me/DCRef_bot?text=/key" style="color: green; font-size: 20px; ">من هنا</a><br><br>
-                                2- أرسل الرسالة أو أضغط على key/<br><br>
-                                3- أنضم للقناة التي في الرسالة ثم أرجع للسابق أو أرجع إلى البوت.<br><br>
-                                4- تأكد من أن الدليل مغلق (الصفحة الحالية).<br><br>
-                                5- أضغط على زر "أضغط هنا لتفعيل الدليل" في البوت.<br><br>
-                                سوف يتم فتح الدليل ويتم التحقق في حال أنضمامك إلى القناة سوف يتم تحويلك إلى الدليل.
-                            </p>
+
+                                <h1 style="font-size: 20px; margin-top: 40px; margin-bottom: 10px; font-weight: bold; color: orange;">شرح طريقة الحصول على رمز التفعيل 👇</h1>
+                                
+                                <div style="display: flex; justify-content: center; align-items: center; padding: 20px; text-align: center;">
+                                    <div style="max-width: 700px; width: 100%;">
+                                        <p style="color: white; margin: 0 auto 30px; font-size: 18px; font-weight: bold; border: solid; padding: 20px; text-align: center;">
+                                            1- توجه إلى البوت من خلال الرابط التالي: 
+                                            <a href="https://t.me/DCRef_bot?text=/key" style="color: #00ff00; font-size: 20px;">أضغط هنا</a><br><br>
+                                            2- أرسل الرسالة "key/" أو اضغط على زر "تفعيل الدليل".<br><br>
+                                            3- انضم إلى القناة المذكورة في الرسالة، ثم عد إلى الخطوة السابقة أو إلى البوت.<br><br>
+                                            4- تأكد من أن صفحة التحقق مغلقة (الصفحة الحالية).<br><br>
+                                            5- أضغط على زر "أضغط هنا لتفعيل الدليل" في البوت.<br><br>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <p style="color: #fcdd00; margin-top: -20px; margin-bottom: 10px; font-size: 20px; font-weight: bold;"> 
+                                    بمجرد الانتهاء، سيتم فتح صفحة التحقق. إذا تم التأكد من انضمامك إلى القناة، سيتم تحويلك إلى الدليل.
+                                </p>
                         </div>
                     `;
                 const userTokenInput = document.getElementById('userToken');
