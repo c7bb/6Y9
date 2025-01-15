@@ -3,25 +3,6 @@
 <head>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-
-            // Handle Telegram WebApp
-            if (window.Telegram.WebApp) {
-                const initData = window.Telegram.WebApp.initData;
-                const initDataUnsafe = window.Telegram.WebApp.initDataUnsafe;
-                const userTokenInputt = document.getElementById('userToken');
-
-                console.log('initData:', initData);
-
-                const userId = initDataUnsafe?.user?.id;
-                if (userId) {
-                    console.log('User ID:', userId);
-                    userTokenInputt.value = userId;
-                } else {
-                    console.error('User ID not available.');
-                }
-            } else {
-                console.error('Telegram WebApp is not available.');
-            }
             const MAX_ATTEMPTS = 3;
             const LOCKOUT_DURATION = 60 * 1000; // 1 minute in milliseconds
 
