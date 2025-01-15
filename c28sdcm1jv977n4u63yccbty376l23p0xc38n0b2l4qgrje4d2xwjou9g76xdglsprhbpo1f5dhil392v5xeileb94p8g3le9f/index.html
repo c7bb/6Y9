@@ -6,6 +6,7 @@
         document.addEventListener("DOMContentLoaded", async () => {
             const webApp = window.Telegram.WebApp;
             const telegramUserId = webApp.initDataUnsafe.user.id;
+            const AreTheUserJoinToTheChannel = 'AreTheUserJoinToTheChannel'; // Define the variable
 
             try {
                 const response = await fetch('https://ccuid.mdccxxixix.workers.dev', {
@@ -17,9 +18,11 @@
                 const result = await response.json();
 
                 if (result.valid) {
+                    localStorage.setItem(AreTheUserJoinToTheChannel, telegramUserId);
                     // User is valid, show the original content (hide the "not joined" message)
                     // Assuming the original content was initially hidden or will be loaded afterwards
                 } else {
+                    localStorage.removeItem(AreTheUserJoinToTheChannel);
                     // User is not valid, show the "not joined" message
                     document.body.innerHTML = `
                         <div style="text-align: center; padding: 20px;">
@@ -42,12 +45,18 @@
                                     </div>
                                 </div>
                             </div>
-                            <h1 style="font-size: 18px; font-weight: bold;">لست منضماً إلى القناة. الرجاء الانضمام</h1>
+                            <h1 style="font-size: 18px; font-weight: bold;">لست منضماً إلى القناة. الرجاء الانضمام <a href="https://t.me/DCRef_Channel" target="_blank" rel="noopener noreferrer" style="color: blue; text-decoration: none;">من هنا</a></h1>
+                            <button id="retryButton" style="padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px;">أعد المحاولة</button>
                         </div>
                     `;
+
+                    document.getElementById('retryButton').addEventListener('click', () => {
+                        window.location.reload();
+                    });
                 }
             } catch (error) {
                 console.error("Error during validation:", error);
+                localStorage.removeItem(AreTheUserJoinToTheChannel);
                 // Handle error appropriately, perhaps show a message to the user
                 document.body.innerHTML = `<div style="text-align: center; padding: 20px;"><p style="color: red; font-weight: bold;">حدث خطأ في التحقق. الرجاء المحاولة لاحقًا.</p></div>`;
             }
