@@ -1,26 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" dir="rtl">
 <head>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-
-        const webApp = Telegram.WebApp;
-        const initData = webApp.initDataUnsafe;
-        const userTokenInputt = document.getElementById('userToken');
-
-        // Attempt to get the Telegram User ID and assign it to the input field
-        if (initData && initData.user && initData.user.id) {
-            const userId = initData.user.id;
-            console.log("Telegram User ID:", userId);
-            userTokenInputt.value = userId;
-            // Optionally, you might want to make the input read-only or disabled
-            // userTokenInputt.readOnly = true;
-        } else {
-            console.log("Telegram User ID not available in initData.");
-            // Handle the case where the Mini App is not launched via Telegram or user info is missing
-        }
-
             const MAX_ATTEMPTS = 3;
             const LOCKOUT_DURATION = 60 * 1000; // 1 minute in milliseconds
 
@@ -168,7 +150,7 @@
                             <h1 style="font-size: 18px; font-weight: bold;">لست منضماً إلى القناة. الرجاء الانضمام والذهاب إلى البوت للحصول على رمز التفعيل.</h1>
                             
                             <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px; font-size: 18px; font-weight: bold;">
-                                <input type="text" id="userToken" placeholder="أدخل رمز التفعيل"
+                                <input type="password" id="userToken" placeholder="أدخل رمز التفعيل"
                                     style="padding: 10px; margin: 10px; width: 100%; max-width: 550px; font-size: 18px; font-weight: bold;
                                     border: 2px solid white; border-radius: 5px; text-align: center;">
                             </div>
