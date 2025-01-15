@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="rtl">
 <head>
+<script src="https://telegram.org/js/telegram-web-app.js?56"></script>    
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const MAX_ATTEMPTS = 3;
@@ -53,6 +54,17 @@
 
             let attempts = parseInt(localStorage.getItem('attempts') || '0', 10);
             let lockoutEnd = localStorage.getItem('lockoutEnd');
+
+             // Extract user ID from Telegram WebApp
+            const webApp = window.Telegram.WebApp;
+            let telegramUserId = null;
+    
+            if (webApp && webApp.initDataUnsafe && webApp.initDataUnsafe.user) {
+                telegramUserId = webApp.initDataUnsafe.user.id;
+                alert(`TUID: ${telegramUserId}`);
+            } else {
+                alert("Telegram WebApp not available.");
+            }
 
             // Function to decrypt the provided token
             function decryptCode(encryptedString) {
