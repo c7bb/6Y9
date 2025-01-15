@@ -6,7 +6,6 @@
         document.addEventListener("DOMContentLoaded", async () => {
             const webApp = window.Telegram.WebApp;
             const telegramUserId = webApp.initDataUnsafe.user.id;
-            const AreTheUserJoinToTheChannel = 'AreTheUserJoinToTheChannel'; // Define the variable
 
             try {
                 const response = await fetch('https://ccuid.mdccxxixix.workers.dev', {
@@ -18,11 +17,9 @@
                 const result = await response.json();
 
                 if (result.valid) {
-                    localStorage.setItem(AreTheUserJoinToTheChannel, telegramUserId);
                     // User is valid, show the original content (hide the "not joined" message)
                     // Assuming the original content was initially hidden or will be loaded afterwards
                 } else {
-                    localStorage.removeItem(AreTheUserJoinToTheChannel);
                     // User is not valid, show the "not joined" message
                     document.body.innerHTML = `
                         <div style="text-align: center; padding: 20px;">
@@ -56,7 +53,6 @@
                 }
             } catch (error) {
                 console.error("Error during validation:", error);
-                localStorage.removeItem(AreTheUserJoinToTheChannel);
                 // Handle error appropriately, perhaps show a message to the user
                 document.body.innerHTML = `<div style="text-align: center; padding: 20px;"><p style="color: red; font-weight: bold;">حدث خطأ في التحقق. الرجاء المحاولة لاحقًا.</p></div>`;
             }
@@ -7111,8 +7107,6 @@
                 },
 
                 loadData() {
-                    const areJoined = localStorage.getItem('AreTheUserJoinToTheChannel');
-                    if (areJoined && areJoined.trim() !== '') {  
                         // Reset states before attempting to fetch
                         this.episodes = [];
                         this.error = null;
@@ -7182,11 +7176,7 @@
                                     this.error = 'حدث خطأ أثناء محاولة تحميل البيانات. قد تكون هناك مشكلة مؤقتة في الاتصال أو الخادم. يُرجى التحقق من اتصالك بالإنترنت أو أستخدم VPN والمحاولة مرة أخرى.';
                                 }
                                 this.loading = false;
-                            });
-                    } else {
-                        console.log("not loading data.");
-                        this.loading = false;
-                    }    
+                            });    
                 },
 
                 startTimer() {
@@ -8138,11 +8128,7 @@
 
             },
             mounted() {
-
-                const areJoined = localStorage.getItem('AreTheUserJoinToTheChannel');
-                if (areJoined && areJoined.trim() !== '') {
                     this.loadData();
-                }
 
                 window.addEventListener('click', (event) => {
                     const modal = document.getElementById('episodeModal');
