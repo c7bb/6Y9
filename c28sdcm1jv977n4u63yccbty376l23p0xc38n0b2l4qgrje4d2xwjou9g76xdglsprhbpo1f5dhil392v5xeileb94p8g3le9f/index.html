@@ -2209,75 +2209,677 @@
                             
                             <fieldset class="border p-4 rounded">
                                 <legend class="font-bold text-lg px-2 mb-2">شرطة العاصمة</legend>
-                            <label class="flex items-center space-x-2">
-                                <input type="checkbox" v-model="" class="scale-150">
-                                <span class="px-2 font-bold">غوزو ميغوري (قريباً)</span>
-                            </label>
+                                <div>
+                                    <fieldset v-if="filterJuzoMegureEpisodes" class="border border-orange-400 p-4 rounded">
+                                        <legend class="font-bold mb-2">
+                                            <input @click="resetJuzoMegureFilters" type="checkbox" v-model="filterJuzoMegureEpisodes" class="scale-150 ml-2">
+                                            <span>غوزو ميغوري ({{ JuzoMegureEpisodesCount }})</span>
+                                        </legend>
+                                        <div class="ml-4 flex space-x-2">
+                                            <label class="flex items-center">
+                                                <input type="radio" value="All" v-model="filterLogicJuzoMegure" class="scale-150">
+                                                <span class="px-2">دمج</span>
+                                            </label>
+                                            <label class="flex items-center px-4">
+                                                <input type="radio" value="Some" v-model="filterLogicJuzoMegure" class="scale-150">
+                                                <span class="px-2">مشترك</span>
+                                            </label>
+                                        </div>
+                                        <br />
+                                        <label class="flex items-center space-x-2">
+                                            <input type="checkbox" v-model="filterJuzoMegureSceneEpisodes" class="scale-150">
+                                            <span class="px-2 font-bold">مشهد ({{ JuzoMegureSceneEpisodesCount }})</span>
+                                        </label>
+                                        <br />
+                                        <label class="flex items-center space-x-2">
+                                            <input type="checkbox" v-model="filterJuzoMegureBackgroundEpisodes" class="scale-150">
+                                            <span class="px-2 font-bold">خلفية ({{ JuzoMegureBackgroundEpisodesCount }})</span>
+                                        </label>
+                                        <br />
+                                        <label class="flex items-center space-x-2">
+                                            <input type="checkbox" v-model="filterJuzoMegureFlashbackEpisodes" class="scale-150">
+                                            <span class="px-2 font-bold">حدث في الماضي ({{ JuzoMegureFlashbackEpisodesCount }})</span>
+                                        </label>
+                                        <br />
+                                        <label class="flex items-center space-x-2">
+                                            <input type="checkbox" v-model="filterJuzoMegureOtherEpisodes" class="scale-150">
+                                            <span class="px-2 font-bold">أخرى ({{ JuzoMegureOtherEpisodesCount }})</span>
+                                        </label>
+                                    </fieldset>
+                                
+                                    <label class="flex items-center space-x-2" v-else>
+                                        <input 
+                                            type="checkbox" 
+                                            v-model="filterJuzoMegureEpisodes" 
+                                            class="scale-150"
+                                        >
+                                        <span class="px-2 font-bold">غوزو ميغوري ({{ JuzoMegureEpisodesCount }})</span>
+                                    </label>
+                                </div>
                             <br />
-                            <label class="flex items-center space-x-2">
-                                <input type="checkbox" v-model="" class="scale-150">
-                                <span class="px-2 font-bold">نيزابورو شيراتوري (قريباً)</span>
-                            </label>
+                            <div>
+                                <fieldset v-if="filterNinzaburoShiratoriEpisodes" class="border border-orange-400 p-4 rounded">
+                                    <legend class="font-bold mb-2">
+                                        <input @click="resetNinzaburoShiratoriFilters" type="checkbox" v-model="filterNinzaburoShiratoriEpisodes" class="scale-150 ml-2">
+                                        <span>نيزابورو شيراتوري ({{ NinzaburoShiratoriEpisodesCount }})</span>
+                                    </legend>
+                                    <div class="ml-4 flex space-x-2">
+                                        <label class="flex items-center">
+                                            <input type="radio" value="All" v-model="filterLogicNinzaburoShiratori" class="scale-150">
+                                            <span class="px-2">دمج</span>
+                                        </label>
+                                        <label class="flex items-center px-4">
+                                            <input type="radio" value="Some" v-model="filterLogicNinzaburoShiratori" class="scale-150">
+                                            <span class="px-2">مشترك</span>
+                                        </label>
+                                    </div>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterNinzaburoShiratoriSceneEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">مشهد ({{ NinzaburoShiratoriSceneEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterNinzaburoShiratoriBackgroundEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">خلفية ({{ NinzaburoShiratoriBackgroundEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterNinzaburoShiratoriFlashbackEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">حدث في الماضي ({{ NinzaburoShiratoriFlashbackEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterNinzaburoShiratoriOtherEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">أخرى ({{ NinzaburoShiratoriOtherEpisodesCount }})</span>
+                                    </label>
+                                </fieldset>
+                            
+                                <label class="flex items-center space-x-2" v-else>
+                                    <input 
+                                        type="checkbox" 
+                                        v-model="filterNinzaburoShiratoriEpisodes" 
+                                        class="scale-150"
+                                    >
+                                    <span class="px-2 font-bold">نيزابورو شيراتوري ({{ NinzaburoShiratoriEpisodesCount }})</span>
+                                </label>
+                            </div>
                             <br />
-                            <label class="flex items-center space-x-2">
-                                <input type="checkbox" v-model="" class="scale-150">
-                                <span class="px-2 font-bold">ميواكو ساتو (قريباً)</span>
-                            </label>
+                            <div>
+                                <fieldset v-if="filterMiwakoSatoEpisodes" class="border border-orange-400 p-4 rounded">
+                                    <legend class="font-bold mb-2">
+                                        <input @click="resetMiwakoSatoFilters" type="checkbox" v-model="filterMiwakoSatoEpisodes" class="scale-150 ml-2">
+                                        <span>ميواكو ساتو ({{ MiwakoSatoEpisodesCount }})</span>
+                                    </legend>
+                                    <div class="ml-4 flex space-x-2">
+                                        <label class="flex items-center">
+                                            <input type="radio" value="All" v-model="filterLogicMiwakoSato" class="scale-150">
+                                            <span class="px-2">دمج</span>
+                                        </label>
+                                        <label class="flex items-center px-4">
+                                            <input type="radio" value="Some" v-model="filterLogicMiwakoSato" class="scale-150">
+                                            <span class="px-2">مشترك</span>
+                                        </label>
+                                    </div>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterMiwakoSatoSceneEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">مشهد ({{ MiwakoSatoSceneEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterMiwakoSatoBackgroundEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">خلفية ({{ MiwakoSatoBackgroundEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterMiwakoSatoFlashbackEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">حدث في الماضي ({{ MiwakoSatoFlashbackEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterMiwakoSatoOtherEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">أخرى ({{ MiwakoSatoOtherEpisodesCount }})</span>
+                                    </label>
+                                </fieldset>
+                            
+                                <label class="flex items-center space-x-2" v-else>
+                                    <input 
+                                        type="checkbox" 
+                                        v-model="filterMiwakoSatoEpisodes" 
+                                        class="scale-150"
+                                    >
+                                    <span class="px-2 font-bold">ميواكو ساتو ({{ MiwakoSatoEpisodesCount }})</span>
+                                </label>
+                            </div>
                             <br />
-                            <label class="flex items-center space-x-2">
-                                <input type="checkbox" v-model="" class="scale-150">
-                                <span class="px-2 font-bold">واتارو تاكاجي (قريباً)</span>
-                            </label>
+                            <div>
+                                <fieldset v-if="filterWataruTakagiEpisodes" class="border border-orange-400 p-4 rounded">
+                                    <legend class="font-bold mb-2">
+                                        <input @click="resetWataruTakagiFilters" type="checkbox" v-model="filterWataruTakagiEpisodes" class="scale-150 ml-2">
+                                        <span>واتارو تاكاجي ({{ WataruTakagiEpisodesCount }})</span>
+                                    </legend>
+                                    <div class="ml-4 flex space-x-2">
+                                        <label class="flex items-center">
+                                            <input type="radio" value="All" v-model="filterLogicWataruTakagi" class="scale-150">
+                                            <span class="px-2">دمج</span>
+                                        </label>
+                                        <label class="flex items-center px-4">
+                                            <input type="radio" value="Some" v-model="filterLogicWataruTakagi" class="scale-150">
+                                            <span class="px-2">مشترك</span>
+                                        </label>
+                                    </div>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterWataruTakagiSceneEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">مشهد ({{ WataruTakagiSceneEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterWataruTakagiBackgroundEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">خلفية ({{ WataruTakagiBackgroundEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterWataruTakagiFlashbackEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">حدث في الماضي ({{ WataruTakagiFlashbackEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterWataruTakagiOtherEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">أخرى ({{ WataruTakagiOtherEpisodesCount }})</span>
+                                    </label>
+                                </fieldset>
+                            
+                                <label class="flex items-center space-x-2" v-else>
+                                    <input 
+                                        type="checkbox" 
+                                        v-model="filterWataruTakagiEpisodes" 
+                                        class="scale-150"
+                                    >
+                                    <span class="px-2 font-bold">واتارو تاكاجي ({{ WataruTakagiEpisodesCount }})</span>
+                                </label>
+                            </div>
                             <br />       
-                            <label class="flex items-center space-x-2">
-                                <input type="checkbox" v-model="" class="scale-150">
-                                <span class="px-2 font-bold">كازونوبو تشيبا (قريباً)</span>
-                            </label>
+                            <div>
+                                <fieldset v-if="filterKazunobuChibaEpisodes" class="border border-orange-400 p-4 rounded">
+                                    <legend class="font-bold mb-2">
+                                        <input @click="resetKazunobuChibaFilters" type="checkbox" v-model="filterKazunobuChibaEpisodes" class="scale-150 ml-2">
+                                        <span>كازونوبو تشيبا ({{ KazunobuChibaEpisodesCount }})</span>
+                                    </legend>
+                                    <div class="ml-4 flex space-x-2">
+                                        <label class="flex items-center">
+                                            <input type="radio" value="All" v-model="filterLogicKazunobuChiba" class="scale-150">
+                                            <span class="px-2">دمج</span>
+                                        </label>
+                                        <label class="flex items-center px-4">
+                                            <input type="radio" value="Some" v-model="filterLogicKazunobuChiba" class="scale-150">
+                                            <span class="px-2">مشترك</span>
+                                        </label>
+                                    </div>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterKazunobuChibaSceneEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">مشهد ({{ KazunobuChibaSceneEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterKazunobuChibaBackgroundEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">خلفية ({{ KazunobuChibaBackgroundEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterKazunobuChibaFlashbackEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">حدث في الماضي ({{ KazunobuChibaFlashbackEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterKazunobuChibaOtherEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">أخرى ({{ KazunobuChibaOtherEpisodesCount }})</span>
+                                    </label>
+                                </fieldset>
+                            
+                                <label class="flex items-center space-x-2" v-else>
+                                    <input 
+                                        type="checkbox" 
+                                        v-model="filterKazunobuChibaEpisodes" 
+                                        class="scale-150"
+                                    >
+                                    <span class="px-2 font-bold">كازونوبو تشيبا ({{ KazunobuChibaEpisodesCount }})</span>
+                                </label>
+                            </div>
                             <br />  
-                            <label class="flex items-center space-x-2">
-                                <input type="checkbox" v-model="" class="scale-150">
-                                <span class="px-2 font-bold">يومي مياموتو (قريباً)</span>
-                            </label>
+                            <div>
+                                <fieldset v-if="filterYumiMiyamotoEpisodes" class="border border-orange-400 p-4 rounded">
+                                    <legend class="font-bold mb-2">
+                                        <input @click="resetYumiMiyamotoFilters" type="checkbox" v-model="filterYumiMiyamotoEpisodes" class="scale-150 ml-2">
+                                        <span>يومي مياموتو ({{ YumiMiyamotoEpisodesCount }})</span>
+                                    </legend>
+                                    <div class="ml-4 flex space-x-2">
+                                        <label class="flex items-center">
+                                            <input type="radio" value="All" v-model="filterLogicYumiMiyamoto" class="scale-150">
+                                            <span class="px-2">دمج</span>
+                                        </label>
+                                        <label class="flex items-center px-4">
+                                            <input type="radio" value="Some" v-model="filterLogicYumiMiyamoto" class="scale-150">
+                                            <span class="px-2">مشترك</span>
+                                        </label>
+                                    </div>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterYumiMiyamotoSceneEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">مشهد ({{ YumiMiyamotoSceneEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterYumiMiyamotoBackgroundEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">خلفية ({{ YumiMiyamotoBackgroundEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterYumiMiyamotoFlashbackEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">حدث في الماضي ({{ YumiMiyamotoFlashbackEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterYumiMiyamotoOtherEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">أخرى ({{ YumiMiyamotoOtherEpisodesCount }})</span>
+                                    </label>
+                                </fieldset>
+                            
+                                <label class="flex items-center space-x-2" v-else>
+                                    <input 
+                                        type="checkbox" 
+                                        v-model="filterYumiMiyamotoEpisodes" 
+                                        class="scale-150"
+                                    >
+                                    <span class="px-2 font-bold">يومي مياموتو ({{ YumiMiyamotoEpisodesCount }})</span>
+                                </label>
+                            </div>
                             <br />  
-                            <label class="flex items-center space-x-2">
-                                <input type="checkbox" v-model="" class="scale-150">
-                                <span class="px-2 font-bold">نايكو ميكي (قريباً)</span>
-                            </label>
+                            <div>
+                                <fieldset v-if="filterNaekoMiikeEpisodes" class="border border-orange-400 p-4 rounded">
+                                    <legend class="font-bold mb-2">
+                                        <input @click="resetNaekoMiikeFilters" type="checkbox" v-model="filterNaekoMiikeEpisodes" class="scale-150 ml-2">
+                                        <span>نايكو ميكي ({{ NaekoMiikeEpisodesCount }})</span>
+                                    </legend>
+                                    <div class="ml-4 flex space-x-2">
+                                        <label class="flex items-center">
+                                            <input type="radio" value="All" v-model="filterLogicNaekoMiike" class="scale-150">
+                                            <span class="px-2">دمج</span>
+                                        </label>
+                                        <label class="flex items-center px-4">
+                                            <input type="radio" value="Some" v-model="filterLogicNaekoMiike" class="scale-150">
+                                            <span class="px-2">مشترك</span>
+                                        </label>
+                                    </div>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterNaekoMiikeSceneEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">مشهد ({{ NaekoMiikeSceneEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterNaekoMiikeBackgroundEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">خلفية ({{ NaekoMiikeBackgroundEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterNaekoMiikeFlashbackEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">حدث في الماضي ({{ NaekoMiikeFlashbackEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterNaekoMiikeOtherEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">أخرى ({{ NaekoMiikeOtherEpisodesCount }})</span>
+                                    </label>
+                                </fieldset>
+                            
+                                <label class="flex items-center space-x-2" v-else>
+                                    <input 
+                                        type="checkbox" 
+                                        v-model="filterNaekoMiikeEpisodes" 
+                                        class="scale-150"
+                                    >
+                                    <span class="px-2 font-bold">نايكو ميكي ({{ NaekoMiikeEpisodesCount }})</span>
+                                </label>
+                            </div>
                             <br />  
-                            <label class="flex items-center space-x-2">
-                                <input type="checkbox" v-model="" class="scale-150">
-                                <span class="px-2 font-bold">كيوناغا ماتسوموتو (قريباً)</span>
-                            </label>
+                            <div>
+                                <fieldset v-if="filterKiyonagaMatsumotoEpisodes" class="border border-orange-400 p-4 rounded">
+                                    <legend class="font-bold mb-2">
+                                        <input @click="resetKiyonagaMatsumotoFilters" type="checkbox" v-model="filterKiyonagaMatsumotoEpisodes" class="scale-150 ml-2">
+                                        <span>كيوناغا ماتسوموتو ({{ KiyonagaMatsumotoEpisodesCount }})</span>
+                                    </legend>
+                                    <div class="ml-4 flex space-x-2">
+                                        <label class="flex items-center">
+                                            <input type="radio" value="All" v-model="filterLogicKiyonagaMatsumoto" class="scale-150">
+                                            <span class="px-2">دمج</span>
+                                        </label>
+                                        <label class="flex items-center px-4">
+                                            <input type="radio" value="Some" v-model="filterLogicKiyonagaMatsumoto" class="scale-150">
+                                            <span class="px-2">مشترك</span>
+                                        </label>
+                                    </div>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterKiyonagaMatsumotoSceneEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">مشهد ({{ KiyonagaMatsumotoSceneEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterKiyonagaMatsumotoBackgroundEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">خلفية ({{ KiyonagaMatsumotoBackgroundEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterKiyonagaMatsumotoFlashbackEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">حدث في الماضي ({{ KiyonagaMatsumotoFlashbackEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterKiyonagaMatsumotoOtherEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">أخرى ({{ KiyonagaMatsumotoOtherEpisodesCount }})</span>
+                                    </label>
+                                </fieldset>
+                            
+                                <label class="flex items-center space-x-2" v-else>
+                                    <input 
+                                        type="checkbox" 
+                                        v-model="filterKiyonagaMatsumotoEpisodes" 
+                                        class="scale-150"
+                                    >
+                                    <span class="px-2 font-bold">كيوناغا ماتسوموتو ({{ KiyonagaMatsumotoEpisodesCount }})</span>
+                                </label>
+                            </div>
                             <br />  
-                            <label class="flex items-center space-x-2">
-                                <input type="checkbox" v-model="" class="scale-150">
-                                <span class="px-2 font-bold">المفتش يوميناغا (قريباً)</span>
-                            </label>
+                            <div>
+                                <fieldset v-if="filterInspectorYuminagaEpisodes" class="border border-orange-400 p-4 rounded">
+                                    <legend class="font-bold mb-2">
+                                        <input @click="resetInspectorYuminagaFilters" type="checkbox" v-model="filterInspectorYuminagaEpisodes" class="scale-150 ml-2">
+                                        <span>المفتش يوميناغا ({{ InspectorYuminagaEpisodesCount }})</span>
+                                    </legend>
+                                    <div class="ml-4 flex space-x-2">
+                                        <label class="flex items-center">
+                                            <input type="radio" value="All" v-model="filterLogicInspectorYuminaga" class="scale-150">
+                                            <span class="px-2">دمج</span>
+                                        </label>
+                                        <label class="flex items-center px-4">
+                                            <input type="radio" value="Some" v-model="filterLogicInspectorYuminaga" class="scale-150">
+                                            <span class="px-2">مشترك</span>
+                                        </label>
+                                    </div>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterInspectorYuminagaSceneEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">مشهد ({{ InspectorYuminagaSceneEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterInspectorYuminagaBackgroundEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">خلفية ({{ InspectorYuminagaBackgroundEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterInspectorYuminagaFlashbackEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">حدث في الماضي ({{ InspectorYuminagaFlashbackEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterInspectorYuminagaOtherEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">أخرى ({{ InspectorYuminagaOtherEpisodesCount }})</span>
+                                    </label>
+                                </fieldset>
+                            
+                                <label class="flex items-center space-x-2" v-else>
+                                    <input 
+                                        type="checkbox" 
+                                        v-model="filterInspectorYuminagaEpisodes" 
+                                        class="scale-150"
+                                    >
+                                    <span class="px-2 font-bold">المفتش يوميناغا ({{ InspectorYuminagaEpisodesCount }})</span>
+                                </label>
+                            </div>
                             <br />  
-                            <label class="flex items-center space-x-2">
-                                <input type="checkbox" v-model="" class="scale-150">
-                                <span class="px-2 font-bold">شينتارو تشاكي (قريباً)</span>
-                            </label>
+                            <div>
+                                <fieldset v-if="filterShintaroChakiEpisodes" class="border border-orange-400 p-4 rounded">
+                                    <legend class="font-bold mb-2">
+                                        <input @click="resetShintaroChakiFilters" type="checkbox" v-model="filterShintaroChakiEpisodes" class="scale-150 ml-2">
+                                        <span>شينتارو تشاكي ({{ ShintaroChakiEpisodesCount }})</span>
+                                    </legend>
+                                    <div class="ml-4 flex space-x-2">
+                                        <label class="flex items-center">
+                                            <input type="radio" value="All" v-model="filterLogicShintaroChaki" class="scale-150">
+                                            <span class="px-2">دمج</span>
+                                        </label>
+                                        <label class="flex items-center px-4">
+                                            <input type="radio" value="Some" v-model="filterLogicShintaroChaki" class="scale-150">
+                                            <span class="px-2">مشترك</span>
+                                        </label>
+                                    </div>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterShintaroChakiSceneEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">مشهد ({{ ShintaroChakiSceneEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterShintaroChakiBackgroundEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">خلفية ({{ ShintaroChakiBackgroundEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterShintaroChakiFlashbackEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">حدث في الماضي ({{ ShintaroChakiFlashbackEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterShintaroChakiOtherEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">أخرى ({{ ShintaroChakiOtherEpisodesCount }})</span>
+                                    </label>
+                                </fieldset>
+                            
+                                <label class="flex items-center space-x-2" v-else>
+                                    <input 
+                                        type="checkbox" 
+                                        v-model="filterShintaroChakiEpisodes" 
+                                        class="scale-150"
+                                    >
+                                    <span class="px-2 font-bold">شينتارو تشاكي ({{ ShintaroChakiEpisodesCount }})</span>
+                                </label>
+                            </div>
                             <br />  
-                            <label class="flex items-center space-x-2">
-                                <input type="checkbox" v-model="" class="scale-150">
-                                <span class="px-2 font-bold">هيوي كورودا (قريباً)</span>
-                            </label>
+                            <div>
+                                <fieldset v-if="filterHyoueKurodaEpisodes" class="border border-orange-400 p-4 rounded">
+                                    <legend class="font-bold mb-2">
+                                        <input @click="resetHyoueKurodaFilters" type="checkbox" v-model="filterHyoueKurodaEpisodes" class="scale-150 ml-2">
+                                        <span>هيوي كورودا ({{ HyoueKurodaEpisodesCount }})</span>
+                                    </legend>
+                                    <div class="ml-4 flex space-x-2">
+                                        <label class="flex items-center">
+                                            <input type="radio" value="All" v-model="filterLogicHyoueKuroda" class="scale-150">
+                                            <span class="px-2">دمج</span>
+                                        </label>
+                                        <label class="flex items-center px-4">
+                                            <input type="radio" value="Some" v-model="filterLogicHyoueKuroda" class="scale-150">
+                                            <span class="px-2">مشترك</span>
+                                        </label>
+                                    </div>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterHyoueKurodaSceneEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">مشهد ({{ HyoueKurodaSceneEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterHyoueKurodaBackgroundEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">خلفية ({{ HyoueKurodaBackgroundEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterHyoueKurodaFlashbackEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">حدث في الماضي ({{ HyoueKurodaFlashbackEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterHyoueKurodaOtherEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">أخرى ({{ HyoueKurodaOtherEpisodesCount }})</span>
+                                    </label>
+                                </fieldset>
+                            
+                                <label class="flex items-center space-x-2" v-else>
+                                    <input 
+                                        type="checkbox" 
+                                        v-model="filterHyoueKurodaEpisodes" 
+                                        class="scale-150"
+                                    >
+                                    <span class="px-2 font-bold">هيوي كورودا ({{ HyoueKurodaEpisodesCount }})</span>
+                                </label>
+                            </div>
                             <br />  
-                            <label class="flex items-center space-x-2">
-                                <input type="checkbox" v-model="" class="scale-150">
-                                <span class="px-2 font-bold">جينبي ماتسودا (قريباً)</span>
-                            </label>
+                            <div>
+                                <fieldset v-if="filterJinpeiMatsudaEpisodes" class="border border-orange-400 p-4 rounded">
+                                    <legend class="font-bold mb-2">
+                                        <input @click="resetJinpeiMatsudaFilters" type="checkbox" v-model="filterJinpeiMatsudaEpisodes" class="scale-150 ml-2">
+                                        <span>جينبي ماتسودا ({{ JinpeiMatsudaEpisodesCount }})</span>
+                                    </legend>
+                                    <div class="ml-4 flex space-x-2">
+                                        <label class="flex items-center">
+                                            <input type="radio" value="All" v-model="filterLogicJinpeiMatsuda" class="scale-150">
+                                            <span class="px-2">دمج</span>
+                                        </label>
+                                        <label class="flex items-center px-4">
+                                            <input type="radio" value="Some" v-model="filterLogicJinpeiMatsuda" class="scale-150">
+                                            <span class="px-2">مشترك</span>
+                                        </label>
+                                    </div>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterJinpeiMatsudaSceneEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">مشهد ({{ JinpeiMatsudaSceneEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterJinpeiMatsudaBackgroundEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">خلفية ({{ JinpeiMatsudaBackgroundEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterJinpeiMatsudaFlashbackEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">حدث في الماضي ({{ JinpeiMatsudaFlashbackEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterJinpeiMatsudaOtherEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">أخرى ({{ JinpeiMatsudaOtherEpisodesCount }})</span>
+                                    </label>
+                                </fieldset>
+                            
+                                <label class="flex items-center space-x-2" v-else>
+                                    <input 
+                                        type="checkbox" 
+                                        v-model="filterJinpeiMatsudaEpisodes" 
+                                        class="scale-150"
+                                    >
+                                    <span class="px-2 font-bold">جينبي ماتسودا ({{ JinpeiMatsudaEpisodesCount }})</span>
+                                </label>
+                            </div>
                             <br />  
-                            <label class="flex items-center space-x-2">
-                                <input type="checkbox" v-model="" class="scale-150">
-                                <span class="px-2 font-bold">كينجي هاغيوارا (قريباً)</span>
-                            </label>
+                            <div>
+                                <fieldset v-if="filterKenjiHagiwaraEpisodes" class="border border-orange-400 p-4 rounded">
+                                    <legend class="font-bold mb-2">
+                                        <input @click="resetKenjiHagiwaraFilters" type="checkbox" v-model="filterKenjiHagiwaraEpisodes" class="scale-150 ml-2">
+                                        <span>كينجي هاغيوارا ({{ KenjiHagiwaraEpisodesCount }})</span>
+                                    </legend>
+                                    <div class="ml-4 flex space-x-2">
+                                        <label class="flex items-center">
+                                            <input type="radio" value="All" v-model="filterLogicKenjiHagiwara" class="scale-150">
+                                            <span class="px-2">دمج</span>
+                                        </label>
+                                        <label class="flex items-center px-4">
+                                            <input type="radio" value="Some" v-model="filterLogicKenjiHagiwara" class="scale-150">
+                                            <span class="px-2">مشترك</span>
+                                        </label>
+                                    </div>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterKenjiHagiwaraSceneEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">مشهد ({{ KenjiHagiwaraSceneEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterKenjiHagiwaraBackgroundEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">خلفية ({{ KenjiHagiwaraBackgroundEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterKenjiHagiwaraFlashbackEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">حدث في الماضي ({{ KenjiHagiwaraFlashbackEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterKenjiHagiwaraOtherEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">أخرى ({{ KenjiHagiwaraOtherEpisodesCount }})</span>
+                                    </label>
+                                </fieldset>
+                            
+                                <label class="flex items-center space-x-2" v-else>
+                                    <input 
+                                        type="checkbox" 
+                                        v-model="filterKenjiHagiwaraEpisodes" 
+                                        class="scale-150"
+                                    >
+                                    <span class="px-2 font-bold">كينجي هاغيوارا ({{ KenjiHagiwaraEpisodesCount }})</span>
+                                </label>
+                            </div>
                             <br />       
-                            <label class="flex items-center space-x-2">
-                                <input type="checkbox" v-model="" class="scale-150">
-                                <span class="px-2 font-bold">واتارو داتي (قريباً)</span>
-                            </label>                                                                                                                                                                                                                                                                                                                                                              
+                            <div>
+                                <fieldset v-if="filterWataruDateEpisodes" class="border border-orange-400 p-4 rounded">
+                                    <legend class="font-bold mb-2">
+                                        <input @click="resetWataruDateFilters" type="checkbox" v-model="filterWataruDateEpisodes" class="scale-150 ml-2">
+                                        <span>واتارو داتي ({{ WataruDateEpisodesCount }})</span>
+                                    </legend>
+                                    <div class="ml-4 flex space-x-2">
+                                        <label class="flex items-center">
+                                            <input type="radio" value="All" v-model="filterLogicWataruDate" class="scale-150">
+                                            <span class="px-2">دمج</span>
+                                        </label>
+                                        <label class="flex items-center px-4">
+                                            <input type="radio" value="Some" v-model="filterLogicWataruDate" class="scale-150">
+                                            <span class="px-2">مشترك</span>
+                                        </label>
+                                    </div>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterWataruDateSceneEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">مشهد ({{ WataruDateSceneEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterWataruDateBackgroundEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">خلفية ({{ WataruDateBackgroundEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterWataruDateFlashbackEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">حدث في الماضي ({{ WataruDateFlashbackEpisodesCount }})</span>
+                                    </label>
+                                    <br />
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" v-model="filterWataruDateOtherEpisodes" class="scale-150">
+                                        <span class="px-2 font-bold">أخرى ({{ WataruDateOtherEpisodesCount }})</span>
+                                    </label>
+                                </fieldset>
+                            
+                                <label class="flex items-center space-x-2" v-else>
+                                    <input 
+                                        type="checkbox" 
+                                        v-model="filterWataruDateEpisodes" 
+                                        class="scale-150"
+                                    >
+                                    <span class="px-2 font-bold">واتارو داتي ({{ WataruDateEpisodesCount }})</span>
+                                </label>
+                            </div>                                                                                                                                                                                                                                                                                                                                                              
                             </fieldset>
 
                             <br />
@@ -3268,6 +3870,105 @@
                     filterMugaLoriOtherEpisodes: false,
                     filterLogicMugaLori: 'All',
 
+                    filterJuzoMegureEpisodes: false,
+                    filterJuzoMegureSceneEpisodes: false,
+                    filterJuzoMegureBackgroundEpisodes: false,
+                    filterJuzoMegureFlashbackEpisodes: false,
+                    filterJuzoMegureOtherEpisodes: false,
+                    filterLogicJuzoMegure: 'All',
+
+                    filterNinzaburoShiratoriEpisodes: false,
+                    filterNinzaburoShiratoriSceneEpisodes: false,
+                    filterNinzaburoShiratoriBackgroundEpisodes: false,
+                    filterNinzaburoShiratoriFlashbackEpisodes: false,
+                    filterNinzaburoShiratoriOtherEpisodes: false,
+                    filterLogicNinzaburoShiratori: 'All',
+
+                    filterMiwakoSatoEpisodes: false,
+                    filterMiwakoSatoSceneEpisodes: false,
+                    filterMiwakoSatoBackgroundEpisodes: false,
+                    filterMiwakoSatoFlashbackEpisodes: false,
+                    filterMiwakoSatoOtherEpisodes: false,
+                    filterLogicMiwakoSato: 'All',
+
+                    filterWataruTakagiEpisodes: false,
+                    filterWataruTakagiSceneEpisodes: false,
+                    filterWataruTakagiBackgroundEpisodes: false,
+                    filterWataruTakagiFlashbackEpisodes: false,
+                    filterWataruTakagiOtherEpisodes: false,
+                    filterLogicWataruTakagi: 'All',
+
+                    filterKazunobuChibaEpisodes: false,
+                    filterKazunobuChibaSceneEpisodes: false,
+                    filterKazunobuChibaBackgroundEpisodes: false,
+                    filterKazunobuChibaFlashbackEpisodes: false,
+                    filterKazunobuChibaOtherEpisodes: false,
+                    filterLogicKazunobuChiba: 'All',
+
+                    filterYumiMiyamotoEpisodes: false,
+                    filterYumiMiyamotoSceneEpisodes: false,
+                    filterYumiMiyamotoBackgroundEpisodes: false,
+                    filterYumiMiyamotoFlashbackEpisodes: false,
+                    filterYumiMiyamotoOtherEpisodes: false,
+                    filterLogicYumiMiyamoto: 'All',
+
+                    filterNaekoMiikeEpisodes: false,
+                    filterNaekoMiikeSceneEpisodes: false,
+                    filterNaekoMiikeBackgroundEpisodes: false,
+                    filterNaekoMiikeFlashbackEpisodes: false,
+                    filterNaekoMiikeOtherEpisodes: false,
+                    filterLogicNaekoMiike: 'All',
+
+                    filterKiyonagaMatsumotoEpisodes: false,
+                    filterKiyonagaMatsumotoSceneEpisodes: false,
+                    filterKiyonagaMatsumotoBackgroundEpisodes: false,
+                    filterKiyonagaMatsumotoFlashbackEpisodes: false,
+                    filterKiyonagaMatsumotoOtherEpisodes: false,
+                    filterLogicKiyonagaMatsumoto: 'All',
+
+                    filterInspectorYuminagaEpisodes: false,
+                    filterInspectorYuminagaSceneEpisodes: false,
+                    filterInspectorYuminagaBackgroundEpisodes: false,
+                    filterInspectorYuminagaFlashbackEpisodes: false,
+                    filterInspectorYuminagaOtherEpisodes: false,
+                    filterLogicInspectorYuminaga: 'All',
+
+                    filterShintaroChakiEpisodes: false,
+                    filterShintaroChakiSceneEpisodes: false,
+                    filterShintaroChakiBackgroundEpisodes: false,
+                    filterShintaroChakiFlashbackEpisodes: false,
+                    filterShintaroChakiOtherEpisodes: false,
+                    filterLogicShintaroChaki: 'All',
+
+
+                    filterHyoueKurodaEpisodes: false,
+                    filterHyoueKurodaSceneEpisodes: false,
+                    filterHyoueKurodaBackgroundEpisodes: false,
+                    filterHyoueKurodaFlashbackEpisodes: false,
+                    filterHyoueKurodaOtherEpisodes: false,
+                    filterLogicHyoueKuroda: 'All',
+
+                    filterJinpeiMatsudaEpisodes: false,
+                    filterJinpeiMatsudaSceneEpisodes: false,
+                    filterJinpeiMatsudaBackgroundEpisodes: false,
+                    filterJinpeiMatsudaFlashbackEpisodes: false,
+                    filterJinpeiMatsudaOtherEpisodes: false,
+                    filterLogicJinpeiMatsuda: 'All',
+
+                    filterKenjiHagiwaraEpisodes: false,
+                    filterKenjiHagiwaraSceneEpisodes: false,
+                    filterKenjiHagiwaraBackgroundEpisodes: false,
+                    filterKenjiHagiwaraFlashbackEpisodes: false,
+                    filterKenjiHagiwaraOtherEpisodes: false,
+                    filterLogicKenjiHagiwara: 'All',
+
+                    filterWataruDateEpisodes: false,
+                    filterWataruDateSceneEpisodes: false,
+                    filterWataruDateBackgroundEpisodes: false,
+                    filterWataruDateFlashbackEpisodes: false,
+                    filterWataruDateOtherEpisodes: false,
+                    filterLogicWataruDate: 'All',
+
                     spoilerVisible: false,
                     nextEpisodeExists: false,
                     previousEpisodeExists: false,
@@ -4144,6 +4845,442 @@
                         }
                     }
 
+                    if (this.filterJuzoMegureEpisodes) {
+                        filteredByType = filteredByType.filter(episode => episode.EpisodeFilterAdvanced.includes("31JM"));
+                    }
+                    const activeFiltersJuzoMegure = [];
+
+                    if (this.filterJuzoMegureSceneEpisodes) {
+                        activeFiltersJuzoMegure.push("31JM1");
+                    }
+                    if (this.filterJuzoMegureBackgroundEpisodes) {
+                        activeFiltersJuzoMegure.push("31JM2");
+                    }
+                    if (this.filterJuzoMegureFlashbackEpisodes) {
+                        activeFiltersJuzoMegure.push("31JM3");
+                    }
+                    if (this.filterJuzoMegureOtherEpisodes) {
+                        activeFiltersJuzoMegure.push("31JM4");
+                    }
+
+                    if (activeFiltersJuzoMegure.length > 0) {
+                        if (this.filterLogicJuzoMegure === 'All') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersJuzoMegure.some(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        } else if (this.filterLogicJuzoMegure === 'Some') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersJuzoMegure.every(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        }
+                    }
+
+                    if (this.filterNinzaburoShiratoriEpisodes) {
+                        filteredByType = filteredByType.filter(episode => episode.EpisodeFilterAdvanced.includes("32NS"));
+                    }
+                    const activeFiltersNinzaburoShiratori = [];
+
+                    if (this.filterNinzaburoShiratoriSceneEpisodes) {
+                        activeFiltersNinzaburoShiratori.push("32NS1");
+                    }
+                    if (this.filterNinzaburoShiratoriBackgroundEpisodes) {
+                        activeFiltersNinzaburoShiratori.push("32NS2");
+                    }
+                    if (this.filterNinzaburoShiratoriFlashbackEpisodes) {
+                        activeFiltersNinzaburoShiratori.push("32NS3");
+                    }
+                    if (this.filterNinzaburoShiratoriOtherEpisodes) {
+                        activeFiltersNinzaburoShiratori.push("32NS4");
+                    }
+
+                    if (activeFiltersNinzaburoShiratori.length > 0) {
+                        if (this.filterLogicNinzaburoShiratori === 'All') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersNinzaburoShiratori.some(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        } else if (this.filterLogicNinzaburoShiratori === 'Some') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersNinzaburoShiratori.every(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        }
+                    }
+
+                    if (this.filterMiwakoSatoEpisodes) {
+                        filteredByType = filteredByType.filter(episode => episode.EpisodeFilterAdvanced.includes("33MS"));
+                    }
+                    const activeFiltersMiwakoSato = [];
+
+                    if (this.filterMiwakoSatoSceneEpisodes) {
+                        activeFiltersMiwakoSato.push("33MS1");
+                    }
+                    if (this.filterMiwakoSatoBackgroundEpisodes) {
+                        activeFiltersMiwakoSato.push("33MS2");
+                    }
+                    if (this.filterMiwakoSatoFlashbackEpisodes) {
+                        activeFiltersMiwakoSato.push("33MS3");
+                    }
+                    if (this.filterMiwakoSatoOtherEpisodes) {
+                        activeFiltersMiwakoSato.push("33MS4");
+                    }
+
+                    if (activeFiltersMiwakoSato.length > 0) {
+                        if (this.filterLogicMiwakoSato === 'All') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersMiwakoSato.some(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        } else if (this.filterLogicMiwakoSato === 'Some') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersMiwakoSato.every(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        }
+                    }
+
+
+                    if (this.filterWataruTakagiEpisodes) {
+                        filteredByType = filteredByType.filter(episode => episode.EpisodeFilterAdvanced.includes("34WT"));
+                    }
+                    const activeFiltersWataruTakagi = [];
+
+                    if (this.filterWataruTakagiSceneEpisodes) {
+                        activeFiltersWataruTakagi.push("34WT1");
+                    }
+                    if (this.filterWataruTakagiBackgroundEpisodes) {
+                        activeFiltersWataruTakagi.push("34WT2");
+                    }
+                    if (this.filterWataruTakagiFlashbackEpisodes) {
+                        activeFiltersWataruTakagi.push("34WT3");
+                    }
+                    if (this.filterWataruTakagiOtherEpisodes) {
+                        activeFiltersWataruTakagi.push("34WT4");
+                    }
+
+                    if (activeFiltersWataruTakagi.length > 0) {
+                        if (this.filterLogicWataruTakagi === 'All') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersWataruTakagi.some(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        } else if (this.filterLogicWataruTakagi === 'Some') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersWataruTakagi.every(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        }
+                    }
+
+
+                    if (this.filterKazunobuChibaEpisodes) {
+                        filteredByType = filteredByType.filter(episode => episode.EpisodeFilterAdvanced.includes("35KC"));
+                    }
+                    const activeFiltersKazunobuChiba = [];
+
+                    if (this.filterKazunobuChibaSceneEpisodes) {
+                        activeFiltersKazunobuChiba.push("35KC1");
+                    }
+                    if (this.filterKazunobuChibaBackgroundEpisodes) {
+                        activeFiltersKazunobuChiba.push("35KC2");
+                    }
+                    if (this.filterKazunobuChibaFlashbackEpisodes) {
+                        activeFiltersKazunobuChiba.push("35KC3");
+                    }
+                    if (this.filterKazunobuChibaOtherEpisodes) {
+                        activeFiltersKazunobuChiba.push("35KC4");
+                    }
+
+                    if (activeFiltersKazunobuChiba.length > 0) {
+                        if (this.filterLogicKazunobuChiba === 'All') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersKazunobuChiba.some(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        } else if (this.filterLogicKazunobuChiba === 'Some') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersKazunobuChiba.every(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        }
+                    }
+
+                    if (this.filterYumiMiyamotoEpisodes) {
+                        filteredByType = filteredByType.filter(episode => episode.EpisodeFilterAdvanced.includes("36YM"));
+                    }
+                    const activeFiltersYumiMiyamoto = [];
+
+                    if (this.filterYumiMiyamotoSceneEpisodes) {
+                        activeFiltersYumiMiyamoto.push("36YM1");
+                    }
+                    if (this.filterYumiMiyamotoBackgroundEpisodes) {
+                        activeFiltersYumiMiyamoto.push("36YM2");
+                    }
+                    if (this.filterYumiMiyamotoFlashbackEpisodes) {
+                        activeFiltersYumiMiyamoto.push("36YM3");
+                    }
+                    if (this.filterYumiMiyamotoOtherEpisodes) {
+                        activeFiltersYumiMiyamoto.push("36YM4");
+                    }
+
+                    if (activeFiltersYumiMiyamoto.length > 0) {
+                        if (this.filterLogicYumiMiyamoto === 'All') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersYumiMiyamoto.some(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        } else if (this.filterLogicYumiMiyamoto === 'Some') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersYumiMiyamoto.every(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        }
+                    }
+
+
+                    if (this.filterNaekoMiikeEpisodes) {
+                        filteredByType = filteredByType.filter(episode => episode.EpisodeFilterAdvanced.includes("37NM"));
+                    }
+                    const activeFiltersNaekoMiike = [];
+
+                    if (this.filterNaekoMiikeSceneEpisodes) {
+                        activeFiltersNaekoMiike.push("37NM1");
+                    }
+                    if (this.filterNaekoMiikeBackgroundEpisodes) {
+                        activeFiltersNaekoMiike.push("37NM2");
+                    }
+                    if (this.filterNaekoMiikeFlashbackEpisodes) {
+                        activeFiltersNaekoMiike.push("37NM3");
+                    }
+                    if (this.filterNaekoMiikeOtherEpisodes) {
+                        activeFiltersNaekoMiike.push("37NM4");
+                    }
+
+                    if (activeFiltersNaekoMiike.length > 0) {
+                        if (this.filterLogicNaekoMiike === 'All') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersNaekoMiike.some(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        } else if (this.filterLogicNaekoMiike === 'Some') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersNaekoMiike.every(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        }
+                    }
+
+
+                    if (this.filterKiyonagaMatsumotoEpisodes) {
+                        filteredByType = filteredByType.filter(episode => episode.EpisodeFilterAdvanced.includes("38KM"));
+                    }
+                    const activeFiltersKiyonagaMatsumoto = [];
+
+                    if (this.filterKiyonagaMatsumotoSceneEpisodes) {
+                        activeFiltersKiyonagaMatsumoto.push("38KM1");
+                    }
+                    if (this.filterKiyonagaMatsumotoBackgroundEpisodes) {
+                        activeFiltersKiyonagaMatsumoto.push("38KM2");
+                    }
+                    if (this.filterKiyonagaMatsumotoFlashbackEpisodes) {
+                        activeFiltersKiyonagaMatsumoto.push("38KM3");
+                    }
+                    if (this.filterKiyonagaMatsumotoOtherEpisodes) {
+                        activeFiltersKiyonagaMatsumoto.push("38KM4");
+                    }
+
+                    if (activeFiltersKiyonagaMatsumoto.length > 0) {
+                        if (this.filterLogicKiyonagaMatsumoto === 'All') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersKiyonagaMatsumoto.some(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        } else if (this.filterLogicKiyonagaMatsumoto === 'Some') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersKiyonagaMatsumoto.every(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        }
+                    }
+
+
+
+                    if (this.filterInspectorYuminagaEpisodes) {
+                        filteredByType = filteredByType.filter(episode => episode.EpisodeFilterAdvanced.includes("39IY"));
+                    }
+                    const activeFiltersInspectorYuminaga = [];
+
+                    if (this.filterInspectorYuminagaSceneEpisodes) {
+                        activeFiltersInspectorYuminaga.push("39IY1");
+                    }
+                    if (this.filterInspectorYuminagaBackgroundEpisodes) {
+                        activeFiltersInspectorYuminaga.push("39IY2");
+                    }
+                    if (this.filterInspectorYuminagaFlashbackEpisodes) {
+                        activeFiltersInspectorYuminaga.push("39IY3");
+                    }
+                    if (this.filterInspectorYuminagaOtherEpisodes) {
+                        activeFiltersInspectorYuminaga.push("39IY4");
+                    }
+
+                    if (activeFiltersInspectorYuminaga.length > 0) {
+                        if (this.filterLogicInspectorYuminaga === 'All') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersInspectorYuminaga.some(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        } else if (this.filterLogicInspectorYuminaga === 'Some') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersInspectorYuminaga.every(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        }
+                    }
+
+
+
+                    if (this.filterShintaroChakiEpisodes) {
+                        filteredByType = filteredByType.filter(episode => episode.EpisodeFilterAdvanced.includes("40SC"));
+                    }
+                    const activeFiltersShintaroChaki = [];
+
+                    if (this.filterShintaroChakiSceneEpisodes) {
+                        activeFiltersShintaroChaki.push("40SC1");
+                    }
+                    if (this.filterShintaroChakiBackgroundEpisodes) {
+                        activeFiltersShintaroChaki.push("40SC2");
+                    }
+                    if (this.filterShintaroChakiFlashbackEpisodes) {
+                        activeFiltersShintaroChaki.push("40SC3");
+                    }
+                    if (this.filterShintaroChakiOtherEpisodes) {
+                        activeFiltersShintaroChaki.push("40SC4");
+                    }
+
+                    if (activeFiltersShintaroChaki.length > 0) {
+                        if (this.filterLogicShintaroChaki === 'All') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersShintaroChaki.some(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        } else if (this.filterLogicShintaroChaki === 'Some') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersShintaroChaki.every(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        }
+                    }
+
+
+                    if (this.filterHyoueKurodaEpisodes) {
+                        filteredByType = filteredByType.filter(episode => episode.EpisodeFilterAdvanced.includes("41HK"));
+                    }
+                    const activeFiltersHyoueKuroda = [];
+
+                    if (this.filterHyoueKurodaSceneEpisodes) {
+                        activeFiltersHyoueKuroda.push("41HK1");
+                    }
+                    if (this.filterHyoueKurodaBackgroundEpisodes) {
+                        activeFiltersHyoueKuroda.push("41HK2");
+                    }
+                    if (this.filterHyoueKurodaFlashbackEpisodes) {
+                        activeFiltersHyoueKuroda.push("41HK3");
+                    }
+                    if (this.filterHyoueKurodaOtherEpisodes) {
+                        activeFiltersHyoueKuroda.push("41HK4");
+                    }
+
+                    if (activeFiltersHyoueKuroda.length > 0) {
+                        if (this.filterLogicHyoueKuroda === 'All') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersHyoueKuroda.some(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        } else if (this.filterLogicHyoueKuroda === 'Some') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersHyoueKuroda.every(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        }
+                    }
+
+
+
+                    if (this.filterJinpeiMatsudaEpisodes) {
+                        filteredByType = filteredByType.filter(episode => episode.EpisodeFilterAdvanced.includes("42JM"));
+                    }
+                    const activeFiltersJinpeiMatsuda = [];
+
+                    if (this.filterJinpeiMatsudaSceneEpisodes) {
+                        activeFiltersJinpeiMatsuda.push("42JM1");
+                    }
+                    if (this.filterJinpeiMatsudaBackgroundEpisodes) {
+                        activeFiltersJinpeiMatsuda.push("42JM2");
+                    }
+                    if (this.filterJinpeiMatsudaFlashbackEpisodes) {
+                        activeFiltersJinpeiMatsuda.push("42JM3");
+                    }
+                    if (this.filterJinpeiMatsudaOtherEpisodes) {
+                        activeFiltersJinpeiMatsuda.push("42JM4");
+                    }
+
+                    if (activeFiltersJinpeiMatsuda.length > 0) {
+                        if (this.filterLogicJinpeiMatsuda === 'All') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersJinpeiMatsuda.some(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        } else if (this.filterLogicJinpeiMatsuda === 'Some') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersJinpeiMatsuda.every(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        }
+                    }
+
+
+
+
+                    if (this.filterKenjiHagiwaraEpisodes) {
+                        filteredByType = filteredByType.filter(episode => episode.EpisodeFilterAdvanced.includes("43KH"));
+                    }
+                    const activeFiltersKenjiHagiwara = [];
+
+                    if (this.filterKenjiHagiwaraSceneEpisodes) {
+                        activeFiltersKenjiHagiwara.push("43KH1");
+                    }
+                    if (this.filterKenjiHagiwaraBackgroundEpisodes) {
+                        activeFiltersKenjiHagiwara.push("43KH2");
+                    }
+                    if (this.filterKenjiHagiwaraFlashbackEpisodes) {
+                        activeFiltersKenjiHagiwara.push("43KH3");
+                    }
+                    if (this.filterKenjiHagiwaraOtherEpisodes) {
+                        activeFiltersKenjiHagiwara.push("43KH4");
+                    }
+
+                    if (activeFiltersKenjiHagiwara.length > 0) {
+                        if (this.filterLogicKenjiHagiwara === 'All') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersKenjiHagiwara.some(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        } else if (this.filterLogicKenjiHagiwara === 'Some') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersKenjiHagiwara.every(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        }
+                    }
+
+
+                    if (this.filterWataruDateEpisodes) {
+                        filteredByType = filteredByType.filter(episode => episode.EpisodeFilterAdvanced.includes("44WD"));
+                    }
+                    const activeFiltersWataruDate = [];
+
+                    if (this.filterWataruDateSceneEpisodes) {
+                        activeFiltersWataruDate.push("44WD1");
+                    }
+                    if (this.filterWataruDateBackgroundEpisodes) {
+                        activeFiltersWataruDate.push("44WD2");
+                    }
+                    if (this.filterWataruDateFlashbackEpisodes) {
+                        activeFiltersWataruDate.push("44WD3");
+                    }
+                    if (this.filterWataruDateOtherEpisodes) {
+                        activeFiltersWataruDate.push("44WD4");
+                    }
+
+                    if (activeFiltersWataruDate.length > 0) {
+                        if (this.filterLogicWataruDate === 'All') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersWataruDate.some(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        } else if (this.filterLogicWataruDate === 'Some') {
+                            filteredByType = filteredByType.filter(episode =>
+                                activeFiltersWataruDate.every(filter => episode.EpisodeFilterAdvanced.includes(filter))
+                            );
+                        }
+                    }
+
+
                     // Filter for FBI Episodes
                     if (this.filterFBI) {
                         filteredByType = filteredByType.filter(episode => episode.EpisodeEvents.includes('ف'));
@@ -4673,6 +5810,259 @@
                     return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("30ML4")).length;
                 },
 
+                JuzoMegureEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("31JM")).length;
+                },
+                JuzoMegureSceneEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("31JM1")).length;
+                },
+                JuzoMegureBackgroundEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("31JM2")).length;
+                },
+                JuzoMegureFlashbackEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("31JM3")).length;
+                },
+                JuzoMegureOtherEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("31JM4")).length;
+                },
+
+
+                NinzaburoShiratoriEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("32NS")).length;
+                },
+                NinzaburoShiratoriSceneEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("32NS1")).length;
+                },
+                NinzaburoShiratoriBackgroundEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("32NS2")).length;
+                },
+                NinzaburoShiratoriFlashbackEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("32NS3")).length;
+                },
+                NinzaburoShiratoriOtherEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("32NS4")).length;
+                },
+
+
+                MiwakoSatoEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("33MS")).length;
+                },
+                MiwakoSatoSceneEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("33MS1")).length;
+                },
+                MiwakoSatoBackgroundEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("33MS2")).length;
+                },
+                MiwakoSatoFlashbackEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("33MS3")).length;
+                },
+                MiwakoSatoOtherEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("33MS4")).length;
+                },
+
+
+
+                WataruTakagiEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("34WT")).length;
+                },
+                WataruTakagiSceneEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("34WT1")).length;
+                },
+                WataruTakagiBackgroundEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("34WT2")).length;
+                },
+                WataruTakagiFlashbackEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("34WT3")).length;
+                },
+                WataruTakagiOtherEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("34WT4")).length;
+                },
+
+
+                KazunobuChibaEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("35KC")).length;
+                },
+                KazunobuChibaSceneEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("35KC1")).length;
+                },
+                KazunobuChibaBackgroundEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("35KC2")).length;
+                },
+                KazunobuChibaFlashbackEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("35KC3")).length;
+                },
+                KazunobuChibaOtherEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("35KC4")).length;
+                },
+
+
+                YumiMiyamotoEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("36YM")).length;
+                },
+                YumiMiyamotoSceneEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("36YM1")).length;
+                },
+                YumiMiyamotoBackgroundEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("36YM2")).length;
+                },
+                YumiMiyamotoFlashbackEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("36YM3")).length;
+                },
+                YumiMiyamotoOtherEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("36YM4")).length;
+                },
+
+
+
+                NaekoMiikeEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("37NM")).length;
+                },
+                NaekoMiikeSceneEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("37NM1")).length;
+                },
+                NaekoMiikeBackgroundEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("37NM2")).length;
+                },
+                NaekoMiikeFlashbackEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("37NM3")).length;
+                },
+                NaekoMiikeOtherEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("37NM4")).length;
+                },
+
+
+
+                KiyonagaMatsumotoEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("38KM")).length;
+                },
+                KiyonagaMatsumotoSceneEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("38KM1")).length;
+                },
+                KiyonagaMatsumotoBackgroundEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("38KM2")).length;
+                },
+                KiyonagaMatsumotoFlashbackEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("38KM3")).length;
+                },
+                KiyonagaMatsumotoOtherEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("38KM4")).length;
+                },
+
+
+
+
+                InspectorYuminagaEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("39IY")).length;
+                },
+                InspectorYuminagaSceneEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("39IY1")).length;
+                },
+                InspectorYuminagaBackgroundEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("39IY2")).length;
+                },
+                InspectorYuminagaFlashbackEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("39IY3")).length;
+                },
+                InspectorYuminagaOtherEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("39IY4")).length;
+                },
+
+
+                ShintaroChakiEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("40SC")).length;
+                },
+                ShintaroChakiSceneEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("40SC1")).length;
+                },
+                ShintaroChakiBackgroundEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("40SC2")).length;
+                },
+                ShintaroChakiFlashbackEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("40SC3")).length;
+                },
+                ShintaroChakiOtherEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("40SC4")).length;
+                },
+
+
+
+
+
+                HyoueKurodaEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("41HK")).length;
+                },
+                HyoueKurodaSceneEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("41HK1")).length;
+                },
+                HyoueKurodaBackgroundEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("41HK2")).length;
+                },
+                HyoueKurodaFlashbackEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("41HK3")).length;
+                },
+                HyoueKurodaOtherEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("41HK4")).length;
+                },
+
+
+
+
+                JinpeiMatsudaEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("42JM")).length;
+                },
+                JinpeiMatsudaSceneEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("42JM1")).length;
+                },
+                JinpeiMatsudaBackgroundEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("42JM2")).length;
+                },
+                JinpeiMatsudaFlashbackEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("42JM3")).length;
+                },
+                JinpeiMatsudaOtherEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("42JM4")).length;
+                },
+
+
+
+
+                KenjiHagiwaraEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("43KH")).length;
+                },
+                KenjiHagiwaraSceneEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("43KH1")).length;
+                },
+                KenjiHagiwaraBackgroundEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("43KH2")).length;
+                },
+                KenjiHagiwaraFlashbackEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("43KH3")).length;
+                },
+                KenjiHagiwaraOtherEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("43KH4")).length;
+                },
+
+
+                WataruDateEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("44WD")).length;
+                },
+                WataruDateSceneEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("44WD1")).length;
+                },
+                WataruDateBackgroundEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("44WD2")).length;
+                },
+                WataruDateFlashbackEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("44WD3")).length;
+                },
+                WataruDateOtherEpisodesCount() {
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("44WD4")).length;
+                },
+
+
+
+
+
                 FBICount() {
                     return this.episodes.filter(episode => episode.EpisodeEvents.includes('ف')).length;
                 },
@@ -4760,7 +6150,21 @@
                         this.filterSakurakoYoneharaEpisodes ||
                         this.filterMomijiOokaEpisodes ||
                         this.filterRumiWakasaEpisodes ||
-                        this.filterMugaLoriEpisodes);
+                        this.filterMugaLoriEpisodes ||
+                        this.filterJuzoMegureEpisodes ||
+                        this.filterNinzaburoShiratoriEpisodes ||
+                        this.filterMiwakoSatoEpisodes ||
+                        this.filterWataruTakagiEpisodes ||
+                        this.filterKazunobuChibaEpisodes ||
+                        this.filterYumiMiyamotoEpisodes ||
+                        this.filterNaekoMiikeEpisodes ||
+                        this.filterKiyonagaMatsumotoEpisodes ||
+                        this.filterInspectorYuminagaEpisodes ||
+                        this.filterShintaroChakiEpisodes ||
+                        this.filterHyoueKurodaEpisodes ||
+                        this.filterJinpeiMatsudaEpisodes ||
+                        this.filterKenjiHagiwaraEpisodes ||
+                        this.filterWataruDateEpisodes);
                     },
             },
             watch: {
@@ -5491,6 +6895,365 @@
                 filterLogicMugaLori() {
                     this.resetPageToOne();
                 },
+
+                filterJuzoMegureEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterJuzoMegureSceneEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterJuzoMegureBackgroundEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterJuzoMegureFlashbackEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterJuzoMegureOtherEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterLogicJuzoMegure() {
+                    this.resetPageToOne();
+                },
+
+                filterNinzaburoShiratoriEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterNinzaburoShiratoriSceneEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterNinzaburoShiratoriBackgroundEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterNinzaburoShiratoriFlashbackEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterNinzaburoShiratoriOtherEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterLogicNinzaburoShiratori() {
+                    this.resetPageToOne();
+                },
+
+
+                filterMiwakoSatoEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterMiwakoSatoSceneEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterMiwakoSatoBackgroundEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterMiwakoSatoFlashbackEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterMiwakoSatoOtherEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterLogicMiwakoSato() {
+                    this.resetPageToOne();
+                },
+
+
+                filterWataruTakagiEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterWataruTakagiSceneEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterWataruTakagiBackgroundEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterWataruTakagiFlashbackEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterWataruTakagiOtherEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterLogicWataruTakagi() {
+                    this.resetPageToOne();
+                },
+
+
+                filterKazunobuChibaEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterKazunobuChibaSceneEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterKazunobuChibaBackgroundEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterKazunobuChibaFlashbackEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterKazunobuChibaOtherEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterLogicKazunobuChiba() {
+                    this.resetPageToOne();
+                },
+
+
+                filterYumiMiyamotoEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterYumiMiyamotoSceneEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterYumiMiyamotoBackgroundEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterYumiMiyamotoFlashbackEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterYumiMiyamotoOtherEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterLogicYumiMiyamoto() {
+                    this.resetPageToOne();
+                },
+
+
+                filterNaekoMiikeEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterNaekoMiikeSceneEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterNaekoMiikeBackgroundEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterNaekoMiikeFlashbackEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterNaekoMiikeOtherEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterLogicNaekoMiike() {
+                    this.resetPageToOne();
+                },
+
+
+                filterKiyonagaMatsumotoEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterKiyonagaMatsumotoSceneEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterKiyonagaMatsumotoBackgroundEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterKiyonagaMatsumotoFlashbackEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterKiyonagaMatsumotoOtherEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterLogicKiyonagaMatsumoto() {
+                    this.resetPageToOne();
+                },
+
+
+
+                filterInspectorYuminagaEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterInspectorYuminagaSceneEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterInspectorYuminagaBackgroundEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterInspectorYuminagaFlashbackEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterInspectorYuminagaOtherEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterLogicInspectorYuminaga() {
+                    this.resetPageToOne();
+                },
+
+
+
+                filterShintaroChakiEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterShintaroChakiSceneEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterShintaroChakiBackgroundEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterShintaroChakiFlashbackEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterShintaroChakiOtherEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterLogicShintaroChaki() {
+                    this.resetPageToOne();
+                },
+
+                
+
+                filterHyoueKurodaEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterHyoueKurodaSceneEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterHyoueKurodaBackgroundEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterHyoueKurodaFlashbackEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterHyoueKurodaOtherEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterLogicHyoueKuroda() {
+                    this.resetPageToOne();
+                },
+
+
+
+                filterJinpeiMatsudaEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterJinpeiMatsudaSceneEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterJinpeiMatsudaBackgroundEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterJinpeiMatsudaFlashbackEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterJinpeiMatsudaOtherEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterLogicJinpeiMatsuda() {
+                    this.resetPageToOne();
+                },
+
+
+
+
+                filterKenjiHagiwaraEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterKenjiHagiwaraSceneEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterKenjiHagiwaraBackgroundEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterKenjiHagiwaraFlashbackEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterKenjiHagiwaraOtherEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterLogicKenjiHagiwara() {
+                    this.resetPageToOne();
+                },
+
+
+
+
+
+                filterWataruDateEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterWataruDateSceneEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterWataruDateBackgroundEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterWataruDateFlashbackEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterWataruDateOtherEpisodes() {
+                    this.resetPageToOne();
+                },
+
+                filterLogicWataruDate() {
+                    this.resetPageToOne();
+                },
+
+
                 jsonUrl() {
                     // Automatically refetch data when jsonUrl changes
                     this.loadData();
@@ -5990,6 +7753,105 @@
                     this.filterMugaLoriFlashbackEpisodes = false;
                     this.filterMugaLoriOtherEpisodes = false;
                     this.filterLogicMugaLori = 'All';
+
+                    this.filterJuzoMegureEpisodes = false;
+                    this.filterJuzoMegureSceneEpisodes = false;
+                    this.filterJuzoMegureBackgroundEpisodes = false;
+                    this.filterJuzoMegureFlashbackEpisodes = false;
+                    this.filterJuzoMegureOtherEpisodes = false;
+                    this.filterLogicJuzoMegure = 'All';
+
+                    this.filterNinzaburoShiratoriEpisodes = false;
+                    this.filterNinzaburoShiratoriSceneEpisodes = false;
+                    this.filterNinzaburoShiratoriBackgroundEpisodes = false;
+                    this.filterNinzaburoShiratoriFlashbackEpisodes = false;
+                    this.filterNinzaburoShiratoriOtherEpisodes = false;
+                    this.filterLogicNinzaburoShiratori = 'All';
+
+                    this.filterMiwakoSatoEpisodes = false;
+                    this.filterMiwakoSatoSceneEpisodes = false;
+                    this.filterMiwakoSatoBackgroundEpisodes = false;
+                    this.filterMiwakoSatoFlashbackEpisodes = false;
+                    this.filterMiwakoSatoOtherEpisodes = false;
+                    this.filterLogicMiwakoSato = 'All';
+
+                    this.filterWataruTakagiEpisodes = false;
+                    this.filterWataruTakagiSceneEpisodes = false;
+                    this.filterWataruTakagiBackgroundEpisodes = false;
+                    this.filterWataruTakagiFlashbackEpisodes = false;
+                    this.filterWataruTakagiOtherEpisodes = false;
+                    this.filterLogicWataruTakagi = 'All';
+
+                    this.filterKazunobuChibaEpisodes = false;
+                    this.filterKazunobuChibaSceneEpisodes = false;
+                    this.filterKazunobuChibaBackgroundEpisodes = false;
+                    this.filterKazunobuChibaFlashbackEpisodes = false;
+                    this.filterKazunobuChibaOtherEpisodes = false;
+                    this.filterLogicKazunobuChiba = 'All';
+
+                    this.filterYumiMiyamotoEpisodes = false;
+                    this.filterYumiMiyamotoSceneEpisodes = false;
+                    this.filterYumiMiyamotoBackgroundEpisodes = false;
+                    this.filterYumiMiyamotoFlashbackEpisodes = false;
+                    this.filterYumiMiyamotoOtherEpisodes = false;
+                    this.filterLogicYumiMiyamoto = 'All';
+
+                    this.filterNaekoMiikeEpisodes = false;
+                    this.filterNaekoMiikeSceneEpisodes = false;
+                    this.filterNaekoMiikeBackgroundEpisodes = false;
+                    this.filterNaekoMiikeFlashbackEpisodes = false;
+                    this.filterNaekoMiikeOtherEpisodes = false;
+                    this.filterLogicNaekoMiike = 'All';
+
+                    this.filterKiyonagaMatsumotoEpisodes = false;
+                    this.filterKiyonagaMatsumotoSceneEpisodes = false;
+                    this.filterKiyonagaMatsumotoBackgroundEpisodes = false;
+                    this.filterKiyonagaMatsumotoFlashbackEpisodes = false;
+                    this.filterKiyonagaMatsumotoOtherEpisodes = false;
+                    this.filterLogicKiyonagaMatsumoto = 'All';
+
+                    this.filterInspectorYuminagaEpisodes = false;
+                    this.filterInspectorYuminagaSceneEpisodes = false;
+                    this.filterInspectorYuminagaBackgroundEpisodes = false;
+                    this.filterInspectorYuminagaFlashbackEpisodes = false;
+                    this.filterInspectorYuminagaOtherEpisodes = false;
+                    this.filterLogicInspectorYuminaga = 'All';
+
+                    this.filterShintaroChakiEpisodes = false;
+                    this.filterShintaroChakiSceneEpisodes = false;
+                    this.filterShintaroChakiBackgroundEpisodes = false;
+                    this.filterShintaroChakiFlashbackEpisodes = false;
+                    this.filterShintaroChakiOtherEpisodes = false;
+                    this.filterLogicShintaroChaki = 'All';
+
+                    this.filterHyoueKurodaEpisodes = false;
+                    this.filterHyoueKurodaSceneEpisodes = false;
+                    this.filterHyoueKurodaBackgroundEpisodes = false;
+                    this.filterHyoueKurodaFlashbackEpisodes = false;
+                    this.filterHyoueKurodaOtherEpisodes = false;
+                    this.filterLogicHyoueKuroda = 'All';
+
+                    this.filterJinpeiMatsudaEpisodes = false;
+                    this.filterJinpeiMatsudaSceneEpisodes = false;
+                    this.filterJinpeiMatsudaBackgroundEpisodes = false;
+                    this.filterJinpeiMatsudaFlashbackEpisodes = false;
+                    this.filterJinpeiMatsudaOtherEpisodes = false;
+                    this.filterLogicJinpeiMatsuda = 'All';
+
+
+                    this.filterKenjiHagiwaraEpisodes = false;
+                    this.filterKenjiHagiwaraSceneEpisodes = false;
+                    this.filterKenjiHagiwaraBackgroundEpisodes = false;
+                    this.filterKenjiHagiwaraFlashbackEpisodes = false;
+                    this.filterKenjiHagiwaraOtherEpisodes = false;
+                    this.filterLogicKenjiHagiwara = 'All';
+
+                    this.filterWataruDateEpisodes = false;
+                    this.filterWataruDateSceneEpisodes = false;
+                    this.filterWataruDateBackgroundEpisodes = false;
+                    this.filterWataruDateFlashbackEpisodes = false;
+                    this.filterWataruDateOtherEpisodes = false;
+                    this.filterLogicWataruDate = 'All';
                     
                 },
 
@@ -6235,6 +8097,139 @@
                     this.filterMugaLoriOtherEpisodes = false;
                     this.filterLogicMugaLori = 'All';
                 },
+
+                resetJuzoMegureFilters() {
+                    this.filterJuzoMegureEpisodes = false;
+                    this.filterJuzoMegureSceneEpisodes = false;
+                    this.filterJuzoMegureBackgroundEpisodes = false;
+                    this.filterJuzoMegureFlashbackEpisodes = false;
+                    this.filterJuzoMegureOtherEpisodes = false;
+                    this.filterLogicJuzoMegure = 'All';
+                },
+
+                resetNinzaburoShiratoriFilters() {
+                    this.filterNinzaburoShiratoriEpisodes = false;
+                    this.filterNinzaburoShiratoriSceneEpisodes = false;
+                    this.filterNinzaburoShiratoriBackgroundEpisodes = false;
+                    this.filterNinzaburoShiratoriFlashbackEpisodes = false;
+                    this.filterNinzaburoShiratoriOtherEpisodes = false;
+                    this.filterLogicNinzaburoShiratori = 'All';
+                },
+
+                resetMiwakoSatoFilters() {
+                    this.filterMiwakoSatoEpisodes = false;
+                    this.filterMiwakoSatoSceneEpisodes = false;
+                    this.filterMiwakoSatoBackgroundEpisodes = false;
+                    this.filterMiwakoSatoFlashbackEpisodes = false;
+                    this.filterMiwakoSatoOtherEpisodes = false;
+                    this.filterLogicMiwakoSato = 'All';
+                },
+
+                resetWataruTakagiFilters() {
+                    this.filterWataruTakagiEpisodes = false;
+                    this.filterWataruTakagiSceneEpisodes = false;
+                    this.filterWataruTakagiBackgroundEpisodes = false;
+                    this.filterWataruTakagiFlashbackEpisodes = false;
+                    this.filterWataruTakagiOtherEpisodes = false;
+                    this.filterLogicWataruTakagi = 'All';
+                },
+
+
+                resetKazunobuChibaFilters() {
+                    this.filterKazunobuChibaEpisodes = false;
+                    this.filterKazunobuChibaSceneEpisodes = false;
+                    this.filterKazunobuChibaBackgroundEpisodes = false;
+                    this.filterKazunobuChibaFlashbackEpisodes = false;
+                    this.filterKazunobuChibaOtherEpisodes = false;
+                    this.filterLogicKazunobuChiba = 'All';
+                },
+
+                resetYumiMiyamotoFilters() {
+                    this.filterYumiMiyamotoEpisodes = false;
+                    this.filterYumiMiyamotoSceneEpisodes = false;
+                    this.filterYumiMiyamotoBackgroundEpisodes = false;
+                    this.filterYumiMiyamotoFlashbackEpisodes = false;
+                    this.filterYumiMiyamotoOtherEpisodes = false;
+                    this.filterLogicYumiMiyamoto = 'All';
+                },
+
+
+                resetNaekoMiikeFilters() {
+                    this.filterNaekoMiikeEpisodes = false;
+                    this.filterNaekoMiikeSceneEpisodes = false;
+                    this.filterNaekoMiikeBackgroundEpisodes = false;
+                    this.filterNaekoMiikeFlashbackEpisodes = false;
+                    this.filterNaekoMiikeOtherEpisodes = false;
+                    this.filterLogicNaekoMiike = 'All';
+                },
+
+                resetKiyonagaMatsumotoFilters() {
+                    this.filterKiyonagaMatsumotoEpisodes = false;
+                    this.filterKiyonagaMatsumotoSceneEpisodes = false;
+                    this.filterKiyonagaMatsumotoBackgroundEpisodes = false;
+                    this.filterKiyonagaMatsumotoFlashbackEpisodes = false;
+                    this.filterKiyonagaMatsumotoOtherEpisodes = false;
+                    this.filterLogicKiyonagaMatsumoto = 'All';
+                },
+
+                resetInspectorYuminagaFilters() {
+                    this.filterInspectorYuminagaEpisodes = false;
+                    this.filterInspectorYuminagaSceneEpisodes = false;
+                    this.filterInspectorYuminagaBackgroundEpisodes = false;
+                    this.filterInspectorYuminagaFlashbackEpisodes = false;
+                    this.filterInspectorYuminagaOtherEpisodes = false;
+                    this.filterLogicInspectorYuminaga = 'All';
+                },
+
+
+                resetShintaroChakiFilters() {
+                    this.filterShintaroChakiEpisodes = false;
+                    this.filterShintaroChakiSceneEpisodes = false;
+                    this.filterShintaroChakiBackgroundEpisodes = false;
+                    this.filterShintaroChakiFlashbackEpisodes = false;
+                    this.filterShintaroChakiOtherEpisodes = false;
+                    this.filterLogicShintaroChaki = 'All';
+                },
+
+                resetHyoueKurodaFilters() {
+                    this.filterHyoueKurodaEpisodes = false;
+                    this.filterHyoueKurodaSceneEpisodes = false;
+                    this.filterHyoueKurodaBackgroundEpisodes = false;
+                    this.filterHyoueKurodaFlashbackEpisodes = false;
+                    this.filterHyoueKurodaOtherEpisodes = false;
+                    this.filterLogicHyoueKuroda = 'All';
+                },
+
+
+                resetJinpeiMatsudaFilters() {
+                    this.filterJinpeiMatsudaEpisodes = false;
+                    this.filterJinpeiMatsudaSceneEpisodes = false;
+                    this.filterJinpeiMatsudaBackgroundEpisodes = false;
+                    this.filterJinpeiMatsudaFlashbackEpisodes = false;
+                    this.filterJinpeiMatsudaOtherEpisodes = false;
+                    this.filterLogicJinpeiMatsuda = 'All';
+                },
+
+
+                resetKenjiHagiwaraFilters() {
+                    this.filterKenjiHagiwaraEpisodes = false;
+                    this.filterKenjiHagiwaraSceneEpisodes = false;
+                    this.filterKenjiHagiwaraBackgroundEpisodes = false;
+                    this.filterKenjiHagiwaraFlashbackEpisodes = false;
+                    this.filterKenjiHagiwaraOtherEpisodes = false;
+                    this.filterLogicKenjiHagiwara = 'All';
+                },
+
+
+                resetWataruDateFilters() {
+                    this.filterWataruDateEpisodes = false;
+                    this.filterWataruDateSceneEpisodes = false;
+                    this.filterWataruDateBackgroundEpisodes = false;
+                    this.filterWataruDateFlashbackEpisodes = false;
+                    this.filterWataruDateOtherEpisodes = false;
+                    this.filterLogicWataruDate = 'All';
+                },
+
                 toggleSpoiler() {
                     this.spoilerVisible = !this.spoilerVisible; // Toggle visibility
                 },
