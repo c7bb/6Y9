@@ -9803,6 +9803,13 @@
                         throw new Error(`Failed to send manga: ${response.statusText}`);
                     }
                 },
+
+                openSpecificEpisode(episodeCode) {
+                    //alert("Opening episode: " + episodeCode); // Debugging line
+                    const episodeNumber = parseInt(episodeCode, 10);
+                    console.log("Episode Number:", episodeNumber); // Log the episode number being used
+                    this.openModal(episodeNumber);
+                },
             },    
 
             mounted() {
@@ -9827,7 +9834,7 @@
                 if (episodeCode) {
                     //alert("Episode Code: " + episodeCode);
                     console.log(this.episodes); // Check if episodes is populated
-                    this.openModal(episodeCode);
+                    this.openSpecificEpisode(episodeCode);
                 }
                 
             }
