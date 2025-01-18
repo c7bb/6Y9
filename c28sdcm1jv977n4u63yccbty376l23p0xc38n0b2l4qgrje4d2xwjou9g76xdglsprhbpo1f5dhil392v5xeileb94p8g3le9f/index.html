@@ -9804,17 +9804,23 @@
                     },
 
                     openSpecificEpisode(episodeCode) {
-                        alert("Opening episode: " + episodeCode); // Debugging line
-                        const episodeNumber = parseInt(episodeCode, 10);
-                        const episode = this.episodes.find(ep => ep.EpisodeNumber === episodeNumber);
+                    alert("Opening episode: " + episodeCode); // Debugging line
+                    const episodeNumber = parseInt(episodeCode, 10);
+                    console.log("Episode Number:", episodeNumber); // Log the episode number being used
 
-                        if (episode) {
-                        this.selectedEpisode = episode;
-                        this.showModal = true;
-                        } else {
-                        console.log("Episode not found!");
-                        }
-                    },
+                    // Log the episodes array and check if it contains the desired episode
+                    console.log("Episodes:", this.episodes);
+
+                    const episode = this.episodes.find(ep => ep.EpisodeNumber === episodeNumber);
+
+                    if (episode) {
+                    console.log("Episode found:", episode); // Log the found episode
+                    this.selectedEpisode = episode;
+                    this.showModal = true;
+                    } else {
+                    console.log("Episode not found!");
+                    }
+                },
 
             },
             mounted() {
@@ -9835,9 +9841,10 @@
                 
                 const urlParams = new URLSearchParams(window.location.search);
                 const episodeCode = urlParams.get("code");
-                
+
                 if (episodeCode) {
-                    alert("Episode Code: " + episodeCode); // Debugging line
+                    alert("Episode Code: " + episodeCode);
+                    console.log(this.episodes); // Check if episodes is populated
                     this.openSpecificEpisode(episodeCode);
                 }
                 
