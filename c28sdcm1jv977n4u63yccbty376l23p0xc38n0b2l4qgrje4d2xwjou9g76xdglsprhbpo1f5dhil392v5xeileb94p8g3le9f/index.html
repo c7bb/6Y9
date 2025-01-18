@@ -9779,8 +9779,9 @@
                     setTimeout(() => {
                         this.selectedEpisode.EpisodeMangasIDs[index].status = null;
                     }, 5000);
-                    },
-                    async sendMangaResponse(chatId, fileId, caption, token) {
+                },
+
+                async sendMangaResponse(chatId, fileId, caption, token) {
                     const url = `https://api.telegram.org/bot${token}/sendDocument`;
                     const body = {
                         chat_id: chatId,
@@ -9801,9 +9802,9 @@
                     if (!response.ok) {
                         throw new Error(`Failed to send manga: ${response.statusText}`);
                     }
-                    },
+                },
 
-                    openSpecificEpisode(episodeCode) {
+                openSpecificEpisode(episodeCode) {
                     alert("Opening episode: " + episodeCode); // Debugging line
                     const episodeNumber = parseInt(episodeCode, 10);
                     console.log("Episode Number:", episodeNumber); // Log the episode number being used
@@ -9820,9 +9821,29 @@
                     } else {
                     console.log("Episode not found!");
                     }
+
                 },
 
-            },
+                openSpecificEpisode(episodeCode) {
+                    alert("Opening episode: " + episodeCode); // Debugging line
+                    const episodeNumber = parseInt(episodeCode, 10);
+                    console.log("Episode Number:", episodeNumber); // Log the episode number being used
+
+                    // Log the episodes array and check if it contains the desired episode
+                    console.log("Episodes:", this.episodes);
+
+                    const episode = this.episodes.find(ep => ep.EpisodeNumber === episodeNumber);
+
+                    if (episode) {
+                    console.log("Episode found:", episode); // Log the found episode
+                    // Use the openModal function to show the episode modal
+                    this.openModal(episode);
+                    } else {
+                    console.log("Episode not found!");
+                    }
+                },
+            },    
+
             mounted() {
 
                 const areJoined = localStorage.getItem('AreTheUserJoinToTheChannel');
