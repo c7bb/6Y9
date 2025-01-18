@@ -9811,8 +9811,8 @@
                     const episode = this.episodes.find(ep => ep.EpisodeNumber === episodeNumber);
                     
                     if (episode) {
-                        this.selectedEpisode = episode; // Set the selected episode object
                         this.showModal = true; // Show the modal
+                        this.selectedEpisode = episode; // Set the selected episode object
                     } else {
                         console.log("Episode not found!");
                     }
