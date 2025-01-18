@@ -9804,11 +9804,18 @@
                 },
 
                 openSpecificEpisode(episodeCode) {
-                    //alert("Opening episode: " + episodeCode); // Debugging line
                     const episodeNumber = parseInt(episodeCode, 10);
                     console.log("Episode Number:", episodeNumber); // Log the episode number being used
-                    this.selectedEpisode = episodeNumber;
-                    this.showModal = true;
+
+                    // Ensure episodes is populated before searching
+                    const episode = this.episodes.find(ep => ep.EpisodeNumber === episodeNumber);
+                    
+                    if (episode) {
+                        this.selectedEpisode = episode; // Set the selected episode object
+                        this.showModal = true; // Show the modal
+                    } else {
+                        console.log("Episode not found!");
+                    }
                 },
             },    
 
@@ -9832,7 +9839,7 @@
                 const episodeCode = urlParams.get("code");
 
                 if (episodeCode) {
-                    //alert("Episode Code: " + episodeCode);
+                    console.log("URL episode code:", episodeCode);
                     console.log(this.episodes); // Check if episodes is populated
                     this.openSpecificEpisode(episodeCode);
                 }
