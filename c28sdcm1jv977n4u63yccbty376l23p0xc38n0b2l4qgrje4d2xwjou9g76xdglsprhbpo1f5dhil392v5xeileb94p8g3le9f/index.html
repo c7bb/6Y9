@@ -9806,8 +9806,16 @@
                 openSpecificEpisode(episodeCode) {
                     const episodeNumber = parseInt(episodeCode, 10);
                     console.log("Episode Number:", episodeNumber); // Log the episode number being used
+
+                    // Ensure episodes is populated before searching
+                    const episode = this.episodes.find(ep => ep.EpisodeNumber === episodeNumber);
+                    
+                    if (episode) {
+                        this.selectedEpisode = episode; // Set the selected episode object
                         this.showModal = true; // Show the modal
-                        this.selectedEpisode = episodeNumber; // Set the selected episode object
+                    } else {
+                        console.log("Episode not found!");
+                    }
                 },
             },    
 
