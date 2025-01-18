@@ -9805,7 +9805,7 @@
 
                 openSpecificEpisode(episodeCode) {
                     // Loop through the episodes to find the matching one
-                    const epi = this.paginatedEpisodes.find(ep => ep.EpisodeNumber === episodeCode);
+                    const epi = this.paginatedEpisodes.find(ep => ep === episodeCode);
 
                     if (epi) {
                         this.openModal(epi); // Open the modal with the selected episode
