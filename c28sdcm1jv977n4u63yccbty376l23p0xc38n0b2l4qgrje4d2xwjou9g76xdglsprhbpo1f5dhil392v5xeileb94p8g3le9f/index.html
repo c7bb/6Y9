@@ -9804,8 +9804,14 @@
                 },
 
                 openSpecificEpisode(episodeCode) {
-                    selectedEpisode.EpisodeNumber = episodeCode;
-                    this.showModal = true; // Open the modal for the selected episode
+                    // Loop through the episodes to find the matching one
+                    const epi = this.paginatedEpisodes.find(ep => ep.EpisodeNumber === episodeCode);
+
+                    if (epi) {
+                        this.openModal(epi); // Open the modal with the selected episode
+                    } else {
+                        console.log("Episode not found!");
+                    }
                 },
 
             },    
@@ -9826,13 +9832,12 @@
 
                 this.closeEmptyPopup();
                 
+                // Extract episodeCode from URL
                 const urlParams = new URLSearchParams(window.location.search);
                 const episodeCode = urlParams.get("code");
 
                 if (episodeCode) {
-                    console.log("URL episode code:", episodeCode);
-                    console.log(this.episodes); // Check if episodes is populated
-                    this.openSpecificEpisode(episodeCode);
+                    this.openSpecificEpisode(episodeCode); // Open specific episode based on URL parameter
                 }
                 
             }
