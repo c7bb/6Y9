@@ -9804,10 +9804,15 @@
                     },
 
                     openSpecificEpisode(episodeCode) {
-                        const episode = this.episodes.find(ep => ep.EpisodeNumber === parseInt(episodeCode, 10));
+                        alert("Opening episode: " + episodeCode); // Debugging line
+                        const episodeNumber = parseInt(episodeCode, 10);
+                        const episode = this.episodes.find(ep => ep.EpisodeNumber === episodeNumber);
+
                         if (episode) {
-                            this.selectedEpisode = episode;
-                            this.showModal = true;
+                        this.selectedEpisode = episode;
+                        this.showModal = true;
+                        } else {
+                        console.log("Episode not found!");
                         }
                     },
 
@@ -9830,8 +9835,9 @@
                 
                 const urlParams = new URLSearchParams(window.location.search);
                 const episodeCode = urlParams.get("code");
-
+                
                 if (episodeCode) {
+                    alert("Episode Code: " + episodeCode); // Debugging line
                     this.openSpecificEpisode(episodeCode);
                 }
                 
