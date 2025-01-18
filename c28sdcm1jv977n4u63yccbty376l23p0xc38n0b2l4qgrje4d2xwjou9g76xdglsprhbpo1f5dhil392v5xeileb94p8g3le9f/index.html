@@ -8168,83 +8168,92 @@
                     this.handlePageSelect({ target: { value: 1 } }); // Call handlePageSelect to update
                 },
 
+                // Method to load data from JSON
                 loadData() {
-                    const areJoined = localStorage.getItem('AreTheUserJoinToTheChannel');
-                    if (areJoined && areJoined.trim() !== '') {  
-                        // Reset states before attempting to fetch
-                        this.episodes = [];
-                        this.error = null;
-                        this.loading = true;
+                    return new Promise((resolve, reject) => {
+                        const areJoined = localStorage.getItem('AreTheUserJoinToTheChannel');
+                        if (areJoined && areJoined.trim() !== '') {  
+                            // Reset states before attempting to fetch
+                            this.episodes = [];
+                            this.error = null;
+                            this.loading = true;
 
-                        // Check if the countdown was already stored in localStorage
-                        const storedWaitTime = localStorage.getItem('waitTime');
-                        if (storedWaitTime) {
-                            this.waitTime = parseInt(storedWaitTime, 10);
-                            // If the countdown is still active, show the error message
-                            this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
-                            this.startTimer();  // Continue the countdown
-                            return;  // Exit early to avoid unnecessary fetch
-                        }
+                            // Check if the countdown was already stored in localStorage
+                            const storedWaitTime = localStorage.getItem('waitTime');
+                            if (storedWaitTime) {
+                                this.waitTime = parseInt(storedWaitTime, 10);
+                                // If the countdown is still active, show the error message
+                                this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
+                                this.startTimer();  // Continue the countdown
+                                reject('Rate limit exceeded');  // Return early if rate-limited
+                                return;  // Exit early to avoid unnecessary fetch
+                            }
 
-                        // Add a dynamic cache-busting query parameter
-                        const urlWithCacheBust = `${this.jsonUrl}?t=${new Date().getTime()}`;
+                            // Add a dynamic cache-busting query parameter
+                            const urlWithCacheBust = `${this.jsonUrl}?t=${new Date().getTime()}`;
 
-                        fetch(urlWithCacheBust, { cache: 'no-store' })
-                            .then(response => {
-                                if (response.status === 429) {
-                                    // Parse JSON response for rate-limit details
-                                    return response.json().then(data => {
+                            fetch(urlWithCacheBust, { cache: 'no-store' })
+                                .then(response => {
+                                    if (response.status === 429) {
+                                        // Parse JSON response for rate-limit details
+                                        return response.json().then(data => {
+                                            this.loading = false;
+
+                                            if (data.error === "User blocked") {
+                                                // User is blocked for the rest of the day
+                                                this.error = "لقد تجاوزت الحد المسموح به من الطلبات لهذا اليوم.";
+                                                reject('User blocked'); // Reject promise if blocked
+                                                return;
+                                            }
+
+                                            // Set a waitTime based on the rate-limiting information from the server
+                                            const resetTime = data.resetTime || Date.now() + 60000; // Adjust as needed
+                                            this.waitTime = Math.max(0, Math.floor((resetTime - Date.now()) / 1000)); // Convert to seconds
+
+                                            // Show initial error message with wait time
+                                            this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
+
+                                            // Store waitTime in localStorage
+                                            localStorage.setItem('waitTime', this.waitTime);
+
+                                            console.warn(data.message); // Optional: Log additional server message
+
+                                            // Start a timer to update the wait time
+                                            this.startTimer();
+                                            reject('Rate limit exceeded');  // Reject if rate-limited
+                                        });
+                                    }
+
+                                    if (!response.ok) {
+                                        throw new Error(`HTTP error! status: ${response.status}`);
+                                    }
+
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    if (data) {
+                                        // Successfully fetched data
+                                        this.episodes = data;
                                         this.loading = false;
-
-                                        if (data.error === "User blocked") {
-                                            // User is blocked for the rest of the day
-                                            this.error = "لقد تجاوزت الحد المسموح به من الطلبات لهذا اليوم.";
-                                            return;
-                                        }
-
-                                        // Set a waitTime based on the rate-limiting information from the server
-                                        const resetTime = data.resetTime || Date.now() + 60000; // Adjust as needed
-                                        this.waitTime = Math.max(0, Math.floor((resetTime - Date.now()) / 1000)); // Convert to seconds
-
-                                        // Show initial error message with wait time
-                                        this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
-
-                                        // Store waitTime in localStorage
-                                        localStorage.setItem('waitTime', this.waitTime);
-
-                                        console.warn(data.message); // Optional: Log additional server message
-
-                                        // Start a timer to update the wait time
-                                        this.startTimer();
-                                    });
-                                }
-
-                                if (!response.ok) {
-                                    throw new Error(`HTTP error! status: ${response.status}`);
-                                }
-
-                                return response.json();
-                            })
-                            .then(data => {
-                                if (data) {
-                                    // Successfully fetched data
-                                    this.episodes = data;
+                                        // Clear the stored waitTime when data is successfully fetched
+                                        localStorage.removeItem('waitTime');
+                                        resolve();  // Resolve the promise once data is successfully loaded
+                                    }
+                                })
+                                .catch(error => {
+                                    // General error handling
+                                    if (!this.error) {
+                                        this.error = 'حدث خطأ أثناء محاولة تحميل البيانات. قد تكون هناك مشكلة مؤقتة في الاتصال أو الخادم. يُرجى التحقق من اتصالك بالإنترنت أو أستخدم VPN والمحاولة مرة أخرى.';
+                                    }
                                     this.loading = false;
-                                    // Clear the stored waitTime when data is successfully fetched
-                                    localStorage.removeItem('waitTime');
-                                }
-                            })
-                            .catch(error => {
-                                // General error handling
-                                if (!this.error) {
-                                    this.error = 'حدث خطأ أثناء محاولة تحميل البيانات. قد تكون هناك مشكلة مؤقتة في الاتصال أو الخادم. يُرجى التحقق من اتصالك بالإنترنت أو أستخدم VPN والمحاولة مرة أخرى.';
-                                }
-                                this.loading = false;
-                            });
-                    } else {
-                        console.log("not loading data.");
-                        this.loading = false;
-                    }    
+                                    reject(error);  // Reject the promise in case of an error
+                                });
+                        } else {
+                            console.log("not loading data.");
+                            this.loading = false;
+                            reject('User not joined to the channel');  // Reject if user is not joined
+                        }    
+                    });
                 },
 
                 startTimer() {
@@ -9804,11 +9813,15 @@
                 },
 
                 openSpecificEpisode(episodeCode) {
-                    // Loop through the episodes to find the matching one
-                    const epi = this.episode.find(ep => ep.EpisodeNumber === episodeCode);
+                    if (!this.episodes || this.episodes.length === 0) {
+                        console.log('Episodes data is not loaded yet!');
+                        return; // Exit early if episodes data is not loaded
+                    }
 
-                    if (epi) {
-                        this.openModal(epi); // Open the modal with the selected episode
+                    const episode = this.episodes.find(ep => ep.EpisodeNumber === episodeCode);
+
+                    if (episode) {
+                        this.openModal(episode); // Open the modal for the found episode
                     } else {
                         console.log("Episode not found!");
                     }
@@ -9817,29 +9830,28 @@
             },    
 
             mounted() {
-
                 const areJoined = localStorage.getItem('AreTheUserJoinToTheChannel');
                 if (areJoined && areJoined.trim() !== '') {
-                    this.loadData();
+                    this.loadData(); // Call loadData only once if the user has joined
                 }
 
-                window.addEventListener('click', (event) => {
-                    const modal = document.getElementById('episodeModal');
-                    if (event.target == modal) {
-                        this.closeModal();
-                    }
-                });
-
+                // Proceed with any other setup actions
                 this.closeEmptyPopup();
-                
-                // Extract episodeCode from URL
+
+                // Ensure data is loaded before calling openSpecificEpisode
                 const urlParams = new URLSearchParams(window.location.search);
                 const episodeCode = urlParams.get("code");
 
-                if (episodeCode) {
-                    this.openSpecificEpisode(episodeCode); // Open specific episode based on URL parameter
+                if (episodeCode && this.episodes && this.episodes.length > 0) {
+                    this.openSpecificEpisode(episodeCode); // Open the episode if data is loaded
+                } else {
+                    // If the data isn't loaded yet, watch for changes
+                    this.$watch('episodes', (newEpisodes) => {
+                        if (newEpisodes && newEpisodes.length > 0 && episodeCode) {
+                            this.openSpecificEpisode(episodeCode);
+                        }
+                    });
                 }
-                
             }
         }).mount('#app');
     </script>
