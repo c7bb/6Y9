@@ -9840,7 +9840,7 @@
 
                 // Ensure data is loaded before calling openSpecificEpisode
                 const urlParams = new URLSearchParams(window.location.search);
-                const episodeCode = urlParams.get("start")?.split('=')[1];  // Extract the episode number from the URL
+                const episodeCode = urlParams.get("code");
 
                 if (episodeCode && this.episodes && this.episodes.length > 0) {
                     this.openSpecificEpisode(episodeCode); // Open the episode if data is loaded
