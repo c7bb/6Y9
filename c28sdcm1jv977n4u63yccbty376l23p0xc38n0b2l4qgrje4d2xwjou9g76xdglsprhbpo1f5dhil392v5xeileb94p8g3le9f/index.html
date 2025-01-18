@@ -3460,7 +3460,6 @@
                     selectedEpisode: null,
                     showEmptyPopup: false,
                     showMangaButtons: false,
-                    selectedEpisodeNumberFromUrl: null,
                     filterBlackOrganization: false,
                     filterDetectiveBoys: false,
                     filterScaryEpisodes: false,
@@ -9808,7 +9807,8 @@
                     //alert("Opening episode: " + episodeCode); // Debugging line
                     const episodeNumber = parseInt(episodeCode, 10);
                     console.log("Episode Number:", episodeNumber); // Log the episode number being used
-                    this.openModal(episodeNumber);
+                    this.selectedEpisode = episodeNumber;
+                    this.showModal = true;
                 },
             },    
 
