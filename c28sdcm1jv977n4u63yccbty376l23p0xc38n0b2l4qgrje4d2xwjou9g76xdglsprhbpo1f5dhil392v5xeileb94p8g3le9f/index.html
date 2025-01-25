@@ -3217,7 +3217,7 @@
                                 </fieldset>
 
                                 <div 
-                                    v-if="selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'error')" 
+                                v-if="(selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'error')) || (selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'error'))"  
                                     class="fixed z-10 inset-0 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center"
                                     >
                                     <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-1/2 lg:w-1/3 max-h-[90vh] overflow-hidden flex flex-col">
@@ -9780,6 +9780,10 @@
                         this.selectedEpisode.EpisodeVideosIDs[index].status = 'success';
                     } catch (error) {
                         this.selectedEpisode.EpisodeVideosIDs[index].status = 'error';
+                        // Skip timeout reset if the error popup is active
+                        if (this.selectedEpisode.EpisodeVideosIDs.some((video) => video.status === "error")) {
+                            return; // Exit early if error popup is shown
+                        }
                     }
                     setTimeout(() => {
                         this.selectedEpisode.EpisodeVideosIDs[index].status = null;
@@ -9885,7 +9889,7 @@
             },    
 
             mounted() {
-                //this.closeEmptyPopup();
+                this.closeEmptyPopup();
 
                 const areJoined = localStorage.getItem('AreTheUserJoinToTheChannel');
                 if (areJoined && areJoined.trim() !== '') {
