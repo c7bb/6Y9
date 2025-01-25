@@ -9878,13 +9878,20 @@
                 },
 
                 clearError() {
-                // Reset the status of mangas with 'error' to null
-                this.selectedEpisode.EpisodeMangasIDs.forEach((manga) => {
-                    if (manga.status === "error") {
-                        manga.status = null;
-                    }
-                });
-            },
+                    // Reset the status of mangas with 'error' to null
+                    this.selectedEpisode.EpisodeMangasIDs.forEach((manga) => {
+                        if (manga.status === "error") {
+                            manga.status = null;
+                        }
+                    });
+
+                    // Reset the status of videos with 'error' to null
+                    this.selectedEpisode.EpisodeVideosIDs.forEach((video) => {
+                        if (video.status === "error") {
+                            video.status = null;
+                        }
+                    });
+                },
 
             },    
 
