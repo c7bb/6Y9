@@ -9885,13 +9885,12 @@
             },    
 
             mounted() {
+                this.showEmptyPopup = false;
+
                 const areJoined = localStorage.getItem('AreTheUserJoinToTheChannel');
                 if (areJoined && areJoined.trim() !== '') {
                     this.loadData(); // Call loadData only once if the user has joined
                 }
-
-                // Proceed with any other setup actions
-                this.closeEmptyPopup();
 
                 // Ensure data is loaded before calling openSpecificEpisode
                 const urlParams = new URLSearchParams(window.location.search);
