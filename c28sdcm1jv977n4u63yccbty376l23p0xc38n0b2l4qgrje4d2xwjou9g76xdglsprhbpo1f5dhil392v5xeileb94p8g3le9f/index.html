@@ -9827,10 +9827,6 @@
                         this.selectedEpisode.EpisodeMangasIDs[index].status = 'success';
                     } catch (error) {
                         this.selectedEpisode.EpisodeMangasIDs[index].status = 'error';
-                        // Skip timeout reset if the error popup is active
-                        if (this.selectedEpisode.EpisodeMangasIDs.some((manga) => manga.status === "error")) {
-                            return; // Exit early if error popup is shown
-                        }
                     }
                     setTimeout(() => {
                         this.selectedEpisode.EpisodeMangasIDs[index].status = null;
