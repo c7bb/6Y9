@@ -8407,10 +8407,21 @@
                 },
                 closeModal() {
                     this.showModal = false;
+                    // Reset status for all videos and mangas when closing modal
+                    if (this.selectedEpisode) {
+                        if (this.selectedEpisode.EpisodeVideosIDs) {
+                            this.selectedEpisode.EpisodeVideosIDs.forEach((video, index) => {
+                                this.selectedEpisode.EpisodeVideosIDs[index].status = null;
+                            });
+                        }
+                        if (this.selectedEpisode.EpisodeMangasIDs) {
+                            this.selectedEpisode.EpisodeMangasIDs.forEach((manga, index) => {
+                                this.selectedEpisode.EpisodeMangasIDs[index].status = null;
+                            });
+                        }
+                    }
                     this.selectedEpisode = null;
                     this.spoilerVisible = false;
-                    this.EpisodeVideosIDs.status = null;
-                    this.EpisodeMangasIDs.status = null;
                 },
 
                 openEmptyPopup() {
