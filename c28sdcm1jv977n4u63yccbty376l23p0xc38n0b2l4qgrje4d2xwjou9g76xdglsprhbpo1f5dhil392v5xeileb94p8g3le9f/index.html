@@ -5160,7 +5160,9 @@
                         })
                         .filter(episode =>
                             new RegExp(searchQuery, 'i').test(episode.EpisodeTitle) ||
-                            new RegExp(searchQuery, 'i').test(episode.EpisodeNumber)
+                            new RegExp(searchQuery, 'i').test(episode.EpisodeNumber) ||
+                            new RegExp(searchQuery, 'i').test(episode.EpisodeStory) ||
+                            new RegExp(searchQuery, 'i').test(episode.EpisodeSummary)
                         );
                 },
 
