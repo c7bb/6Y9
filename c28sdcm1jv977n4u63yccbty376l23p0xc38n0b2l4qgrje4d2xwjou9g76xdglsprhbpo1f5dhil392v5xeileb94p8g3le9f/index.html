@@ -3414,6 +3414,7 @@
         createApp({
             data() {
                 return {
+                    userJoined: false,
                     replacementDict: {
                     "فلم": ["فيلم",],
                     "ة": ["ه","ة"],
@@ -8156,88 +8157,77 @@
                 // Method to load data from JSON
                 loadData() {
                     return new Promise((resolve, reject) => {
-                        const areJoined = localStorage.getItem('AreTheUserJoinToTheChannel');
-                        if (areJoined && areJoined.trim() !== '') {  
-                            // Reset states before attempting to fetch
-                            this.episodes = [];
-                            this.error = null;
-                            this.loading = true;
-
-                            // Check if the countdown was already stored in localStorage
-                            const storedWaitTime = localStorage.getItem('waitTime');
-                            if (storedWaitTime) {
-                                this.waitTime = parseInt(storedWaitTime, 10);
-                                // If the countdown is still active, show the error message
+                    if (this.userJoined) {
+                        // Reset states before attempting to fetch.
+                        this.episodes = [];
+                        this.error = null;
+                        this.loading = true;
+            
+                        // Check if a rate-limit countdown is stored.
+                        const storedWaitTime = localStorage.getItem('waitTime');
+                        if (storedWaitTime) {
+                        this.waitTime = parseInt(storedWaitTime, 10);
+                        this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
+                        this.startTimer();  // Continue the countdown.
+                        reject('Rate limit exceeded');
+                        return;
+                        }
+            
+                        // Append a cache-busting query parameter.
+                        const urlWithCacheBust = `${this.jsonUrl}?t=${new Date().getTime()}`;
+            
+                        fetch(urlWithCacheBust, { cache: 'no-store' })
+                        .then(response => {
+                            if (response.status === 429) {
+                            // If rate-limited, parse the JSON response.
+                            return response.json().then(data => {
+                                this.loading = false;
+            
+                                if (data.error === "User blocked") {
+                                this.error = "لقد تجاوزت الحد المسموح به من الطلبات لهذا اليوم.";
+                                reject('User blocked');
+                                return;
+                                }
+            
+                                const resetTime = data.resetTime || Date.now() + 60000;
+                                this.waitTime = Math.max(0, Math.floor((resetTime - Date.now()) / 1000));
                                 this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
-                                this.startTimer();  // Continue the countdown
-                                reject('Rate limit exceeded');  // Return early if rate-limited
-                                return;  // Exit early to avoid unnecessary fetch
+                                localStorage.setItem('waitTime', this.waitTime);
+                                console.warn(data.message);
+            
+                                // Start a timer to update the wait time.
+                                this.startTimer();
+                                reject('Rate limit exceeded');
+                            });
                             }
-
-                            // Add a dynamic cache-busting query parameter
-                            const urlWithCacheBust = `${this.jsonUrl}?t=${new Date().getTime()}`;
-
-                            fetch(urlWithCacheBust, { cache: 'no-store' })
-                                .then(response => {
-                                    if (response.status === 429) {
-                                        // Parse JSON response for rate-limit details
-                                        return response.json().then(data => {
-                                            this.loading = false;
-
-                                            if (data.error === "User blocked") {
-                                                // User is blocked for the rest of the day
-                                                this.error = "لقد تجاوزت الحد المسموح به من الطلبات لهذا اليوم.";
-                                                reject('User blocked'); // Reject promise if blocked
-                                                return;
-                                            }
-
-                                            // Set a waitTime based on the rate-limiting information from the server
-                                            const resetTime = data.resetTime || Date.now() + 60000; // Adjust as needed
-                                            this.waitTime = Math.max(0, Math.floor((resetTime - Date.now()) / 1000)); // Convert to seconds
-
-                                            // Show initial error message with wait time
-                                            this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
-
-                                            // Store waitTime in localStorage
-                                            localStorage.setItem('waitTime', this.waitTime);
-
-                                            console.warn(data.message); // Optional: Log additional server message
-
-                                            // Start a timer to update the wait time
-                                            this.startTimer();
-                                            reject('Rate limit exceeded');  // Reject if rate-limited
-                                        });
-                                    }
-
-                                    if (!response.ok) {
-                                        throw new Error(`HTTP error! status: ${response.status}`);
-                                    }
-
-                                    return response.json();
-                                })
-                                .then(data => {
-                                    if (data) {
-                                        // Successfully fetched data
-                                        this.episodes = data;
-                                        this.loading = false;
-                                        // Clear the stored waitTime when data is successfully fetched
-                                        localStorage.removeItem('waitTime');
-                                        resolve();  // Resolve the promise once data is successfully loaded
-                                    }
-                                })
-                                .catch(error => {
-                                    // General error handling
-                                    if (!this.error) {
-                                        this.error = 'حدث خطأ أثناء محاولة تحميل البيانات. قد تكون هناك مشكلة مؤقتة في الاتصال أو الخادم. يُرجى التحقق من اتصالك بالإنترنت أو أستخدم VPN والمحاولة مرة أخرى.';
-                                    }
-                                    this.loading = false;
-                                    reject(error);  // Reject the promise in case of an error
-                                });
-                        } else {
-                            console.log("not loading data.");
+            
+                            if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+            
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data) {
+                            // Data fetched successfully.
+                            this.episodes = data;
                             this.loading = false;
-                            reject('User not joined to the channel');  // Reject if user is not joined
-                        }    
+                            localStorage.removeItem('waitTime');
+                            resolve();
+                            }
+                        })
+                        .catch(error => {
+                            if (!this.error) {
+                            this.error = 'حدث خطأ أثناء محاولة تحميل البيانات. قد تكون هناك مشكلة مؤقتة في الاتصال أو الخادم. يُرجى التحقق من اتصالك بالإنترنت أو استخدام VPN والمحاولة مرة أخرى.';
+                            }
+                            this.loading = false;
+                            reject(error);
+                        });
+                    } else {
+                        console.log("User not joined, not loading data.");
+                        this.loading = false;
+                        reject('User not joined to the channel');
+                    }
                     });
                 },
 
@@ -9863,49 +9853,48 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ token: telegramUserId })
                     });
-            
                     const result = await response.json();
             
                     if (result.valid) {
                         localStorage.setItem(localStorageKey, telegramUserId);
-                        // User is valid; the Vue app will continue mounting.
+                        // Set the reactive flag.
+                        this.userJoined = true;
                     } else {
-                        localStorage.removeItem(localStorageKey);
-                        // Replace the page with the "not joined" message and retry button.
+                        this.userJoined = false;
+                        // Replace the page with the "not joined" screen.
                         document.body.innerHTML = `
                         <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #1e3c72, #2a5298); animation: fadeIn 1s;">
                             <div style="text-align: center; padding: 20px; border: 2px solid #fff; border-radius: 15px; background-color: rgba(0, 0, 0, 0.7); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); animation: slideDown 1s;">
-                                <h1 style="font-size: 26px; font-weight: bold; color: #ff4f4f; margin-bottom: 10px;">
-                                    لست منضماً إلى القناة.<br>
-                                    <span style="font-size: 26px; font-weight: bold; color: #ffffff;">الرجاء الانضمام</span>
-                                    <a href="https://t.me/DCRef_Channel" target="_blank" rel="noopener noreferrer" style="color: #00ff00; text-decoration: none; font-size: 20px; font-weight: bold;">من هنا</a>
-                                </h1>
-                                <button id="retryButton" style="padding: 15px 30px; background: linear-gradient(135deg, #007BFF, #0056b3); color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold; margin-top: 20px; transition: transform 0.3s, box-shadow 0.3s;">
-                                    أعد المحاولة
-                                </button>
+                            <h1 style="font-size: 26px; font-weight: bold; color: #ff4f4f; margin-bottom: 10px;">
+                                لست منضماً إلى القناة.<br>
+                                <span style="font-size: 26px; font-weight: bold; color: #ffffff;">الرجاء الانضمام</span>
+                                <a href="https://t.me/DCRef_Channel" target="_blank" rel="noopener noreferrer" style="color: #00ff00; text-decoration: none; font-size: 20px; font-weight: bold;">من هنا</a>
+                            </h1>
+                            <button id="retryButton" style="padding: 15px 30px; background: linear-gradient(135deg, #007BFF, #0056b3); color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold; margin-top: 20px; transition: transform 0.3s, box-shadow 0.3s;">
+                                أعد المحاولة
+                            </button>
                             </div>
                         </div>
                         `;
                         document.getElementById('retryButton').addEventListener('click', () => {
-                        // A simple reload (if needed, you can modify this to bust caches)
                         window.location.reload();
                         });
                     }
                     } catch (error) {
                     console.error("Error during validation:", error);
-                    localStorage.removeItem(localStorageKey);
-                    // Show an error screen with a retry button.
+                    this.userJoined = false;
+                    // Display an error screen with a retry button.
                     document.body.innerHTML = `
                         <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #ff4f4f, #ff7575); animation: fadeIn 1s;">
-                            <div style="text-align: center; padding: 20px; border: 2px solid #fff; border-radius: 15px; background-color: rgba(0, 0, 0, 0.7); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); animation: slideDown 1s;">
-                                <h1 style="color: #fff; font-size: 20px; font-weight: bold; margin-bottom: 10px;">حدث خطأ في فتح الدليل.</h1>
-                                <h1 style="color: #fff; font-size: 20px; font-weight: bold; margin-bottom: 20px;">الرجاء المحاولة لاحقاً.</h1>
-                                <button id="retryButton" style="padding: 15px 30px; background: linear-gradient(135deg, #007BFF, #0056b3); color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold; transition: transform 0.3s, box-shadow 0.3s;">
-                                    أعد المحاولة
-                                </button>
-                            </div>
+                        <div style="text-align: center; padding: 20px; border: 2px solid #fff; border-radius: 15px; background-color: rgba(0, 0, 0, 0.7); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); animation: slideDown 1s;">
+                            <h1 style="color: #fff; font-size: 20px; font-weight: bold; margin-bottom: 10px;">حدث خطأ في فتح الدليل.</h1>
+                            <h1 style="color: #fff; font-size: 20px; font-weight: bold; margin-bottom: 20px;">الرجاء المحاولة لاحقاً.</h1>
+                            <button id="retryButton" style="padding: 15px 30px; background: linear-gradient(135deg, #007BFF, #0056b3); color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold; transition: transform 0.3s, box-shadow 0.3s;">
+                            أعد المحاولة
+                            </button>
                         </div>
-                        `;
+                        </div>
+                    `;
                     document.getElementById('retryButton').addEventListener('click', () => {
                         window.location.reload();
                     });
@@ -9914,17 +9903,16 @@
             },
             
             async created() {
-                // Run the Telegram check before the Vue app is fully mounted.
+                // Run the Telegram check before mounting the app.
                 await this.checkTelegram();
+                // If the user is valid, immediately load data.
+                if (this.userJoined) {
+                    this.loadData();
+                }
             },
 
             mounted() {
                 this.closeEmptyPopup();
-
-                const areJoined = localStorage.getItem('AreTheUserJoinToTheChannel');
-                if (areJoined && areJoined.trim() !== '') {
-                    this.loadData(); // Call loadData only once if the user has joined
-                }
 
                 // Ensure data is loaded before calling openSpecificEpisode
                 const urlParams = new URLSearchParams(window.location.search);
