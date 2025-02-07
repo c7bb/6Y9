@@ -3,9 +3,12 @@
 <head>
     <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", async () => {
+    // Store the original body content to restore later
+    const originalBody = document.body.innerHTML;
+
+    async function checkUserAndLoad() {
         const webApp = window.Telegram.WebApp;
-        const telegramUserId = webApp.initDataUnsafe.user.id;
+        const telegramUserId = webApp.initDataUnsafe.user?.id; // Optional chaining for safety
         const localStorageKey = 'AreTheUserJoinToTheChannel';
 
         try {
@@ -19,48 +22,61 @@
 
             if (result.valid) {
                 localStorage.setItem(localStorageKey, telegramUserId);
-                // User is valid, show the original content (hide the "not joined" message)
+                restoreContentAndInitialize(); // Restore UI and initialize app
             } else {
                 localStorage.removeItem(localStorageKey);
-                // User is not valid, show the "not joined" message
-                document.body.innerHTML = `
-                    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #1e3c72, #2a5298); animation: fadeIn 1s;">
-                        <div style="text-align: center; padding: 20px; border: 2px solid #fff; border-radius: 15px; background-color: rgba(0, 0, 0, 0.7); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); animation: slideDown 1s;">
-                            <h1 style="font-size: 26px; font-weight: bold; color: #ff4f4f; margin-bottom: 10px;">لست منضماً إلى القناة.<br>
-                                <span style="font-size: 26px; font-weight: bold; color: #ffffff;">الرجاء الانضمام</span>
-                                <a href="https://t.me/DCRef_Channel" target="_blank" rel="noopener noreferrer" style="color: #00ff00; text-decoration: none; font-size: 20px; font-weight: bold;">من هنا</a>
-                            </h1>
-                            <button id="retryButton" style="padding: 15px 30px; background: linear-gradient(135deg, #007BFF, #0056b3); color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold; margin-top: 20px; transition: transform 0.3s, box-shadow 0.3s;">
-                                أعد المحاولة
-                            </button>
-                        </div>
-                    </div>
-                `;
-                document.getElementById('retryButton').addEventListener('click', () => {
-                    window.location.reload();
-                });
+                showJoinRequiredMessage(); // Show channel join message
             }
         } catch (error) {
-            console.error("Error during validation:", error);
-            localStorage.removeItem(localStorageKey);
-            // Show error message with retry button
-            document.body.innerHTML = `
-                <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #ff4f4f, #ff7575); animation: fadeIn 1s;">
-                    <div style="text-align: center; padding: 20px; border: 2px solid #fff; border-radius: 15px; background-color: rgba(0, 0, 0, 0.7); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); animation: slideDown 1s;">
-                        <h1 style="color: #fff; font-size: 20px; font-weight: bold; margin-bottom: 10px;">حدث خطأ في فتح الدليل.</h1>
-                        <h1 style="color: #fff; font-size: 20px; font-weight: bold; margin-bottom: 20px;">الرجاء المحاولة لاحقاً.</h1>
-                        <button id="retryButton" style="padding: 15px 30px; background: linear-gradient(135deg, #007BFF, #0056b3); color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold; transition: transform 0.3s, box-shadow 0.3s;">
-                            أعد المحاولة
-                        </button>
-                    </div>
-                </div>
-            `;
-            document.getElementById('retryButton').addEventListener('click', () => {
-                window.location.reload();
-            });
+            console.error("Validation error:", error);
+            showError();
         }
-    });
-</script>    
+    }
+
+    function restoreContentAndInitialize() {
+        // Restore original body content
+        document.body.innerHTML = originalBody;
+        // You can also initialize your app or call additional functions here if needed.
+    }
+
+    function showJoinRequiredMessage() {
+        document.body.innerHTML = `
+            <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #1e3c72, #2a5298);">
+                <div style="text-align: center; padding: 20px; border: 2px solid #fff; border-radius: 15px; background-color: rgba(0, 0, 0, 0.7);">
+                    <h1 style="font-size: 26px; font-weight: bold; color: #ff4f4f; margin-bottom: 10px;">
+                        لست منضماً إلى القناة.<br>
+                        <span style="color: #ffffff;">الرجاء الانضمام</span>
+                        <a href="https://t.me/DCRef_Channel" target="_blank" style="color: #00ff00; text-decoration: none;">
+                            من هنا
+                        </a>
+                    </h1>
+                    <button id="retryButton" style="padding: 15px 30px; background: linear-gradient(135deg, #007BFF, #0056b3); color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold; transition: transform 0.3s, box-shadow 0.3s;">
+                        أعد المحاولة
+                    </button>
+                </div>
+            </div>
+        `;
+        document.getElementById('retryButton').addEventListener('click', checkUserAndLoad);
+    }
+
+    function showError() {
+        document.body.innerHTML = `
+            <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #ff4f4f, #ff7575); animation: fadeIn 1s;">
+                <div style="text-align: center; padding: 20px; border: 2px solid #fff; border-radius: 15px; background-color: rgba(0, 0, 0, 0.7); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); animation: slideDown 1s;">
+                    <h1 style="color: #fff; font-size: 20px; font-weight: bold; margin-bottom: 10px;">حدث خطأ في فتح الدليل.</h1>
+                    <h1 style="color: #fff; font-size: 20px; font-weight: bold; margin-bottom: 20px;">الرجاء المحاولة لاحقاً.</h1>
+                    <button id="retryButton" style="padding: 15px 30px; background: linear-gradient(135deg, #007BFF, #0056b3); color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold; transition: transform 0.3s, box-shadow 0.3s;">
+                        أعد المحاولة
+                    </button>
+                </div>
+            </div>
+        `;
+        document.getElementById('retryButton').addEventListener('click', checkUserAndLoad);
+    }
+
+    // Initial check when page loads
+    document.addEventListener("DOMContentLoaded", checkUserAndLoad);
+</script>   
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KNKPH3ZEY5"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
