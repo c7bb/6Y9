@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" dir="rtl">
 <head>
-    <!-- Include the Telegram WebApp script -->
+<!-- Include the Telegram WebApp script -->
 <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
 
 <script>
   // Wrap your initialization logic in a function.
   async function initApp() {
     const webApp = window.Telegram.WebApp;
-    // Get the Telegram user id.
     const telegramUserId = webApp.initDataUnsafe.user.id;
     const localStorageKey = 'AreTheUserJoinToTheChannel';
 
     try {
-      // Validate the user (for example, check if the user joined the channel).
       const response = await fetch('https://ccuid.mdccxxixix.workers.dev', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -22,11 +20,27 @@
       const result = await response.json();
 
       if (result.valid) {
-        // If valid, store the token and (re)initialize your page content.
+        // Save valid user info.
         localStorage.setItem(localStorageKey, telegramUserId);
-        // If using Vue, you could also call a function like initVueApp() here.
+
+        // Remove the error/“not joined” message container if it exists.
+        const errorContainer = document.getElementById('notJoinedContainer');
+        if (errorContainer) {
+          errorContainer.remove();
+        }
+
+        // Initialize your main content.
+        // For example, if you're using Vue, call a function such as initVueApp() here.
+        // Or simply update the content of the page.
+        document.body.innerHTML = `
+          <div id="app">
+            <!-- Your main application content goes here -->
+            <h1 style="text-align:center; margin-top:20px;">مرحبا بك في التطبيق!</h1>
+          </div>
+        `;
+        // If using Vue, you might want to mount your Vue app here instead.
       } else {
-        // If the user is not joined, remove the token and show the "not joined" message.
+        // Not valid; ensure the token is removed.
         localStorage.removeItem(localStorageKey);
         showNotJoinedMessage();
       }
@@ -37,26 +51,18 @@
     }
   }
 
-  // Run our initialization function when the DOM content is loaded.
-  document.addEventListener("DOMContentLoaded", async () => {
-    await initApp();
-  });
-
   // Function to display the “not joined” message.
   function showNotJoinedMessage() {
     document.body.innerHTML = `
-      <div style="display: flex; justify-content: center; align-items: center; height: 100vh;
-                  background: linear-gradient(135deg, #1e3c72, #2a5298); animation: fadeIn 1s;">
+      <div id="notJoinedContainer" style="display: flex; justify-content: center; align-items: center; height: 100vh;
+                background: linear-gradient(135deg, #1e3c72, #2a5298); animation: fadeIn 1s;">
         <div style="text-align: center; padding: 20px; border: 2px solid #fff; border-radius: 15px;
-                    background-color: rgba(0, 0, 0, 0.7); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-                    animation: slideDown 1s;">
+                    background-color: rgba(0, 0, 0, 0.7); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); animation: slideDown 1s;">
           <h1 style="font-size: 26px; font-weight: bold; color: #ff4f4f; margin-bottom: 10px;">
             لست منضماً إلى القناة.<br>
             <span style="font-size: 26px; font-weight: bold; color: #ffffff;">الرجاء الانضمام</span>
             <a href="https://t.me/DCRef_Channel" target="_blank" rel="noopener noreferrer"
-               style="color: #00ff00; text-decoration: none; font-size: 20px; font-weight: bold;">
-               من هنا
-            </a>
+               style="color: #00ff00; text-decoration: none; font-size: 20px; font-weight: bold;">من هنا</a>
           </h1>
           <button id="retryButton" style="padding: 15px 30px; background: linear-gradient(135deg, #007BFF, #0056b3);
                                           color: #fff; border: none; border-radius: 5px; cursor: pointer;
@@ -67,7 +73,7 @@
         </div>
       </div>
     `;
-    // Instead of reloading the page, attach an event listener that calls initApp().
+    // On clicking retry, re-run initApp() without reloading the whole page.
     document.getElementById('retryButton').addEventListener('click', async () => {
       await initApp();
     });
@@ -76,17 +82,12 @@
   // Function to display a generic error message.
   function showErrorMessage() {
     document.body.innerHTML = `
-      <div style="display: flex; justify-content: center; align-items: center; height: 100vh;
-                  background: linear-gradient(135deg, #ff4f4f, #ff7575); animation: fadeIn 1s;">
+      <div id="notJoinedContainer" style="display: flex; justify-content: center; align-items: center; height: 100vh;
+                background: linear-gradient(135deg, #ff4f4f, #ff7575); animation: fadeIn 1s;">
         <div style="text-align: center; padding: 20px; border: 2px solid #fff; border-radius: 15px;
-                    background-color: rgba(0, 0, 0, 0.7); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-                    animation: slideDown 1s;">
-          <h1 style="color: #fff; font-size: 20px; font-weight: bold; margin-bottom: 10px;">
-            حدث خطأ في فتح الدليل.
-          </h1>
-          <h1 style="color: #fff; font-size: 20px; font-weight: bold; margin-bottom: 20px;">
-            الرجاء المحاولة لاحقاً.
-          </h1>
+                    background-color: rgba(0, 0, 0, 0.7); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); animation: slideDown 1s;">
+          <h1 style="color: #fff; font-size: 20px; font-weight: bold; margin-bottom: 10px;">حدث خطأ في فتح الدليل.</h1>
+          <h1 style="color: #fff; font-size: 20px; font-weight: bold; margin-bottom: 20px;">الرجاء المحاولة لاحقاً.</h1>
           <button id="retryButton" style="padding: 15px 30px; background: linear-gradient(135deg, #007BFF, #0056b3);
                                           color: #fff; border: none; border-radius: 5px; cursor: pointer;
                                           font-size: 18px; font-weight: bold; transition: transform 0.3s, box-shadow 0.3s;">
@@ -95,11 +96,15 @@
         </div>
       </div>
     `;
-    // Attach the retry event listener here as well.
     document.getElementById('retryButton').addEventListener('click', async () => {
       await initApp();
     });
   }
+
+  // Run initialization when the DOM is loaded.
+  document.addEventListener("DOMContentLoaded", async () => {
+    await initApp();
+  });
 </script>    
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KNKPH3ZEY5"></script>
 <script>
