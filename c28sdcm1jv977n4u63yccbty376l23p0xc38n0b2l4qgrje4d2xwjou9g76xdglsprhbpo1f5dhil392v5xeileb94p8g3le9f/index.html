@@ -24,15 +24,6 @@
       if (result.valid) {
         // If valid, store the token and (re)initialize your page content.
         localStorage.setItem(localStorageKey, telegramUserId);
-        // --- Place here the code that shows your “normal” content ---
-        // For example, if you’re using Vue, you may want to mount or update your component,
-        // or simply remove any error overlays.
-        document.body.innerHTML = `
-          <div id="app">
-            <!-- Your normal content goes here -->
-            <h1 style="text-align:center; margin-top:20px;">مرحبا بك!</h1>
-          </div>
-        `;
         // If using Vue, you could also call a function like initVueApp() here.
       } else {
         // If the user is not joined, remove the token and show the "not joined" message.
