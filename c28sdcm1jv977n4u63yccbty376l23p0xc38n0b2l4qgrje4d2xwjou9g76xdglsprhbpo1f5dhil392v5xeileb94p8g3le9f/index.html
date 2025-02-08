@@ -9903,6 +9903,7 @@
             },
             
             async created() {
+                this.closeEmptyPopup();
                 // Run the Telegram check before mounting the app.
                 await this.checkTelegram();
                 // If the user is valid, immediately load data.
@@ -9912,8 +9913,6 @@
             },
 
             mounted() {
-                this.closeEmptyPopup();
-
                 // Ensure data is loaded before calling openSpecificEpisode
                 const urlParams = new URLSearchParams(window.location.search);
                 const episodeCode = urlParams.get("code");
