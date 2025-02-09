@@ -3031,8 +3031,11 @@
                         <th :class="['border border-gray-300 text-xl px-4 py-2 text-center w-5/6', isAnyFilterActive ? 'bg-orange-500' : '']">
                             {{ episodeTitleHeader }}
                             <br />
-                            <span v-if="isAnyFilterActive" @click="openEmptyPopup" class="text-base text-gray-700 cursor-pointer">
-                            (التصفية قيد التشغيل حالياً)
+                            <span v-if="isAnyFilterActive" @click="openEmptyPopup" class="text-base text-black cursor-pointer">
+                            ~ (التصفية قيد التشغيل حالياً) ~
+                            </span> <br />
+                            <span class="text-base text-white">
+                                (اضغط فوق أي عنوان حلقة لفتح بياناتها)
                             </span>
                         </th>                          
                     </tr>
