@@ -7726,21 +7726,21 @@
 
                     // Chris Vineyard
                     if (this.filterChrisVineyardEpisodes) {
-                        filteredByType = filteredByType.filter(episode => episode.EpisodeFilterAdvanced.includes("71CV"));
+                        filteredByType = filteredByType.filter(episode => episode.EpisodeFilterAdvanced.includes("71VH"));
                     }
                     const activeFiltersChrisVineyard = [];
 
                     if (this.filterChrisVineyardSceneEpisodes) {
-                        activeFiltersChrisVineyard.push("71CV1");
+                        activeFiltersChrisVineyard.push("71VH1");
                     }
                     if (this.filterChrisVineyardBackgroundEpisodes) {
-                        activeFiltersChrisVineyard.push("71CV2");
+                        activeFiltersChrisVineyard.push("71VH2");
                     }
                     if (this.filterChrisVineyardFlashbackEpisodes) {
-                        activeFiltersChrisVineyard.push("71CV3");
+                        activeFiltersChrisVineyard.push("71VH3");
                     }
                     if (this.filterChrisVineyardOtherEpisodes) {
-                        activeFiltersChrisVineyard.push("71CV4");
+                        activeFiltersChrisVineyard.push("71VH4");
                     }
 
                     if (activeFiltersChrisVineyard.length > 0) {
@@ -9326,19 +9326,19 @@
 
                 // Chris Vineyard
                 ChrisVineyardEpisodesCount() {
-                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("71CV")).length;
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("71VH")).length;
                 },
                 ChrisVineyardSceneEpisodesCount() {
-                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("71CV1")).length;
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("71VH1")).length;
                 },
                 ChrisVineyardBackgroundEpisodesCount() {
-                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("71CV2")).length;
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("71VH2")).length;
                 },
                 ChrisVineyardFlashbackEpisodesCount() {
-                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("71CV3")).length;
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("71VH3")).length;
                 },
                 ChrisVineyardOtherEpisodesCount() {
-                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("71CV4")).length;
+                    return this.episodes.filter(episode => episode.EpisodeFilterAdvanced.includes("71VH4")).length;
                 },
 
                 // Chianti
