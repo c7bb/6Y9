@@ -3032,12 +3032,13 @@
                             {{ episodeTitleHeader }}
                             <br />
                             <span v-if="isAnyFilterActive" @click="openEmptyPopup" class="text-base text-black cursor-pointer">
-                            ~ (التصفية قيد التشغيل حالياً) ~
-                            </span> <br />
+                                ~ (التصفية قيد التشغيل حالياً) ~
+                            </span>
+                            <br v-if="isAnyFilterActive" />
                             <span class="text-base text-white">
                                 (اضغط فوق أي عنوان حلقة لفتح بياناتها)
                             </span>
-                        </th>                          
+                        </th>                                                  
                     </tr>
                 </thead>
 
