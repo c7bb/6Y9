@@ -3035,10 +3035,10 @@
                                 ~ (التصفية قيد التشغيل حالياً) ~
                             </span>
                             <br v-if="isAnyFilterActive" />
-                            <span class="text-base text-white">
+                            <span :class="['text-base', isAnyFilterActive ? 'text-white' : 'text-red-600']">
                                 (اضغط فوق أي عنوان حلقة لفتح بياناتها)
                             </span>
-                        </th>                                                  
+                        </th>                                                                          
                     </tr>
                 </thead>
 
