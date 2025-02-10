@@ -4752,14 +4752,14 @@
                                     </div>
                                 </fieldset>
 
-                                <div 
-                                v-if="(selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'error')) || (selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'error'))"  
+                                <div  
+                                    v-if="(selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'error')) || (selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'error'))"
                                     class="fixed z-10 inset-0 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center"
                                     >
                                     <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-1/2 lg:w-1/3 max-h-[90vh] overflow-hidden flex flex-col">
                                         <!-- Sticky Header Section -->
                                         <div class="sticky top-0 bg-cyan-900 pt-4 pl-4 pr-4 pb-2">
-                                            <h2 class="text-2xl text-red-500 font-bold text-center">حدث خطأ</h2>
+                                        <h2 class="text-2xl text-red-500 font-bold text-center">حدث خطأ</h2>
                                         </div>
 
                                         <!-- Scrollable Content -->
@@ -4772,6 +4772,10 @@
                                             alt="Error Hint"
                                             class="mb-4 w-full rounded"
                                         />
+                                        <!-- Display Telegram's error message -->
+                                        <p v-if="errorMessage" class="text-lg text-white text-center font-bold mt-4">
+                                            {{ errorMessage }}
+                                        </p>
                                         <p class="text-lg text-white font-bold text-center mt-4">
                                             إذا لم يظهر لك الزر، فهذا يعني أنك مشترك بالفعل في البوت.
                                         </p>
@@ -5011,6 +5015,7 @@
                 return {
                     userJoined: false,
                     showEmptyPopup: false,
+                    errorMessage: "",
                     replacementDict: {
                     "فلم": ["فيلم",],
                     "ة": ["ه","ة"],
@@ -13481,33 +13486,6 @@
                     }
                 },
 
-                async sendMangaToBot(fileId, mangaNumber, index) {
-                    if (!this.selectedEpisode.EpisodeNumber) {
-                        return;
-                    }
-
-                    const token = '7518282241:AAF06PXBA0a0kY2z-Sh7Wm4kj9_kkyRRFk8';
-                    const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
-                    console.log(chatId);
-                    const caption = `*الفصل: ${mangaNumber}*`;
-
-                    this.selectedEpisode.EpisodeMangasIDs[index].status = 'sending';
-
-                    try {
-                        await this.sendMangaResponse(chatId, fileId, caption, token);
-                        this.selectedEpisode.EpisodeMangasIDs[index].status = 'success';
-                    } catch (error) {
-                        this.selectedEpisode.EpisodeMangasIDs[index].status = 'error';
-                        // Skip timeout reset if the error popup is active
-                        if (this.selectedEpisode.EpisodeMangasIDs.some((manga) => manga.status === "error")) {
-                            return; // Exit early if error popup is shown
-                        }
-                    }
-                    setTimeout(() => {
-                        this.selectedEpisode.EpisodeMangasIDs[index].status = null;
-                    }, 5000);
-                },
-
                 async sendMangaResponse(chatId, fileId, caption, token) {
                     const url = `https://api.telegram.org/bot${token}/sendDocument`;
                     const body = {
@@ -13526,9 +13504,44 @@
                         body: JSON.stringify(body),
                     });
 
-                    if (!response.ok) {
-                        throw new Error(`Failed to send manga: ${response.statusText}`);
+                    // Parse the JSON response
+                    const data = await response.json();
+
+                    // If Telegram reports an error, throw it with the description from Telegram
+                    if (!data.ok) {
+                        throw new Error(data.description || response.statusText);
                     }
+                },
+
+                async sendMangaToBot(fileId, mangaNumber, index) {
+                    if (!this.selectedEpisode.EpisodeNumber) {
+                        return;
+                    }
+
+                    const token = '7518282241:AAF06PXBA0a0kY2z-Sh7Wm4kj9_kkyRRFk8';
+                    const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
+                    const caption = `*الفصل: ${mangaNumber}*`;
+
+                    this.selectedEpisode.EpisodeMangasIDs[index].status = 'sending';
+
+                    try {
+                        await this.sendMangaResponse(chatId, fileId, caption, token);
+                        this.selectedEpisode.EpisodeMangasIDs[index].status = 'success';
+                        // Clear any previous error message on success
+                        this.errorMessage = "";
+                    } catch (error) {
+                        this.selectedEpisode.EpisodeMangasIDs[index].status = 'error';
+                        // Save the error message from Telegram so it can be displayed
+                        this.errorMessage = error.message;
+                        // If an error popup is active, skip further processing
+                        if (this.selectedEpisode.EpisodeMangasIDs.some(manga => manga.status === "error")) {
+                        return;
+                        }
+                    }
+
+                    setTimeout(() => {
+                        this.selectedEpisode.EpisodeMangasIDs[index].status = null;
+                    }, 5000);
                 },
 
                 openSpecificEpisode(episodeCode) {
