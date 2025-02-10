@@ -4487,7 +4487,7 @@
                 <p class="text-white text-xl text-center font-bold">تم إضافة حلقة الأسبوع ({{ ep }})</p>
                 <button 
                     v-if="episodes && episodes.length > 0"
-                    @click="openModal(episodes.find(e => e.EpisodeNumber === ep))"
+                    @click="openEpisodeModal(ep)"
                     class="mt-4 w-full py-2 bg-teal-600 text-white font-bold text-lg rounded hover:bg-teal-500 transition-transform transform hover:scale-105 animate-bounce">
                     أضغط هنا لفتح الحلقة
                 </button>
@@ -13660,18 +13660,19 @@
                     }
                 },
 
-                    openEpisodeModal(episodeNumber) {
+                openEpisodeModal(episodeNumber) {
                     if (!this.episodes || this.episodes.length === 0) {
-                        console.log('Episodes data is not loaded yet!');
-                        return; // Exit early if episodes data is not loaded
+                        console.log('Episodes data is not loaded yet in openEpisodeModal!'); // Keeping this one, as it's a potential error case
+                        return;
                     }
 
-                    const episode = this.episodes.find(ep => ep.EpisodeNumber === episodeNumber);
+                    const episodeNumberString = String(episodeNumber); // Convert episodeNumber to string
+                    const episode = this.episodes.find(ep => ep.EpisodeNumber === episodeNumberString);
 
                     if (episode) {
-                        this.openModal(episode); // Open the modal for the found episode OBJECT
+                        this.openModal(episode);
                     } else {
-                        console.log("Episode not found in episodes array!");
+                        console.log("Episode not found in episodes array in openEpisodeModal!"); // Keeping this one for error case
                     }
                 },
             },
