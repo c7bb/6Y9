@@ -4487,7 +4487,7 @@
                 <p class="text-white text-xl text-center font-bold">تم إضافة حلقة الأسبوع ({{ ep }})</p>
                 <button 
                     v-if="episodes && episodes.length > 0"
-                    @click="openSpecificEpisode(ep)" 
+                    @click="openModal(ep)" 
                     class="mt-4 w-full py-2 bg-teal-600 text-white font-bold text-lg rounded hover:bg-teal-500 transition-transform transform hover:scale-105 animate-bounce">
                     أضغط هنا لفتح الحلقة
                 </button>
