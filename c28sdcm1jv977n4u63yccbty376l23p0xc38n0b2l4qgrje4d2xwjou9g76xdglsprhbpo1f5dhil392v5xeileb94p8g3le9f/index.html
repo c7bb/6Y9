@@ -13,86 +13,10 @@
 <script data-goatcounter="https://dcref.goatcounter.com/count"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
-    <title>.</title>
-    <script>
-        function isInput(event) {
-            return event.target.tagName === 'INPUT' ||
-                event.target.tagName === 'TEXTAREA' ||
-                event.target.isContentEditable;
-        }
-
-        document.addEventListener('contextmenu', (event) => {
-            if (!isInput(event)) {
-                event.preventDefault();
-            }
-        });
-
-        document.addEventListener('keydown', (event) => {
-            if (!isInput(event) && (event.ctrlKey || event.metaKey) && ['c', 'x', 'v', 'a', 's', 'p'].includes(event.key.toLowerCase())) {
-                event.preventDefault();
-            }
-        });
-
-        document.addEventListener('selectstart', (event) => {
-            if (!isInput(event)) {
-                event.preventDefault();
-            }
-        });
-    
-            // Disable Ctrl+U (View Source), Ctrl+Shift+I (DevTools)
-            // if (event.ctrlKey && 
-            //     (event.key.toLowerCase() === 'u' || 
-            //     (event.shiftKey && event.key.toLowerCase() === 'i'))) {
-            //     event.preventDefault();
-            // }
-    </script>    
+    <title>.</title>    
     <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
     <script src="episodes.json" type="application/json"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Disable text selection */
-
-        /* html{
-            touch-action: none; Prevent touch gestures like pinch-to-zoom
-        } */
-
-        /* body {
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            /* touch-action: none;
-        } */
-
-        * {
-            -webkit-user-drag: none; /* Disable dragging */
-            -webkit-touch-callout: none; /* Disable callouts on iOS */
-            user-select: none; /* Disable text selection */
-            -webkit-user-select: none; /* For WebKit browsers */
-            -moz-user-select: none; /* For Firefox */
-            -ms-user-select: none; /* For IE */
-        }
-
-         /* Allow text selection specifically in the search input */
-        input[type="text"], input[type="search"], textarea, [contenteditable="true"], input.v-model {
-            user-select: text; /* Enable text selection for input fields */
-            -webkit-user-select: text; /* For WebKit browsers (Safari, Chrome) */
-            -moz-user-select: text; /* For Firefox */
-            -ms-user-select: text; /* For Internet Explorer */
-            pointer-events: auto;
-        }
-    
-        /* Disable drag functionality */
-        img {
-            -webkit-user-drag: none; /* Disable dragging of images and links */
-            pointer-events: none;
-        }
-
-        /* Enable pointer-events for specific icons */
-        .icon-pointer {
-            pointer-events: auto;
-        }
-    </style>    
+    <script src="https://cdn.tailwindcss.com"></script>    
     <style>
         @font-face {
             font-family: 'Expo Arabic Light';
