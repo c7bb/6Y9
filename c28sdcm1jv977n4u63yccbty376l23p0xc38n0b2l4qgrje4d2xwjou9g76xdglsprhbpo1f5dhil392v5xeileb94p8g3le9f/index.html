@@ -4482,6 +4482,17 @@
 
             <input v-model="searchQuery" class="border px-4 py-2 font-bold text-xl rounded w-full" placeholder="بحث...">
 
+            <!-- Announcement Box -->
+            <div class="relative w-full max-w-2xl p-4 mt-4 bg-black bg-opacity-85 rounded-lg shadow-lg border border-yellow-500 animate-borderMove">
+                <p class="text-white text-xl text-center font-bold">تم إضافة حلقة الأسبوع ({{ ep }})</p>
+                <button 
+                    v-if="episodes && episodes.length > 0"
+                    @click="openSpecificEpisode(ep)" 
+                    class="mt-4 w-full py-2 bg-teal-600 text-white font-bold text-lg rounded hover:bg-teal-500 transition-transform transform hover:scale-105 animate-bounce">
+                    أضغط هنا لفتح الحلقة
+                </button>
+            </div>
+
                         <!-- Centered Description Box for Colors and Their Names with "معاني الألوان" Legend -->
                         <fieldset class="my-4 w-full font-bold p-4 rounded border relative">
                             <legend class="px-2 font-bold text-white-600">معاني الألوان</legend>
@@ -5016,6 +5027,7 @@
                     userJoined: false,
                     showEmptyPopup: false,
                     errorMessage: "",
+                    ep: 1152,
                     replacementDict: {
                     "فلم": ["فيلم",],
                     "ة": ["ه","ة"],
@@ -13679,5 +13691,35 @@
             }
         }).mount('#app');
     </script>
+    <style scoped>
+        @keyframes borderMove {
+          0% {
+            border-color: #ffdd57;
+          }
+          50% {
+            border-color: #ff0000;
+          }
+          100% {
+            border-color: #ffdd57;
+          }
+        }
+        
+        .animate-borderMove {
+          animation: borderMove 2s infinite alternate;
+        }
+        
+        @keyframes bounce {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-5px);
+          }
+        }
+        
+        .animate-bounce {
+          animation: bounce 1.5s infinite;
+        }
+    </style>
 </body>
 </html>
