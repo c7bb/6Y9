@@ -4965,7 +4965,7 @@
                                 <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeSummary !== ''" class="border p-2 border-orange-400 rounded mb-2">
                                     <legend class="font-bold cursor-pointer" @click="toggleSpoiler">
                                         <span class="text-lg">
-                                            <span v-html="highlightSpoilerText()"></span>
+                                            <span v-html="highlightSpoilerText()" class="animate-bounce"></span>
                                         </span>
                                     </legend>
                                     <p v-if="spoilerVisible" class="text-lg">{{ selectedEpisode.EpisodeSummary }}</p>
