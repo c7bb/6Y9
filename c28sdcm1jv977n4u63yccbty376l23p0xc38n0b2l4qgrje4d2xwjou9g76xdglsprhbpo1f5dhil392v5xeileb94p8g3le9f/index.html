@@ -4761,42 +4761,55 @@
                                     <span v-else>لايوجد</span>
                                 </p>
 
-                                <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeMangaQuoted !== ''" class="mb-2 text-lg">
+                                <fieldset 
+                                    v-if="selectedEpisode && selectedEpisode.EpisodeMangaQuoted !== ''" 
+                                    :class="{
+                                        'border p-2 rounded mb-2': selectedEpisode.EpisodeMangasIDs && selectedEpisode.EpisodeMangasIDs.length > 0
+                                    }"
+                                    >
                                     <!-- Show legend only if EpisodeMangasIDs exists and is not empty -->
-                                    <legend v-if="selectedEpisode.EpisodeMangasIDs && selectedEpisode.EpisodeMangasIDs.length > 0" class="font-bold text-lg">
-                                      <p>
+                                    <legend 
+                                        v-if="selectedEpisode.EpisodeMangasIDs && selectedEpisode.EpisodeMangasIDs.length > 0" 
+                                        class="font-bold text-lg"
+                                    >
+                                        <p>
                                         <span dir="ltr">:قراءة الفصول (عبر البوت)</span> {{ selectedEpisode.EpisodeMangaQuoted }}
-                                      </p>
+                                        </p>
                                     </legend>
-                                  
+
                                     <!-- If EpisodeMangasIDs is empty/null, only show the text -->
-                                    <p v-else>
-                                      <span dir="ltr">:الفصول المقتبسة</span> {{ selectedEpisode.EpisodeMangaQuoted }}
+                                    <p v-else class="text-lg mb-2">
+                                        <span dir="ltr">:الفصول المقتبسة</span> {{ selectedEpisode.EpisodeMangaQuoted }}
                                     </p>
-                                  
+
                                     <!-- Manga download buttons -->
-                                    <div v-if="selectedEpisode.EpisodeMangasIDs && selectedEpisode.EpisodeMangasIDs.length > 0" class="flex flex-col justify-center gap-4">
-                                      <div 
+                                    <div 
+                                        v-if="selectedEpisode.EpisodeMangasIDs && selectedEpisode.EpisodeMangasIDs.length > 0" 
+                                        class="flex flex-col justify-center gap-4"
+                                    >
+                                        <div 
                                         v-for="(manga, index) in selectedEpisode.EpisodeMangasIDs" 
                                         :key="manga.MangaNumber" 
-                                        class="relative flex flex-col gap-4">
+                                        class="relative flex flex-col gap-4"
+                                        >
                                         <button
-                                          :disabled="manga.status === 'success'"
-                                          @click="() => { sendMangaToBot(manga.MangaFileID, manga.MangaNumber, index); }"
-                                          class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center justify-center shadow-md disabled:opacity-50">
-                                          ({{ manga.MangaFileSize }}&nbsp;MB) {{ manga.MangaNumber }}
+                                            :disabled="manga.status === 'success'"
+                                            @click="() => { sendMangaToBot(manga.MangaFileID, manga.MangaNumber, index); }"
+                                            class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center justify-center shadow-md disabled:opacity-50"
+                                        >
+                                            ({{ formatMangaSize(manga.MangaFileSize) }}) {{ manga.MangaNumber }}
                                         </button>
                                         <img 
-                                          v-if="manga.status === 'success'" 
-                                          src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/true.png"
-                                          class="absolute right-0 top-0 w-6 h-6 ml-2"
+                                            v-if="manga.status === 'success'" 
+                                            src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/true.png"
+                                            class="absolute right-0 top-0 w-6 h-6 ml-2"
                                         />
                                         <img 
-                                          v-if="manga.status === 'error'" 
-                                          src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png"
-                                          class="absolute right-0 top-0 w-6 h-6 ml-2"
+                                            v-if="manga.status === 'error'" 
+                                            src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png"
+                                            class="absolute right-0 top-0 w-6 h-6 ml-2"
                                         />
-                                      </div>
+                                        </div>
                                     </div>
                                 </fieldset>                                                                    
 
@@ -13713,6 +13726,10 @@
                     } else {
                         console.log("Episode not found in episodes array in openEpisodeModal!"); // Keeping this one for error case
                     }
+                },
+
+                formatMangaSize(size) {
+                    return `${size} MB`;
                 },
             },
             
