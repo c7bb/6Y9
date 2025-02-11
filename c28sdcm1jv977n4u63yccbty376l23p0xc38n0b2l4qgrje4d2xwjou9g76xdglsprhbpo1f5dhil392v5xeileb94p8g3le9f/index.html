@@ -4784,7 +4784,7 @@
                                           :disabled="manga.status === 'success'"
                                           @click="() => { sendMangaToBot(manga.MangaFileID, manga.MangaNumber, index); }"
                                           class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center justify-center shadow-md disabled:opacity-50">
-                                          ({{ manga.MangaFileSize }}&nbsp;MB) {{ manga.MangaNumber }}
+                                          ({{ `${manga.MangaFileSize} MB` }}) {{ manga.MangaNumber }}
                                         </button>
                                         <img 
                                           v-if="manga.status === 'success'" 
