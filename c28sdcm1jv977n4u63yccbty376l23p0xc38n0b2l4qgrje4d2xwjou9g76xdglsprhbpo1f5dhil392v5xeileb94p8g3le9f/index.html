@@ -356,23 +356,23 @@
 </style>
 </head>
 <body class="bg-gray-800 p-4">
-    <div id="app" class="container mx-auto p-4 shadow-lg rounded"> <!-- Removed .bg-slate-700 -->
+    <div id="app" class="container mx-auto p-4 shadow-lg rounded relative"> <!-- Removed .bg-slate-700 -->
 
-        <!-- Header Navigation Bar -->
-        <fieldset class="border border-gray-400 rounded p-2 mb-4">
-            <legend class="text-lg font-bold text-white px-2">النوافذ</legend>
-            <div class="flex justify-center gap-4">
-                <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">
-                    حلقات
-                </button>
-                <button class="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700">
-                    أفلام
-                </button>
-                <button class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-purple-700">
-                    مانغا
-                </button>
+        <!-- Menu Button -->
+        <div class="absolute top-4 right-4">
+            <button @click="toggleMenu" class="bg-gray-700 text-white p-2 rounded flex flex-col items-center">
+                <span class="block w-6 h-1 bg-white mb-1"></span>
+                <span class="block w-6 h-1 bg-white mb-1"></span>
+                <span class="block w-6 h-1 bg-white"></span>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div v-if="menuOpen" class="absolute right-0 mt-2 bg-white shadow-lg rounded py-2 w-32">
+                <button class="block w-full text-left px-4 py-2 text-blue-500 hover:bg-gray-200">حلقات</button>
+                <button class="block w-full text-left px-4 py-2 text-green-500 hover:bg-gray-200">أفلام</button>
+                <button class="block w-full text-left px-4 py-2 text-purple-500 hover:bg-gray-200">مانغا</button>
             </div>
-        </fieldset>
+        </div>
 
             <!-- Error Message with Retry Button -->
     <div v-if="error" class="text-center text-xl mb-4 text-red-500 font-bold py-4">
@@ -5092,6 +5092,7 @@
         createApp({
             data() {
                 return {
+                    menuOpen: false,
                     userJoined: false,
                     showEmptyPopup: false,
                     errorMessage: "",
@@ -13743,6 +13744,10 @@
 
                 formatMangaSize(size) {
                     return `${size} MB`;
+                },
+
+                toggleMenu() {
+                    this.menuOpen = !this.menuOpen;
                 },
             },
             
