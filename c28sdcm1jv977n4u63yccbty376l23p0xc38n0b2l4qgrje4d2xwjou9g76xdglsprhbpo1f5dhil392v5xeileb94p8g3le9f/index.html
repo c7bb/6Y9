@@ -373,7 +373,7 @@
                 </div>
             </div>
 
-            <!-- Add this new modal structure -->
+            <!-- Updated Direct Window Modal -->
             <div v-if="showDirectWindow" class="fixed z-50 inset-0 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center">
                 <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-1/2 lg:w-1/3 max-h-[90vh] overflow-hidden flex flex-col">
                     <div class="sticky top-0 bg-cyan-900 pt-4 pl-4 pr-4 pb-2">
@@ -388,15 +388,15 @@
                             <legend class="px-2">اختر نوع المحتوى:</legend>
                             <div class="flex justify-around">
                                 <label class="flex items-center">
-                                    <input type="radio" v-model="selectedCategory" value="episodes" class="ml-2" @change="activeTab.episodes = 0">
+                                    <input type="radio" v-model="selectedCategory" value="episodes" class="ml-2" @change="resetEpisodesView">
                                     حلقات
                                 </label>
                                 <label class="flex items-center">
-                                    <input type="radio" v-model="selectedCategory" value="movies" class="ml-2" @change="activeTab.movies = 0">
+                                    <input type="radio" v-model="selectedCategory" value="movies" class="ml-2" @change="resetMoviesView">
                                     أفلام
                                 </label>
                                 <label class="flex items-center">
-                                    <input type="radio" v-model="selectedCategory" value="mangas" class="ml-2" @change="activeTab.mangas = 0">
+                                    <input type="radio" v-model="selectedCategory" value="mangas" class="ml-2" @change="resetMangasView">
                                     مانغا
                                 </label>
                             </div>
@@ -414,13 +414,40 @@
                                 </button>
                             </div>
                             <fieldset class="border p-2 rounded">
-                                <legend>الحلقات المتاحة</legend>
-                                <div class="grid grid-cols-3 gap-2">
+                                <legend class="flex items-center gap-2">
+                                    <span>الحلقات المتاحة</span>
+                                    <button v-if="selectedEpisode" @click="resetEpisodesView" class="p-1 hover:bg-gray-700 rounded">
+                                        <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/previous.png" alt="رجوع" class="h-6 w-6" />
+                                    </button>
+                                </legend>
+                                <div v-if="!selectedEpisode" class="grid grid-cols-3 gap-2">
                                     <button v-for="episode in groupedEpisodes[activeTab.episodes]?.items" 
-                                            @click="sendEpisodeToBot(episode.EpisodeVideosIDs[0].VideoID, episode.EpisodeVideosIDs[0].Resolution, 0)"
+                                            @click="selectedEpisode = episode"
                                             class="bg-green-500 text-white p-2 rounded hover:bg-green-700">
                                         {{ episode.EpisodeNumber }}
                                     </button>
+                                </div>
+                                <div v-else class="flex flex-col justify-center gap-4">
+                                    <div v-for="(video, index) in selectedEpisode.EpisodeVideosIDs" 
+                                        :key="video.VideoID" 
+                                        class="relative flex flex-col gap-4">
+                                        <button
+                                            :disabled="video.status === 'success'"
+                                            @click="sendEpisodeToBot(video.VideoID, video.Resolution, index)"
+                                            class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50">
+                                            {{ video.Resolution }} ({{ video.Size }} MB)
+                                        </button>
+                                        <img 
+                                            v-if="video.status === 'success'" 
+                                            src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/true.png" 
+                                            class="absolute right-0 top-0 w-6 h-6 ml-2"
+                                        />
+                                        <img 
+                                            v-if="video.status === 'error'" 
+                                            src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png" 
+                                            class="absolute right-0 top-0 w-6 h-6 ml-2"
+                                        />
+                                    </div>
                                 </div>
                             </fieldset>
                         </div>
@@ -5828,11 +5855,13 @@
 
                 groupedEpisodes() {
                     const seasons = {};
-                    this.episodes.filter(e => !e.EpisodeNumber.includes('الفيلم')).forEach(ep => {
-                        const season = ep.EpisodeSeason || 'default';
-                        if (!seasons[season]) seasons[season] = [];
-                        seasons[season].push(ep);
-                    });
+                    this.episodes
+                        .filter(e => e.EpisodeVideosIDs && e.EpisodeVideosIDs.length > 0) // Filter out episodes without videos
+                        .forEach(ep => {
+                            const season = ep.EpisodeSeason || 'default';
+                            if (!seasons[season]) seasons[season] = [];
+                            seasons[season].push(ep);
+                        });
                     
                     return Object.values(seasons).map(group => ({
                         range: `${group[0].EpisodeNumber}-${group[group.length-1].EpisodeNumber}`,
@@ -13953,6 +13982,10 @@
                     this.selectedCategory = category;
                     this.showDirectWindow = true;
                     this.menuOpen = false;
+                },
+
+                resetEpisodesView() {
+                    this.selectedEpisode = null; // Reset to show episodes list
                 },
             },
             
