@@ -359,13 +359,13 @@
     <div id="app" class="container mx-auto p-4 shadow-lg rounded"> <!-- Removed .bg-slate-700 -->
 
         <!-- Menu Button -->
-        <div class="fixed top-4 right-4 z-50">
-            <button @click="toggleMenu" class="bg-gray-700 text-white p-2 rounded flex flex-col items-center">
+        <div class="fixed top-4 right-4 z-50 menu-container">
+            <button @click.stop="toggleMenu" class="bg-gray-700 text-white p-2 rounded flex flex-col items-center">
                 <span class="block w-6 h-1 bg-white mb-1"></span>
                 <span class="block w-6 h-1 bg-white mb-1"></span>
                 <span class="block w-6 h-1 bg-white"></span>
             </button>
-            
+
             <!-- Dropdown Menu -->
             <div v-if="menuOpen" class="absolute right-0 mt-2 bg-sky-900 shadow-lg rounded py-2 w-32">
                 <button class="block w-full text-center px-4 py-2 text-base font-bold text-white hover:bg-teal-600">حلقات (قريباً)</button>
@@ -13799,6 +13799,13 @@
                 toggleMenu() {
                     this.menuOpen = !this.menuOpen;
                 },
+
+                closeMenu(event) {
+                    // Check if the click is outside the menu
+                    if (!event.target.closest(".menu-container")) {
+                        this.menuOpen = false;
+                    }
+                },
             },
             
             async created() {
@@ -13812,6 +13819,7 @@
 
             mounted() {
                 this.closeEmptyPopup();
+                document.addEventListener("click", this.closeMenu);
 
                 // Ensure data is loaded before calling openSpecificEpisode
                 const urlParams = new URLSearchParams(window.location.search);
@@ -13827,7 +13835,13 @@
                         }
                     });
                 }
+            },
+
+            unmounted() {
+                // Clean up event listener to prevent memory leaks
+                document.removeEventListener("click", this.closeMenu);
             }
+
         }).mount('#app');
     </script>
     <style scoped>
