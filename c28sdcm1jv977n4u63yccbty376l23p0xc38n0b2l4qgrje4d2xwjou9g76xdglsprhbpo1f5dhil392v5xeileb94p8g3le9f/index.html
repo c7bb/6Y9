@@ -388,7 +388,7 @@
 
     <h1 
         class="text-5xl font-bold mb-4 text-center">
-        <span @click="reloadPage1">الدليل الشامل لمشاهدة المحقق كونان</span>
+        <span>الدليل الشامل لمشاهدة المحقق كونان</span>
     </h1>
         <!-- <br>
 
@@ -4614,16 +4614,9 @@
             <div class="relative w-12 h-12 mx-auto">
                 <div class="w-full h-full animate-spin">
                     <svg class="w-full h-full" viewBox="0 0 100 100" style="transform: rotate(-90deg);">
-                        <circle
-                            class="stroke-blue-500"
-                            cx="50"
-                            cy="50"
-                            r="45"
-                            fill="none"
-                            stroke-width="8"
+                        <circle class="stroke-blue-500" cx="50" cy="50" r="45" fill="none" stroke-width="8"
                             :stroke-dasharray="circumference"
-                            :stroke-dashoffset="strokeDashOffset"
-                        />
+                            :stroke-dashoffset="strokeDashOffset" />
                     </svg>
                 </div>
                 <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-blue-500 font-bold text-sm">
@@ -5137,8 +5130,9 @@
                     episodeTypeFilter: 'All',
                     episodes: [],
                     loading: true,
-                    loadProgress: 0, // Ensure this is defined here
+                    loadProgress: 0,
                     circumference: 2 * Math.PI * 45, // 2πr where r=45
+                    progressInterval: null,
                     error: null,
                     searchQuery: '',
                     selectedFilter: 'all',
@@ -11993,103 +11987,107 @@
 
                 // Method to load data from JSON
                 loadData() {
-                        return new Promise((resolve, reject) => {
-                            this.loadProgress = 0; // Reset progress
-                            if (this.userJoined) {
-                                // Reset states before attempting to fetch
-                                this.episodes = [];
-                                this.mangas = [];
-                                this.error = null;
-                                this.loading = true;
+                    return new Promise((resolve, reject) => {
+                        // Reset progress and start the progress interval
+                        this.loadProgress = 0;
+                        if (this.progressInterval) clearInterval(this.progressInterval);
 
-                                // Check if a rate-limit countdown is stored
-                                const storedWaitTime = localStorage.getItem('waitTime');
-                                if (storedWaitTime) {
-                                    this.waitTime = parseInt(storedWaitTime, 10);
-                                    this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
-                                    this.startTimer(); // Continue the countdown
-                                    reject('Rate limit exceeded');
-                                    return;
-                                }
-
-                                // Append a cache-busting query parameter
-                                const urlWithCacheBust = `${this.jsonUrl}?t=${new Date().getTime()}`;
-
-                                fetch(urlWithCacheBust, { cache: 'no-store' })
-                                    .then(response => {
-                                        if (response.status === 429) {
-                                            // Handle rate limit
-                                            return response.json().then(data => {
-                                                this.loading = false;
-                                                this.loadProgress = 0; // Reset progress
-                                                // Handle rate limit error
-                                            });
-                                        }
-
-                                        if (!response.ok) {
-                                            throw new Error(`HTTP error! status: ${response.status}`);
-                                        }
-
-                                        // Get the total content length from the response headers
-                                        const contentLength = response.headers.get('Content-Length');
-                                        if (!contentLength) {
-                                            console.warn('Content-Length header missing. Progress tracking may not be accurate.');
-                                        }
-
-                                        let loadedBytes = 0;
-                                        const reader = response.body.getReader();
-                                        const chunks = [];
-
-                                        // Function to read the stream
-                                        const readStream = () => {
-                                            return reader.read().then(({ done, value }) => {
-                                                if (done) {
-                                                    // Stream is complete
-                                                    const data = new TextDecoder().decode(new Uint8Array(chunks.reduce((acc, chunk) => [...acc, ...chunk], [])));
-                                                    const parsedData = JSON.parse(data);
-                                                    this.episodes = parsedData.Episodes || [];
-                                                    this.mangas = parsedData.Mangas || [];
-                                                    this.loading = false;
-                                                    this.loadProgress = 100; // Set progress to 100%
-                                                    localStorage.removeItem('waitTime');
-                                                    resolve();
-                                                    return;
-                                                }
-
-                                                // Update loaded bytes and progress
-                                                loadedBytes += value.length;
-                                                chunks.push([...value]);
-
-                                                if (contentLength) {
-                                                    this.loadProgress = Math.round((loadedBytes / contentLength) * 100);
-                                                }
-
-                                                // Continue reading the stream
-                                                return readStream();
-                                            });
-                                        };
-
-                                        // Start reading the stream
-                                        return readStream();
-                                    })
-                                    .catch(error => {
-                                        this.loading = false;
-                                        this.loadProgress = 0; // Reset progress on error
-
-                                        if (!this.error) {
-                                            this.error = 'حدث خطأ أثناء محاولة تحميل البيانات. قد تكون هناك مشكلة مؤقتة في الاتصال أو الخادم. يُرجى التحقق من اتصالك بالإنترنت أو استخدام VPN والمحاولة مرة أخرى.';
-                                        }
-                                        reject(error);
-                                    });
-                            } else {
-                                this.loading = false;
-                                this.loadProgress = 0;
-                                console.log("User not joined, not loading data.");
-                                reject('User not joined to the channel');
+                        // Start progress animation
+                        this.progressInterval = setInterval(() => {
+                            if (this.loadProgress < 90) {
+                                this.loadProgress += 1;
                             }
-                        });
-                    },
+                        }, 50);
+
+                        if (this.userJoined) {
+                            // Reset states before attempting to fetch
+                            this.episodes = [];
+                            this.mangas = [];
+                            this.error = null;
+                            this.loading = true;
+
+                            // Check if a rate-limit countdown is stored
+                            const storedWaitTime = localStorage.getItem('waitTime');
+                            if (storedWaitTime) {
+                                this.waitTime = parseInt(storedWaitTime, 10);
+                                this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
+                                this.startTimer(); // Continue the countdown
+                                clearInterval(this.progressInterval); // Stop progress animation
+                                this.loadProgress = 0; // Reset progress
+                                reject('Rate limit exceeded');
+                                return;
+                            }
+
+                            // Append a cache-busting query parameter
+                            const urlWithCacheBust = `${this.jsonUrl}?t=${new Date().getTime()}`;
+
+                            fetch(urlWithCacheBust, { cache: 'no-store' })
+                                .then(response => {
+                                    if (response.status === 429) {
+                                        // If rate-limited, parse the JSON response
+                                        return response.json().then(data => {
+                                            this.loading = false;
+                                            clearInterval(this.progressInterval); // Stop progress animation
+                                            this.loadProgress = 0; // Reset progress
+
+                                            if (data.error === "User blocked") {
+                                                this.error = "لقد تجاوزت الحد المسموح به من الطلبات لهذا اليوم.";
+                                                reject('User blocked');
+                                                return;
+                                            }
+
+                                            const resetTime = data.resetTime || Date.now() + 60000;
+                                            this.waitTime = Math.max(0, Math.floor((resetTime - Date.now()) / 1000));
+                                            this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
+                                            localStorage.setItem('waitTime', this.waitTime);
+                                            console.warn(data.message);
+
+                                            // Start a timer to update the wait time
+                                            this.startTimer();
+                                            reject('Rate limit exceeded');
+                                        });
+                                    }
+
+                                    if (!response.ok) {
+                                        throw new Error(`HTTP error! status: ${response.status}`);
+                                    }
+
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    if (data) {
+                                        // Data fetched successfully
+                                        clearInterval(this.progressInterval); // Stop progress animation
+                                        this.loadProgress = 100; // Set progress to 100%
+                                        setTimeout(() => {
+                                            this.episodes = data.Episodes || [];
+                                            this.mangas = data.Mangas || [];
+                                            this.loading = false;
+                                            localStorage.removeItem('waitTime');
+                                            resolve();
+                                        }, 300); // Delay to show 100% progress
+                                    }
+                                })
+                                .catch(error => {
+                                    clearInterval(this.progressInterval); // Stop progress animation
+                                    this.loadProgress = 0; // Reset progress
+                                    this.loading = false;
+
+                                    if (!this.error) {
+                                        this.error = 'حدث خطأ أثناء محاولة تحميل البيانات. قد تكون هناك مشكلة مؤقتة في الاتصال أو الخادم. يُرجى التحقق من اتصالك بالإنترنت أو استخدام VPN والمحاولة مرة أخرى.';
+                                    }
+                                    reject(error);
+                                });
+                        } else {
+                            clearInterval(this.progressInterval); // Stop progress animation
+                            this.loadProgress = 0; // Reset progress
+                            this.loading = false;
+                            console.log("User not joined, not loading data.");
+                            reject('User not joined to the channel');
+                        }
+                    });
                 },
+
                 startTimer() {
                     if (this.waitTime > 0) {
                         const timerInterval = setInterval(() => {
@@ -12115,10 +12113,6 @@
                     location.reload(); // Reloads the page
                     //localStorage.clear();
                     localStorage.removeItem('waitTime');
-                },
-
-                reloadPage1() {
-                    location.reload();
                 },
 
                 getBackgroundColor(episode) {
