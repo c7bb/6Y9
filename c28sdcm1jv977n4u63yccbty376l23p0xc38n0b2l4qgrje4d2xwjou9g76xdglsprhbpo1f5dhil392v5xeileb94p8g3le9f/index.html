@@ -11992,13 +11992,6 @@
                         this.loadProgress = 0;
                         if (this.progressInterval) clearInterval(this.progressInterval);
 
-                        // Start progress animation
-                        this.progressInterval = setInterval(() => {
-                            if (this.loadProgress < 90) {
-                                this.loadProgress += 1;
-                            }
-                        }, 50);
-
                         if (this.userJoined) {
                             // Reset states before attempting to fetch
                             this.episodes = [];
@@ -12012,8 +12005,6 @@
                                 this.waitTime = parseInt(storedWaitTime, 10);
                                 this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
                                 this.startTimer(); // Continue the countdown
-                                clearInterval(this.progressInterval); // Stop progress animation
-                                this.loadProgress = 0; // Reset progress
                                 reject('Rate limit exceeded');
                                 return;
                             }
@@ -12027,8 +12018,6 @@
                                         // If rate-limited, parse the JSON response
                                         return response.json().then(data => {
                                             this.loading = false;
-                                            clearInterval(this.progressInterval); // Stop progress animation
-                                            this.loadProgress = 0; // Reset progress
 
                                             if (data.error === "User blocked") {
                                                 this.error = "لقد تجاوزت الحد المسموح به من الطلبات لهذا اليوم.";
@@ -12052,26 +12041,50 @@
                                         throw new Error(`HTTP error! status: ${response.status}`);
                                     }
 
-                                    return response.json();
-                                })
-                                .then(data => {
-                                    if (data) {
-                                        // Data fetched successfully
-                                        clearInterval(this.progressInterval); // Stop progress animation
-                                        this.loadProgress = 100; // Set progress to 100%
-                                        setTimeout(() => {
-                                            this.episodes = data.Episodes || [];
-                                            this.mangas = data.Mangas || [];
-                                            this.loading = false;
-                                            localStorage.removeItem('waitTime');
-                                            resolve();
-                                        }, 300); // Delay to show 100% progress
+                                    // Get the total content length from the response headers
+                                    const contentLength = response.headers.get('Content-Length');
+                                    if (!contentLength) {
+                                        console.warn('Content-Length header missing. Progress tracking may not be accurate.');
                                     }
+
+                                    let loadedBytes = 0;
+                                    const reader = response.body.getReader();
+                                    const chunks = [];
+
+                                    // Function to read the stream
+                                    const readStream = () => {
+                                        return reader.read().then(({ done, value }) => {
+                                            if (done) {
+                                                // Stream is complete
+                                                const data = new TextDecoder().decode(new Uint8Array(chunks.reduce((acc, chunk) => [...acc, ...chunk], [])));
+                                                const parsedData = JSON.parse(data);
+                                                this.episodes = parsedData.Episodes || [];
+                                                this.mangas = parsedData.Mangas || [];
+                                                this.loading = false;
+                                                localStorage.removeItem('waitTime');
+                                                resolve();
+                                                return;
+                                            }
+
+                                            // Update loaded bytes and progress
+                                            loadedBytes += value.length;
+                                            chunks.push([...value]);
+
+                                            if (contentLength) {
+                                                this.loadProgress = Math.round((loadedBytes / contentLength) * 100);
+                                            }
+
+                                            // Continue reading the stream
+                                            return readStream();
+                                        });
+                                    };
+
+                                    // Start reading the stream
+                                    return readStream();
                                 })
                                 .catch(error => {
-                                    clearInterval(this.progressInterval); // Stop progress animation
-                                    this.loadProgress = 0; // Reset progress
                                     this.loading = false;
+                                    this.loadProgress = 0;
 
                                     if (!this.error) {
                                         this.error = 'حدث خطأ أثناء محاولة تحميل البيانات. قد تكون هناك مشكلة مؤقتة في الاتصال أو الخادم. يُرجى التحقق من اتصالك بالإنترنت أو استخدام VPN والمحاولة مرة أخرى.';
@@ -12079,15 +12092,13 @@
                                     reject(error);
                                 });
                         } else {
-                            clearInterval(this.progressInterval); // Stop progress animation
-                            this.loadProgress = 0; // Reset progress
                             this.loading = false;
+                            this.loadProgress = 0;
                             console.log("User not joined, not loading data.");
                             reject('User not joined to the channel');
                         }
                     });
                 },
-
                 startTimer() {
                     if (this.waitTime > 0) {
                         const timerInterval = setInterval(() => {
