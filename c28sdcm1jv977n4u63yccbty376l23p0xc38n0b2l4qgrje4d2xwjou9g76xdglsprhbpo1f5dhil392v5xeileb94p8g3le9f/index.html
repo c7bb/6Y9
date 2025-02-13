@@ -406,7 +406,7 @@
                     <!-- Episodes Content -->
                     <div v-if="selectedCategory === 'episodes'" class="overflow-y-auto p-4 flex-1">
                         <div v-if="groupedEpisodes.length" class="mb-4">
-                            <div class="flex flex-wrap gap-2 mb-4">
+                            <div class="flex flex-wrap gap-2 mb-4 justify-start"> <!-- Align buttons to the left -->
                                 <button v-for="(group, index) in groupedEpisodes" 
                                         @click="activeTab.episodes = index"
                                         :class="['px-3 py-1 rounded', activeTab.episodes === index ? 'bg-blue-500 text-white' : 'bg-gray-700']">
@@ -455,18 +455,13 @@
 
                     <!-- Movies Content -->
                     <div v-if="selectedCategory === 'movies'" class="overflow-y-auto p-4 flex-1">
-                        <div v-if="groupedMovies.length" class="mb-4">
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <button v-for="(group, index) in groupedMovies" 
-                                        @click="activeTab.movies = index"
-                                        :class="['px-3 py-1 rounded', activeTab.movies === index ? 'bg-blue-500 text-white' : 'bg-gray-700']">
-                                    {{ group.range }}
-                                </button>
-                            </div>
+                        <div v-if="movies.length" class="mb-4">
                             <fieldset class="border p-2 rounded">
-                                <legend>الأفلام المتاحة</legend>
+                                <legend class="flex items-center gap-2">
+                                    <span>الأفلام المتاحة</span>
+                                </legend>
                                 <div class="grid grid-cols-3 gap-2">
-                                    <button v-for="movie in groupedMovies[activeTab.movies]?.items" 
+                                    <button v-for="movie in movies" 
                                             @click="sendEpisodeToBot(movie.EpisodeVideosIDs[0].VideoID, movie.EpisodeVideosIDs[0].Resolution, 0)"
                                             class="bg-green-500 text-white p-2 rounded hover:bg-green-700">
                                         {{ movie.EpisodeNumber.replace('الفيلم', '') }}
@@ -479,7 +474,7 @@
                     <!-- Mangas Content -->
                     <div v-if="selectedCategory === 'mangas'" class="overflow-y-auto p-4 flex-1">
                         <div v-if="groupedMangas.length" class="mb-4">
-                            <div class="flex flex-wrap gap-2 mb-4">
+                            <div class="flex flex-wrap gap-2 mb-4 justify-start"> <!-- Align buttons to the left -->
                                 <button v-for="(group, index) in groupedMangas" 
                                         @click="activeTab.mangas = index"
                                         :class="['px-3 py-1 rounded', activeTab.mangas === index ? 'bg-blue-500 text-white' : 'bg-gray-700']">
@@ -487,7 +482,9 @@
                                 </button>
                             </div>
                             <fieldset class="border p-2 rounded">
-                                <legend>الفصول المتاحة</legend>
+                                <legend class="flex items-center gap-2">
+                                    <span>الفصول المتاحة</span>
+                                </legend>
                                 <div class="grid grid-cols-3 gap-2">
                                     <button v-for="manga in groupedMangas[activeTab.mangas]?.items" 
                                             @click="sendMangaToBot(manga.MangaFileID, manga.MangaNumber, 0)"
@@ -5259,6 +5256,7 @@
                     showTooltip6: false,
                     episodeTypeFilter: 'All',
                     episodes: [],
+                    movies: [],
                     loading: true,
                     loadProgress: 0,
                     circumference: 2 * Math.PI * 45, // 2πr where r=45
@@ -5856,7 +5854,7 @@
                 groupedEpisodes() {
                     const seasons = {};
                     this.episodes
-                        .filter(e => e.EpisodeVideosIDs && e.EpisodeVideosIDs.length > 0) // Filter out episodes without videos
+                        .filter(e => e.EpisodeVideosIDs && e.EpisodeVideosIDs.length > 0 && !e.EpisodeNumber.includes('الفيلم')) // Filter out episodes without videos and "الفيلم"
                         .forEach(ep => {
                             const season = ep.EpisodeSeason || 'default';
                             if (!seasons[season]) seasons[season] = [];
