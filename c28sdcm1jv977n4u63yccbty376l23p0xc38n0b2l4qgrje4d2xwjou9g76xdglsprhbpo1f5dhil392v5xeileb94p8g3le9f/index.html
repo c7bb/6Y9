@@ -13981,27 +13981,32 @@
                 },
 
                 async sendMangaToBotD(fileId, mangaNumber, index) {
-                if (!this.selectedManga?.MangaNumber) return; // Use selectedManga instead of selectedEpisode
+                    if (!this.selectedManga?.MangaNumber) return; // Use selectedManga instead of selectedEpisode
 
-                const token = '7518282241:AAF06PXBA0a0kY2z-Sh7Wm4kj9_kkyRRFk8';
-                const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
-                const caption = `*الفصل: ${mangaNumber}*`;
+                    const token = '7518282241:AAF06PXBA0a0kY2z-Sh7Wm4kj9_kkyRRFk8';
+                    const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
+                    const caption = `*الفصل: ${mangaNumber}*`;
 
-                this.selectedManga.status = 'sending';
+                    this.selectedManga.status = 'sending';
 
-                try {
-                    await this.sendMangaResponse(chatId, fileId, caption, token);
-                    this.selectedManga.status = 'success';
-                    this.errorMessage = "";
-                } catch (error) {
-                    this.selectedManga.status = 'error';
-                    this.errorMessage = error.message;
-                }
+                    try {
+                        await this.sendMangaResponse(chatId, fileId, caption, token);
+                        this.selectedManga.status = 'success';
+                        this.errorMessage = "";
+                    } catch (error) {
+                        this.selectedManga.status = 'error';
+                        this.errorMessage = error.message;
 
-                setTimeout(() => {
-                    this.selectedManga.status = null;
-                }, 5000);
-            },
+                        // If an error popup is active, skip further processing
+                        if (this.selectedManga.status === "error") {
+                            return;
+                        }
+                    }
+
+                    setTimeout(() => {
+                        this.selectedManga.status = null;
+                    }, 5000);
+                },
 
                 openSpecificEpisode(episodeCode) {
                     if (!this.episodes || this.episodes.length === 0) {
