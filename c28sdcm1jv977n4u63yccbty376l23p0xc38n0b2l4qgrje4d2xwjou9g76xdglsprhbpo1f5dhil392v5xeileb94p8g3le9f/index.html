@@ -4610,9 +4610,6 @@
 
         <!-- Table -->
         <div v-if="loading" class="text-center py-4">
-            <div class="relative inline-block w-12 h-12 border-8 border-blue-500 border-t-transparent rounded-full">
-                <div class="absolute top-0 left-0 w-full h-full border-4 border-blue-500 border-t-transparent rounded-full animate-spin" :style="`border-top-color: transparent; border-right-color: transparent; transform: rotate(${progress * 3.6}deg)`"></div>
-            </div>
             <div class="w-full h-2 bg-gray-200 mt-4 relative">
                 <div :style="`width: ${progress}%`" class="h-full bg-blue-500"></div>
             </div>
