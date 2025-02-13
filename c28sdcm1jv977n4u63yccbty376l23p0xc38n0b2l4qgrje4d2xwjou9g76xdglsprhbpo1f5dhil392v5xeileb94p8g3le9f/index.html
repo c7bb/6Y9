@@ -406,7 +406,7 @@
                     <!-- Episodes Content -->
                     <div v-if="selectedCategory === 'episodes'" class="overflow-y-auto p-4 flex-1">
                         <div v-if="groupedEpisodes.length" class="mb-4">
-                            <div class="flex flex-wrap gap-2 mb-4 justify-start"> <!-- Align buttons to the left -->
+                            <div class="flex flex-wrap gap-2 mb-4 justify-left"> <!-- Align buttons to the left -->
                                 <button v-for="(group, index) in groupedEpisodes" 
                                         @click="activeTab.episodes = index"
                                         :class="['px-3 py-1 rounded', activeTab.episodes === index ? 'bg-blue-500 text-white' : 'bg-gray-700']">
