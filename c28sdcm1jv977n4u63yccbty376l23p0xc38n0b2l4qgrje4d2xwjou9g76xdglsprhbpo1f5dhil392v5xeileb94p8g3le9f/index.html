@@ -4610,10 +4610,7 @@
 
         <!-- Table -->
         <div v-if="loading" class="text-center py-4">
-            <div class="w-full h-2 bg-gray-200 mt-4 relative">
-                <div :style="`width: ${progress}%`" class="h-full bg-blue-500"></div>
-            </div>
-            <div class="text-sm mt-2">{{ progress.toFixed(0) }}%</div>
+            <div class="spinner-border animate-spin inline-block w-12 h-12 border-8 border-blue-500 border-t-transparent rounded-full"></div>
         </div>
         <div v-else>
             <table class="min-w-full border-collapse border border-gray-300">
@@ -5095,7 +5092,6 @@
         createApp({
             data() {
                 return {
-                    progress: 0,
                     menuOpen: false,
                     userJoined: false,
                     showEmptyPopup: false,
@@ -11973,77 +11969,66 @@
                 loadData() {
                     return new Promise((resolve, reject) => {
                         if (this.userJoined) {
-                            // Reset states before attempting to fetch.
                             this.episodes = [];
+                            this.mangas = [];
                             this.error = null;
                             this.loading = true;
-                            this.progress = 0;
-
+                
                             const storedWaitTime = localStorage.getItem('waitTime');
                             if (storedWaitTime) {
                                 this.waitTime = parseInt(storedWaitTime, 10);
                                 this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
-                                this.startTimer();  // Continue the countdown.
+                                this.startTimer();
                                 reject('Rate limit exceeded');
                                 return;
                             }
-
-                            // Append a cache-busting query parameter.
+                
                             const urlWithCacheBust = `${this.jsonUrl}?t=${new Date().getTime()}`;
-
+                
                             fetch(urlWithCacheBust, { cache: 'no-store' })
-                            .then(response => {
-                                if (response.status === 429) {
-                                    return response.json().then(data => {
+                                .then(response => {
+                                    if (response.status === 429) {
+                                        return response.json().then(data => {
+                                            this.loading = false;
+                                            if (data.error === "User blocked") {
+                                                this.error = "لقد تجاوزت الحد المسموح به من الطلبات لهذا اليوم.";
+                                                reject('User blocked');
+                                                return;
+                                            }
+                
+                                            const resetTime = data.resetTime || Date.now() + 60000;
+                                            this.waitTime = Math.max(0, Math.floor((resetTime - Date.now()) / 1000));
+                                            this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
+                                            localStorage.setItem('waitTime', this.waitTime);
+                                            console.warn(data.message);
+                
+                                            this.startTimer();
+                                            reject('Rate limit exceeded');
+                                        });
+                                    }
+                
+                                    if (!response.ok) {
+                                        throw new Error(`HTTP error! status: ${response.status}`);
+                                    }
+                
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    if (data) {
+                                        this.episodes = data.Episodes || [];
+                                        this.mangas = data.Mangas || [];
                                         this.loading = false;
-
-                                        if (data.error === "User blocked") {
-                                            this.error = "لقد تجاوزت الحد المسموح به من الطلبات لهذا اليوم.";
-                                            reject('User blocked');
-                                            return;
-                                        }
-
-                                        const resetTime = data.resetTime || Date.now() + 60000;
-                                        this.waitTime = Math.max(0, Math.floor((resetTime - Date.now()) / 1000));
-                                        this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
-                                        localStorage.setItem('waitTime', this.waitTime);
-                                        console.warn(data.message);
-                                        this.startTimer();
-                                        reject('Rate limit exceeded');
-                                    });
-                                }
-
-                                if (!response.ok) {
-                                    throw new Error(`HTTP error! status: ${response.status}`);
-                                }
-
-                                return response.json();
-                            })
-                            .then(data => {
-                                if (data) {
-                                    this.episodes = data;
+                                        localStorage.removeItem('waitTime');
+                                        resolve();
+                                    }
+                                })
+                                .catch(error => {
+                                    if (!this.error) {
+                                        this.error = 'حدث خطأ أثناء محاولة تحميل البيانات. قد تكون هناك مشكلة مؤقتة في الاتصال أو الخادم. يُرجى التحقق من اتصالك بالإنترنت أو استخدام VPN والمحاولة مرة أخرى.';
+                                    }
                                     this.loading = false;
-                                    this.progress = 100;
-                                    localStorage.removeItem('waitTime');
-                                    resolve();
-                                }
-                            })
-                            .catch(error => {
-                                if (!this.error) {
-                                    this.error = 'حدث خطأ أثناء محاولة تحميل البيانات. قد تكون هناك مشكلة مؤقتة في الاتصال أو الخادم. يُرجى التحقق من اتصالك بالإنترنت أو استخدام VPN والمحاولة مرة أخرى.';
-                                }
-                                this.loading = false;
-                                reject(error);
-                            });
-
-                            // Simulate loading progress (if data is too big, adjust the progress in real-time)
-                            let interval = setInterval(() => {
-                                if (this.progress < 100) {
-                                    this.progress += 10; // Increment progress by 10% for demonstration
-                                } else {
-                                    clearInterval(interval);
-                                }
-                            }, 500);
+                                    reject(error);
+                                });
                         } else {
                             console.log("User not joined, not loading data.");
                             this.loading = false;
