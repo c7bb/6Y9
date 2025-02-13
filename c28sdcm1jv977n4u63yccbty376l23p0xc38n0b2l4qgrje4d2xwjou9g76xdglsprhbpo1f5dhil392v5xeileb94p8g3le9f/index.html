@@ -368,94 +368,109 @@
 
                     <!-- Dropdown Menu -->
                     <div v-if="menuOpen" class="absolute right-0 mt-2 bg-sky-900 shadow-lg rounded py-2 w-32">
-                        <button @click="openContentModal('episodes')" class="block w-full text-center px-4 py-2 text-base font-bold text-white hover:bg-teal-600">حلقات (قريباً)</button>
-                        <button @click="openContentModal('movies')" class="block w-full text-center px-4 py-2 text-base font-bold text-white hover:bg-teal-600">أفلام (قريباً)</button>
-                        <button @click="openContentModal('mangas')" class="block w-full text-center px-4 py-2 text-base font-bold text-white hover:bg-teal-600">مانغا (قريباً)</button>
+                        <button @click="openCategoryModal('episodes')" class="block w-full text-center px-4 py-2 text-base font-bold text-white hover:bg-teal-600">حلقات (قريباً)</button>
+                        <button @click="openCategoryModal('movies')" class="block w-full text-center px-4 py-2 text-base font-bold text-white hover:bg-teal-600">أفلام (قريباً)</button>
+                        <button @click="openCategoryModal('mangas')" class="block w-full text-center px-4 py-2 text-base font-bold text-white hover:bg-teal-600">مانغا (قريباً)</button>
                     </div>
                 </div>
 
                 <!-- New Popup Window -->
-                <div v-if="showContentModal" class="fixed z-50 inset-0 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center">
+                <div v-if="showCategoryModal" class="fixed z-50 inset-0 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center">
                     <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-1/2 lg:w-1/3 max-h-[90vh] overflow-hidden flex flex-col">
-                        <!-- Sticky Header Section -->
+                        <!-- Header -->
                         <div class="sticky top-0 bg-cyan-900 pt-4 pl-4 pr-4 pb-2">
                             <div class="flex justify-between items-center">
                                 <h2 class="text-xl font-bold">النافذة المباشرة</h2>
-                                <button @click="closeContentModal" class="text-red-600 hover:text-yellow-300 font-bold focus:outline-none">
+                                <button @click="closeCategoryModal" class="text-red-600 hover:text-yellow-300 font-bold focus:outline-none">
                                     <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png" alt="Close" class="h-8 w-8" />
                                 </button>
                             </div>
                         </div>
 
-                        <!-- Scrollable Content -->
+                        <!-- Body -->
                         <div class="overflow-y-auto p-4 flex-1 always-visible-scrollbar">
-                            <fieldset>
-                                <legend class="font-bold text-lg">اختر نوع المحتوى</legend>
+                            <fieldset class="border p-2 rounded mb-2">
+                                <legend class="font-bold text-lg">اختر الفئة</legend>
                                 <div class="flex flex-col gap-2">
                                     <label class="flex items-center gap-2">
-                                        <input type="radio" v-model="selectedContentType" value="episodes" class="form-radio"> حلقات
+                                        <input type="radio" v-model="selectedCategory" value="episodes" class="form-radio"> حلقات
                                     </label>
                                     <label class="flex items-center gap-2">
-                                        <input type="radio" v-model="selectedContentType" value="movies" class="form-radio"> أفلام
+                                        <input type="radio" v-model="selectedCategory" value="movies" class="form-radio"> أفلام
                                     </label>
                                     <label class="flex items-center gap-2">
-                                        <input type="radio" v-model="selectedContentType" value="mangas" class="form-radio"> مانغا
+                                        <input type="radio" v-model="selectedCategory" value="mangas" class="form-radio"> مانغا
                                     </label>
                                 </div>
                             </fieldset>
 
-                            <!-- Episodes Tab Control -->
-                            <div v-if="selectedContentType === 'episodes'">
-                                <div class="flex gap-2 mt-4">
-                                    <button v-for="season in uniqueSeasons" :key="season" @click="setActiveSeason(season)" :class="{'bg-blue-500': activeSeason === season, 'bg-gray-700': activeSeason !== season}" class="text-white px-4 py-2 rounded">
-                                        الموسم {{ season }}
-                                    </button>
-                                </div>
-
-                                <fieldset v-if="activeSeason" class="mt-4">
-                                    <legend class="font-bold text-lg">حلقات الموسم {{ activeSeason }}</legend>
-                                    <div class="flex flex-wrap gap-2">
-                                        <button v-for="episode in episodesBySeason" :key="episode.EpisodeNumber" @click="handleEpisodeClick(episode)" class="bg-green-500 text-white px-4 py-2 rounded">
-                                            الحلقة {{ episode.EpisodeNumber }}
+                            <!-- Episodes Tab -->
+                            <div v-if="selectedCategory === 'episodes'">
+                                <fieldset class="border p-2 rounded mb-2">
+                                    <legend class="font-bold text-lg">الحلقات</legend>
+                                    <div class="flex flex-col gap-2">
+                                        <button v-for="season in episodeSeasons" :key="season" @click="openSeasonTab(season)" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
+                                            {{ season }}
                                         </button>
                                     </div>
                                 </fieldset>
+
+                                <div v-if="selectedSeason">
+                                    <fieldset class="border p-2 rounded mb-2">
+                                        <legend class="font-bold text-lg">الحلقات</legend>
+                                        <div class="flex flex-col gap-2">
+                                            <button v-for="episode in filteredEpisodess" :key="episode.EpisodeNumber" @click="sendEpisodeToBot(episode.EpisodeVideosIDs[0].VideoID, episode.EpisodeVideosIDs[0].Resolution, 0)" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">
+                                                {{ episode.EpisodeNumber }} ({{ episode.EpisodeVideosIDs[0].Resolution }})
+                                            </button>
+                                        </div>
+                                    </fieldset>
+                                </div>
                             </div>
 
-                            <!-- Movies Tab Control -->
-                            <div v-if="selectedContentType === 'movies'">
-                                <div class="flex gap-2 mt-4">
-                                    <button v-for="(group, index) in movieGroups" :key="index" @click="setActiveMovieGroup(index)" :class="{'bg-blue-500': activeMovieGroup === index, 'bg-gray-700': activeMovieGroup !== index}" class="text-white px-4 py-2 rounded">
-                                        المجموعة {{ index + 1 }}
-                                    </button>
-                                </div>
-
-                                <fieldset v-if="activeMovieGroup !== null" class="mt-4">
-                                    <legend class="font-bold text-lg">أفلام المجموعة {{ activeMovieGroup + 1 }}</legend>
-                                    <div class="flex flex-wrap gap-2">
-                                        <button v-for="movie in moviesByGroup" :key="movie.EpisodeNumber" @click="handleMovieClick(movie)" class="bg-green-500 text-white px-4 py-2 rounded">
-                                            الفيلم {{ movie.EpisodeNumber }}
+                            <!-- Movies Tab -->
+                            <div v-if="selectedCategory === 'movies'">
+                                <fieldset class="border p-2 rounded mb-2">
+                                    <legend class="font-bold text-lg">الأفلام</legend>
+                                    <div class="flex flex-col gap-2">
+                                        <button v-for="group in movieGroups" :key="group" @click="openMovieGroup(group)" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
+                                            {{ group }}
                                         </button>
                                     </div>
                                 </fieldset>
+
+                                <div v-if="selectedMovieGroup">
+                                    <fieldset class="border p-2 rounded mb-2">
+                                        <legend class="font-bold text-lg">الأفلام</legend>
+                                        <div class="flex flex-col gap-2">
+                                            <button v-for="movie in filteredMovies" :key="movie.EpisodeNumber" @click="sendEpisodeToBot(movie.EpisodeVideosIDs[0].VideoID, movie.EpisodeVideosIDs[0].Resolution, 0)" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">
+                                                {{ movie.EpisodeNumber }} ({{ movie.EpisodeVideosIDs[0].Resolution }})
+                                            </button>
+                                        </div>
+                                    </fieldset>
+                                </div>
                             </div>
 
-                            <!-- Mangas Tab Control -->
-                            <div v-if="selectedContentType === 'mangas'">
-                                <div class="flex gap-2 mt-4">
-                                    <button v-for="(group, index) in mangaGroups" :key="index" @click="setActiveMangaGroup(index)" :class="{'bg-blue-500': activeMangaGroup === index, 'bg-gray-700': activeMangaGroup !== index}" class="text-white px-4 py-2 rounded">
-                                        المجموعة {{ index + 1 }}
-                                    </button>
-                                </div>
-
-                                <fieldset v-if="activeMangaGroup !== null" class="mt-4">
-                                    <legend class="font-bold text-lg">مانغا المجموعة {{ activeMangaGroup + 1 }}</legend>
-                                    <div class="flex flex-wrap gap-2">
-                                        <button v-for="manga in mangasByGroup" :key="manga.MangaNumber" @click="handleMangaClick(manga)" class="bg-green-500 text-white px-4 py-2 rounded">
-                                            المانغا {{ manga.MangaNumber }}
+                            <!-- Mangas Tab -->
+                            <div v-if="selectedCategory === 'mangas'">
+                                <fieldset class="border p-2 rounded mb-2">
+                                    <legend class="font-bold text-lg">المانغا</legend>
+                                    <div class="flex flex-col gap-2">
+                                        <button v-for="group in mangaGroups" :key="group" @click="openMangaGroup(group)" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
+                                            {{ group }}
                                         </button>
                                     </div>
                                 </fieldset>
+
+                                <div v-if="selectedMangaGroup">
+                                    <fieldset class="border p-2 rounded mb-2">
+                                        <legend class="font-bold text-lg">المانغا</legend>
+                                        <div class="flex flex-col gap-2">
+                                            <button v-for="manga in filteredMangas" :key="manga.MangaNumber" @click="sendMangaToBot(manga.MangaFileID, manga.MangaNumber, 0)" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">
+                                                {{ manga.MangaNumber }} ({{ manga.MangaFileSize }} MB)
+                                            </button>
+                                        </div>
+                                    </fieldset>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -5194,11 +5209,11 @@
                     menuOpen: false,
                     userJoined: false,
                     showEmptyPopup: false,
-                    showContentModal: false,
-                    selectedContentType: null,
-                    activeSeason: null,
-                    activeMovieGroup: null,
-                    activeMangaGroup: null,
+                    showCategoryModal: false,
+                    selectedCategory: null,
+                    selectedSeason: null,
+                    selectedMovieGroup: null,
+                    selectedMangaGroup: null,
                     errorMessage: "",
                     ep: 1152,
                     replacementDict: {
@@ -5222,8 +5237,9 @@
                     episodeTypeFilter: 'All',
                     episodes: [],
                     mangas: [],
-                    selectedMovie: null,
-                    selectedManga: null,                    
+                    episodeSeasons: [],
+                    movieGroups: [],
+                    mangaGroups: [],                  
                     loading: true,
                     loadProgress: 0,
                     circumference: 2 * Math.PI * 45, // 2πr where r=45
@@ -5814,28 +5830,14 @@
             },
             computed: {
 
-                strokeDashOffset() {
-                    return this.circumference - (this.loadProgress / 100) * this.circumference;
+                filteredEpisodess() {
+                    return this.episodes.filter(episode => episode.EpisodeSeason === this.selectedSeason);
                 },
-
-                uniqueSeasons() {
-                    return [...new Set(this.episodes.map(ep => ep.EpisodeSeason))].sort();
+                filteredMovies() {
+                    return this.episodes.filter(episode => episode.EpisodeNumber.includes('الفيلم') && this.selectedMovieGroup.includes(episode.EpisodeNumber));
                 },
-                episodesBySeason() {
-                    return this.episodes.filter(ep => ep.EpisodeSeason === this.activeSeason);
-                },
-                movieGroups() {
-                    const movies = this.episodes.filter(ep => ep.EpisodeNumber.includes('الفيلم'));
-                    return this.chunkArray(movies, 5);
-                },
-                moviesByGroup() {
-                    return this.movieGroups[this.activeMovieGroup] || [];
-                },
-                mangaGroups() {
-                    return this.chunkArray(this.mangas.flatMap(m => m.MangasIDs), 100);
-                },
-                mangasByGroup() {
-                    return this.mangaGroups[this.activeMangaGroup] || [];
+                filteredMangas() {
+                    return this.mangas.flatMap(manga => manga.MangasIDs).filter(manga => this.selectedMangaGroup.includes(manga.MangaNumber));
                 },
 
                 filteredEpisodes() {
@@ -13922,50 +13924,58 @@
                     }
                 },
 
-                openContentModal(type) {
-                    this.selectedContentType = type;
-                    this.showContentModal = true;
-                    this.menuOpen = false;
+                openCategoryModal(category) {
+                    this.showCategoryModal = true;
+                    this.selectedCategory = category;
+                    this.loadCategoryData(category);
                 },
 
-                closeContentModal() {
-                    this.showContentModal = false;
-                    this.selectedContentType = null;
-                    this.activeSeason = null;
-                    this.activeMovieGroup = null;
-                    this.activeMangaGroup = null;
+                closeCategoryModal() {
+                    this.showCategoryModal = false;
+                    this.selectedCategory = null;
+                    this.selectedSeason = null;
+                    this.selectedMovieGroup = null;
+                    this.selectedMangaGroup = null;
                 },
 
-                setActiveSeason(season) {
-                    this.activeSeason = season;
-                },
-                setActiveMovieGroup(index) {
-                    this.activeMovieGroup = index;
-                },
-
-                setActiveMangaGroup(index) {
-                    this.activeMangaGroup = index;
-                },
-
-                handleEpisodeClick(episode) {
-                    this.selectedEpisode = episode;
-                    this.sendEpisodeToBot(episode.EpisodeVideosIDs);
+                loadCategoryData(category) {
+                    if (category === 'episodes') {
+                        this.episodeSeasons = [...new Set(this.episodes.map(episode => episode.EpisodeSeason))];
+                    } else if (category === 'movies') {
+                        this.movieGroups = this.createMovieGroups();
+                    } else if (category === 'mangas') {
+                        this.mangaGroups = this.createMangaGroups();
+                    }
                 },
 
-                handleMovieClick(movie) {
-                    this.selectedMovie = movie;
-                    this.sendEpisodeToBot(movie.EpisodeVideosIDs);
+                createMovieGroups() {
+                    const movies = this.episodes.filter(episode => episode.EpisodeNumber.includes('الفيلم'));
+                    const groups = [];
+                    for (let i = 0; i < movies.length; i += 5) {
+                        groups.push(`${i + 1}-${Math.min(i + 5, movies.length)}`);
+                    }
+                    return groups;
                 },
 
-                handleMangaClick(manga) {
-                    this.selectedManga = manga;
-                    this.sendMangaToBot(manga.MangaFileID, manga.MangaNumber);
+                createMangaGroups() {
+                    const mangas = this.mangas.flatMap(manga => manga.MangasIDs);
+                    const groups = [];
+                    for (let i = 0; i < mangas.length; i += 100) {
+                        groups.push(`${i + 1}-${Math.min(i + 100, mangas.length)}`);
+                    }
+                    return groups;
+                },
+
+                openSeasonTab(season) {
+                    this.selectedSeason = season;
+                },
+
+                openMovieGroup(group) {
+                    this.selectedMovieGroup = group;
                 },
                 
-                chunkArray(arr, size) {
-                    return Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
-                        arr.slice(i * size, i * size + size)
-                    );
+                openMangaGroup(group) {
+                    this.selectedMangaGroup = group;
                 },
             },
             
