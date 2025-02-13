@@ -507,11 +507,12 @@
                     <div v-if="selectedCategory === 'movies'" class="overflow-y-auto p-4 flex-1 always-visible-scrollbar">
                         <div v-if="groupedMovies.length" class="mb-4">
                             <div class="flex flex-wrap gap-2 mb-4 justify-center" dir="ltr">
-                                <button v-for="(group, index) in groupedMovies" 
-                                        @click="activeTab.movies = index"
-                                        :class="['px-3 py-1 rounded', activeTab.movies === index ? 'bg-blue-500 text-white' : 'bg-gray-700']">
-                                    {{ group.range }}
-                                </button>
+                                <button 
+                                v-for="(group, index) in groupedMovies" 
+                                @click="handleMovieGroupChange(index)" 
+                                :class="['px-3 py-1 rounded', activeTab.movies === index ? 'bg-blue-500 text-white' : 'bg-gray-700']">
+                                {{ group.range }}
+                            </button>                            
                             </div>
                             <fieldset class="border p-2 rounded">
                                 <legend class="flex items-center gap-2">
@@ -521,11 +522,12 @@
                                     </button>
                                 </legend>
                                 <div v-if="!selectedEpisode" class="grid grid-cols-3 gap-2">
-                                    <button v-for="episode in groupedMovies[activeTab.movies]?.items" 
-                                            @click="selectedEpisode = episode"
-                                            class="bg-amber-700 text-white p-2 rounded hover:bg-green-500">
-                                        {{ episode.EpisodeNumber }}
-                                    </button>
+                                    <button 
+                                    v-for="movie in groupedMovies[activeTab.movies]?.items" 
+                                    @click="selectMovie(movie)" 
+                                    class="bg-amber-700 text-white p-2 rounded hover:bg-green-500">
+                                    {{ movie.EpisodeNumber }}
+                                </button>                                
                                 </div>
                                 <div v-else class="flex flex-col justify-center gap-4">
                                     <span class="text-lg font-bold text-center">{{ selectedEpisode.EpisodeNumber }}</span>
@@ -558,11 +560,12 @@
                     <div v-if="selectedCategory === 'mangas'" class="overflow-y-auto p-4 flex-1 always-visible-scrollbar">
                         <div v-if="groupedMangas.length" class="mb-4">
                             <div class="flex flex-wrap gap-2 mb-4 justify-center" dir="ltr"> <!-- Align buttons to the left -->
-                                <button v-for="(group, index) in groupedMangas" 
-                                        @click="activeTab.mangas = index"
-                                        :class="['px-3 py-1 rounded', activeTab.mangas === index ? 'bg-blue-500 text-white' : 'bg-gray-700']">
-                                    {{ group.range }}
-                                </button>
+                                <button 
+                                v-for="(group, index) in groupedMangas" 
+                                @click="handleMangaGroupChange(index)" 
+                                :class="['px-3 py-1 rounded', activeTab.mangas === index ? 'bg-blue-500 text-white' : 'bg-gray-700']">
+                                {{ group.range }}
+                            </button>                            
                             </div>
                             <fieldset class="border p-2 rounded">
                                 <legend class="flex items-center gap-2">
@@ -572,11 +575,12 @@
                                     </button>
                                 </legend>
                                 <div v-if="!selectedManga" class="grid grid-cols-3 gap-2">
-                                    <button v-for="manga in groupedMangas[activeTab.mangas]?.items" 
-                                            @click="selectedManga = manga"
-                                            class="bg-green-500 text-white p-2 rounded hover:bg-blue-500">
-                                        {{ manga.MangaNumber }}
-                                    </button>
+                                    <button 
+                                    v-for="manga in groupedMangas[activeTab.mangas]?.items" 
+                                    @click="selectManga(manga)" 
+                                    class="bg-green-500 text-white p-2 rounded hover:bg-blue-500">
+                                    {{ manga.MangaNumber }}
+                                </button>                                
                                 </div>
                                 <div v-else class="flex flex-col justify-center gap-4">
                                     <div class="relative flex flex-col gap-4">
@@ -14207,13 +14211,35 @@
 
             handleEpisodeGroupChange(index) {
                 if (this.selectedEpisode) {
-                    this.resetEpisodesView(); // Go back to episode list before changing tabs
+                    this.resetEpisodesView();
                 }
-                this.activeTab.episodes = index; // Switch to new episode group
+                this.activeTab.episodes = index;
+            },
+
+            handleMovieGroupChange(index) {
+                if (this.selectedEpisode) {
+                    this.resetMoviesView();
+                }
+                this.activeTab.movies = index;
+            },
+
+            handleMangaGroupChange(index) {
+                if (this.selectedManga) {
+                    this.resetMangasView();
+                }
+                this.activeTab.mangas = index;
             },
 
             selectEpisode(episode) {
                 this.selectedEpisode = episode;
+            },
+
+            selectMovie(movie) {
+                this.selectedEpisode = movie;
+            },
+
+            selectManga(manga) {
+                this.selectedManga = manga;
             },
 
             },
