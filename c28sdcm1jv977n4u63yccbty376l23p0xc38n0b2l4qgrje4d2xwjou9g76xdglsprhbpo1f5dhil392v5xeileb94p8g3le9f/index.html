@@ -453,74 +453,48 @@
                         </div>
                     </div>
 
-                    <!-- Movies Content -->
-                    <div v-if="selectedCategory === 'movies'" class="overflow-y-auto p-4 flex-1">
-                        <div v-if="groupedMovies().length" class="mb-4">
-                        <!-- Movie Groups Navigation -->
-                        <div class="flex flex-wrap gap-2 mb-4 justify-start">
-                            <button
-                            v-for="(group, index) in groupedMovies()"
-                            :key="index"
-                            @click="activeTab.movies = index"
-                            :class="['px-3 py-1 rounded', activeTab.movies === index ? 'bg-blue-500 text-white' : 'bg-gray-700']"
-                            >
-                            {{ group.range }}
-                            </button>
-                        </div>
-                    
-                        <fieldset class="border p-2 rounded">
-                            <legend class="flex items-center gap-2">
-                            <span>الأفلام المتاحة</span>
-                            <button v-if="selectedMovie" @click="resetMoviesView" class="p-1 hover:bg-gray-700 rounded">
-                                <img
-                                src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/previous.png"
-                                alt="رجوع"
-                                class="h-6 w-6"
-                                />
-                            </button>
-                            </legend>
-                    
-                            <!-- Movie Selection -->
-                            <div v-if="!selectedMovie" class="grid grid-cols-3 gap-2">
-                            <button
-                                v-for="movie in groupedMovies()[activeTab.movies]?.items"
-                                :key="movie.id"
-                                @click="selectedMovie = movie"
-                                class="bg-green-500 text-white p-2 rounded hover:bg-green-700"
-                            >
-                                {{ movie.EpisodeNumber.replace('الفيلم', '') }}
-                            </button>
-                            </div>
-                    
-                            <!-- Movie Details -->
-                            <div v-else class="flex flex-col justify-center gap-4">
-                            <div
-                                v-for="(video, index) in selectedMovie.EpisodeVideosIDs"
-                                :key="video.VideoID"
-                                class="relative flex flex-col gap-4"
-                            >
-                                <button
-                                :disabled="video.status === 'success'"
-                                @click="sendEpisodeToBot(video.VideoID, video.Resolution, index)"
-                                class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50"
-                                >
-                                {{ video.Resolution }} ({{ video.Size }} MB)
-                                </button>
-                                <img
-                                v-if="video.status === 'success'"
-                                src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/true.png"
-                                class="absolute right-0 top-0 w-6 h-6 ml-2"
-                                />
-                                <img
-                                v-if="video.status === 'error'"
-                                src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png"
-                                class="absolute right-0 top-0 w-6 h-6 ml-2"
-                                />
-                            </div>
-                            </div>
-                        </fieldset>
-                        </div>
-                    </div>    
+<!-- Movies Content -->
+<div v-if="selectedCategory === 'movies'" class="overflow-y-auto p-4 flex-1">
+    <div v-if="movies.length" class="mb-4">
+        <fieldset class="border p-2 rounded">
+            <legend class="flex items-center gap-2">
+                <span>الأفلام المتاحة</span>
+                <button v-if="selectedMovie" @click="resetMoviesView" class="p-1 hover:bg-gray-700 rounded">
+                    <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/previous.png" alt="رجوع" class="h-6 w-6" />
+                </button>
+            </legend>
+            <div v-if="!selectedMovie" class="grid grid-cols-3 gap-2">
+                <button v-for="movie in movies" 
+                        @click="selectedMovie = movie"
+                        class="bg-green-500 text-white p-2 rounded hover:bg-green-700">
+                    {{ movie.EpisodeNumber.replace('الفيلم', '') }}
+                </button>
+            </div>
+            <div v-else class="flex flex-col justify-center gap-4">
+                <div v-for="(video, index) in selectedMovie.EpisodeVideosIDs" 
+                     :key="video.VideoID" 
+                     class="relative flex flex-col gap-4">
+                    <button
+                        :disabled="video.status === 'success'"
+                        @click="sendEpisodeToBot(video.VideoID, video.Resolution, index)"
+                        class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50">
+                        {{ video.Resolution }} ({{ video.Size }} MB)
+                    </button>
+                    <img 
+                        v-if="video.status === 'success'" 
+                        src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/true.png" 
+                        class="absolute right-0 top-0 w-6 h-6 ml-2"
+                    />
+                    <img 
+                        v-if="video.status === 'error'" 
+                        src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png" 
+                        class="absolute right-0 top-0 w-6 h-6 ml-2"
+                    />
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>
 
                     <!-- Mangas Content -->
                     <div v-if="selectedCategory === 'mangas'" class="overflow-y-auto p-4 flex-1">
@@ -5307,6 +5281,8 @@
                     showTooltip6: false,
                     episodeTypeFilter: 'All',
                     episodes: [],
+                    selectedMovie: null, // Track the selected movie for resolution/size view
+                    movies: [], // Movies will be populated separately
                     loading: true,
                     loadProgress: 0,
                     circumference: 2 * Math.PI * 45, // 2πr where r=45
@@ -5319,7 +5295,6 @@
                     pageSize: 15,
                     showModal: false,
                     selectedEpisode: null,
-                    selectedMovie: null,
                     showMangaButtons: false,
                     filterBlackOrganization: false,
                     filterDetectiveBoys: false,
@@ -5918,15 +5893,9 @@
                     }));
                 },
 
-                groupedMovies() {
-                    const chunkSize = 5;
+                movies() {
                     return this.episodes
-                        .filter(e => e.EpisodeNumber.includes('الفيلم'))
-                        .reduce((acc, _, i, arr) => (i % chunkSize) ? acc : 
-                            [...acc, { 
-                                range: `${i+1}-${Math.min(i+chunkSize, arr.length)}`, 
-                                items: arr.slice(i, i+chunkSize)
-                            }], []);
+                        .filter(e => e.EpisodeNumber.includes('الفيلم') && e.EpisodeVideosIDs && e.EpisodeVideosIDs.length > 0);
                 },
 
                 groupedMangas() {
@@ -14038,8 +14007,9 @@
                 },
 
                 resetMoviesView() {
-                    this.selectedMovie = null;
+                    this.selectedMovie = null; // Reset to show movies list
                 },
+
             },
             
             async created() {
