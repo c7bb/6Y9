@@ -4795,7 +4795,7 @@
         <!-- Table -->
         <!-- Progress Spinner -->
         <div v-if="loading" class="text-center py-4">
-            <div class="relative w-12 h-12 mx-auto">
+            <div class="relative w-24 h-24 mx-auto">
               <div class="w-full h-full animate-spin">
                 <svg class="w-full h-full" viewBox="0 0 100 100" style="transform: rotate(-90deg);">
                   <circle 
@@ -5035,49 +5035,51 @@
                                 </fieldset>                                                                    
 
                                 <div  
-                                    v-if="(selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'error')) ||
-                                        (selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'error')) ||
-                                        (selectedManga?.status === 'error')"
+                                    v-if="(selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'error')) || (selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'error'))"
                                     class="fixed z-10 inset-0 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center"
-                                >
+                                    >
                                     <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-1/2 lg:w-1/3 max-h-[90vh] overflow-hidden flex flex-col">
-                                    <!-- Sticky Header Section -->
-                                    <div class="sticky top-0 bg-cyan-900 pt-4 pl-4 pr-4 pb-2">
+                                        <!-- Sticky Header Section -->
+                                        <div class="sticky top-0 bg-cyan-900 pt-4 pl-4 pr-4 pb-2">
                                         <h2 class="text-lg text-red-500 font-bold text-center">{{ errorMessage }}</h2>
-                                    </div>
-                                
-                                    <!-- Scrollable Content -->
-                                    <div class="overflow-y-auto p-4 flex-1">
+                                        </div>
+
+                                        <!-- Scrollable Content -->
+                                        <div class="overflow-y-auto p-4 flex-1">
                                         <p class="text-lg text-white text-center font-bold mb-4">
-                                        تأكد من أن البوت لديه صلاحية إرسال الرسائل لك من خلال اشتراكك فيه، وذلك بالضغط على زر 'Start' أو 'Restart' أو 'بدء' كما هو موضح في الصورة 👇
+                                            تأكد من أن البوت لديه صلاحية إرسال الرسائل لك من خلال اشتراكك فيه، وذلك بالضغط على زر 'Start' أو 'Restart' أو 'بدء' كما هو موضح في الصورة 👇
                                         </p>
                                         <img
-                                        src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/error_hint.png"
-                                        alt="Error Hint"
-                                        class="mb-4 w-full rounded"
+                                            src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/error_hint.png"
+                                            alt="Error Hint"
+                                            class="mb-4 w-full rounded"
                                         />
+                                        <!-- Display Telegram's error message -->
+                                        <!-- <p v-if="errorMessage" class="text-lg text-white text-center font-bold mt-4">
+                                            {{ errorMessage }}
+                                        </p> -->
                                         <p class="text-lg text-white font-bold text-center mt-4">
-                                        إذا لم يظهر لك الزر، فهذا يعني أنك مشترك بالفعل في البوت.
+                                            إذا لم يظهر لك الزر، فهذا يعني أنك مشترك بالفعل في البوت.
                                         </p>
-                                    </div>
-                                
-                                    <!-- Footer Section -->
-                                    <div class="p-4 bg-cyan-900 flex justify-between">
+                                        </div>
+
+                                        <!-- Footer Section -->
+                                        <div class="p-4 bg-cyan-900 flex justify-between">
                                         <a
-                                        href="https://t.me/DCRef_bot"
-                                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+                                            href="https://t.me/DCRef_bot"
+                                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
                                         >
-                                        أضغط هنا للذهاب إلى البوت
+                                            أضغط هنا للذهاب إلى البوت
                                         </a>
                                         <button
-                                        @click="clearError()"
-                                        class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+                                            @click="clearError()"
+                                            class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
                                         >
-                                        إغلاق
+                                            إغلاق
                                         </button>
+                                        </div>
                                     </div>
-                                    </div>
-                              </div>                                                             
+                                </div>                               
 
                                 <p v-if="selectedEpisode && selectedEpisode.EpisodeSeason !== ''" class="mb-2 text-lg">
                                     <span>الموسم: </span>{{ selectedEpisode.EpisodeSeason }} ({{ selectedEpisode.EpisodeSeasonCount }} حلقة)
