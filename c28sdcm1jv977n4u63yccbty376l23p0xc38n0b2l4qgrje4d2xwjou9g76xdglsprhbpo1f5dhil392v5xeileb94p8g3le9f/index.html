@@ -11987,150 +11987,106 @@
 
                 // Method to load data from JSON
                 loadData() {
-        return new Promise((resolve, reject) => {
-            // Reset progress
-            this.loadProgress = 0;
-            this.loading = true;
-            if (this.progressInterval) clearInterval(this.progressInterval);
-
-            if (this.userJoined) {
-                // Reset states before attempting to fetch
-                this.episodes = [];
-                this.mangas = [];
-                this.error = null;
-
-                // Check for rate-limit (existing code) - keep it
-                const storedWaitTime = localStorage.getItem('waitTime');
-                if (storedWaitTime) {
-                    this.waitTime = parseInt(storedWaitTime, 10);
-                    this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
-                    this.startTimer();
-                    this.loading = false;
-                    reject('Rate limit exceeded');
-                    return;
-                }
-
-                // Cache-busting URL (existing code) - keep it
-                const urlWithCacheBust = `${this.jsonUrl}?t=${new Date().getTime()}`;
-
-                fetch(urlWithCacheBust, { cache: 'no-store' })
-                    .then(response => {
-                        if (response.status === 429) {
-                            // Rate limit handling (existing code) - keep it
-                            return response.json().then(data => {
-                                this.loading = false;
-                                this.loadProgress = 0;
-
-                                if (data.error === "User blocked") {
-                                    this.error = "لقد تجاوزت الحد المسموح به من الطلبات لهذا اليوم.";
-                                    reject('User blocked');
-                                    return;
-                                }
-
-                                const resetTime = data.resetTime || Date.now() + 60000;
-                                this.waitTime = Math.max(0, Math.floor((resetTime - Date.now()) / 1000));
-                                this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
-                                localStorage.setItem('waitTime', this.waitTime);
-                                console.warn(data.message);
-
-                                this.startTimer();
-                                reject('Rate limit exceeded');
-                            });
-                        }
-
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-
-                        // Real-time progress implementation starts here
-
-                        const contentLength = response.headers.get('Content-Length');
-                        if (contentLength === null) {
-                            // Content-Length is not available. Fallback to indeterminate progress or handle differently.
-                            // For now, resolve immediately after fetching if no Content-Length, assuming small data
-                            return response.json().then(data => {
-                                this.episodes = data.Episodes || [];
-                                this.mangas = data.Mangas || [];
-                                this.loading = false;
-                                this.loadProgress = 100; // Indicate completed fetch visually
-                                localStorage.removeItem('waitTime');
-                                resolve();
-                            });
-                        }
-
-                        const totalBytes = parseInt(contentLength, 10);
-                        let downloadedBytes = 0;
-                        const reader = response.body.getReader();
-
-                        return new ReadableStream({
-                            start: (controller) => { // Corrected placement - arrow function, implicitly binds 'this' to surrounding scope
-
-                                function read() {
-                                    reader.read().then(({ done, value }) => {
-                                        if (done) {
-                                            controller.close();
-                                            return;
-                                        }
-                                        downloadedBytes += value.byteLength;
-                                        const progress = Math.round((downloadedBytes / totalBytes) * 100);
-                                        this.loadProgress = progress; // Update progress here
-                                        controller.enqueue(value); // Pass chunk to stream
-                                        read(); // Continue reading
-                                    }).catch(error => {
-                                        console.error("Stream reading error:", error);
-                                        controller.error(error);
-                                        reject(error); // Reject promise on stream error
-                                    });
-                                }
-                                read.call(this); // Important to use .call(this) to keep 'this' context in nested function
-                            } // No need for .bind(this) here with arrow function for start
-                        })
-                        .pipeThrough(new TextDecoderStream())
-                        .pipeTo(new WritableStream({
-                            writer: {
-                                write: (chunk) => {},
-                                close: () => {
-                                    response.json().then(data => {
-                                        this.episodes = data.Episodes || [];
-                                        this.mangas = data.Mangas || [];
-                                        this.loading = false;
-                                        this.loadProgress = 100;
-                                        localStorage.removeItem('waitTime');
-                                        resolve();
-                                    }).catch(jsonError => {
-                                        console.error("JSON Parsing error:", jsonError);
-                                        this.loading = false;
-                                        this.loadProgress = 0;
-                                        reject(jsonError);
-                                    });
-                                },
-                                abort: (reason) => {
-                                    console.error("Stream aborted:", reason);
-                                    this.loading = false;
-                                    this.loadProgress = 0;
-                                    reject(reason);
-                                }
-                            }
-                        }));
-                    })
-                    .catch(error => {
-                        // Error handling (existing code) - keep it, adjust loading and progress reset
-                        this.loading = false;
+                    return new Promise((resolve, reject) => {
+                        // Reset progress and start the progress interval
                         this.loadProgress = 0;
+                        if (this.progressInterval) clearInterval(this.progressInterval);
 
-                        if (!this.error) {
-                            this.error = 'حدث خطأ أثناء محاولة تحميل البيانات. قد تكون هناك مشكلة مؤقتة في الاتصال أو الخادم. يُرجى التحقق من اتصالك بالإنترنت أو استخدام VPN والمحاولة مرة أخرى.';
+                        // Start progress animation
+                        this.progressInterval = setInterval(() => {
+                            if (this.loadProgress < 90) {
+                                this.loadProgress += 1;
+                            }
+                        }, 50);
+
+                        if (this.userJoined) {
+                            // Reset states before attempting to fetch
+                            this.episodes = [];
+                            this.mangas = [];
+                            this.error = null;
+                            this.loading = true;
+
+                            // Check if a rate-limit countdown is stored
+                            const storedWaitTime = localStorage.getItem('waitTime');
+                            if (storedWaitTime) {
+                                this.waitTime = parseInt(storedWaitTime, 10);
+                                this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
+                                this.startTimer(); // Continue the countdown
+                                clearInterval(this.progressInterval); // Stop progress animation
+                                this.loadProgress = 0; // Reset progress
+                                reject('Rate limit exceeded');
+                                return;
+                            }
+
+                            // Append a cache-busting query parameter
+                            const urlWithCacheBust = `${this.jsonUrl}?t=${new Date().getTime()}`;
+
+                            fetch(urlWithCacheBust, { cache: 'no-store' })
+                                .then(response => {
+                                    if (response.status === 429) {
+                                        // If rate-limited, parse the JSON response
+                                        return response.json().then(data => {
+                                            this.loading = false;
+                                            clearInterval(this.progressInterval); // Stop progress animation
+                                            this.loadProgress = 0; // Reset progress
+
+                                            if (data.error === "User blocked") {
+                                                this.error = "لقد تجاوزت الحد المسموح به من الطلبات لهذا اليوم.";
+                                                reject('User blocked');
+                                                return;
+                                            }
+
+                                            const resetTime = data.resetTime || Date.now() + 60000;
+                                            this.waitTime = Math.max(0, Math.floor((resetTime - Date.now()) / 1000));
+                                            this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
+                                            localStorage.setItem('waitTime', this.waitTime);
+                                            console.warn(data.message);
+
+                                            // Start a timer to update the wait time
+                                            this.startTimer();
+                                            reject('Rate limit exceeded');
+                                        });
+                                    }
+
+                                    if (!response.ok) {
+                                        throw new Error(`HTTP error! status: ${response.status}`);
+                                    }
+
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    if (data) {
+                                        // Data fetched successfully
+                                        clearInterval(this.progressInterval); // Stop progress animation
+                                        this.loadProgress = 100; // Set progress to 100%
+                                        setTimeout(() => {
+                                            this.episodes = data.Episodes || [];
+                                            this.mangas = data.Mangas || [];
+                                            this.loading = false;
+                                            localStorage.removeItem('waitTime');
+                                            resolve();
+                                        }, 300); // Delay to show 100% progress
+                                    }
+                                })
+                                .catch(error => {
+                                    clearInterval(this.progressInterval); // Stop progress animation
+                                    this.loadProgress = 0; // Reset progress
+                                    this.loading = false;
+
+                                    if (!this.error) {
+                                        this.error = 'حدث خطأ أثناء محاولة تحميل البيانات. قد تكون هناك مشكلة مؤقتة في الاتصال أو الخادم. يُرجى التحقق من اتصالك بالإنترنت أو استخدام VPN والمحاولة مرة أخرى.';
+                                    }
+                                    reject(error);
+                                });
+                        } else {
+                            clearInterval(this.progressInterval); // Stop progress animation
+                            this.loadProgress = 0; // Reset progress
+                            this.loading = false;
+                            console.log("User not joined, not loading data.");
+                            reject('User not joined to the channel');
                         }
-                        reject(error);
                     });
-            } else {
-                this.loading = false;
-                this.loadProgress = 0;
-                console.log("User not joined, not loading data.");
-                reject('User not joined to the channel');
-            }
-        });
-    },
+                },
 
                 startTimer() {
                     if (this.waitTime > 0) {
