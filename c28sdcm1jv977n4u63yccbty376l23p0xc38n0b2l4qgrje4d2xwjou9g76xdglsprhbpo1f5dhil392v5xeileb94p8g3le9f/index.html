@@ -388,7 +388,7 @@
 
     <h1 
         class="text-5xl font-bold mb-4 text-center">
-        <span>الدليل الشامل لمشاهدة المحقق كونان</span>
+        <span @click="reloadPage1">الدليل الشامل لمشاهدة المحقق كونان</span>
     </h1>
         <!-- <br>
 
@@ -12130,6 +12130,10 @@
                     location.reload(); // Reloads the page
                     //localStorage.clear();
                     localStorage.removeItem('waitTime');
+                },
+
+                reloadPage1() {
+                    location.reload();
                 },
 
                 getBackgroundColor(episode) {
