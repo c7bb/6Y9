@@ -4768,6 +4768,17 @@
 
             <input v-model="searchQuery" class="border px-4 py-2 font-bold text-xl rounded w-full" placeholder="بحث...">
 
+            <!-- Manga Announcement Box -->
+            <div class="relative w-full max-w-2xl p-4 mt-4 bg-black bg-opacity-85 rounded-lg shadow-lg border border-yellow-500 animate-borderMove">
+                <p class="text-white text-xl text-center font-bold">تم إضافة فصل المانغا ({{ mangaCh }})</p>
+                <button 
+                    v-if="mangas && mangas.length > 0"
+                    @click="openMangaModal(mangaCh)"
+                    class="mt-4 w-full py-2 bg-teal-600 text-white font-bold text-lg rounded hover:bg-teal-500 transition-transform transform hover:scale-105 animate-bounce">
+                    أضغط هنا لفتح الفصل
+                </button>
+            </div>
+
             <!-- Announcement Box -->
             <div class="relative w-full max-w-2xl p-4 mt-4 bg-black bg-opacity-85 rounded-lg shadow-lg border border-yellow-500 animate-borderMove">
                 <p class="text-white text-xl text-center font-bold">تم إضافة حلقة الأسبوع ({{ ep }})</p>
@@ -5356,6 +5367,7 @@
                     activeTab: { episodes: 0, movies: 0, mangas: 0 },
                     errorMessage: "",
                     ep: 1152,
+                    mangaCh: 100,
                     replacementDict: {
                     "فلم": ["فيلم",],
                     "ة": ["ه","ة"],
@@ -6001,29 +6013,29 @@
                 },
 
                 groupedMangas() {
-  const allMangas = [
-    ...this.mangas.flatMap(m => m.MangasIDs),
-    ...this.episodes.flatMap(e => e.EpisodeMangasIDs || [])
-  ].sort((a, b) => a.MangaNumber - b.MangaNumber);
+                    const allMangas = [
+                        ...this.mangas.flatMap(m => m.MangasIDs),
+                        ...this.episodes.flatMap(e => e.EpisodeMangasIDs || [])
+                    ].sort((a, b) => a.MangaNumber - b.MangaNumber);
 
-  // Remove duplicates by MangaNumber
-  const uniqueMangas = Array.from(new Set(allMangas.map(m => m.MangaNumber)))
-    .map(mangaNumber => allMangas.find(m => m.MangaNumber === mangaNumber));
+                    // Remove duplicates by MangaNumber
+                    const uniqueMangas = Array.from(new Set(allMangas.map(m => m.MangaNumber)))
+                        .map(mangaNumber => allMangas.find(m => m.MangaNumber === mangaNumber));
 
-  const chunkSize = 100;
-  return uniqueMangas.reduce((acc, _, i, arr) => {
-    if (i % chunkSize === 0) {
-      return [
-        ...acc,
-        {
-          range: `${arr[i].MangaNumber}-${arr[Math.min(i + chunkSize - 1, arr.length - 1)].MangaNumber}`,
-          items: arr.slice(i, i + chunkSize)
-        }
-      ];
-    }
-    return acc;
-  }, []);
-},
+                    const chunkSize = 100;
+                    return uniqueMangas.reduce((acc, _, i, arr) => {
+                        if (i % chunkSize === 0) {
+                        return [
+                            ...acc,
+                            {
+                            range: `${arr[i].MangaNumber}-${arr[Math.min(i + chunkSize - 1, arr.length - 1)].MangaNumber}`,
+                            items: arr.slice(i, i + chunkSize)
+                            }
+                        ];
+                        }
+                        return acc;
+                    }, []);
+                },
 
                 filteredEpisodes() {
                     const searchQuery = this.normalizeText(this.searchQuery);
@@ -14166,81 +14178,104 @@
                 },
 
                 closeDirectWindow() {
-                // Reset status for all videos and episode mangas when closing modal 
-                if (this.selectedEpisode) {
-                    if (this.selectedEpisode.EpisodeVideosIDs) {
-                    this.selectedEpisode.EpisodeVideosIDs.forEach((video, index) => {
-                        this.selectedEpisode.EpisodeVideosIDs[index].status = null;
-                    });
+                    // Reset status for all videos and episode mangas when closing modal 
+                    if (this.selectedEpisode) {
+                        if (this.selectedEpisode.EpisodeVideosIDs) {
+                        this.selectedEpisode.EpisodeVideosIDs.forEach((video, index) => {
+                            this.selectedEpisode.EpisodeVideosIDs[index].status = null;
+                        });
+                        }
+                        if (this.selectedEpisode.EpisodeMangasIDs) {
+                        this.selectedEpisode.EpisodeMangasIDs.forEach((manga, index) => {
+                            this.selectedEpisode.EpisodeMangasIDs[index].status = null;
+                        });
+                        }
                     }
-                    if (this.selectedEpisode.EpisodeMangasIDs) {
-                    this.selectedEpisode.EpisodeMangasIDs.forEach((manga, index) => {
-                        this.selectedEpisode.EpisodeMangasIDs[index].status = null;
-                    });
+                    
+                    // Additionally, reset the manga status if a manga is selected
+                    if (this.selectedManga) {
+                        this.selectedManga.status = null;
                     }
-                }
-                
-                // Additionally, reset the manga status if a manga is selected
-                if (this.selectedManga) {
-                    this.selectedManga.status = null;
-                }
 
-                // Close the modal
-                this.showDirectWindow = false;
+                    // Close the modal
+                    this.showDirectWindow = false;
 
-                // Reset selections depending on the current category
-                if (this.selectedCategory === 'episodes') {
-                    this.resetEpisodesView();
-                } else if (this.selectedCategory === 'movies') {
-                    this.resetMoviesView();
-                } else if (this.selectedCategory === 'mangas') {
-                    this.resetMangasView();
-                }
+                    // Reset selections depending on the current category
+                    if (this.selectedCategory === 'episodes') {
+                        this.resetEpisodesView();
+                    } else if (this.selectedCategory === 'movies') {
+                        this.resetMoviesView();
+                    } else if (this.selectedCategory === 'mangas') {
+                        this.resetMangasView();
+                    }
 
-                // Clear other selections
-                this.selectedEpisode = null;
-                this.selectedManga = null;
+                    // Clear other selections
+                    this.selectedEpisode = null;
+                    this.selectedManga = null;
 
-                // Reset active tabs
-                this.activeTab = {
-                    episodes: 0,
-                    movies: 0,
-                    mangas: 0
-                };
-            },
+                    // Reset active tabs
+                    this.activeTab = {
+                        episodes: 0,
+                        movies: 0,
+                        mangas: 0
+                    };
+                },
 
-            handleEpisodeGroupChange(index) {
-                if (this.selectedEpisode) {
-                    this.resetEpisodesView();
-                }
-                this.activeTab.episodes = index;
-            },
+                handleEpisodeGroupChange(index) {
+                    if (this.selectedEpisode) {
+                        this.resetEpisodesView();
+                    }
+                    this.activeTab.episodes = index;
+                },
 
-            handleMovieGroupChange(index) {
-                if (this.selectedEpisode) {
-                    this.resetMoviesView();
-                }
-                this.activeTab.movies = index;
-            },
+                handleMovieGroupChange(index) {
+                    if (this.selectedEpisode) {
+                        this.resetMoviesView();
+                    }
+                    this.activeTab.movies = index;
+                },
 
-            handleMangaGroupChange(index) {
-                if (this.selectedManga) {
-                    this.resetMangasView();
-                }
-                this.activeTab.mangas = index;
-            },
+                handleMangaGroupChange(index) {
+                    if (this.selectedManga) {
+                        this.resetMangasView();
+                    }
+                    this.activeTab.mangas = index;
+                },
 
-            selectEpisode(episode) {
-                this.selectedEpisode = episode;
-            },
+                selectEpisode(episode) {
+                    this.selectedEpisode = episode;
+                },
 
-            selectMovie(movie) {
-                this.selectedEpisode = movie;
-            },
+                selectMovie(movie) {
+                    this.selectedEpisode = movie;
+                },
 
-            selectManga(manga) {
-                this.selectedManga = manga;
-            },
+                selectManga(manga) {
+                    this.selectedManga = manga;
+                },
+
+                openMangaModal(chapterNumber) {
+                    const chapterString = String(chapterNumber);
+                    // Search through all available mangas
+                    const allMangas = this.groupedMangas.flatMap(group => group.items);
+                    const manga = allMangas.find(m => m.MangaNumber === chapterString);
+                    
+                    if (manga) {
+                        this.selectedManga = manga;
+                        this.selectedCategory = 'mangas';
+                        this.showDirectWindow = true;
+                        
+                        // Find which group contains this manga
+                        const groupIndex = this.groupedMangas.findIndex(group => 
+                            group.items.some(m => m.MangaNumber === chapterString)
+                        );
+                        if (groupIndex > -1) {
+                            this.activeTab.mangas = groupIndex;
+                        }
+                    } else {
+                        console.log("Manga chapter not found");
+                    }
+                },
 
             },
             
