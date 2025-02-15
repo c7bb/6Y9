@@ -5026,24 +5026,24 @@
                                     <span v-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">نوع الفيلم: </span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة')">نوع القصة القصيرة: </span>
                                     <span v-else>نوع الحلقة: </span>
-                                
+                                    
                                     <span v-if="selectedEpisode.EpisodeNumber.includes('الفيلم') || selectedEpisode.EpisodeNumber.includes('قصة قصيرة')">
-                                        <span v-if="selectedEpisode.EpisodeType === 'ف'">فِلر</span>
-                                        <span v-else-if="selectedEpisode.EpisodeType === 'م'">مانغا</span>
-                                        <span v-else-if="selectedEpisode.EpisodeType === 'ث'">مانغا</span>
-                                        <span v-else>
-                                            {{ selectedEpisode.EpisodeType }}
-                                            <span v-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة')"> (أوفا)</span>
-                                        </span>
+                                      <span v-if="selectedEpisode.EpisodeType === 'ف'">فِلر</span>
+                                      <span v-else-if="selectedEpisode.EpisodeType === 'م'">مانغا</span>
+                                      <span v-else-if="selectedEpisode.EpisodeType === 'ث'">مانغا</span>
+                                      <span v-else>{{ selectedEpisode.EpisodeType }}</span>
+                                      <!-- Append (أوفا) if EpisodeNumber includes "قصة قصيرة" -->
+                                      <span v-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة')"> (أوفا)</span>
                                     </span>
                                     
                                     <span v-else>
-                                        <span v-if="selectedEpisode.EpisodeType === 'ف'">فِلر</span>
-                                        <span v-else-if="selectedEpisode.EpisodeType === 'م'">مانغا</span>
-                                        <span v-else-if="selectedEpisode.EpisodeType === 'ث'">مانغا</span>
-                                        <span v-else>{{ selectedEpisode.EpisodeType }}</span>
+                                      <span v-if="selectedEpisode.EpisodeType === 'ف'">فِلر</span>
+                                      <span v-else-if="selectedEpisode.EpisodeType === 'م'">مانغا</span>
+                                      <span v-else-if="selectedEpisode.EpisodeType === 'ث'">مانغا</span>
+                                      <span v-else>{{ selectedEpisode.EpisodeType }}</span>
                                     </span>                                    
-                                </p>                                
+                                </p>
+                                                                
 
                                 <p v-if="selectedEpisode && (selectedEpisode.EpisodeSpecial !== '' && selectedEpisode.EpisodeSpecial !== 'أوفا')" class="mb-2 text-lg">
                                     <span>خاصة: </span>
