@@ -5045,7 +5045,7 @@
                                     </span>                                    
                                 </p>                                
 
-                                <p v-if="selectedEpisode && (selectedEpisode.EpisodeSpecial !== '' || selectedEpisode.EpisodeSpecial === 'أوفا')" class="mb-2 text-lg">
+                                <p v-if="selectedEpisode && (selectedEpisode.EpisodeSpecial !== '' && selectedEpisode.EpisodeSpecial !== 'أوفا')" class="mb-2 text-lg">
                                     <span>خاصة: </span>
                                     <span v-if="selectedEpisode.EpisodeSpecial === '1'"> (ساعة)</span>
                                     <span v-else-if="selectedEpisode.EpisodeSpecial === '2'"> (ساعتين)</span>
