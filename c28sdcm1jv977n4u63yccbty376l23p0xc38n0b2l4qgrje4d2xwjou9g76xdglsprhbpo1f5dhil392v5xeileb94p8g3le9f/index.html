@@ -4833,6 +4833,15 @@
                                         حلقات تمتد لفترة أطول من الحلقة العادية التي مدتها 24 دقيقة، حيث يصل بعضها إلى ساعتين ونصف
                                     </span>
                                 </div>
+
+                                <!-- Tooltip for Stort Stories -->
+                                <div class="tooltip-container flex items-center gap-2">
+                                    <span class="w-6 h-6 bg-green-500 rounded-full"></span>
+                                    <span>قصة قصيرة</span>
+                                    <span class="tooltip-text">
+                                        قصص قصيرة تُبرز أسلوب غوشو أوياما الإبداعي وتكشف جذور وتطور عالم "المحقق كونان" دون ارتباط بالسرد الرئيسي.
+                                    </span>
+                                </div>                                
                         
                             </div>
                         </fieldset>
@@ -12444,6 +12453,8 @@
                             return 'bg-sky-800';
                         } else if (episode.EpisodeSpecial === '2') {
                             return 'bg-orange-600';
+                        } else if (episode.EpisodeNumber.includes("قصة قصيرة")) {
+                            return 'bg-green-500';
                         }
 
                         // Check for EpisodeType after exceptions
@@ -12460,6 +12471,8 @@
                             return 'bg-sky-800';
                         } else if (episode.EpisodeSpecial === '2') {
                             return 'bg-orange-600';
+                        } else if (episode.EpisodeNumber.includes("قصة قصيرة")) {
+                            return 'bg-green-500';
                         }
                     } else if (this.selectedFilter === 'anime' && (this.episodeTypeFilter === 'Manga' || this.episodeTypeFilter === 'Filler')) {
                         // Check for special cases first
