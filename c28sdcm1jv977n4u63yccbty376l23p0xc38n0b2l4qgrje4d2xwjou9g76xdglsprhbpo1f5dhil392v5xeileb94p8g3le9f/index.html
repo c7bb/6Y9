@@ -5031,22 +5031,26 @@
                                         <span v-if="selectedEpisode.EpisodeType === 'ف'">فِلر</span>
                                         <span v-else-if="selectedEpisode.EpisodeType === 'م'">مانغا</span>
                                         <span v-else-if="selectedEpisode.EpisodeType === 'ث'">مانغا</span>
-                                        <span v-else>{{ selectedEpisode.EpisodeType }}</span>
+                                        <span v-else>
+                                            {{ selectedEpisode.EpisodeType }}
+                                            <span v-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة')"> (أوفا)</span>
+                                        </span>
                                     </span>
+                                    
                                     <span v-else>
                                         <span v-if="selectedEpisode.EpisodeType === 'ف'">فِلر</span>
                                         <span v-else-if="selectedEpisode.EpisodeType === 'م'">مانغا</span>
                                         <span v-else-if="selectedEpisode.EpisodeType === 'ث'">مانغا</span>
                                         <span v-else>{{ selectedEpisode.EpisodeType }}</span>
-                                    </span>
+                                    </span>                                    
                                 </p>                                
 
-                                <p v-if="selectedEpisode && selectedEpisode.EpisodeSpecial !== ''" class="mb-2 text-lg">
+                                <p v-if="selectedEpisode && (selectedEpisode.EpisodeSpecial !== '' || selectedEpisode.EpisodeSpecial === 'أوفا')" class="mb-2 text-lg">
                                     <span>خاصة: </span>
                                     <span v-if="selectedEpisode.EpisodeSpecial === '1'"> (ساعة)</span>
                                     <span v-else-if="selectedEpisode.EpisodeSpecial === '2'"> (ساعتين)</span>
-                                    <!-- <span v-else>لايوجد</span> -->
-                                </p>
+                                    <span v-else>لايوجد</span>
+                                </p>                                
 
                                 <fieldset 
                                     v-if="selectedEpisode && selectedEpisode.EpisodeMangaQuoted !== ''" 
