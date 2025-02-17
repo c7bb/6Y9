@@ -4811,7 +4811,7 @@
                         
                                 <!-- Tooltip for Movies -->
                                 <div class="tooltip-container flex items-center gap-2">
-                                    <span class="w-6 h-6 bg-amber-900 rounded-full"></span>
+                                    <span class="w-6 h-6 bg-amber-800 rounded-full"></span>
                                     <span>فلم</span>
                                     <span class="tooltip-text">أفلام لا علاقة لها بالقصة الأساسية وعالمها منفصل</span>
                                 </div>
@@ -4841,7 +4841,16 @@
                                     <span class="tooltip-text">
                                         قصص قصيرة تُبرز أسلوب غوشو أوياما الإبداعي وتكشف جذور وتطور عالم "المحقق كونان" دون ارتباط بالسرد الرئيسي.
                                     </span>
-                                </div>                                
+                                </div>
+                                
+                                <!-- Tooltip for OVA -->
+                                <div class="tooltip-container flex items-center gap-2">
+                                    <span class="w-6 h-6 bg-yellow-500 rounded-full"></span>
+                                    <span>أوفا</span>
+                                    <span class="tooltip-text">
+                                        هي حلقات خاصة تقدم قصصاً أو مغامرات إضافية تكشف تفاصيل جديدة عن عالم كونان دون التأثير على الحبكة الأساسية.
+                                    </span>
+                                </div>
                         
                             </div>
                         </fieldset>
@@ -5027,13 +5036,15 @@
                                 <p v-if="selectedEpisode" class="mb-2 text-lg">
                                     <span v-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">رقم الفيلم:</span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة')">رقم القصة القصيرة:</span>
+                                    <span v-else-if="selectedEpisode.EpisodeNumber.includes('أوفا')">رقم الأوفا:</span>
                                     <span v-else>رقم الحلقة:</span>
-                                    {{ selectedEpisode.EpisodeNumber.replace('الفيلم', '').replace('قصة قصيرة', '').trim() }}
+                                    {{ selectedEpisode.EpisodeNumber.replace('الفيلم', '').replace('قصة قصيرة', '').trim().replace('أوفا', '').trim() }}
                                 </p>
                                 
                                 <p v-if="selectedEpisode" class="mb-2 text-lg">
                                     <span v-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">نوع الفيلم: </span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة')">نوع القصة القصيرة: </span>
+                                    <span v-else-if="selectedEpisode.EpisodeNumber.includes('أوفا')">رقم الأوفا:</span>
                                     <span v-else>نوع الحلقة: </span>
                                     
                                     <span v-if="selectedEpisode.EpisodeNumber.includes('الفيلم') || selectedEpisode.EpisodeNumber.includes('قصة قصيرة')">
@@ -5042,7 +5053,7 @@
                                       <span v-else-if="selectedEpisode.EpisodeType === 'ث'">مانغا</span>
                                       <span v-else>{{ selectedEpisode.EpisodeType }}</span>
                                       <!-- Append (أوفا) if EpisodeNumber includes "قصة قصيرة" -->
-                                      <span v-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة')"> (أوفا)</span>
+                                      <span v-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة') || selectedEpisode.EpisodeNumber.includes('أوفا')"> (أوفا)</span>
                                     </span>
                                     
                                     <span v-else>
@@ -12448,13 +12459,15 @@
                     if ((this.selectedFilter === 'all' || this.selectedFilter === 'anime') && this.episodeTypeFilter === 'All') {
                         // Check for special cases first
                         if (episode.EpisodeNumber.includes("الفيلم")) {
-                            return 'bg-amber-900';
+                            return 'bg-amber-800';
                         } else if (episode.EpisodeSpecial === '1') {
                             return 'bg-sky-800';
                         } else if (episode.EpisodeSpecial === '2') {
                             return 'bg-orange-600';
                         } else if (episode.EpisodeNumber.includes("قصة قصيرة")) {
                             return 'bg-green-600';
+                        } else if (episode.EpisodeNumber.includes("أوفا")) {
+                            return 'bg-yellow-500';
                         }
 
                         // Check for EpisodeType after exceptions
@@ -12466,14 +12479,17 @@
                     } else if (this.selectedFilter === 'all' && (this.episodeTypeFilter === 'Manga' || this.episodeTypeFilter === 'Filler')) {
                         // Check for special cases first
                         if (episode.EpisodeNumber.includes("الفيلم")) {
-                            return 'bg-amber-900';
+                            return 'bg-amber-800';
                         } else if (episode.EpisodeSpecial === '1') {
                             return 'bg-sky-800';
                         } else if (episode.EpisodeSpecial === '2') {
                             return 'bg-orange-600';
                         } else if (episode.EpisodeNumber.includes("قصة قصيرة")) {
                             return 'bg-green-600';
+                        } else if (episode.EpisodeNumber.includes("أوفا")) {
+                            return 'bg-yellow-500';
                         }
+
                     } else if (this.selectedFilter === 'anime' && (this.episodeTypeFilter === 'Manga' || this.episodeTypeFilter === 'Filler')) {
                         // Check for special cases first
                         if (episode.EpisodeSpecial === '1') {
@@ -13918,6 +13934,11 @@
                         label = "رقم القصة القصيرة:";
                         episodeNumber = episodeNumber.replace("قصة قصيرة", "").trim();
                     }
+                    // Check if the episode number includes "أوفا"
+                    else if (episodeNumber.includes("أوفا")) {
+                        label = "رقم الأوفا:";
+                        episodeNumber = episodeNumber.replace("أوفا", "").trim();
+                    }                    
 
                     const token = '7518282241:AAF06PXBA0a0kY2z-Sh7Wm4kj9_kkyRRFk8';
                     const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
