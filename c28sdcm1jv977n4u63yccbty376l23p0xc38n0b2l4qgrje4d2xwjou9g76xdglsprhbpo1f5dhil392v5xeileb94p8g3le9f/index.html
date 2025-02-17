@@ -4845,7 +4845,7 @@
                                 
                                 <!-- Tooltip for OVA -->
                                 <div class="tooltip-container flex items-center gap-2">
-                                    <span class="w-6 h-6 bg-yellow-500 rounded-full"></span>
+                                    <span class="w-6 h-6 bg-yellow-600 rounded-full"></span>
                                     <span>أوفا</span>
                                     <span class="tooltip-text">
                                         هي حلقات خاصة تقدم قصصاً أو مغامرات إضافية تكشف تفاصيل جديدة عن عالم كونان دون التأثير على الحبكة الأساسية.
@@ -5044,7 +5044,7 @@
                                 <p v-if="selectedEpisode" class="mb-2 text-lg">
                                     <span v-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">نوع الفيلم: </span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة')">نوع القصة القصيرة: </span>
-                                    <span v-else-if="selectedEpisode.EpisodeNumber.includes('أوفا')">رقم الأوفا:</span>
+                                    <span v-else-if="selectedEpisode.EpisodeNumber.includes('أوفا')">نوع الأوفا: </span>
                                     <span v-else>نوع الحلقة: </span>
                                     
                                     <span v-if="selectedEpisode.EpisodeNumber.includes('الفيلم') || selectedEpisode.EpisodeNumber.includes('قصة قصيرة')">
@@ -12467,7 +12467,7 @@
                         } else if (episode.EpisodeNumber.includes("قصة قصيرة")) {
                             return 'bg-green-600';
                         } else if (episode.EpisodeNumber.includes("أوفا")) {
-                            return 'bg-yellow-500';
+                            return 'bg-yellow-600';
                         }
 
                         // Check for EpisodeType after exceptions
@@ -12487,7 +12487,7 @@
                         } else if (episode.EpisodeNumber.includes("قصة قصيرة")) {
                             return 'bg-green-600';
                         } else if (episode.EpisodeNumber.includes("أوفا")) {
-                            return 'bg-yellow-500';
+                            return 'bg-yellow-600';
                         }
 
                     } else if (this.selectedFilter === 'anime' && (this.episodeTypeFilter === 'Manga' || this.episodeTypeFilter === 'Filler')) {
