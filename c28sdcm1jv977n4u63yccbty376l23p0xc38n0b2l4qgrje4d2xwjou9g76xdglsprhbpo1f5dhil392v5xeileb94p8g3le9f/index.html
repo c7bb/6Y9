@@ -5053,7 +5053,7 @@
                                       <span v-else-if="selectedEpisode.EpisodeType === 'ث'">مانغا</span>
                                       <span v-else>{{ selectedEpisode.EpisodeType }}</span>
                                       <!-- Append (أوفا) if EpisodeNumber includes "قصة قصيرة" -->
-                                      <span v-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة') || selectedEpisode.EpisodeNumber.includes('أوفا')"> (أوفا)</span>
+                                      <span v-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة')"> (أوفا)</span>
                                     </span>
                                     
                                     <span v-else>
