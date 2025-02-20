@@ -8629,7 +8629,7 @@
                             if (this.selectedFilter === 'anime') {
                                 return /^[0-9]+(\.[0-9]+)?$/.test(episode.EpisodeNumber);
                             } else if (this.selectedFilter === 'movies') {
-                                return episode.EpisodeNumber.includes("الفيلم");
+                                return episode.EpisodeNumber.includes("الفيلم") && !episode.EpisodeNumber.includes("خاصة بالفيلم");
                             } else if (this.selectedFilter === 'hourly_special') {
                                 return episode.EpisodeSpecial === "1"; // Filter for خاصة (ساعة)
                             } else if (this.selectedFilter === 'two_hour_special') {
