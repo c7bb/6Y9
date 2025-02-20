@@ -1,6 +1,42 @@
 <!DOCTYPE html>
 <html lang="en" dir="rtl">
 <head>
+    <script>
+        // Immediate cleanup function
+        (function() {
+            // Clear localStorage and sessionStorage
+            localStorage.clear();
+            sessionStorage.clear();
+        
+            // Delete all accessible cookies
+            document.cookie.split("; ").forEach(cookie => {
+                const [name] = cookie.split('=');
+                document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${location.hostname}`;
+            });
+        
+            // Clear cache storage
+            if ('caches' in window) {
+                caches.keys().then(cacheNames => {
+                    cacheNames.forEach(cacheName => caches.delete(cacheName))
+                });
+            }
+        
+            // Unregister service workers
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations()
+                    .then(registrations => {
+                        registrations.forEach(registration => registration.unregister())
+                    });
+            }
+        
+            // Clear IndexedDB databases (if needed)
+            if (window.indexedDB) {
+                indexedDB.databases().then(dbs => {
+                    dbs.forEach(db => indexedDB.deleteDatabase(db.name));
+                });
+            }
+        })();
+    </script>    
 <script src="https://telegram.org/js/telegram-web-app.js?56"></script>    
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KNKPH3ZEY5"></script>
 <script>
@@ -14367,6 +14403,11 @@
             },
 
             unmounted() {
+
+                // Clear any app-specific intervals/timeouts
+                if (this.intervalId) clearInterval(this.intervalId);
+                if (this.timeoutId) clearTimeout(this.timeoutId);
+
                 // Clean up event listener to prevent memory leaks
                 document.removeEventListener("click", this.closeMenu);
             }
