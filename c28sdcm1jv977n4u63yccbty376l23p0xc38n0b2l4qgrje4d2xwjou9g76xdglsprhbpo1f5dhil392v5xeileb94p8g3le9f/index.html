@@ -12507,17 +12507,17 @@
                 getBackgroundColor(episode) {
                     if ((this.selectedFilter === 'all' || this.selectedFilter === 'anime') && this.episodeTypeFilter === 'All') {
                         // Check for special cases first
-                        if (episode.EpisodeNumber === "الفيلم") {
+                        if (episode.EpisodeNumber.includes("الفيلم")) {
                             return 'bg-amber-800';
                         } else if (episode.EpisodeSpecial === '1') {
                             return 'bg-sky-800';
                         } else if (episode.EpisodeSpecial === '2') {
                             return 'bg-orange-600';
-                        } else if (episode.EpisodeNumber === "قصة قصيرة") {
+                        } else if (episode.EpisodeNumber.includes("قصة قصيرة")) {
                             return 'bg-green-600';
-                        } else if (episode.EpisodeNumber === "أوفا") {
+                        } else if (episode.EpisodeNumber.includes("أوفا")) {
                             return 'bg-yellow-600';
-                        } else if (episode.EpisodeNumber === "خاصة بالفيلم") {
+                        } else if (episode.EpisodeNumber.includes("خاصة بالفيلم")) {
                             return 'bg-cyan-500';
                         }
 
@@ -12529,17 +12529,17 @@
                         }
                     } else if (this.selectedFilter === 'all' && (this.episodeTypeFilter === 'Manga' || this.episodeTypeFilter === 'Filler')) {
                         // Check for special cases first
-                        if (episode.EpisodeNumber === "الفيلم") {
+                        if (episode.EpisodeNumber.includes("الفيلم")) {
                             return 'bg-amber-800';
                         } else if (episode.EpisodeSpecial === '1') {
                             return 'bg-sky-800';
                         } else if (episode.EpisodeSpecial === '2') {
                             return 'bg-orange-600';
-                        } else if (episode.EpisodeNumber === "قصة قصيرة") {
+                        } else if (episode.EpisodeNumber.includes("قصة قصيرة")) {
                             return 'bg-green-600';
-                        } else if (episode.EpisodeNumber === "أوفا") {
+                        } else if (episode.EpisodeNumber.includes("أوفا")) {
                             return 'bg-yellow-600';
-                        } else if (episode.EpisodeNumber === "خاصة بالفيلم") {
+                        } else if (episode.EpisodeNumber.includes("خاصة بالفيلم")) {
                             return 'bg-cyan-500';
                         }
 
