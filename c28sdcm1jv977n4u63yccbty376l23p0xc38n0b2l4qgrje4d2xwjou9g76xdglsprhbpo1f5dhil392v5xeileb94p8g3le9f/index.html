@@ -5079,12 +5079,12 @@
                                 </h2>
 
                                 <p v-if="selectedEpisode" class="mb-2 text-lg">
-                                    <span v-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">رقم الفيلم:</span>
+                                    <span v-else-if="selectedEpisode.EpisodeNumber.includes('خاصة بالفيلم')">رقم الحلقة الخاصة:</span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة')">رقم القصة القصيرة:</span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('أوفا')">رقم الأوفا:</span>
-                                    <span v-else-if="selectedEpisode.EpisodeNumber.includes('خاصة بالفيلم')">رقم الحلقة الخاصة:</span>
+                                    <span v-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">رقم الفيلم:</span>
                                     <span v-else>رقم الحلقة:</span>
-                                    {{ selectedEpisode.EpisodeNumber.replace('الفيلم', '').replace('قصة قصيرة', '').trim().replace('أوفا', '').trim().replace('خاصة بالفيلم', '').trim() }}
+                                    {{ selectedEpisode.EpisodeNumber.replace('خاصة بالفيلم', '').trim().replace('قصة قصيرة', '').trim().replace('أوفا', '').trim().replace('الفيلم', '') }}
                                 </p>
                                 
                                 <p v-if="selectedEpisode" class="mb-2 text-lg">
