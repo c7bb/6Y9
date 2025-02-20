@@ -6064,7 +6064,12 @@
                 groupedEpisodes() {
                     const seasons = {};
                     this.episodes
-                        .filter(e => e.EpisodeVideosIDs && e.EpisodeVideosIDs.length > 0 && !e.EpisodeNumber.includes('الفيلم')) // Filter out episodes without videos and "الفيلم"
+                        .filter(e => 
+                            e.EpisodeVideosIDs && e.EpisodeVideosIDs.length > 0 &&
+                            !e.EpisodeNumber.includes('الفيلم') &&
+                            !e.EpisodeNumber.includes('قصة قصيرة') &&
+                            !e.EpisodeNumber.includes('أوفا')
+                        )
                         .forEach(ep => {
                             const season = ep.EpisodeSeason || 'default';
                             if (!seasons[season]) seasons[season] = [];
@@ -6072,7 +6077,7 @@
                         });
                     
                     return Object.values(seasons).map(group => ({
-                        range: `${group[0].EpisodeNumber}-${group[group.length-1].EpisodeNumber}`,
+                        range: `${group[0].EpisodeNumber}-${group[group.length - 1].EpisodeNumber}`,
                         items: group
                     }));
                 },
