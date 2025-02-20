@@ -519,7 +519,7 @@
                                         class="relative flex flex-col gap-4">
                                         <button
                                             :disabled="video.status === 'success'"
-                                            @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index)"
+                                            @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
                                             class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50">
                                             {{ video.Resolution }} ({{ video.Size }} MB)
                                         </button>
@@ -572,7 +572,7 @@
                                         class="relative flex flex-col gap-4">
                                         <button
                                             :disabled="video.status === 'success'"
-                                            @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index)"
+                                            @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
                                             class="bg-amber-700 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50">
                                             {{ video.Resolution }} ({{ video.Size }} MB)
                                         </button>
@@ -5356,7 +5356,7 @@
                                             class="relative flex flex-col gap-4">
                                             <button
                                                 :disabled="video.status === 'success'"
-                                                @click="() => { sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index); }"
+                                                @click="() => { sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime); }"
                                                 class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50">
                                                 {{ video.Resolution }} ({{ video.Size }} MB)
                                             </button>
@@ -13951,37 +13951,64 @@
                     }
                 },
 
-                async sendEpisodeToBot(videoID, resolution, size, index) {
+                async sendEpisodeToBot(videoID, resolution, size, index, introductionTime, startStoryTime, episodeSuspenseTime, startSongTime, chapterOneTime, chapterTwoTime, endSongTime, nextEpisodeTeaserTime, nextEpisodeHintTime) {
                     if (!this.selectedEpisode.EpisodeNumber) {
                         return;
                     }
 
-                    // Initialize the default label and episode number
                     let episodeNumber = this.selectedEpisode.EpisodeNumber;
                     let label = "رقم الحلقة:";
 
-                    // Check if the episode number includes "الفيلم"
                     if (episodeNumber.includes("الفيلم")) {
                         label = "رقم الفيلم:";
                         episodeNumber = episodeNumber.replace("الفيلم", "").trim();
-                    } 
-                    // Check if the episode number includes "قصة قصيرة"
-                    else if (episodeNumber.includes("قصة قصيرة")) {
+                    } else if (episodeNumber.includes("قصة قصيرة")) {
                         label = "رقم القصة القصيرة:";
                         episodeNumber = episodeNumber.replace("قصة قصيرة", "").trim();
-                    }
-                    // Check if the episode number includes "أوفا"
-                    else if (episodeNumber.includes("أوفا")) {
+                    } else if (episodeNumber.includes("أوفا")) {
                         label = "رقم الأوفا:";
                         episodeNumber = episodeNumber.replace("أوفا", "").trim();
-                    }                    
+                    }
 
                     const token = '7518282241:AAF06PXBA0a0kY2z-Sh7Wm4kj9_kkyRRFk8';
                     const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
                     console.log(chatId);
 
-                    // Create the caption with the updated label and episode number
-                    const caption = `*${label} ${episodeNumber}\nالجودة: ${resolution}\nالحجم: ${size} ميجا*`;
+                    // Build additional details only if provided
+                    let details = "";
+                    if (introductionTime) {
+                        details += `\nالمقدمة: ${introductionTime}`;
+                    }
+                    if (startStoryTime) {
+                        details += `\nبداية القصة: ${startStoryTime}`;
+                    }
+                    if (episodeSuspenseTime) {
+                        details += `\nتشويق الحلقة: ${episodeSuspenseTime}`;
+                    }
+                    if (startSongTime) {
+                        details += `\nأغنية البداية: ${startSongTime}`;
+                    }
+                    if (chapterOneTime) {
+                        details += `\nالفصل الأول: ${chapterOneTime}`;
+                    }
+                    if (chapterTwoTime) {
+                        details += `\nالفصل الثاني: ${chapterTwoTime}`;
+                    }
+                    if (endSongTime) {
+                        details += `\nأغنية النهاية: ${endSongTime}`;
+                    }
+                    if (nextEpisodeTeaserTime) {
+                        details += `\nتشويق الحلقة القادمة: ${nextEpisodeTeaserTime}`;
+                    }
+                    if (nextEpisodeHintTime) {
+                        details += `\nتلميح الحلقة القادمة: ${nextEpisodeHintTime}`;
+                    }
+
+                    // Build the caption. If any additional details exist, prepend the header.
+                    let caption = `*${label} ${episodeNumber}\nالجودة: ${resolution}\nالحجم: ${size} ميجا*`;
+                    if (details) {
+                        caption += `\n\n✦✦— محتويات الحلقة —✦✦${details}*`;
+                    }
 
                     // Set the status to 'sending'
                     this.selectedEpisode.EpisodeVideosIDs[index].status = 'sending';
@@ -13989,19 +14016,15 @@
                     try {
                         await this.sendVideoResponse(chatId, videoID, caption, token);
                         this.selectedEpisode.EpisodeVideosIDs[index].status = 'success';
-                        // Clear any previous error message on success
                         this.errorMessage = "";
                     } catch (error) {
                         this.selectedEpisode.EpisodeVideosIDs[index].status = 'error';
-                        // Save the error message from Telegram for display in the error popup
                         this.errorMessage = error.message;
-                        // If an error popup is active, skip further processing
                         if (this.selectedEpisode.EpisodeVideosIDs.some((video) => video.status === "error")) {
-                            return; // Exit early if error popup is shown
+                            return;
                         }
                     }
 
-                    // Reset the status after a delay (if needed)
                     setTimeout(() => {
                         this.selectedEpisode.EpisodeVideosIDs[index].status = null;
                     }, 2000);
