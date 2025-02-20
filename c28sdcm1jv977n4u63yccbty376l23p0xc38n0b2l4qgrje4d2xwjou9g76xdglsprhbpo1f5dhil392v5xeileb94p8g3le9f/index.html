@@ -14407,37 +14407,6 @@
             },
             
             async created() {
-
-                // Set the loading page
-            document.body.innerHTML = `
-                <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background: linear-gradient(135deg, #1e3c72, #2a5298);">
-                    <div id="loadingImage" style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden; animation: rotate 2s linear infinite;">
-                        <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/Logo.png" alt="Loading" style="width: 100%; height: 100%;">
-                    </div>
-                    <div style="width: 200px; height: 10px; background: #fff; border-radius: 5px; margin-top: 20px; overflow: hidden;">
-                        <div id="progressBar" style="width: 0%; height: 100%; background: #00ff00; transition: width 0.5s;"></div>
-                    </div>
-                    <div id="progressText" style="color: #fff; margin-top: 10px;">0%</div>
-                </div>
-            `;
-
-            // Rotate the image
-            const loadingImage = document.getElementById('loadingImage');
-            const rotateImage = () => {
-                loadingImage.style.transform = 'rotate(360deg)';
-                setTimeout(() => {
-                    loadingImage.style.transform = 'rotate(90deg)';
-                    setTimeout(() => {
-                        loadingImage.style.transform = 'rotate(190deg)';
-                        setTimeout(() => {
-                            loadingImage.style.transform = 'rotate(90deg)';
-                            setTimeout(rotateImage, 1000);
-                        }, 500);
-                    }, 500);
-                }, 500);
-            };
-            rotateImage();
-
                 // Run the Telegram check before mounting the app.
                 await this.checkTelegram();
                 // If the user is valid, immediately load data.
