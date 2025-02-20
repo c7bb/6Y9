@@ -6080,7 +6080,7 @@
                 groupedMovies() {
                     const chunkSize = 27;
                     return this.episodes
-                        .filter(e => e.EpisodeNumber.includes('الفيلم'))
+                        .filter(e => e.EpisodeNumber.includes('الفيلم') && !e.EpisodeNumber.includes('خاصة بالفيلم'))
                         .reduce((acc, _, i, arr) => (i % chunkSize) ? acc : 
                             [...acc, { 
                                 range: `${i+1}-${Math.min(i+chunkSize, arr.length)}`, 
