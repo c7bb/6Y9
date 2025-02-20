@@ -13980,7 +13980,7 @@
                             .replace(/[_*[\]()~`>#+\-=|{}.!]/g, '\\$&')
                             .replace(/\n/g, '\\n');
                     }
-
+                    
                     // Build additional details only if provided
                     let details = "";
                     if (introductionTime) {
@@ -14010,6 +14010,9 @@
                     if (nextEpisodeHintTime) {
                         details += `\n\n*تلميح الحلقة القادمة:* ${escapeMarkdown(nextEpisodeHintTime)}`;
                     }
+
+                    // Build the caption. If any additional details exist, prepend the header.
+                    let caption = `*${label} ${episodeNumber}\nالجودة: ${resolution}\nالحجم: ${size} ميجا*`;
 
                     // Append the bold header for the details and then the details content
                     if (details) {
