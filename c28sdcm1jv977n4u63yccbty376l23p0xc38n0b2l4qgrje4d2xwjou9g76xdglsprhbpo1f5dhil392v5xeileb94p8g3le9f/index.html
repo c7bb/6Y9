@@ -13984,31 +13984,31 @@
     // Build additional details only if provided
     let details = "";
     if (introductionTime) {
-        details += `\n\nالمقدمة: *${escapeMarkdown(introductionTime)}*`;
+        details += `*\n\nالمقدمة:* ${escapeMarkdown(introductionTime)}`;
     }
     if (startStoryTime) {
-        details += `*\n\nبداية القصة: *${escapeMarkdown(startStoryTime)}*`;
+        details += `\n\nبداية القصة: *${escapeMarkdown(startStoryTime)}*`;
     }
     if (episodeSuspenseTime) {
-        details += `*\n\nتشويق الحلقة: *${escapeMarkdown(episodeSuspenseTime)}*`;
+        details += `\n\nتشويق الحلقة: *${escapeMarkdown(episodeSuspenseTime)}*`;
     }
     if (startSongTime) {
-        details += `*\n\nأغنية البداية: *${escapeMarkdown(startSongTime)}*`;
+        details += `\n\nأغنية البداية: *${escapeMarkdown(startSongTime)}*`;
     }
     if (chapterOneTime) {
-        details += `*\n\nالفصل الأول: *${escapeMarkdown(chapterOneTime)}*`;
+        details += `\n\nالفصل الأول: *${escapeMarkdown(chapterOneTime)}*`;
     }
     if (chapterTwoTime) {
         details += `\n\nالفصل الثاني: *${escapeMarkdown(chapterTwoTime)}*`;
     }
     if (endSongTime) {
-        details += `*\n\nأغنية النهاية: *${escapeMarkdown(endSongTime)}*`;
+        details += `\n\nأغنية النهاية: *${escapeMarkdown(endSongTime)}*`;
     }
     if (nextEpisodeTeaserTime) {
-        details += `*\n\nتشويق الحلقة القادمة: *${escapeMarkdown(nextEpisodeTeaserTime)}*`;
+        details += `\n\nتشويق الحلقة القادمة: *${escapeMarkdown(nextEpisodeTeaserTime)}*`;
     }
     if (nextEpisodeHintTime) {
-        details += `*\n\nتلميح الحلقة القادمة: *${escapeMarkdown(nextEpisodeHintTime)}*`;
+        details += `\n\nتلميح الحلقة القادمة: *${escapeMarkdown(nextEpisodeHintTime)}*`;
     }
 
     // Build the caption. If any additional details exist, prepend the header.
