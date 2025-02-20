@@ -14409,7 +14409,7 @@
             async created() {
 
                 // Add rotation animation and progress bar only when `loading && userJoined`
-                if (this.loading && this.userJoined) {
+                if (this.loading && !this.userJoined) {
                     document.body.innerHTML = `
                         <style>
                             @keyframes rotateAnimation {
