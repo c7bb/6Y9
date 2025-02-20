@@ -14407,33 +14407,6 @@
             },
             
             async created() {
-
-                // Add rotation animation and progress bar only when `loading && userJoined`
-                if (this.loading && !this.userJoined) {
-                    document.body.innerHTML = `
-                        <style>
-                            @keyframes rotateAnimation {
-                                0% { transform: rotate(360deg); }
-                                25% { transform: rotate(90deg); }
-                                35% { transform: rotate(90deg); }
-                                55% { transform: rotate(190deg); }
-                                65% { transform: rotate(90deg); }
-                                100% { transform: rotate(360deg); }
-                            }
-                        </style>
-                        <div class="flex justify-center items-center h-screen">
-                            <div class="relative w-32 h-32 rounded-full overflow-hidden animate-rotateAnimation">
-                                <img class="w-full h-full object-cover" src="your-image-url.jpg" alt="Loading" />
-                            </div>
-                        </div>
-                        <div class="w-4/5 mx-auto mt-8 h-3 bg-gray-300 rounded-full">
-                            <div class="bg-green-500 h-full rounded-full transition-all" style="width: ${this.loadProgress}%;"></div>
-                        </div>
-                        <div class="text-center text-white text-xl mt-4">
-                            ${this.loadProgress}%
-                        </div>
-                    `;
-                }
                 // Run the Telegram check before mounting the app.
                 await this.checkTelegram();
                 // If the user is valid, immediately load data.
