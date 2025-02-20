@@ -14012,7 +14012,7 @@
     }
 
     // Build the caption. If any additional details exist, prepend the header.
-    let caption = `*${escapeMarkdown(label)} ${escapeMarkdown(episodeNumber)}\nالجودة: ${escapeMarkdown(resolution)}\nالحجم: ${escapeMarkdown(size)} ميجا*`;
+    let caption = `*${label} ${episodeNumber}\nالجودة: ${resolution}\nالحجم: ${size} ميجا*`;
     if (details) {
         caption += `\n\n✦✦— محتويات الحلقة —✦✦${details}`;
     }
