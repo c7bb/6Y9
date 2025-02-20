@@ -12505,9 +12505,11 @@
                 },
 
                 getBackgroundColor(episode) {
-                    if ((this.selectedFilter === 'all' || this.selectedFilter === 'anime') && this.episodeTypeFilter === 'All') {
+                        if ((this.selectedFilter === 'all' || this.selectedFilter === 'anime') && this.episodeTypeFilter === 'All') {
                         // Check for special cases first
-                        if (episode.EpisodeNumber.includes("الفيلم") && !episode.EpisodeNumber.includes("خاصة بالفيلم")) {
+                        if (episode.EpisodeNumber.includes("خاصة بالفيلم")) {
+                            return 'bg-cyan-500';
+                        } else if (episode.EpisodeNumber.includes("الفيلم")) {
                             return 'bg-amber-800';
                         } else if (episode.EpisodeSpecial === '1') {
                             return 'bg-sky-800';
@@ -12517,8 +12519,6 @@
                             return 'bg-green-600';
                         } else if (episode.EpisodeNumber.includes("أوفا")) {
                             return 'bg-yellow-600';
-                        } else if (episode.EpisodeNumber.includes("خاصة بالفيلم") && !episode.EpisodeNumber.includes("الفيلم")) {
-                            return 'bg-cyan-500';
                         }
 
                         // Check for EpisodeType after exceptions
@@ -12529,7 +12529,9 @@
                         }
                     } else if (this.selectedFilter === 'all' && (this.episodeTypeFilter === 'Manga' || this.episodeTypeFilter === 'Filler')) {
                         // Check for special cases first
-                        if (episode.EpisodeNumber.includes("الفيلم") && !episode.EpisodeNumber.includes("خاصة بالفيلم")) {
+                        if (episode.EpisodeNumber.includes("خاصة بالفيلم")) {
+                            return 'bg-cyan-500';
+                        } else if (episode.EpisodeNumber.includes("الفيلم")) {
                             return 'bg-amber-800';
                         } else if (episode.EpisodeSpecial === '1') {
                             return 'bg-sky-800';
@@ -12539,10 +12541,7 @@
                             return 'bg-green-600';
                         } else if (episode.EpisodeNumber.includes("أوفا")) {
                             return 'bg-yellow-600';
-                        } else if (episode.EpisodeNumber.includes("خاصة بالفيلم")  && !episode.EpisodeNumber.includes("الفيلم")) {
-                            return 'bg-cyan-500';
                         }
-
                     } else if (this.selectedFilter === 'anime' && (this.episodeTypeFilter === 'Manga' || this.episodeTypeFilter === 'Filler')) {
                         // Check for special cases first
                         if (episode.EpisodeSpecial === '1') {
