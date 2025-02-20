@@ -5079,19 +5079,24 @@
                                 </h2>
 
                                 <p v-if="selectedEpisode" class="mb-2 text-lg">
-                                    <span v-else-if="selectedEpisode.EpisodeNumber.includes('خاصة بالفيلم')">رقم الحلقة الخاصة:</span>
+                                    <span v-if="selectedEpisode.EpisodeNumber.includes('خاصة بالفيلم')">رقم الحلقة الخاصة:</span>
+                                    <span v-else-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">رقم الفيلم:</span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة')">رقم القصة القصيرة:</span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('أوفا')">رقم الأوفا:</span>
-                                    <span v-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">رقم الفيلم:</span>
                                     <span v-else>رقم الحلقة:</span>
-                                    {{ selectedEpisode.EpisodeNumber.replace('خاصة بالفيلم', '').trim().replace('قصة قصيرة', '').trim().replace('أوفا', '').trim().replace('الفيلم', '') }}
+                                    {{ selectedEpisode.EpisodeNumber
+                                         .replace('خاصة بالفيلم', '')
+                                         .replace('الفيلم', '')
+                                         .replace('قصة قصيرة', '')
+                                         .replace('أوفا', '')
+                                         .trim() }}
                                 </p>
                                 
                                 <p v-if="selectedEpisode" class="mb-2 text-lg">
-                                    <span v-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">نوع الفيلم: </span>
+                                    <span v-if="selectedEpisode.EpisodeNumber.includes('خاصة بالفيلم')">نوع الحلقة الخاصة: </span>
+                                    <span v-else-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">نوع الفيلم: </span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة')">نوع القصة القصيرة: </span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('أوفا')">نوع الأوفا: </span>
-                                    <span v-else-if="selectedEpisode.EpisodeNumber.includes('خاصة بالفيلم')">نوع الحلقة الخاصة: </span>
                                     <span v-else>نوع الحلقة: </span>
                                     
                                     <span v-if="selectedEpisode.EpisodeNumber.includes('الفيلم') || selectedEpisode.EpisodeNumber.includes('قصة قصيرة')">
