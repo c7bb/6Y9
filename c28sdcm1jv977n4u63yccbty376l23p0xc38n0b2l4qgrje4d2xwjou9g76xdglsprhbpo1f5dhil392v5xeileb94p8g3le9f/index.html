@@ -13952,83 +13952,90 @@
                 },
 
                 async sendEpisodeToBot(videoID, resolution, size, index, introductionTime, startStoryTime, episodeSuspenseTime, startSongTime, chapterOneTime, chapterTwoTime, endSongTime, nextEpisodeTeaserTime, nextEpisodeHintTime) {
-                    if (!this.selectedEpisode.EpisodeNumber) {
-                        return;
-                    }
+    if (!this.selectedEpisode.EpisodeNumber) {
+        return;
+    }
 
-                    let episodeNumber = this.selectedEpisode.EpisodeNumber;
-                    let label = "رقم الحلقة:";
+    let episodeNumber = this.selectedEpisode.EpisodeNumber;
+    let label = "رقم الحلقة:";
 
-                    if (episodeNumber.includes("الفيلم")) {
-                        label = "رقم الفيلم:";
-                        episodeNumber = episodeNumber.replace("الفيلم", "").trim();
-                    } else if (episodeNumber.includes("قصة قصيرة")) {
-                        label = "رقم القصة القصيرة:";
-                        episodeNumber = episodeNumber.replace("قصة قصيرة", "").trim();
-                    } else if (episodeNumber.includes("أوفا")) {
-                        label = "رقم الأوفا:";
-                        episodeNumber = episodeNumber.replace("أوفا", "").trim();
-                    }
+    if (episodeNumber.includes("الفيلم")) {
+        label = "رقم الفيلم:";
+        episodeNumber = episodeNumber.replace("الفيلم", "").trim();
+    } else if (episodeNumber.includes("قصة قصيرة")) {
+        label = "رقم القصة القصيرة:";
+        episodeNumber = episodeNumber.replace("قصة قصيرة", "").trim();
+    } else if (episodeNumber.includes("أوفا")) {
+        label = "رقم الأوفا:";
+        episodeNumber = episodeNumber.replace("أوفا", "").trim();
+    }
 
-                    const token = '7518282241:AAF06PXBA0a0kY2z-Sh7Wm4kj9_kkyRRFk8';
-                    const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
-                    console.log(chatId);
+    const token = '7518282241:AAF06PXBA0a0kY2z-Sh7Wm4kj9_kkyRRFk8';
+    const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
+    console.log(chatId);
 
-                    // Build additional details only if provided
-                    let details = "";
-                    if (introductionTime) {
-                        details += `\nالمقدمة: ${introductionTime}`;
-                    }
-                    if (startStoryTime) {
-                        details += `\nبداية القصة: ${startStoryTime}`;
-                    }
-                    if (episodeSuspenseTime) {
-                        details += `\nتشويق الحلقة: ${episodeSuspenseTime}`;
-                    }
-                    if (startSongTime) {
-                        details += `\nأغنية البداية: ${startSongTime}`;
-                    }
-                    if (chapterOneTime) {
-                        details += `\nالفصل الأول: ${chapterOneTime}`;
-                    }
-                    if (chapterTwoTime) {
-                        details += `\nالفصل الثاني: ${chapterTwoTime}`;
-                    }
-                    if (endSongTime) {
-                        details += `\nأغنية النهاية: ${endSongTime}`;
-                    }
-                    if (nextEpisodeTeaserTime) {
-                        details += `\nتشويق الحلقة القادمة: ${nextEpisodeTeaserTime}`;
-                    }
-                    if (nextEpisodeHintTime) {
-                        details += `\nتلميح الحلقة القادمة: ${nextEpisodeHintTime}`;
-                    }
+    // Escape the special Markdown characters
+    function escapeMarkdown(text) {
+        return text
+            .replace(/[_*[\]()~`>#+\-=|{}.!]/g, '\\$&')
+            .replace(/\n/g, '\\n');
+    }
 
-                    // Build the caption. If any additional details exist, prepend the header.
-                    let caption = `*${label} ${episodeNumber}\nالجودة: ${resolution}\nالحجم: ${size} ميجا*`;
-                    if (details) {
-                        caption += `\n\n✦✦— محتويات الحلقة —✦✦${details}*`;
-                    }
+    // Build additional details only if provided
+    let details = "";
+    if (introductionTime) {
+        details += `\nالمقدمة: ${escapeMarkdown(introductionTime)}`;
+    }
+    if (startStoryTime) {
+        details += `\nبداية القصة: ${escapeMarkdown(startStoryTime)}`;
+    }
+    if (episodeSuspenseTime) {
+        details += `\nتشويق الحلقة: ${escapeMarkdown(episodeSuspenseTime)}`;
+    }
+    if (startSongTime) {
+        details += `\nأغنية البداية: ${escapeMarkdown(startSongTime)}`;
+    }
+    if (chapterOneTime) {
+        details += `\nالفصل الأول: ${escapeMarkdown(chapterOneTime)}`;
+    }
+    if (chapterTwoTime) {
+        details += `\nالفصل الثاني: ${escapeMarkdown(chapterTwoTime)}`;
+    }
+    if (endSongTime) {
+        details += `\nأغنية النهاية: ${escapeMarkdown(endSongTime)}`;
+    }
+    if (nextEpisodeTeaserTime) {
+        details += `\nتشويق الحلقة القادمة: ${escapeMarkdown(nextEpisodeTeaserTime)}`;
+    }
+    if (nextEpisodeHintTime) {
+        details += `\nتلميح الحلقة القادمة: ${escapeMarkdown(nextEpisodeHintTime)}`;
+    }
 
-                    // Set the status to 'sending'
-                    this.selectedEpisode.EpisodeVideosIDs[index].status = 'sending';
+    // Build the caption. If any additional details exist, prepend the header.
+    let caption = `*${escapeMarkdown(label)} ${escapeMarkdown(episodeNumber)}\nالجودة: ${escapeMarkdown(resolution)}\nالحجم: ${escapeMarkdown(size)} ميجا*`;
+    if (details) {
+        caption += `\n\n✦✦— محتويات الحلقة —✦✦${details}`;
+    }
 
-                    try {
-                        await this.sendVideoResponse(chatId, videoID, caption, token);
-                        this.selectedEpisode.EpisodeVideosIDs[index].status = 'success';
-                        this.errorMessage = "";
-                    } catch (error) {
-                        this.selectedEpisode.EpisodeVideosIDs[index].status = 'error';
-                        this.errorMessage = error.message;
-                        if (this.selectedEpisode.EpisodeVideosIDs.some((video) => video.status === "error")) {
-                            return;
-                        }
-                    }
+    // Set the status to 'sending'
+    this.selectedEpisode.EpisodeVideosIDs[index].status = 'sending';
 
-                    setTimeout(() => {
-                        this.selectedEpisode.EpisodeVideosIDs[index].status = null;
-                    }, 2000);
-                },
+    try {
+        await this.sendVideoResponse(chatId, videoID, caption, token);
+        this.selectedEpisode.EpisodeVideosIDs[index].status = 'success';
+        this.errorMessage = "";
+    } catch (error) {
+        this.selectedEpisode.EpisodeVideosIDs[index].status = 'error';
+        this.errorMessage = error.message;
+        if (this.selectedEpisode.EpisodeVideosIDs.some((video) => video.status === "error")) {
+            return;
+        }
+    }
+
+    setTimeout(() => {
+        this.selectedEpisode.EpisodeVideosIDs[index].status = null;
+    }, 2000);
+},
 
                 async sendVideoResponse(chatId, fileId, caption, token) {
                     const url = `https://api.telegram.org/bot${token}/sendVideo`;
