@@ -13984,7 +13984,7 @@
     // Build additional details only if provided
     let details = "";
     if (introductionTime) {
-        details += `*\n\nالمقدمة:* ${escapeMarkdown(introductionTime)}`;
+        details += `*\n\nالمقدمة: *${escapeMarkdown(introductionTime)}*`;
     }
     if (startStoryTime) {
         details += `\n\nبداية القصة: *${escapeMarkdown(startStoryTime)}*`;
@@ -14014,7 +14014,7 @@
     // Build the caption. If any additional details exist, prepend the header.
     let caption = `*${label} ${episodeNumber}\nالجودة: ${resolution}\nالحجم: ${size} ميجا*`;
     if (details) {
-        caption += `*\n\n✦✦— محتويات الحلقة —✦✦${details}*`;
+        caption += `*\n\n✦✦— محتويات الحلقة —✦✦*${details}`;
     }
 
     // Set the status to 'sending'
