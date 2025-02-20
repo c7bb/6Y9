@@ -4887,6 +4887,15 @@
                                         هي حلقات خاصة تقدم قصصاً أو مغامرات إضافية تكشف تفاصيل جديدة عن عالم كونان دون التأثير على الحبكة الأساسية.
                                     </span>
                                 </div>
+
+                                <!-- Tooltip for OVA -->
+                                <div class="tooltip-container flex items-center gap-2">
+                                    <span class="w-6 h-6 bbg-cyan-500 rounded-full"></span>
+                                    <span>خاصة بالفيلم</span>
+                                    <span class="tooltip-text">
+                                        هي حلقات قصيرة تُعرف باسم «حلقات الأفلام الخاصة» أو «الملف السحري»، وتصل مدة عرضها إلى نحو 25 دقيقة.
+                                    </span>
+                                </div>
                         
                             </div>
                         </fieldset>
@@ -5073,29 +5082,33 @@
                                     <span v-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">رقم الفيلم:</span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة')">رقم القصة القصيرة:</span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('أوفا')">رقم الأوفا:</span>
+                                    <span v-else-if="selectedEpisode.EpisodeNumber.includes('خاصة بالفيلم')">رقم الحلقة الخاصة:</span>
                                     <span v-else>رقم الحلقة:</span>
-                                    {{ selectedEpisode.EpisodeNumber.replace('الفيلم', '').replace('قصة قصيرة', '').trim().replace('أوفا', '').trim() }}
+                                    {{ selectedEpisode.EpisodeNumber.replace('الفيلم', '').replace('قصة قصيرة', '').trim().replace('أوفا', '').trim().replace('خاصة بالفيلم', '').trim() }}
                                 </p>
                                 
                                 <p v-if="selectedEpisode" class="mb-2 text-lg">
                                     <span v-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">نوع الفيلم: </span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة')">نوع القصة القصيرة: </span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('أوفا')">نوع الأوفا: </span>
+                                    <span v-else-if="selectedEpisode.EpisodeNumber.includes('خاصة بالفيلم')">نوع الحلقة الخاصة: </span>
                                     <span v-else>نوع الحلقة: </span>
                                     
                                     <span v-if="selectedEpisode.EpisodeNumber.includes('الفيلم') || selectedEpisode.EpisodeNumber.includes('قصة قصيرة')">
                                       <span v-if="selectedEpisode.EpisodeType === 'ف'">فِلر</span>
                                       <span v-else-if="selectedEpisode.EpisodeType === 'م'">مانغا</span>
                                       <span v-else-if="selectedEpisode.EpisodeType === 'ث'">مانغا</span>
+                                      <span v-else-if="selectedEpisode.EpisodeType === 'مف'">مانغا/فِلر</span>
                                       <span v-else>{{ selectedEpisode.EpisodeType }}</span>
                                       <!-- Append (أوفا) if EpisodeNumber includes "قصة قصيرة" -->
-                                      <span v-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة')"> (أوفا)</span>
+                                      <span v-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة') || selectedEpisode.EpisodeNumber.includes('خاصة بالفيلم')"> (أوفا)</span>
                                     </span>
                                     
                                     <span v-else>
                                       <span v-if="selectedEpisode.EpisodeType === 'ف'">فِلر</span>
                                       <span v-else-if="selectedEpisode.EpisodeType === 'م'">مانغا</span>
                                       <span v-else-if="selectedEpisode.EpisodeType === 'ث'">مانغا</span>
+                                      <span v-else-if="selectedEpisode.EpisodeType === 'مف'">مانغا/فِلر</span>
                                       <span v-else>{{ selectedEpisode.EpisodeType }}</span>
                                     </span>                                    
                                 </p>
@@ -12504,6 +12517,8 @@
                             return 'bg-green-600';
                         } else if (episode.EpisodeNumber.includes("أوفا")) {
                             return 'bg-yellow-600';
+                        } else if (episode.EpisodeNumber.includes("خاصة بالفيلم")) {
+                            return 'bg-cyan-500';
                         }
 
                         // Check for EpisodeType after exceptions
@@ -12524,6 +12539,8 @@
                             return 'bg-green-600';
                         } else if (episode.EpisodeNumber.includes("أوفا")) {
                             return 'bg-yellow-600';
+                        } else if (episode.EpisodeNumber.includes("خاصة بالفيلم")) {
+                            return 'bg-cyan-500';
                         }
 
                     } else if (this.selectedFilter === 'anime' && (this.episodeTypeFilter === 'Manga' || this.episodeTypeFilter === 'Filler')) {
