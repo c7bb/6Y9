@@ -5091,6 +5091,7 @@
                                     <span v-if="selectedEpisode.EpisodeNumber.includes('خاصة بالفيلم')">رقم الحلقة الخاصة:</span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">رقم الفيلم:</span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة')">رقم القصة القصيرة:</span>
+                                    <span v-else-if="selectedEpisode.EpisodeNumber.includes('2أوفا')">رقم الأوفا الثانية:</span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('أوفا')">رقم الأوفا:</span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('إصدار خاص')">رقم الإصدار الخاص:</span>
                                     <span v-else>رقم الحلقة:</span>
@@ -5098,6 +5099,7 @@
                                          .replace('خاصة بالفيلم', '')
                                          .replace('الفيلم', '')
                                          .replace('قصة قصيرة', '')
+                                         .replace('2أوفا', '')
                                          .replace('أوفا', '')
                                          .replace('إصدار خاص', '')
                                          .trim() }}
@@ -5107,6 +5109,7 @@
                                     <span v-if="selectedEpisode.EpisodeNumber.includes('خاصة بالفيلم')">نوع الحلقة الخاصة: </span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">نوع الفيلم: </span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة')">نوع القصة القصيرة: </span>
+                                    <span v-else-if="selectedEpisode.EpisodeNumber.includes('2أوفا')">نوع الأوفا الثانية: </span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('أوفا')">نوع الأوفا: </span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('إصدار خاص')">نوع الإصدار الخاص: </span>
                                     <span v-else>نوع الحلقة: </span>
