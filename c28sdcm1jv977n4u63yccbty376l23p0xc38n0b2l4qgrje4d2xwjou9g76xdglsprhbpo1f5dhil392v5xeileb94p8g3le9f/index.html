@@ -519,7 +519,7 @@
                                         class="relative flex flex-col gap-4">
                                         <button
                                             :disabled="video.status === 'success'"
-                                            @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
+                                            @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
                                             class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50">
                                             {{ video.Resolution }} ({{ video.Size }} MB)
                                         </button>
@@ -572,7 +572,7 @@
                                         class="relative flex flex-col gap-4">
                                         <button
                                             :disabled="video.status === 'success'"
-                                            @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
+                                            @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
                                             class="bg-amber-700 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50">
                                             {{ video.Resolution }} ({{ video.Size }} MB)
                                         </button>
@@ -5392,7 +5392,7 @@
                                             class="relative flex flex-col gap-4">
                                             <button
                                                 :disabled="video.status === 'success'"
-                                                @click="() => { sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime); }"
+                                                @click="() => { sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime); }"
                                                 class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50">
                                                 {{ video.Resolution }} ({{ video.Size }} MB)
                                             </button>
@@ -14000,7 +14000,7 @@
                     }
                 },
 
-                async sendEpisodeToBot(videoID, resolution, size, index, introductionTime, startStoryTime, episodeSuspenseTime, startSongTime, chapterOneTime, chapterTwoTime, endSongTime, nextEpisodeTeaserTime, nextEpisodeHintTime) {
+                async sendEpisodeToBot(videoID, resolution, size, index, introductionTime, startStoryTime, episodeSuspenseTime, startSongTime, chapterOneTime, chapterTwoTime, endSongTime, chapterThreeTime, nextEpisodeTeaserTime, nextEpisodeHintTime) {
                     if (!this.selectedEpisode.EpisodeNumber) {
                         return;
                     }
@@ -14064,6 +14064,9 @@
                     }
                     if (endSongTime) {
                         details += `\n*أغنية النهاية:* ${escapeMarkdown(endSongTime)}`;
+                    }
+                    if (chapterThreeTime) {
+                        details += `\n*الفصل الثالث:* ${escapeMarkdown(chapterThreeTime)}`;
                     }
                     if (nextEpisodeTeaserTime) {
                         details += `\n*تشويق الحلقة القادمة:* ${escapeMarkdown(nextEpisodeTeaserTime)}`;
