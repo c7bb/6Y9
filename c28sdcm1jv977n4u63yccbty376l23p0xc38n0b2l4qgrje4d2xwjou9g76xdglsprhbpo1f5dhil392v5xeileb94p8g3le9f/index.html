@@ -4884,7 +4884,7 @@
                                     <span class="w-6 h-6 bg-yellow-600 rounded-full"></span>
                                     <span>أوفا</span>
                                     <span class="tooltip-text">
-                                        هي حلقات خاصة تقدم قصصاً أو مغامرات إضافية تكشف تفاصيل جديدة عن عالم كونان دون التأثير على الحبكة الأساسية.
+                                        حلقات خاصة تقدم قصصاً أو مغامرات إضافية تكشف تفاصيل جديدة عن عالم كونان دون التأثير على الحبكة الأساسية.
                                     </span>
                                 </div>
 
@@ -4893,7 +4893,7 @@
                                     <span class="w-6 h-6 bg-cyan-500 rounded-full"></span>
                                     <span>خاصة بالفيلم</span>
                                     <span class="tooltip-text">
-                                        هي حلقات قصيرة تُعرف باسم «حلقات الأفلام الخاصة» أو «الملف السحري»، وتصل مدة عرضها إلى نحو 25 دقيقة.
+                                        حلقات قصيرة تُعرف باسم «حلقات الأفلام الخاصة» أو «الملف السحري»، وتصل مدة عرضها إلى نحو 25 دقيقة.
                                     </span>
                                 </div>
 
@@ -5092,12 +5092,14 @@
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">رقم الفيلم:</span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة')">رقم القصة القصيرة:</span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('أوفا')">رقم الأوفا:</span>
+                                    <span v-else-if="selectedEpisode.EpisodeNumber.includes('إصدار خاص')">رقم الإصدار الخاص:</span>
                                     <span v-else>رقم الحلقة:</span>
                                     {{ selectedEpisode.EpisodeNumber
                                          .replace('خاصة بالفيلم', '')
                                          .replace('الفيلم', '')
                                          .replace('قصة قصيرة', '')
                                          .replace('أوفا', '')
+                                         .replace('إصدار خاص', '')
                                          .trim() }}
                                 </p>
                                 
@@ -5106,6 +5108,7 @@
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">نوع الفيلم: </span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة')">نوع القصة القصيرة: </span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('أوفا')">نوع الأوفا: </span>
+                                    <span v-else-if="selectedEpisode.EpisodeNumber.includes('إصدار خاص')">نوع الإصدار الخاص: </span>
                                     <span v-else>نوع الحلقة: </span>
                                     
                                     <span v-if="selectedEpisode.EpisodeNumber.includes('الفيلم') || selectedEpisode.EpisodeNumber.includes('قصة قصيرة')">
@@ -6082,7 +6085,8 @@
                             e.EpisodeVideosIDs && e.EpisodeVideosIDs.length > 0 &&
                             !e.EpisodeNumber.includes('الفيلم') &&
                             !e.EpisodeNumber.includes('قصة قصيرة') &&
-                            !e.EpisodeNumber.includes('أوفا')
+                            !e.EpisodeNumber.includes('أوفا') &&
+                            !e.EpisodeNumber.includes('إصدار خاص')
                         )
                         .forEach(ep => {
                             const season = ep.EpisodeSeason || 'default';
