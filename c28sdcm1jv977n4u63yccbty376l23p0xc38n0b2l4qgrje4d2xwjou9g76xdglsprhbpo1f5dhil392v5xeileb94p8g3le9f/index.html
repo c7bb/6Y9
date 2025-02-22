@@ -14009,7 +14009,7 @@
                     let label = "رقم الحلقة:";
 
                     if (episodeNumber.includes("خاصة بالفيلم")) {
-                        label = "رقم الحلقة الخاصة:";
+                        label = "رقم الحلقة الخاصة(فيلم):";
                         episodeNumber = episodeNumber.replace("خاصة بالفيلم", "").trim();
                     } else if (episodeNumber.includes("الفيلم")) {
                         label = "رقم الفيلم:";
@@ -14017,15 +14017,15 @@
                     } else if (episodeNumber.includes("قصة قصيرة")) {
                         label = "رقم القصة القصيرة:";
                         episodeNumber = episodeNumber.replace("قصة قصيرة", "").trim();
-                    } else if (episodeNumber.includes("أوفا")) {
-                        label = "رقم الأوفا:";
-                        episodeNumber = episodeNumber.replace("أوفا", "").trim();
-                    } else if (episodeNumber.includes("أوفا2")) {
-                        label = "رقم الأوفا الثانية:";
-                        episodeNumber = episodeNumber.replace("أوفا2", "").trim();
                     } else if (episodeNumber.includes("أوفا3")) {
                         label = "رقم الأوفا الثالثة:";
                         episodeNumber = episodeNumber.replace("أوفا3", "").trim();
+                    } else if (episodeNumber.includes("أوفا2")) {
+                        label = "رقم الأوفا الثانية:";
+                        episodeNumber = episodeNumber.replace("أوفا2", "").trim();
+                    } else if (episodeNumber.includes("أوفا")) {
+                        label = "رقم الأوفا:";
+                        episodeNumber = episodeNumber.replace("أوفا", "").trim();
                     } else if (episodeNumber.includes("إصدار خاص")) {
                         label = "رقم الإصدار الخاص:";
                         episodeNumber = episodeNumber.replace("إصدار خاص", "").trim();
