@@ -4817,7 +4817,7 @@
 
             <!-- Announcement Box -->
             <div class="relative w-full max-w-2xl p-4 mt-4 bg-black bg-opacity-85 rounded-lg shadow-lg border border-yellow-500 animate-borderMove">
-                <p class="text-white text-xl text-center font-bold">تم إضافة حلقة الأسبوع ({{ ep }})</p>
+                <p class="text-white text-xl text-center font-bold">تم إضافة حلقة الأسبوع الماضي ({{ ep }})</p>
                 <button 
                     v-if="episodes && episodes.length > 0"
                     @click="openEpisodeModal(ep)"
@@ -4888,7 +4888,7 @@
                                     </span>
                                 </div>
 
-                                <!-- Tooltip for OVA -->
+                                <!-- Tooltip for Movies Special -->
                                 <div class="tooltip-container flex items-center gap-2">
                                     <span class="w-6 h-6 bg-cyan-500 rounded-full"></span>
                                     <span>خاصة بالفيلم</span>
@@ -4896,6 +4896,16 @@
                                         هي حلقات قصيرة تُعرف باسم «حلقات الأفلام الخاصة» أو «الملف السحري»، وتصل مدة عرضها إلى نحو 25 دقيقة.
                                     </span>
                                 </div>
+
+                                <!-- Tooltip for Special Edition -->
+                                <div class="tooltip-container flex items-center gap-2">
+                                    <span class="w-6 h-6 bg-purple-500 rounded-full"></span>
+                                    <span>إصدار خاص</span>
+                                    <span class="tooltip-text">
+                                        حلقات فريدة من نوعها تقع خارج السياق أو التدفق المعتاد للمسلسل. وغالباً ما تقدم منظوراً مختلفاً أو نظرة ثاقبة لقصة معينة.
+                                    </span>
+                                </div>
+
                             </div>
                         </fieldset>
 
@@ -12528,6 +12538,8 @@
                             return 'bg-green-600';
                         } else if (episode.EpisodeNumber.includes("أوفا")) {
                             return 'bg-yellow-600';
+                        } else if (episode.EpisodeNumber.includes("إصدار خاص")) {
+                            return 'bg-purple-500';
                         }
 
                         // Check for EpisodeType after exceptions
@@ -12550,6 +12562,8 @@
                             return 'bg-green-600';
                         } else if (episode.EpisodeNumber.includes("أوفا")) {
                             return 'bg-yellow-600';
+                        } else if (episode.EpisodeNumber.includes("إصدار خاص")) {
+                            return 'bg-purple-500';
                         }
                     } else if (this.selectedFilter === 'anime' && (this.episodeTypeFilter === 'Manga' || this.episodeTypeFilter === 'Filler')) {
                         // Check for special cases first
