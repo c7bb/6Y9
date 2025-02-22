@@ -5092,7 +5092,7 @@
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">رقم الفيلم:</span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة')">رقم القصة القصيرة:</span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('أوفا2')">رقم الأوفا الثانية:</span>
-                                    <span v-else-if="selectedEpisode.EpisodeNumber.includes('أوفا3')">رقم الأوفا الثانية:</span>
+                                    <span v-else-if="selectedEpisode.EpisodeNumber.includes('أوفا3')">رقم الأوفا الثالثة:</span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('أوفا')">رقم الأوفا:</span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('إصدار خاص')">رقم الإصدار الخاص:</span>
                                     <span v-else>رقم الحلقة:</span>
@@ -5112,7 +5112,7 @@
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('الفيلم')">نوع الفيلم: </span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('قصة قصيرة')">نوع القصة القصيرة: </span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('أوفا2')">نوع الأوفا الثانية: </span>
-                                    <span v-else-if="selectedEpisode.EpisodeNumber.includes('أوفا3')">نوع الأوفا الثانية: </span>
+                                    <span v-else-if="selectedEpisode.EpisodeNumber.includes('أوفا3')">نوع الأوفا الثالثة: </span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('أوفا')">نوع الأوفا: </span>
                                     <span v-else-if="selectedEpisode.EpisodeNumber.includes('إصدار خاص')">نوع الإصدار الخاص: </span>
                                     <span v-else>نوع الحلقة: </span>
@@ -14008,7 +14008,10 @@
                     let episodeNumber = this.selectedEpisode.EpisodeNumber;
                     let label = "رقم الحلقة:";
 
-                    if (episodeNumber.includes("الفيلم")) {
+                    if (episodeNumber.includes("خاصة بالفيلم")) {
+                        label = "رقم الحلقة الخاصة:";
+                        episodeNumber = episodeNumber.replace("خاصة بالفيلم", "").trim();
+                    } else if (episodeNumber.includes("الفيلم")) {
                         label = "رقم الفيلم:";
                         episodeNumber = episodeNumber.replace("الفيلم", "").trim();
                     } else if (episodeNumber.includes("قصة قصيرة")) {
@@ -14017,6 +14020,15 @@
                     } else if (episodeNumber.includes("أوفا")) {
                         label = "رقم الأوفا:";
                         episodeNumber = episodeNumber.replace("أوفا", "").trim();
+                    } else if (episodeNumber.includes("أوفا2")) {
+                        label = "رقم الأوفا الثانية:";
+                        episodeNumber = episodeNumber.replace("أوفا2", "").trim();
+                    } else if (episodeNumber.includes("أوفا3")) {
+                        label = "رقم الأوفا الثالثة:";
+                        episodeNumber = episodeNumber.replace("أوفا3", "").trim();
+                    } else if (episodeNumber.includes("إصدار خاص")) {
+                        label = "رقم الإصدار الخاص:";
+                        episodeNumber = episodeNumber.replace("إصدار خاص", "").trim();
                     }
 
                     const token = '7518282241:AAF06PXBA0a0kY2z-Sh7Wm4kj9_kkyRRFk8';
