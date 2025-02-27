@@ -4906,6 +4906,33 @@
                                     </span>
                                 </div>
 
+                                <!-- Tooltip for Special Edition -->
+                                <div class="tooltip-container flex items-center gap-2">
+                                    <span class="w-6 h-6 bg-indigo-600 rounded-full"></span>
+                                    <span>ماجيك كايتو</span>
+                                    <span class="tooltip-text">
+                                        مسلسل يروي مغامرات كايتو كوروبا، فتى يتقمص هوية اللص كايتو كيد مستخدمًا الخدع السحرية لكشف لغز مقتل والده والتصدي لمنظمة غامضة.
+                                    </span>
+                                </div>
+                                
+                                <!-- Tooltip for Special Edition -->
+                                <div class="tooltip-container flex items-center gap-2">
+                                    <span class="w-6 h-6 bg-pink-500 rounded-full"></span>
+                                    <span>يوميات زيرو</span>
+                                    <span class="tooltip-text">
+                                        مسلسل فرعي يسلط الضوء على الحياة المزدوجة لتورو أمورو، مقدمًا منظورًا جديدًا لشخصيته خارج إطار التحقيقات المعتادة.
+                                    </span>
+                                </div>
+                                
+                                <!-- Tooltip for Special Edition -->
+                                <div class="tooltip-container flex items-center gap-2">
+                                    <span class="w-6 h-6 bg-stone-700 rounded-full"></span>
+                                    <span>المجرم هانزاوا</span>
+                                    <span class="tooltip-text">
+                                        مسلسل كوميدي فرعي يعرض مغامرات المجرم هانزاوا من منظور ساخر، حيث يواجه مواقف طريفة أثناء سعيه لتحقيق أهدافه في مدينة تعجّ بالجرائم.
+                                    </span>
+                                </div>                                
+
                             </div>
                         </fieldset>
 
@@ -12550,6 +12577,12 @@
                             return 'bg-yellow-600';
                         } else if (episode.EpisodeNumber.includes("إصدار خاص")) {
                             return 'bg-purple-500';
+                        } else if (episode.EpisodeNumber.includes("ماجيك كايتو")) {
+                            return 'bg-indigo-600';
+                        } else if (episode.EpisodeNumber.includes("يوميات زيرو")) {
+                            return 'bg-pink-500';
+                        } else if (episode.EpisodeNumber.includes("المجرم هانزاوا")) {
+                            return 'bg-stone-700';
                         }
 
                         // Check for EpisodeType after exceptions
@@ -12574,6 +12607,12 @@
                             return 'bg-yellow-600';
                         } else if (episode.EpisodeNumber.includes("إصدار خاص")) {
                             return 'bg-purple-500';
+                        } else if (episode.EpisodeNumber.includes("ماجيك كايتو")) {
+                            return 'bg-indigo-600';
+                        } else if (episode.EpisodeNumber.includes("يوميات زيرو")) {
+                            return 'bg-pink-500';
+                        } else if (episode.EpisodeNumber.includes("المجرم هانزاوا")) {
+                            return 'bg-stone-700';
                         }
                     } else if (this.selectedFilter === 'anime' && (this.episodeTypeFilter === 'Manga' || this.episodeTypeFilter === 'Filler')) {
                         // Check for special cases first
