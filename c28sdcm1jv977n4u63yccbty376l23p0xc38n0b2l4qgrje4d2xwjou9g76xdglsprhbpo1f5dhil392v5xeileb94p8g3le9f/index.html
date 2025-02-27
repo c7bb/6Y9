@@ -5136,6 +5136,8 @@
                                          .replace('يوميات زيرو', '')
                                          .replace('المجرم هانزاوا', '')
                                          .trim() }}
+                                    <span v-if="selectedEpisode.EpisodeNumber.includes('ماجيك كايتو1')"> (ج1)</span>
+                                    <span v-if="selectedEpisode.EpisodeNumber.includes('ماجيك كايتو2')"> (ج2)</span>
                                 </p>
                                 
                                 <p v-if="selectedEpisode" class="mb-2 text-lg">
