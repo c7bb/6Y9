@@ -4917,7 +4917,7 @@
                                 
                                 <!-- Tooltip for Special Edition -->
                                 <div class="tooltip-container flex items-center gap-2">
-                                    <span class="w-6 h-6 bg-pink-500 rounded-full"></span>
+                                    <span class="w-6 h-6 bg-pink-600 rounded-full"></span>
                                     <span>يوميات زيرو</span>
                                     <span class="tooltip-text">
                                         مسلسل فرعي يسلط الضوء على الحياة المزدوجة لتورو أمورو، مقدمًا منظورًا جديدًا لشخصيته خارج إطار التحقيقات المعتادة.
@@ -4926,7 +4926,7 @@
                                 
                                 <!-- Tooltip for Special Edition -->
                                 <div class="tooltip-container flex items-center gap-2">
-                                    <span class="w-6 h-6 bg-stone-700 rounded-full"></span>
+                                    <span class="w-6 h-6 bg-stone-600 rounded-full"></span>
                                     <span>المجرم هانزاوا</span>
                                     <span class="tooltip-text">
                                         مسلسل كوميدي فرعي يعرض مغامرات المجرم هانزاوا من منظور ساخر، حيث يواجه مواقف طريفة أثناء سعيه لتحقيق أهدافه في مدينة تعجّ بالجرائم.
@@ -5131,6 +5131,9 @@
                                          .replace('أوفا3', '')
                                          .replace('أوفا', '')
                                          .replace('إصدار خاص', '')
+                                         .replace('ماجيك كايتو', '')
+                                         .replace('يوميات زيرو', '')
+                                         .replace('المجرم هانزاوا', '')
                                          .trim() }}
                                 </p>
                                 
@@ -12580,9 +12583,9 @@
                         } else if (episode.EpisodeNumber.includes("ماجيك كايتو")) {
                             return 'bg-indigo-600';
                         } else if (episode.EpisodeNumber.includes("يوميات زيرو")) {
-                            return 'bg-pink-500';
+                            return 'bg-pink-600';
                         } else if (episode.EpisodeNumber.includes("المجرم هانزاوا")) {
-                            return 'bg-stone-700';
+                            return 'bg-stone-600';
                         }
 
                         // Check for EpisodeType after exceptions
@@ -12610,9 +12613,9 @@
                         } else if (episode.EpisodeNumber.includes("ماجيك كايتو")) {
                             return 'bg-indigo-600';
                         } else if (episode.EpisodeNumber.includes("يوميات زيرو")) {
-                            return 'bg-pink-500';
+                            return 'bg-pink-600';
                         } else if (episode.EpisodeNumber.includes("المجرم هانزاوا")) {
-                            return 'bg-stone-700';
+                            return 'bg-stone-600';
                         }
                     } else if (this.selectedFilter === 'anime' && (this.episodeTypeFilter === 'Manga' || this.episodeTypeFilter === 'Filler')) {
                         // Check for special cases first
@@ -14068,6 +14071,13 @@
                     } else if (episodeNumber.includes("إصدار خاص")) {
                         label = "رقم الإصدار الخاص:";
                         episodeNumber = episodeNumber.replace("إصدار خاص", "").trim();
+                    } else if (episodeNumber.includes("ماجيك كايتو")) {
+                        episodeNumber = episodeNumber.replace("ماجيك كايتو1", "").trim();
+                        episodeNumber = episodeNumber.replace("ماجيك كايتو2", "").trim();
+                    } else if (episodeNumber.includes("يوميات زيرو")) {
+                        episodeNumber = episodeNumber.replace("يوميات زيرو", "").trim();
+                    } else if (episodeNumber.includes("المجرم هانزاوا")) {
+                        episodeNumber = episodeNumber.replace("المجرم هانزاوا", "").trim();
                     }
 
                     const token = '7518282241:AAF06PXBA0a0kY2z-Sh7Wm4kj9_kkyRRFk8';
