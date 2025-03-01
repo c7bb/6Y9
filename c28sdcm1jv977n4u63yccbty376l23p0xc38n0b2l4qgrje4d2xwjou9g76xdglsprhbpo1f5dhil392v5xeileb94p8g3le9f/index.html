@@ -8777,7 +8777,7 @@
                         } else if (this.selectedFilter === 'ova') {
                             return episode.EpisodeNumber.includes("أوفا");
                         } else if (this.selectedFilter === 'movie_special') {
-                            return episode.EpisodeNumber.includes("خاصة بالفيلم");
+                            return episode.EpisodeNumber.includes("خاصة بالفيلم") && episode.EpisodeTitle.includes("خاصة بالفيلم");
                         } else if (this.selectedFilter === 'special_release') {
                             return episode.EpisodeNumber.includes("إصدار خاص");
                         } else if (this.selectedFilter === 'magic_kaito') {
@@ -8828,7 +8828,7 @@
                 return this.episodes.filter(episode => episode.EpisodeNumber.includes("أوفا")).length;
                 },
                 episodeTypeMovieSpecial() {
-                return this.episodes.filter(episode => episode.EpisodeNumber.includes("خاصة بالفيلم")).length;
+                return this.episodes.filter(episode => episode.EpisodeNumber.includes("خاصة بالفيلم") && episode.EpisodeTitle.includes("خاصة بالفيلم")).length;
                 },
                 episodeTypeSpecialRelease() {
                 return this.episodes.filter(episode => episode.EpisodeNumber.includes("إصدار خاص")).length;
