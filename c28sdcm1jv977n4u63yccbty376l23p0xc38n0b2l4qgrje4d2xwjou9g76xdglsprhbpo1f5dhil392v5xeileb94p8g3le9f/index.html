@@ -708,6 +708,13 @@
                     <option value="movies">أفلام</option>
                     <option value="hourly_special">خاصة (ساعة)</option>
                     <option value="two_hour_special">خاصة (ساعتين)</option>
+                    <option value="short_story">قصة قصيرة</option>
+                    <option value="ova">أوفا</option>
+                    <option value="movie_special">خاصة بالفيلم</option>
+                    <option value="special_release">إصدار خاص</option>
+                    <option value="magic_kaito">ماجيك كايتو</option>
+                    <option value="zero_diaries">يوميات زيرو</option>
+                    <option value="criminal_hanzawa">المجرم هانزاوا</option>
                 </select>
             
                 <fieldset class="border border-gray-300 rounded p-4 w-1/2">
@@ -807,6 +814,41 @@
                             <label class="flex items-center space-x-2">
                                 <input type="radio" v-model="selectedFilter" value="two_hour_special" class="scale-150" />
                                 <span class="px-2 font-bold">خاصة "ساعتين" ({{ episodeTypeTwoHourSpecialCount }})</span>
+                            </label>
+                            <br />
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" v-model="selectedFilter" value="short_story" class="scale-150" />
+                                <span class="px-2 font-bold">قصة قصيرة ({{ episodeTypeShortStoryCount }})</span>
+                            </label>
+                            <br />
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" v-model="selectedFilter" value="ova" class="scale-150" />
+                                <span class="px-2 font-bold">أوفا ({{ episodeTypeOVA }})</span>
+                            </label>
+                            <br />
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" v-model="selectedFilter" value="movie_special" class="scale-150" />
+                                <span class="px-2 font-bold">خاصة بالفيلم ({{ episodeTypeMovieSpecial }})</span>
+                            </label>
+                            <br />
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" v-model="selectedFilter" value="special_release" class="scale-150" />
+                                <span class="px-2 font-bold">إصدار خاص ({{ episodeTypeSpecialRelease }})</span>
+                            </label>
+                            <br />
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" v-model="selectedFilter" value="magic_kaito" class="scale-150" />
+                                <span class="px-2 font-bold">ماجيك كايتو ({{ episodeTypeMagicKaito }})</span>
+                            </label>
+                            <br />
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" v-model="selectedFilter" value="zero_diaries" class="scale-150" />
+                                <span class="px-2 font-bold">يوميات زيرو ({{ episodeTypeZeroDiaries }})</span>
+                            </label>
+                            <br />
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" v-model="selectedFilter" value="hanazawa" class="scale-150" />
+                                <span class="px-2 font-bold">المجرم هانزاوا ({{ episodeTypeHanazawa }})</span>
                             </label>
                         </fieldset>
 
@@ -4802,10 +4844,34 @@
                 </div>
             </div>            
 
-            <div class="flex items-center w-full">
-                <input v-model="searchQuery" class="border px-4 py-2 font-bold text-xl rounded w-full" placeholder="بحث...">
-                <button @click="clearSearch" class="mr-2 px-4 py-2 bg-red-500 text-white font-bold rounded">مسح</button>
-            </div>
+            <fieldset class="border p-4 rounded">
+                <legend class="font-bold text-lg px-2 mb-2">مربع البحث</legend>
+                <div class="flex items-center w-full">
+                    <input v-model="searchQuery" class="border px-4 py-2 font-bold text-xl rounded w-full" placeholder="بحث...">
+                    <button @click="clearSearch" class="mr-2 px-4 py-2 bg-red-500 text-white font-bold rounded">مسح</button>
+                </div>
+                <div class="mt-2">
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" v-model="searchFilters.title" checked class="scale-150">
+                        <span class="px-2 font-bold">عنوان الحلقة</span>
+                    </label>
+                    <br />
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" v-model="searchFilters.number" class="scale-150">
+                        <span class="px-2 font-bold">رقم الحلقة</span>
+                    </label>
+                    <br />
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" v-model="searchFilters.story" class="scale-150">
+                        <span class="px-2 font-bold">قصة الحلقة</span>
+                    </label>
+                    <br />
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" v-model="searchFilters.summary" class="scale-150">
+                        <span class="px-2 font-bold">ملخص الحلقة</span>
+                    </label>
+                </div>
+            </fieldset>
 
             <!-- Manga Announcement Box -->
             <div class="relative w-full max-w-2xl p-4 mt-4 bg-black bg-opacity-85 rounded-lg shadow-lg border border-yellow-500 animate-borderMove">
@@ -5500,6 +5566,12 @@
                     showDirectWindow: false,
                     selectedCategory: 'episodes',
                     activeTab: { episodes: 0, movies: 0, mangas: 0 },
+                    searchFilters: {
+                        title: true,
+                        number: false,
+                        story: false,
+                        summary: false,
+                    },
                     errorMessage: "",
                     ep: 1154,
                     mangaCh: 1140,
@@ -8690,24 +8762,38 @@
 
                     // Apply other filters (e.g., category and search query)
                     return filteredByType
-                        .filter(episode => {
-                            if (this.selectedFilter === 'anime') {
-                                return /^[0-9]+(\.[0-9]+)?$/.test(episode.EpisodeNumber);
-                            } else if (this.selectedFilter === 'movies') {
-                                return episode.EpisodeNumber.includes("الفيلم") && !episode.EpisodeNumber.includes("خاصة بالفيلم");
-                            } else if (this.selectedFilter === 'hourly_special') {
-                                return episode.EpisodeSpecial === "1"; // Filter for خاصة (ساعة)
-                            } else if (this.selectedFilter === 'two_hour_special') {
-                                return episode.EpisodeSpecial === "2"; // Filter for خاصة (ساعتين)
-                            }
-                            return true;
-                        })
-                        .filter(episode =>
-                            new RegExp(searchQuery, 'i').test(episode.EpisodeTitle) ||
-                            new RegExp(searchQuery, 'i').test(episode.EpisodeNumber) ||
-                            new RegExp(searchQuery, 'i').test(episode.EpisodeStory) ||
-                            new RegExp(searchQuery, 'i').test(episode.EpisodeSummary)
-                        );
+                    .filter(episode => {
+                        if (this.selectedFilter === 'anime') {
+                            return /^[0-9]+(\.[0-9]+)?$/.test(episode.EpisodeNumber);
+                        } else if (this.selectedFilter === 'movies') {
+                            return episode.EpisodeNumber.includes("الفيلم") && !episode.EpisodeNumber.includes("خاصة بالفيلم");
+                        } else if (this.selectedFilter === 'hourly_special') {
+                            return episode.EpisodeSpecial === "1";
+                        } else if (this.selectedFilter === 'two_hour_special') {
+                            return episode.EpisodeSpecial === "2";
+                        } else if (this.selectedFilter === 'short_story') {
+                            return episode.EpisodeNumber.includes("قصة قصيرة");
+                        } else if (this.selectedFilter === 'ova') {
+                            return episode.EpisodeNumber.includes("أوفا");
+                        } else if (this.selectedFilter === 'movie_special') {
+                            return episode.EpisodeNumber.includes("خاصة بالفيلم");
+                        } else if (this.selectedFilter === 'special_release') {
+                            return episode.EpisodeNumber.includes("إصدار خاص");
+                        } else if (this.selectedFilter === 'magic_kaito') {
+                            return episode.EpisodeNumber.includes("ماجيك كايتو");
+                        } else if (this.selectedFilter === 'zero_diaries') {
+                            return episode.EpisodeNumber.includes("يوميات زيرو");
+                        } else if (this.selectedFilter === 'criminal_hanzawa') {
+                            return episode.EpisodeNumber.includes("المجرم هانزاوا");
+                        }
+                        return true;
+                    })
+                    .filter(episode =>
+                        (this.searchFilters.title && new RegExp(searchQuery, 'i').test(episode.EpisodeTitle)) ||
+                        (this.searchFilters.number && new RegExp(searchQuery, 'i').test(episode.EpisodeNumber)) ||
+                        (this.searchFilters.story && new RegExp(searchQuery, 'i').test(episode.EpisodeStory)) ||
+                        (this.searchFilters.summary && new RegExp(searchQuery, 'i').test(episode.EpisodeSummary))
+                    );
                 },
 
                 blackOrganizationCount() {
@@ -8733,6 +8819,27 @@
                 },
                 episodeTypeAnimeCount() {
                     return this.episodes.filter(episode => !episode.EpisodeNumber.includes("الفيلم")).length;
+                },
+                episodeTypeShortStoryCount() {
+                return this.episodes.filter(episode => episode.EpisodeNumber.includes("قصة قصيرة")).length;
+                },
+                episodeTypeOVA() {
+                return this.episodes.filter(episode => episode.EpisodeNumber.includes("أوفا")).length;
+                },
+                episodeTypeMovieSpecial() {
+                return this.episodes.filter(episode => episode.EpisodeNumber.includes("خاصة بالفيلم")).length;
+                },
+                episodeTypeSpecialRelease() {
+                return this.episodes.filter(episode => episode.EpisodeNumber.includes("إصدار خاص")).length;
+                },
+                episodeTypeMagicKaito() {
+                return this.episodes.filter(episode => episode.EpisodeNumber.includes("ماجيك كايتو")).length;
+                },
+                episodeTypeZeroDiaries() {
+                return this.episodes.filter(episode => episode.EpisodeNumber.includes("يوميات زيرو")).length;
+                },
+                episodeTypeHanazawa() {
+                return this.episodes.filter(episode => episode.EpisodeNumber.includes("المجرم هانزاوا")).length;
                 },
                 episodeTypeMovieCount() {
                     return this.episodes.filter(episode => episode.EpisodeNumber.includes("الفيلم")).length;
@@ -10276,10 +10383,6 @@
                 },
 
                 episodeTypeFilter() {
-                    this.resetPageToOne();
-                },
-
-                selectedFilter() {
                     this.resetPageToOne();
                 },
 
