@@ -4844,34 +4844,31 @@
                 </div>
             </div>            
 
-            <fieldset class="border p-4 rounded">
-                <legend class="font-bold text-lg px-2 mb-2">مربع البحث</legend>
+            <fieldset class="border p-4 rounded w-full">
+                <legend class="font-bold text-lg px-2 mb-2 w-full">مربع البحث</legend>
                 <div class="flex items-center w-full">
                     <input v-model="searchQuery" class="border px-4 py-2 font-bold text-xl rounded w-full" placeholder="بحث...">
                     <button @click="clearSearch" class="mr-2 px-4 py-2 bg-red-500 text-white font-bold rounded">مسح</button>
                 </div>
-                <div class="mt-2">
+                <div class="flex flex-wrap gap-4 mt-2">
                     <label class="flex items-center space-x-2">
-                        <input type="checkbox" v-model="searchFilters.title" checked class="scale-150">
+                        <input type="checkbox" v-model="searchFilters.title" class="scale-150" @change="ensureOneChecked('title')">
                         <span class="px-2 font-bold">عنوان الحلقة</span>
                     </label>
-                    <br />
                     <label class="flex items-center space-x-2">
-                        <input type="checkbox" v-model="searchFilters.number" class="scale-150">
+                        <input type="checkbox" v-model="searchFilters.number" class="scale-150" @change="ensureOneChecked('number')">
                         <span class="px-2 font-bold">رقم الحلقة</span>
                     </label>
-                    <br />
                     <label class="flex items-center space-x-2">
-                        <input type="checkbox" v-model="searchFilters.story" class="scale-150">
+                        <input type="checkbox" v-model="searchFilters.story" class="scale-150" @change="ensureOneChecked('story')">
                         <span class="px-2 font-bold">قصة الحلقة</span>
                     </label>
-                    <br />
                     <label class="flex items-center space-x-2">
-                        <input type="checkbox" v-model="searchFilters.summary" class="scale-150">
+                        <input type="checkbox" v-model="searchFilters.summary" class="scale-150" @change="ensureOneChecked('summary')">
                         <span class="px-2 font-bold">ملخص الحلقة</span>
                     </label>
                 </div>
-            </fieldset>
+            </fieldset>                        
 
             <!-- Manga Announcement Box -->
             <div class="relative w-full max-w-2xl p-4 mt-4 bg-black bg-opacity-85 rounded-lg shadow-lg border border-yellow-500 animate-borderMove">
@@ -14628,6 +14625,14 @@
 
                 clearSearch() {
                     this.searchQuery = '';
+                },
+
+                ensureOneChecked(changedKey) {
+                    const checkedFilters = Object.keys(this.searchFilters).filter(key => this.searchFilters[key]);
+
+                    if (checkedFilters.length === 0) {
+                        this.searchFilters[changedKey] = true; // Prevent unchecking the last one
+                    }
                 },
 
             },
