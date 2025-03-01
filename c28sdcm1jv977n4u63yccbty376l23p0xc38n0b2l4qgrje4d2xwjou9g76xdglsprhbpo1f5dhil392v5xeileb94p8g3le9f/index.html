@@ -4845,27 +4845,27 @@
             </div>            
 
             <fieldset class="border p-4 rounded w-full">
-                <legend class="font-bold text-lg px-2 mb-2 w-full">مربع البحث</legend>
-                <div class="flex items-center w-full">
+                <legend class="font-bold text-lg px-2 mb-2">مربع البحث</legend>
+                <div class="flex items-center w-full mb-2">
                     <input v-model="searchQuery" class="border px-4 py-2 font-bold text-xl rounded w-full" placeholder="بحث...">
                     <button @click="clearSearch" class="mr-2 px-4 py-2 bg-red-500 text-white font-bold rounded">مسح</button>
                 </div>
                 <div class="flex flex-wrap gap-4 mt-2">
                     <label class="flex items-center space-x-2">
                         <input type="checkbox" v-model="searchFilters.title" class="scale-150" @change="ensureOneChecked('title')">
-                        <span class="px-2 font-bold">عنوان الحلقة</span>
+                        <span class="px-2 font-bold">العنوان</span>
                     </label>
                     <label class="flex items-center space-x-2">
                         <input type="checkbox" v-model="searchFilters.number" class="scale-150" @change="ensureOneChecked('number')">
-                        <span class="px-2 font-bold">رقم الحلقة</span>
+                        <span class="px-2 font-bold">الرقم</span>
                     </label>
                     <label class="flex items-center space-x-2">
                         <input type="checkbox" v-model="searchFilters.story" class="scale-150" @change="ensureOneChecked('story')">
-                        <span class="px-2 font-bold">قصة الحلقة</span>
+                        <span class="px-2 font-bold">القصة</span>
                     </label>
                     <label class="flex items-center space-x-2">
                         <input type="checkbox" v-model="searchFilters.summary" class="scale-150" @change="ensureOneChecked('summary')">
-                        <span class="px-2 font-bold">ملخص الحلقة</span>
+                        <span class="px-2 font-bold">الملخص</span>
                     </label>
                 </div>
             </fieldset>                        
