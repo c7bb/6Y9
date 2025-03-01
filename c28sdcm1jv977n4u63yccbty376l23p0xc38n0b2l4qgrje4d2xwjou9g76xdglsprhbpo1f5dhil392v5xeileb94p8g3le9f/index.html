@@ -4803,6 +4803,7 @@
             </div>            
 
             <input v-model="searchQuery" class="border px-4 py-2 font-bold text-xl rounded w-full" placeholder="بحث...">
+            <button @click="clearSearch" class="ml-2 px-4 py-2 bg-red-500 text-white font-bold rounded">مسح</button>
 
             <!-- Manga Announcement Box -->
             <div class="relative w-full max-w-2xl p-4 mt-4 bg-black bg-opacity-85 rounded-lg shadow-lg border border-yellow-500 animate-borderMove">
@@ -10247,7 +10248,7 @@
                     this.resetPageToOne();
                 },
                 
-// Functions for filtering episodes
+                // Functions for filtering episodes
                 filterShinichiKudoEpisodes() {
                     this.resetPageToOne();
                 },
@@ -14518,6 +14519,10 @@
                     } else {
                         console.log("Manga chapter not found");
                     }
+                },
+
+                clearSearch() {
+                    this.searchQuery = '';
                 },
 
             },
