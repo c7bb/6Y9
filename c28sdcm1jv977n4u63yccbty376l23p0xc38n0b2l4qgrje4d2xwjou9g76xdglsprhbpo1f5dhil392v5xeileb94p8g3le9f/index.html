@@ -4842,15 +4842,19 @@
                         </div> -->
                     </div>
                 </div>
-            </div>            
-
+            </div>   
+                     
             <fieldset class="border p-4 rounded w-full">
-                <legend class="font-bold text-lg px-2 mb-2">مربع البحث</legend>
-                <div class="flex items-center w-full mb-2">
+                <legend class="font-bold text-lg px-2 mb-2">مستطيل البحث</legend>
+            
+                <!-- Search Input and Button with margin-bottom -->
+                <div class="flex items-center w-full mb-4">
                     <input v-model="searchQuery" class="border px-4 py-2 font-bold text-xl rounded w-full" placeholder="بحث...">
                     <button @click="clearSearch" class="mr-2 px-4 py-2 bg-red-500 text-white font-bold rounded">مسح</button>
                 </div>
-                <div class="flex flex-wrap gap-4 mt-2">
+            
+                <!-- Centered Checkboxes -->
+                <div class="flex flex-wrap gap-4 mt-2 justify-center">
                     <label class="flex items-center space-x-2">
                         <input type="checkbox" v-model="searchFilters.title" class="scale-150" @change="ensureOneChecked('title')">
                         <span class="px-2 font-bold">العنوان</span>
@@ -4868,7 +4872,7 @@
                         <span class="px-2 font-bold">الملخص</span>
                     </label>
                 </div>
-            </fieldset>                        
+            </fieldset>                                   
 
             <!-- Manga Announcement Box -->
             <div class="relative w-full max-w-2xl p-4 mt-4 bg-black bg-opacity-85 rounded-lg shadow-lg border border-yellow-500 animate-borderMove">
