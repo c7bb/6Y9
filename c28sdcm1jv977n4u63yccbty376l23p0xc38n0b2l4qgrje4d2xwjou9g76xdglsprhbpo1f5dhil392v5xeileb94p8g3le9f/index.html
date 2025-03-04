@@ -14654,19 +14654,41 @@
             mounted() {
                 this.closeEmptyPopup();
                 document.addEventListener("click", this.closeMenu);
-                // Ensure data is loaded before calling openSpecificEpisode
+                
+                // Ensure data is loaded before calling openSpecificEpisode/openMangaModal
                 const urlParams = new URLSearchParams(window.location.search);
-                const episodeCode = urlParams.get("code");
+                const code = urlParams.get("code");
 
-                if (episodeCode && this.episodes && this.episodes.length > 0) {
-                    this.openSpecificEpisode(episodeCode); // Open the episode if data is loaded
-                } else {
-                    // If the data isn't loaded yet, watch for changes
-                    this.$watch('episodes', (newEpisodes) => {
-                        if (newEpisodes && newEpisodes.length > 0 && episodeCode) {
-                            this.openSpecificEpisode(episodeCode);
+                if (code) {
+                    // Check if code is for manga first
+                    if (code.startsWith("manga ")) {
+                        const chapterNumber = code.split(" ")[1];
+                        const isMangaLoaded = this.groupedMangas && 
+                                            this.groupedMangas.some(group => group.items.length > 0);
+
+                        if (isMangaLoaded) {
+                            this.openMangaModal(chapterNumber);
+                        } else {
+                            this.$watch('groupedMangas', (newGroups) => {
+                                if (newGroups.some(group => group.items.length > 0)) {
+                                    this.openMangaModal(chapterNumber);
+                                }
+                            });
                         }
-                    });
+                    }
+                    else { // Handle episodes/movies
+                        const isEpisodeLoaded = this.episodes && this.episodes.length > 0;
+                        
+                        if (isEpisodeLoaded) {
+                            this.openSpecificEpisode(code);
+                        } else {
+                            this.$watch('episodes', (newEpisodes) => {
+                                if (newEpisodes && newEpisodes.length > 0) {
+                                    this.openSpecificEpisode(code);
+                                }
+                            });
+                        }
+                    }
                 }
             },
 
