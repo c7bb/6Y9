@@ -14605,11 +14605,14 @@
                 },
 
                 openMangaModal(chapterNumber) {
-                // Ensure we compare strings without extra spaces.
-                const chapterString = String(chapterNumber).trim();
-                // Search through all available mangas, converting each MangaNumber to a string.
+                // Convert chapterNumber to a string for comparison
+                const chapterString = String(chapterNumber);
+
+                // Search through all available mangas
                 const allMangas = this.groupedMangas.flatMap(group => group.items);
-                const manga = allMangas.find(m => String(m.MangaNumber).trim() === chapterString);
+                
+                // Find the manga by comparing MangaNumber as strings
+                const manga = allMangas.find(m => String(m.MangaNumber) === chapterString);
                 
                 if (manga) {
                     this.selectedManga = manga;
@@ -14618,8 +14621,9 @@
                     
                     // Find which group contains this manga
                     const groupIndex = this.groupedMangas.findIndex(group => 
-                        group.items.some(m => String(m.MangaNumber).trim() === chapterString)
+                        group.items.some(m => String(m.MangaNumber) === chapterString)
                     );
+                    
                     if (groupIndex > -1) {
                         this.activeTab.mangas = groupIndex;
                     }
@@ -14661,10 +14665,9 @@
                 const mangaParam = urlParams.get('manga');
                 const codeParam = urlParams.get('code');
 
-                                // Handle Manga First
+                // Handle Manga First
                 if (mangaParam) {
-                    // If mangaParam might be a string with extra spaces, trim and convert it.
-                    const chapterNumber = parseInt(mangaParam, 10) || mangaParam;
+                    const chapterNumber = mangaParam; // Already a string
                     const isMangaLoaded = this.groupedMangas && 
                                         this.groupedMangas.some(group => group.items.length > 0);
 
@@ -14678,20 +14681,19 @@
                         });
                     }
                 }
-
                 // Then handle Episodes/Movies
                 else if (codeParam) {
-                    const isEpisodeLoaded = this.episodes && this.episodes.length > 0;
-                    
-                    if (isEpisodeLoaded) {
+                const isEpisodeLoaded = this.episodes && this.episodes.length > 0;
+                
+                if (isEpisodeLoaded) {
+                    this.openSpecificEpisode(codeParam);
+                } else {
+                    this.$watch('episodes', (newEpisodes) => {
+                    if (newEpisodes && newEpisodes.length > 0) {
                         this.openSpecificEpisode(codeParam);
-                    } else {
-                        this.$watch('episodes', (newEpisodes) => {
-                        if (newEpisodes && newEpisodes.length > 0) {
-                            this.openSpecificEpisode(codeParam);
-                        }
-                        });
                     }
+                    });
+                }
                 }
             },
 
