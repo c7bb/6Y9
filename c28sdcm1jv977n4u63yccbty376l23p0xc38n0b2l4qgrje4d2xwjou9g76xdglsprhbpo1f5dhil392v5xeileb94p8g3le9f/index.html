@@ -14654,41 +14654,41 @@
             mounted() {
                 this.closeEmptyPopup();
                 document.addEventListener("click", this.closeMenu);
-                
-                // Ensure data is loaded before calling openSpecificEpisode/openMangaModal
+
+                // Ensure data is loaded before opening content
                 const urlParams = new URLSearchParams(window.location.search);
-                const code = urlParams.get("code");
+                const mangaParam = urlParams.get('manga');
+                const codeParam = urlParams.get('code');
 
-                if (code) {
-                    // Check if code is for manga first
-                    if (code.startsWith("manga ")) {
-                        const chapterNumber = code.split(" ")[1];
-                        const isMangaLoaded = this.groupedMangas && 
-                                            this.groupedMangas.some(group => group.items.length > 0);
+                // Handle Manga First
+                if (mangaParam) {
+                const chapterNumber = mangaParam;
+                const isMangaLoaded = this.groupedMangas && 
+                                    this.groupedMangas.some(group => group.items.length > 0);
 
-                        if (isMangaLoaded) {
-                            this.openMangaModal(chapterNumber);
-                        } else {
-                            this.$watch('groupedMangas', (newGroups) => {
-                                if (newGroups.some(group => group.items.length > 0)) {
-                                    this.openMangaModal(chapterNumber);
-                                }
-                            });
-                        }
+                if (isMangaLoaded) {
+                    this.openMangaModal(chapterNumber);
+                } else {
+                    this.$watch('groupedMangas', (newGroups) => {
+                    if (newGroups.some(group => group.items.length > 0)) {
+                        this.openMangaModal(chapterNumber);
                     }
-                    else { // Handle episodes/movies
-                        const isEpisodeLoaded = this.episodes && this.episodes.length > 0;
-                        
-                        if (isEpisodeLoaded) {
-                            this.openSpecificEpisode(code);
-                        } else {
-                            this.$watch('episodes', (newEpisodes) => {
-                                if (newEpisodes && newEpisodes.length > 0) {
-                                    this.openSpecificEpisode(code);
-                                }
-                            });
-                        }
+                    });
+                }
+                }
+                // Then handle Episodes/Movies
+                else if (codeParam) {
+                const isEpisodeLoaded = this.episodes && this.episodes.length > 0;
+                
+                if (isEpisodeLoaded) {
+                    this.openSpecificEpisode(codeParam);
+                } else {
+                    this.$watch('episodes', (newEpisodes) => {
+                    if (newEpisodes && newEpisodes.length > 0) {
+                        this.openSpecificEpisode(codeParam);
                     }
+                    });
+                }
                 }
             },
 
