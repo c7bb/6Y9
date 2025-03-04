@@ -5596,6 +5596,7 @@
                     showTooltip6: false,
                     episodeTypeFilter: 'All',
                     episodes: [],
+                    groupedMangas: [],
                     selectedMovie: null, // Track the selected movie for resolution/size view
                     selectedManga: null, // Track the selected manga for file size view
                     movies: [], // Movies will be populated separately
@@ -12621,6 +12622,7 @@
                                         setTimeout(() => {
                                             this.episodes = data.Episodes || [];
                                             this.mangas = data.Mangas || [];
+                                            this.groupedMangas = this.groupMangas(this.mangas);
                                             this.loading = false;
                                             localStorage.removeItem('waitTime');
                                             resolve();
@@ -14605,32 +14607,24 @@
                 },
 
                 openMangaModal(chapterNumber) {
-                // Convert chapterNumber to a string for comparison
-                const chapterString = String(chapterNumber);
+                    const chapterStr = String(chapterNumber);
+                    const allMangas = this.groupedMangas.flatMap(g => g.items);
+                    const manga = allMangas.find(m => String(m.MangaNumber) === chapterStr);
 
-                // Search through all available mangas
-                const allMangas = this.groupedMangas.flatMap(group => group.items);
-                
-                // Find the manga by comparing MangaNumber as strings
-                const manga = allMangas.find(m => String(m.MangaNumber) === chapterString);
-                
-                if (manga) {
-                    this.selectedManga = manga;
-                    this.selectedCategory = 'mangas';
-                    this.showDirectWindow = true;
-                    
-                    // Find which group contains this manga
-                    const groupIndex = this.groupedMangas.findIndex(group => 
-                        group.items.some(m => String(m.MangaNumber) === chapterString)
-                    );
-                    
-                    if (groupIndex > -1) {
-                        this.activeTab.mangas = groupIndex;
+                    if (manga) {
+                        this.selectedManga = manga;
+                        this.selectedCategory = 'mangas';
+                        this.showDirectWindow = true;
+                        
+                        // Activate the correct tab
+                        const groupIndex = this.groupedMangas.findIndex(g => 
+                            g.items.some(m => String(m.MangaNumber) === chapterStr)
+                        );
+                        this.activeTab.mangas = Math.max(0, groupIndex);
+                    } else {
+                        console.log("Chapter not found:", chapterStr);
                     }
-                } else {
-                    console.log("Manga chapter not found");
-                }
-            },
+                },
 
                 clearSearch() {
                     this.searchQuery = '';
@@ -14642,6 +14636,19 @@
                     if (checkedFilters.length === 0) {
                         this.searchFilters[changedKey] = true; // Prevent unchecking the last one
                     }
+                },
+
+                groupMangas(mangas) {
+                    const chunkSize = 100;
+                    return mangas.reduce((acc, _, index) => {
+                        if (index % chunkSize === 0) {
+                            acc.push({
+                                range: `Chapters ${index + 1}-${index + chunkSize}`,
+                                items: mangas.slice(index, index + chunkSize)
+                            });
+                        }
+                        return acc;
+                    }, []);
                 },
 
             },
@@ -14656,9 +14663,12 @@
                 }
             },
 
-            mounted() {
+            async mounted() {
                 this.closeEmptyPopup();
                 document.addEventListener("click", this.closeMenu);
+
+                // Load data first
+                await this.loadData().catch(() => {});
 
                 // Ensure data is loaded before opening content
                 const urlParams = new URLSearchParams(window.location.search);
@@ -14667,19 +14677,7 @@
 
                 // Handle Manga First
                 if (mangaParam) {
-                    const chapterNumber = mangaParam; // Already a string
-                    const isMangaLoaded = this.groupedMangas && 
-                                        this.groupedMangas.some(group => group.items.length > 0);
-
-                    if (isMangaLoaded) {
-                        this.openMangaModal(chapterNumber);
-                    } else {
-                        this.$watch('groupedMangas', (newGroups) => {
-                            if (newGroups.some(group => group.items.length > 0)) {
-                                this.openMangaModal(chapterNumber);
-                            }
-                        });
-                    }
+                    this.openMangaModal(mangaParam);
                 }
                 // Then handle Episodes/Movies
                 else if (codeParam) {
