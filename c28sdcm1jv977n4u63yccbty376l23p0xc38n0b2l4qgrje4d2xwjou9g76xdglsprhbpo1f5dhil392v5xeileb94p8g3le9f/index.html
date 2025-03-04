@@ -14605,27 +14605,28 @@
                 },
 
                 openMangaModal(chapterNumber) {
-                    const chapterString = String(chapterNumber);
-                    // Search through all available mangas
-                    const allMangas = this.groupedMangas.flatMap(group => group.items);
-                    const manga = allMangas.find(m => m.MangaNumber === chapterString);
+                // Ensure we compare strings without extra spaces.
+                const chapterString = String(chapterNumber).trim();
+                // Search through all available mangas, converting each MangaNumber to a string.
+                const allMangas = this.groupedMangas.flatMap(group => group.items);
+                const manga = allMangas.find(m => String(m.MangaNumber).trim() === chapterString);
+                
+                if (manga) {
+                    this.selectedManga = manga;
+                    this.selectedCategory = 'mangas';
+                    this.showDirectWindow = true;
                     
-                    if (manga) {
-                        this.selectedManga = manga;
-                        this.selectedCategory = 'mangas';
-                        this.showDirectWindow = true;
-                        
-                        // Find which group contains this manga
-                        const groupIndex = this.groupedMangas.findIndex(group => 
-                            group.items.some(m => m.MangaNumber === chapterString)
-                        );
-                        if (groupIndex > -1) {
-                            this.activeTab.mangas = groupIndex;
-                        }
-                    } else {
-                        console.log("Manga chapter not found");
+                    // Find which group contains this manga
+                    const groupIndex = this.groupedMangas.findIndex(group => 
+                        group.items.some(m => String(m.MangaNumber).trim() === chapterString)
+                    );
+                    if (groupIndex > -1) {
+                        this.activeTab.mangas = groupIndex;
                     }
-                },
+                } else {
+                    console.log("Manga chapter not found");
+                }
+            },
 
                 clearSearch() {
                     this.searchQuery = '';
@@ -14660,35 +14661,37 @@
                 const mangaParam = urlParams.get('manga');
                 const codeParam = urlParams.get('code');
 
-                // Handle Manga First
+                                // Handle Manga First
                 if (mangaParam) {
-                const chapterNumber = mangaParam;
-                const isMangaLoaded = this.groupedMangas && 
-                                    this.groupedMangas.some(group => group.items.length > 0);
+                    // If mangaParam might be a string with extra spaces, trim and convert it.
+                    const chapterNumber = parseInt(mangaParam, 10) || mangaParam;
+                    const isMangaLoaded = this.groupedMangas && 
+                                        this.groupedMangas.some(group => group.items.length > 0);
 
-                if (isMangaLoaded) {
-                    this.openMangaModal(chapterNumber);
-                } else {
-                    this.$watch('groupedMangas', (newGroups) => {
-                    if (newGroups.some(group => group.items.length > 0)) {
+                    if (isMangaLoaded) {
                         this.openMangaModal(chapterNumber);
+                    } else {
+                        this.$watch('groupedMangas', (newGroups) => {
+                            if (newGroups.some(group => group.items.length > 0)) {
+                                this.openMangaModal(chapterNumber);
+                            }
+                        });
                     }
-                    });
                 }
-                }
+
                 // Then handle Episodes/Movies
                 else if (codeParam) {
-                const isEpisodeLoaded = this.episodes && this.episodes.length > 0;
-                
-                if (isEpisodeLoaded) {
-                    this.openSpecificEpisode(codeParam);
-                } else {
-                    this.$watch('episodes', (newEpisodes) => {
-                    if (newEpisodes && newEpisodes.length > 0) {
+                    const isEpisodeLoaded = this.episodes && this.episodes.length > 0;
+                    
+                    if (isEpisodeLoaded) {
                         this.openSpecificEpisode(codeParam);
+                    } else {
+                        this.$watch('episodes', (newEpisodes) => {
+                        if (newEpisodes && newEpisodes.length > 0) {
+                            this.openSpecificEpisode(codeParam);
+                        }
+                        });
                     }
-                    });
-                }
                 }
             },
 
