@@ -6253,7 +6253,6 @@
 
                 filteredEpisodes() {
                     const searchQuery = this.normalizeText(this.searchQuery);
-                    if (!searchQuery) return this.episodes;
 
                     // Filter by EpisodeType
                     let filteredByType = this.episodes;
@@ -8790,20 +8789,17 @@
                         }
                         return true;
                     })
-                    return this.episodes.filter(episode => {
-                    // Handle number search differently when number filter is active
-                    if (this.searchFilters.number) {
-                        const numberSearch = this.handleNumberSearch(searchQuery, episode);
-                        if (numberSearch !== null) return numberSearch;
-                    }
+                    .filter(episode => {
+                        if (this.searchFilters.number) {
+                            // Split the search query into an array of numbers (remove spaces)
+                            const numbers = searchQuery.split(',').map(num => num.trim()).filter(num => num !== '');
+                            return numbers.some(num => episode.EpisodeNumber === num);
+                        }
 
-                    // Regular search for other filters
-                    return (
-                        (this.searchFilters.title && this.testRegex(episode.EpisodeTitle, searchQuery)) ||
-                        (this.searchFilters.story && this.testRegex(episode.EpisodeStory, searchQuery)) ||
-                        (this.searchFilters.summary && this.testRegex(episode.EpisodeSummary, searchQuery))
-                    );
-                });
+                        return (this.searchFilters.title && new RegExp(searchQuery, 'i').test(episode.EpisodeTitle)) ||
+                            (this.searchFilters.story && new RegExp(searchQuery, 'i').test(episode.EpisodeStory)) ||
+                            (this.searchFilters.summary && new RegExp(searchQuery, 'i').test(episode.EpisodeSummary));
+                    });
                 },
 
                 blackOrganizationCount() {
@@ -14647,35 +14643,7 @@
                         this.searchFilters[changedKey] = true; // Prevent unchecking the last one
                     }
                 },
-                
-                handleNumberSearch(query, episode) {
-                    // Only process if number filter is active and query contains numbers
-                    if (query.includes(',')) {
-                        const numbers = query.split(',')
-                            .map(num => num.trim())
-                            .map(Number)
-                            .filter(num => !isNaN(num));
 
-                        if (numbers.length > 0) {
-                            return numbers.includes(Number(episode.EpisodeNumber));
-                        }
-                    }
-                    
-                    // Fallback to regex search for number field
-                    if (this.searchFilters.number) {
-                        return this.testRegex(episode.EpisodeNumber, query);
-                    }
-                    
-                    return null;
-                },
-                
-                testRegex(text, query) {
-                    try {
-                        return new RegExp(query, 'i').test(text);
-                    } catch (e) {
-                        return String(text).includes(query);
-                    }
-                },
             },
             
             async created() {
