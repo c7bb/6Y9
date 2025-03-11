@@ -8789,43 +8789,12 @@
                         }
                         return true;
                     })
-                    
-                    let queryNumbers = [];
-
-                    // If the number filter is active and the search query includes commas,
-                    // split the query into an array of trimmed number strings.
-                    if (this.searchFilters.number && searchQuery.includes(',')) {
-                    queryNumbers = searchQuery.split(',')
-                                    .map(num => num.trim())
-                                    .filter(num => num !== '');
-                    }
-
-                    // Filter the episodes array based on the active filters.
-                    return this.episodes.filter(episode => {
-                    const matchesTitle = this.searchFilters.title &&
-                            new RegExp(searchQuery, 'i').test(episode.EpisodeTitle);
-
-                    const matchesStory = this.searchFilters.story &&
-                            new RegExp(searchQuery, 'i').test(episode.EpisodeStory);
-
-                    const matchesSummary = this.searchFilters.summary &&
-                            new RegExp(searchQuery, 'i').test(episode.EpisodeSummary);
-
-                    let matchesNumber = false;
-                    if (this.searchFilters.number) {
-                        // If we have multiple numbers from the search query,
-                        // check if the episode's number matches any of them.
-                        if (queryNumbers.length > 0) {
-                        matchesNumber = queryNumbers.includes(episode.EpisodeNumber.toString());
-                        } else {
-                        // Otherwise, perform a normal regex match (for a single number input)
-                        matchesNumber = new RegExp(searchQuery, 'i').test(episode.EpisodeNumber);
-                        }
-                    }
-
-                    // Return true if any of the selected filters match.
-                    return matchesTitle || matchesNumber || matchesStory || matchesSummary;
-                    });
+                    .filter(episode =>
+                        (this.searchFilters.title && new RegExp(searchQuery, 'i').test(episode.EpisodeTitle)) ||
+                        (this.searchFilters.number && new RegExp(searchQuery, 'i').test(episode.EpisodeNumber)) ||
+                        (this.searchFilters.story && new RegExp(searchQuery, 'i').test(episode.EpisodeStory)) ||
+                        (this.searchFilters.summary && new RegExp(searchQuery, 'i').test(episode.EpisodeSummary))
+                    );
                 },
 
                 blackOrganizationCount() {
