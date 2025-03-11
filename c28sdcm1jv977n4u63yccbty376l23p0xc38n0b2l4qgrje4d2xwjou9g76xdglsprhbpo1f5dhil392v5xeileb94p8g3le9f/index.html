@@ -8789,37 +8789,42 @@
                         }
                         return true;
                     })
-                    // Prepare number list search if applicable
-                    const isNumberList = this.searchFilters.number && searchQuery.includes(',');
-                    let numberTerms = [];
-                    if (isNumberList) {
-                        numberTerms = searchQuery.split(',')
-                            .map(num => num.trim())
-                            .map(Number)
-                            .filter(num => !isNaN(num));
+                    
+                    let queryNumbers = [];
+
+                    // If the number filter is active and the search query includes commas,
+                    // split the query into an array of trimmed number strings.
+                    if (this.searchFilters.number && searchQuery.includes(',')) {
+                    queryNumbers = searchQuery.split(',')
+                                    .map(num => num.trim())
+                                    .filter(num => num !== '');
                     }
 
+                    // Filter the episodes array based on the active filters.
                     return this.episodes.filter(episode => {
-                        // Title match
-                        const titleMatch = this.searchFilters.title && 
+                    const matchesTitle = this.searchFilters.title &&
                             new RegExp(searchQuery, 'i').test(episode.EpisodeTitle);
-                        
-                        // Number match (supports comma-separated exact matches)
-                        const numberMatch = this.searchFilters.number && (
-                            isNumberList 
-                                ? numberTerms.includes(Number(episode.EpisodeNumber))
-                                : new RegExp(searchQuery, 'i').test(episode.EpisodeNumber)
-                        );
-                        
-                        // Story match
-                        const storyMatch = this.searchFilters.story && 
+
+                    const matchesStory = this.searchFilters.story &&
                             new RegExp(searchQuery, 'i').test(episode.EpisodeStory);
-                        
-                        // Summary match
-                        const summaryMatch = this.searchFilters.summary && 
+
+                    const matchesSummary = this.searchFilters.summary &&
                             new RegExp(searchQuery, 'i').test(episode.EpisodeSummary);
 
-                        return titleMatch || numberMatch || storyMatch || summaryMatch;
+                    let matchesNumber = false;
+                    if (this.searchFilters.number) {
+                        // If we have multiple numbers from the search query,
+                        // check if the episode's number matches any of them.
+                        if (queryNumbers.length > 0) {
+                        matchesNumber = queryNumbers.includes(episode.EpisodeNumber.toString());
+                        } else {
+                        // Otherwise, perform a normal regex match (for a single number input)
+                        matchesNumber = new RegExp(searchQuery, 'i').test(episode.EpisodeNumber);
+                        }
+                    }
+
+                    // Return true if any of the selected filters match.
+                    return matchesTitle || matchesNumber || matchesStory || matchesSummary;
                     });
                 },
 
