@@ -8791,6 +8791,8 @@
                     })
                     .filter(episode => {
                         if (this.searchFilters.number) {
+                            if (searchQuery === "") return true; // ✅ Show all episodes when search bar is empty
+                            
                             // Split the search query into an array of numbers (remove spaces)
                             const numbers = searchQuery.split(',').map(num => num.trim()).filter(num => num !== '');
                             return numbers.some(num => episode.EpisodeNumber === num);
