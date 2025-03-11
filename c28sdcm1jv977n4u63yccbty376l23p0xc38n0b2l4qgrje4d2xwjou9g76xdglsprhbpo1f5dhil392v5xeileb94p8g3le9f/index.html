@@ -6253,6 +6253,7 @@
 
                 filteredEpisodes() {
                     const searchQuery = this.normalizeText(this.searchQuery);
+                    if (!searchQuery) return this.episodes;
 
                     // Filter by EpisodeType
                     let filteredByType = this.episodes;
@@ -14666,6 +14667,14 @@
                     }
                     
                     return null;
+                },
+                
+                testRegex(text, query) {
+                    try {
+                        return new RegExp(query, 'i').test(text);
+                    } catch (e) {
+                        return String(text).includes(query);
+                    }
                 },
             },
             
