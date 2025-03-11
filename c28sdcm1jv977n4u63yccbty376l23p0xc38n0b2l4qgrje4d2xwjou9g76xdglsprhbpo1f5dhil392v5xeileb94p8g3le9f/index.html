@@ -8789,12 +8789,23 @@
                         }
                         return true;
                     })
-                    .filter(episode =>
-                        (this.searchFilters.title && new RegExp(searchQuery, 'i').test(episode.EpisodeTitle)) ||
-                        (this.searchFilters.number && new RegExp(searchQuery, 'i').test(episode.EpisodeNumber)) ||
-                        (this.searchFilters.story && new RegExp(searchQuery, 'i').test(episode.EpisodeStory)) ||
-                        (this.searchFilters.summary && new RegExp(searchQuery, 'i').test(episode.EpisodeSummary))
-                    );
+                    // Split search query by commas, remove spaces, and convert to numbers when possible
+                    const searchParts = this.searchQuery.split(",").map(part => part.trim()).filter(part => part !== "");
+                    const numberSearch = searchParts.filter(part => !isNaN(part)).map(Number); // Extract numeric values
+                    const textSearch = searchParts.filter(part => isNaN(part)).join(" "); // Extract text search terms
+                                
+                    return this.episodes.filter(episode => {
+                        // Check if the episode number is in the search list
+                        const matchesNumber = numberSearch.includes(episode.EpisodeNumber);
+
+                        // Check if any text fields match the query
+                        const searchRegex = new RegExp(this.normalizeText(textSearch), 'i');
+                        const matchesText = this.searchFilters.title && searchRegex.test(episode.EpisodeTitle) ||
+                                            this.searchFilters.story && searchRegex.test(episode.EpisodeStory) ||
+                                            this.searchFilters.summary && searchRegex.test(episode.EpisodeSummary);
+
+                        return matchesNumber || matchesText;
+                    });
                 },
 
                 blackOrganizationCount() {
