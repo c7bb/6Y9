@@ -8793,9 +8793,29 @@
                         if (this.searchFilters.number) {
                             if (searchQuery === "") return true; // ✅ Show all episodes when search bar is empty
                             
-                            // Split the search query into an array of numbers (remove spaces)
-                            const numbers = searchQuery.split(',').map(num => num.trim()).filter(num => num !== '');
-                            return numbers.some(num => episode.EpisodeNumber === num);
+                            // Convert search query into a list of numbers
+                            const numberList = [];
+
+                            searchQuery.split(',').forEach(part => {
+                                part = part.trim();
+                                if (part.includes('-')) {
+                                    // Handle ranges like "44-60"
+                                    const [start, end] = part.split('-').map(num => parseInt(num.trim(), 10));
+                                    if (!isNaN(start) && !isNaN(end) && start <= end) {
+                                        for (let i = start; i <= end; i++) {
+                                            numberList.push(i.toString());
+                                        }
+                                    }
+                                } else {
+                                    // Handle single numbers
+                                    const num = parseInt(part, 10);
+                                    if (!isNaN(num)) {
+                                        numberList.push(num.toString());
+                                    }
+                                }
+                            });
+
+                            return numberList.includes(episode.EpisodeNumber);
                         }
 
                         return (this.searchFilters.title && new RegExp(searchQuery, 'i').test(episode.EpisodeTitle)) ||
