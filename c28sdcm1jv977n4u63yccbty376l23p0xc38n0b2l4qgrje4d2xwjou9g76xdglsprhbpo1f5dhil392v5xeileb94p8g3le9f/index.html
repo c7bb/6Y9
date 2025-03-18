@@ -5591,9 +5591,6 @@
                         summary: false,
                     },
                     errorMessage: "",
-                    playerType: 'internal', // Default to internal player
-                    // Maximum file size in MB that can be sent through Telegram's sendVideo API
-                    maxInternalPlayerSize: 50,
                     ep: 1157,
                     mangaCh: 1140,
                     replacementDict: {
@@ -10398,12 +10395,6 @@
                     }
                 },
 
-                // Watch for playerType changes to update UI
-                playerType(newValue) {
-                    // Clear any error messages when switching player types
-                    this.errorMessage = "";
-                },
-
                 selectedFilter() {
                     this.resetPageToOne();
                 },
@@ -14206,145 +14197,113 @@
                 },
 
                 async sendEpisodeToBot(videoID, resolution, size, index, introductionTime, startStoryTime, episodeSuspenseTime, startSongTime, chapterOneTime, chapterTwoTime, endSongTime, chapterThreeTime, nextEpisodeTeaserTime, nextEpisodeHintTime) {
-                if (!this.selectedEpisode.EpisodeNumber) {
-                    return;
-                }
-
-                // Check if the file size is too large for internal player
-                if (size > this.maxInternalPlayerSize && this.playerType === 'internal') {
-                    // Either switch to external player or show a warning
-                    this.errorMessage = "هذا الملف كبير جدًا للمشغل الداخلي. الرجاء استخدام المشغل الخارجي.";
-                    // Optionally switch to external player automatically
-                    // this.playerType = 'external';
-                    // You can return here to prevent further processing or continue and let the API fail
-                    return;
-                }
-
-                let episodeNumber = this.selectedEpisode.EpisodeNumber;
-                let label = "رقم الحلقة:";
-
-                if (episodeNumber.includes("خاصة بالفيلم")) {
-                    label = "رقم الحلقة الخاصة:";
-                    episodeNumber = episodeNumber.replace("خاصة بالفيلم", "").trim();
-                } else if (episodeNumber.includes("الفيلم")) {
-                    label = "رقم الفيلم:";
-                    episodeNumber = episodeNumber.replace("الفيلم", "").trim();
-                } else if (episodeNumber.includes("قصة قصيرة")) {
-                    label = "رقم القصة القصيرة:";
-                    episodeNumber = episodeNumber.replace("قصة قصيرة", "").trim();
-                } else if (episodeNumber.includes("أوفا3")) {
-                    label = "رقم الأوفا الثالثة:";
-                    episodeNumber = episodeNumber.replace("أوفا3", "").trim();
-                } else if (episodeNumber.includes("أوفا2")) {
-                    label = "رقم الأوفا الثانية:";
-                    episodeNumber = episodeNumber.replace("أوفا2", "").trim();
-                } else if (episodeNumber.includes("أوفا")) {
-                    label = "رقم الأوفا:";
-                    episodeNumber = episodeNumber.replace("أوفا", "").trim();
-                } else if (episodeNumber.includes("إصدار خاص")) {
-                    label = "رقم الإصدار الخاص:";
-                    episodeNumber = episodeNumber.replace("إصدار خاص", "").trim();
-                } else if (episodeNumber.includes("ماجيك كايتو")) {
-                    episodeNumber = episodeNumber.replace("ماجيك كايتو1", "").trim();
-                    episodeNumber = episodeNumber.replace("ماجيك كايتو2", "").trim();
-                } else if (episodeNumber.includes("يوميات زيرو")) {
-                    episodeNumber = episodeNumber.replace("يوميات زيرو", "").trim();
-                } else if (episodeNumber.includes("المجرم هانزاوا")) {
-                    episodeNumber = episodeNumber.replace("المجرم هانزاوا", "").trim();
-                }
-
-                const token = '7518282241:AAF06PXBA0a0kY2z-Sh7Wm4kj9_kkyRRFk8';
-                const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
-                console.log(chatId);
-
-                // Escape the special Markdown characters
-                function escapeMarkdown(text) {
-                    return text
-                        .replace(/[_*[\]()~`>#+\-=|{}.!]/g, '\\$&')
-                        .replace(/\n/g, '\\n');
-                }
-                
-                // Build additional details only if provided
-                let details = "";
-                if (introductionTime) {
-                    details += `\n*المقدمة:* ${escapeMarkdown(introductionTime)}`;
-                }
-                if (startStoryTime) {
-                    details += `\n*بداية القصة:* ${escapeMarkdown(startStoryTime)}`;
-                }
-                if (episodeSuspenseTime) {
-                    details += `\n*تشويق الحلقة:* ${escapeMarkdown(episodeSuspenseTime)}`;
-                }
-                if (startSongTime) {
-                    details += `\n*أغنية البداية:* ${escapeMarkdown(startSongTime)}`;
-                }
-                if (chapterOneTime) {
-                    details += `\n*الفصل الأول:* ${escapeMarkdown(chapterOneTime)}`;
-                }
-                if (chapterTwoTime) {
-                    details += `\n*الفصل الثاني:* ${escapeMarkdown(chapterTwoTime)}`;
-                }
-                if (endSongTime) {
-                    details += `\n*أغنية النهاية:* ${escapeMarkdown(endSongTime)}`;
-                }
-                if (chapterThreeTime) {
-                    details += `\n*الفصل الثالث:* ${escapeMarkdown(chapterThreeTime)}`;
-                }
-                if (nextEpisodeTeaserTime) {
-                    details += `\n*تشويق الحلقة القادمة:* ${escapeMarkdown(nextEpisodeTeaserTime)}`;
-                }
-                if (nextEpisodeHintTime) {
-                    details += `\n*تلميح الحلقة القادمة:* ${escapeMarkdown(nextEpisodeHintTime)}`;
-                }
-
-                // Build the caption. If any additional details exist, prepend the header.
-                let caption = `*${label} ${episodeNumber}\nالجودة: ${resolution}\nالحجم: ${size} ميجا*`;
-
-                // Append the bold header for the details and then the details content
-                if (details) {
-                    caption += `\n\n*✦✦— محتويات الحلقة —✦✦*${details}`;
-                }
-
-                // Set the status to 'sending'
-                this.selectedEpisode.EpisodeVideosIDs[index].status = 'sending';
-                this.errorMessage = ""; // Clear any previous error messages
-
-                try {
-                    // Check if player type is external or internal
-                    if (this.playerType === 'external') {
-                        await this.openExternalPlayer(videoID, caption, token, episodeNumber);
-                    } else {
-                        await this.sendVideoResponse(chatId, videoID, caption, token);
+                    if (!this.selectedEpisode.EpisodeNumber) {
+                        return;
                     }
-                    this.selectedEpisode.EpisodeVideosIDs[index].status = 'success';
-                } catch (error) {
-                    this.selectedEpisode.EpisodeVideosIDs[index].status = 'error';
+
+                    let episodeNumber = this.selectedEpisode.EpisodeNumber;
+                    let label = "رقم الحلقة:";
+
+                    if (episodeNumber.includes("خاصة بالفيلم")) {
+                        label = "رقم الحلقة الخاصة:";
+                        episodeNumber = episodeNumber.replace("خاصة بالفيلم", "").trim();
+                    } else if (episodeNumber.includes("الفيلم")) {
+                        label = "رقم الفيلم:";
+                        episodeNumber = episodeNumber.replace("الفيلم", "").trim();
+                    } else if (episodeNumber.includes("قصة قصيرة")) {
+                        label = "رقم القصة القصيرة:";
+                        episodeNumber = episodeNumber.replace("قصة قصيرة", "").trim();
+                    } else if (episodeNumber.includes("أوفا3")) {
+                        label = "رقم الأوفا الثالثة:";
+                        episodeNumber = episodeNumber.replace("أوفا3", "").trim();
+                    } else if (episodeNumber.includes("أوفا2")) {
+                        label = "رقم الأوفا الثانية:";
+                        episodeNumber = episodeNumber.replace("أوفا2", "").trim();
+                    } else if (episodeNumber.includes("أوفا")) {
+                        label = "رقم الأوفا:";
+                        episodeNumber = episodeNumber.replace("أوفا", "").trim();
+                    } else if (episodeNumber.includes("إصدار خاص")) {
+                        label = "رقم الإصدار الخاص:";
+                        episodeNumber = episodeNumber.replace("إصدار خاص", "").trim();
+                    } else if (episodeNumber.includes("ماجيك كايتو")) {
+                        episodeNumber = episodeNumber.replace("ماجيك كايتو1", "").trim();
+                        episodeNumber = episodeNumber.replace("ماجيك كايتو2", "").trim();
+                    } else if (episodeNumber.includes("يوميات زيرو")) {
+                        episodeNumber = episodeNumber.replace("يوميات زيرو", "").trim();
+                    } else if (episodeNumber.includes("المجرم هانزاوا")) {
+                        episodeNumber = episodeNumber.replace("المجرم هانزاوا", "").trim();
+                    }
+
+                    const token = '7518282241:AAF06PXBA0a0kY2z-Sh7Wm4kj9_kkyRRFk8';
+                    const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
+                    console.log(chatId);
+
+                    // Escape the special Markdown characters
+                    function escapeMarkdown(text) {
+                        return text
+                            .replace(/[_*[\]()~`>#+\-=|{}.!]/g, '\\$&')
+                            .replace(/\n/g, '\\n');
+                    }
                     
-                    // Check if the error is related to file size
-                    if (error.message && error.message.includes("too big")) {
-                        this.errorMessage = "هذا الملف كبير جدًا للمشغل الداخلي. الرجاء استخدام المشغل الخارجي.";
-                        // Optionally, try automatically with external player
-                        try {
-                            if (this.playerType === 'internal') {
-                                await this.openExternalPlayer(videoID, caption, token, episodeNumber);
-                                this.selectedEpisode.EpisodeVideosIDs[index].status = 'success';
-                                this.playerType = 'external'; // Switch to external player for future requests
-                                this.errorMessage = "تم فتح الفيديو في مشغل خارجي بسبب حجم الملف الكبير";
-                            }
-                        } catch (secondError) {
-                            this.errorMessage = "فشل فتح المشغل الخارجي: " + secondError.message;
-                        }
-                    } else {
-                        this.errorMessage = error.message;
+                    // Build additional details only if provided
+                    let details = "";
+                    if (introductionTime) {
+                        details += `\n*المقدمة:* ${escapeMarkdown(introductionTime)}`;
                     }
-                }
+                    if (startStoryTime) {
+                        details += `\n*بداية القصة:* ${escapeMarkdown(startStoryTime)}`;
+                    }
+                    if (episodeSuspenseTime) {
+                        details += `\n*تشويق الحلقة:* ${escapeMarkdown(episodeSuspenseTime)}`;
+                    }
+                    if (startSongTime) {
+                        details += `\n*أغنية البداية:* ${escapeMarkdown(startSongTime)}`;
+                    }
+                    if (chapterOneTime) {
+                        details += `\n*الفصل الأول:* ${escapeMarkdown(chapterOneTime)}`;
+                    }
+                    if (chapterTwoTime) {
+                        details += `\n*الفصل الثاني:* ${escapeMarkdown(chapterTwoTime)}`;
+                    }
+                    if (endSongTime) {
+                        details += `\n*أغنية النهاية:* ${escapeMarkdown(endSongTime)}`;
+                    }
+                    if (chapterThreeTime) {
+                        details += `\n*الفصل الثالث:* ${escapeMarkdown(chapterThreeTime)}`;
+                    }
+                    if (nextEpisodeTeaserTime) {
+                        details += `\n*تشويق الحلقة القادمة:* ${escapeMarkdown(nextEpisodeTeaserTime)}`;
+                    }
+                    if (nextEpisodeHintTime) {
+                        details += `\n*تلميح الحلقة القادمة:* ${escapeMarkdown(nextEpisodeHintTime)}`;
+                    }
 
-                    // Clear status after a delay
-                    setTimeout(() => {
-                        if (this.selectedEpisode && this.selectedEpisode.EpisodeVideosIDs[index]) {
-                            this.selectedEpisode.EpisodeVideosIDs[index].status = null;
+                    // Build the caption. If any additional details exist, prepend the header.
+                    let caption = `*${label} ${episodeNumber}\nالجودة: ${resolution}\nالحجم: ${size} ميجا*`;
+
+                    // Append the bold header for the details and then the details content
+                    if (details) {
+                        caption += `\n\n*✦✦— محتويات الحلقة —✦✦*${details}`;
+                    }
+
+                    // Set the status to 'sending'
+                    this.selectedEpisode.EpisodeVideosIDs[index].status = 'sending';
+
+                    try {
+                        await this.sendVideoResponse(chatId, videoID, caption, token);
+                        this.selectedEpisode.EpisodeVideosIDs[index].status = 'success';
+                        this.errorMessage = "";
+                    } catch (error) {
+                        this.selectedEpisode.EpisodeVideosIDs[index].status = 'error';
+                        this.errorMessage = error.message;
+                        if (this.selectedEpisode.EpisodeVideosIDs.some((video) => video.status === "error")) {
+                            return;
                         }
-                    }, 3000);
+                    }
+
+                    setTimeout(() => {
+                        this.selectedEpisode.EpisodeVideosIDs[index].status = null;
+                    }, 2000);
                 },
 
                 async sendVideoResponse(chatId, fileId, caption, token) {
@@ -14373,114 +14332,33 @@
                     if (!data.ok) {
                         throw new Error(data.description || response.statusText);
                     }
-                    
-                    return data;
                 },
 
-                async openExternalPlayer(fileId, caption, token, episodeTitle) {
-                    try {
-                        // First try the direct Telegram method for large files
-                        if (this.isLargeFile(fileId)) {
-                            // Use Telegram's direct protocol for large files
-                            const telegramUrl = this.createTelegramDirectUrl(fileId);
-                            window.Telegram.WebApp.openLink(telegramUrl);
-                            return true;
-                        }
-                        
-                        // For smaller files or if the direct method fails, proceed with the file API
-                        const fileInfoUrl = `https://api.telegram.org/bot${token}/getFile`;
-                        const fileInfoBody = {
-                            file_id: fileId
-                        };
+                async sendMangaResponse(chatId, fileId, caption, token) {
+                    const url = `https://api.telegram.org/bot${token}/sendDocument`;
+                    const body = {
+                        chat_id: chatId,
+                        document: fileId,
+                        caption: caption,
+                        parse_mode: "Markdown",
+                        //protect_content: true,
+                    };
 
-                        const fileInfoResponse = await fetch(fileInfoUrl, {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify(fileInfoBody),
-                        });
+                    const response = await fetch(url, {
+                        method: "POST",
+                        headers: {
+                        "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(body),
+                    });
 
-                        const fileInfo = await fileInfoResponse.json();
-                        
-                        if (!fileInfo.ok) {
-                            // If it's a file size error, try the direct Telegram protocol
-                            if (fileInfo.description && (fileInfo.description.includes("too big") || 
-                                fileInfo.description.includes("file is too big"))) {
-                                const telegramUrl = this.createTelegramDirectUrl(fileId);
-                                window.Telegram.WebApp.openLink(telegramUrl);
-                                return true;
-                            }
-                            throw new Error(fileInfo.description || "Failed to get file info");
-                        }
+                    // Parse the JSON response
+                    const data = await response.json();
 
-                        // Generate direct download URL for the file
-                        const filePath = fileInfo.result.file_path;
-                        const fileUrl = `https://api.telegram.org/file/bot${token}/${filePath}`;
-                        
-                        // Create URL with intent to open external media player
-                        const fileName = episodeTitle || filePath.split('/').pop();
-                        const streamingUrl = this.createStreamingUrl(fileUrl, fileName);
-                        
-                        // Open the URL in an external player
-                        window.Telegram.WebApp.openLink(streamingUrl);
-                        
-                        return true;
-                    } catch (error) {
-                        console.error("Error opening external player:", error);
-                        throw error;
+                    // If Telegram reports an error, throw it with the description from Telegram
+                    if (!data.ok) {
+                        throw new Error(data.description || response.statusText);
                     }
-                },
-
-                // Helper method to check if a file is likely to be large based on fileId pattern
-                // This is a heuristic and may not be 100% accurate
-                isLargeFile(fileId) {
-                    // Some heuristics for large files - adjust based on your observations
-                    // For example, some file IDs for large videos may start with specific patterns
-                    return false; // Default to false and rely on error handling
-                },
-
-                // Method to create a direct Telegram URL for large files
-                // This uses Telegram's tg:// protocol which can handle large files better
-                createTelegramDirectUrl(fileId) {
-                    // Use Telegram's native protocol for direct media access
-                    return `tg://open?media=${fileId}`;
-                },
-
-                // Enhanced method to support multiple external players
-                createStreamingUrl(fileUrl, fileName) {
-                    const mimeType = "video/mp4";
-                    const encodedUrl = encodeURIComponent(fileUrl);
-                    const encodedTitle = encodeURIComponent(fileName);
-                    
-                    // Create intent URLs for different players
-                    
-                    // MX Player (free version)
-                    const mxPlayerUrl = `intent:${fileUrl}#Intent;type=${mimeType};package=com.mxtech.videoplayer.ad;S.title=${encodedTitle};end`;
-                    
-                    // MX Player (pro version)
-                    const mxPlayerProUrl = `intent:${fileUrl}#Intent;type=${mimeType};package=com.mxtech.videoplayer.pro;S.title=${encodedTitle};end`;
-                    
-                    // VLC Player
-                    const vlcUrl = `intent:${fileUrl}#Intent;type=${mimeType};package=org.videolan.vlc;S.title=${encodedTitle};end`;
-                    
-                    // Default media intent (will open with the default video player)
-                    const defaultUrl = `intent:${fileUrl}#Intent;type=${mimeType};S.title=${encodedTitle};end`;
-                    
-                    // You can detect the platform and choose the appropriate URL
-                    // For now, we'll return the MX Player URL as default since it's very common
-                    
-                    // Check if we're on iOS (different handling might be needed)
-                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-                    
-                    if (isIOS) {
-                        // On iOS, we might want to use a different approach
-                        // For now, just return the direct file URL
-                        return fileUrl;
-                    }
-                    
-                    // On Android, return the intent URL for MX Player
-                    return mxPlayerUrl;
                 },
 
                 async sendMangaToBot(fileId, mangaNumber, index) {
