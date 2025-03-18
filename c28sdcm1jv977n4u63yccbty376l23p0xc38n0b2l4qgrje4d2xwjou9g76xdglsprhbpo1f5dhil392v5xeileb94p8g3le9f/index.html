@@ -486,75 +486,61 @@
                         </div>
                     </div> 
 
-<!-- Episodes Content -->
-<div v-if="selectedCategory === 'episodes'" class="overflow-y-auto p-4 flex-1 always-visible-scrollbar">
-	<div v-if="groupedEpisodes.length" class="mb-4">
-		<div class="flex flex-wrap gap-2 mb-4 justify-center" dir="ltr"> <!-- Align buttons to the left -->
-			<button 
-			v-for="(group, index) in groupedEpisodes" 
-			@click="handleEpisodeGroupChange(index)" 
-			:class="['px-3 py-1 rounded', activeTab.episodes === index ? 'bg-blue-500 text-white' : 'bg-gray-700']">
-			{{ group.range }}
-		</button>                            
-		</div>
-		<fieldset class="border p-2 rounded">
-			<legend class="flex items-center gap-2">
-				<span>الحلقات المتاحة</span>
-				<div class="flex items-center gap-3">
-					<div class="flex items-center">
-						<input type="radio" id="internal-player" name="player-type" value="internal" v-model="playerType" class="mr-1">
-						<label for="internal-player" class="text-sm">داخلي</label>
-					</div>
-					<div class="flex items-center">
-						<input type="radio" id="external-player" name="player-type" value="external" v-model="playerType" class="mr-1">
-						<label for="external-player" class="text-sm">خارجي</label>
-					</div>
-					<button v-if="selectedEpisode" @click="resetEpisodesView" class="p-1 hover:bg-gray-700 rounded">
-						<img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/previous.png" alt="رجوع" class="h-6 w-6" />
-					</button>
-				</div>
-			</legend>
-			<div v-if="!selectedEpisode" class="grid grid-cols-3 gap-2">
-				<button 
-				v-for="episode in groupedEpisodes[activeTab.episodes]?.items" 
-				@click="selectEpisode(episode)" 
-				class="bg-blue-500 text-white p-2 rounded hover:bg-green-500">
-				{{ episode.EpisodeNumber }}
-			</button>                                
-			</div>
-			<div v-else class="flex flex-col justify-center gap-4">
-				<span class="text-lg font-bold text-center">{{ selectedEpisode.EpisodeNumber }}</span>
-                <div v-if="errorMessage" class="bg-red-500 text-white p-2 rounded mb-2 text-center">
-                    {{ errorMessage }}
-                </div>
-				<div v-for="(video, index) in selectedEpisode.EpisodeVideosIDs" 
-					:key="video.VideoID" 
-					class="relative flex flex-col gap-4">
-					<button
-						:disabled="video.status === 'success'"
-						@click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
-						class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50">
-						{{ video.Resolution }} ({{ video.Size }} MB)
-                        <span v-if="size > 50 && playerType === 'internal'" class="ml-2 text-xs">(مناسب للمشغل الخارجي)</span>
-					</button>
-					<img 
-						v-if="video.status === 'success'" 
-						src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/true.png" 
-						class="absolute right-0 top-0 w-6 h-6 ml-2"
-					/>
-					<img 
-						v-if="video.status === 'error'" 
-						src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png" 
-						class="absolute right-0 top-0 w-6 h-6 ml-2"
-					/>
-                    <div v-if="video.status === 'sending'" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded">
-                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                    <!-- Episodes Content -->
+                    <div v-if="selectedCategory === 'episodes'" class="overflow-y-auto p-4 flex-1 always-visible-scrollbar">
+                        <div v-if="groupedEpisodes.length" class="mb-4">
+                            <div class="flex flex-wrap gap-2 mb-4 justify-center" dir="ltr"> <!-- Align buttons to the left -->
+                                <button 
+                                v-for="(group, index) in groupedEpisodes" 
+                                @click="handleEpisodeGroupChange(index)" 
+                                :class="['px-3 py-1 rounded', activeTab.episodes === index ? 'bg-blue-500 text-white' : 'bg-gray-700']">
+                                {{ group.range }}
+                            </button>                            
+                            </div>
+                            <fieldset class="border p-2 rounded">
+                                <legend class="flex items-center gap-2">
+                                    <span>الحلقات المتاحة</span>
+                                    <button v-if="selectedEpisode" @click="resetEpisodesView" class="p-1 hover:bg-gray-700 rounded">
+                                        <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/previous.png" alt="رجوع" class="h-6 w-6" />
+                                    </button>
+                                </legend>
+                                <div v-if="!selectedEpisode" class="grid grid-cols-3 gap-2">
+                                    <button 
+                                    v-for="episode in groupedEpisodes[activeTab.episodes]?.items" 
+                                    @click="selectEpisode(episode)" 
+                                    class="bg-blue-500 text-white p-2 rounded hover:bg-green-500">
+                                    {{ episode.EpisodeNumber }}
+                                </button>                                
+                                </div>
+                                <div v-else class="flex flex-col justify-center gap-4">
+                                    <span class="text-lg font-bold text-center">{{ selectedEpisode.EpisodeNumber }}</span>
+                                    <div v-for="(video, index) in selectedEpisode.EpisodeVideosIDs" 
+                                        :key="video.VideoID" 
+                                        class="relative flex flex-col gap-4">
+                                        <button
+                                            :disabled="video.status === 'success'"
+                                            @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
+                                            class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50">
+                                            {{ video.Resolution }} ({{ video.Size }} MB)
+                                        </button>
+                                        <img 
+                                            v-if="video.status === 'success'" 
+                                            src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/true.png" 
+                                            class="absolute right-0 top-0 w-6 h-6 ml-2"
+                                        />
+                                        <img 
+                                            v-if="video.status === 'error'" 
+                                            src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png" 
+                                            class="absolute right-0 top-0 w-6 h-6 ml-2"
+                                        />
+                                        <div v-if="video.status === 'sending'" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded">
+                                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
                     </div>
-				</div>
-			</div>
-		</fieldset>
-	</div>
-</div>
 
                     <!-- Movies Content -->
                     <div v-if="selectedCategory === 'movies'" class="overflow-y-auto p-4 flex-1 always-visible-scrollbar">
@@ -603,6 +589,9 @@
                                             src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png" 
                                             class="absolute right-0 top-0 w-6 h-6 ml-2"
                                         />
+                                        <div v-if="video.status === 'sending'" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded">
+                                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </fieldset>
@@ -5526,6 +5515,9 @@
                                                 src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png" 
                                                 class="absolute right-0 top-0 w-6 h-6 ml-2"
                                             />
+                                            <div v-if="video.status === 'sending'" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded">
+                                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </fieldset>
