@@ -8804,37 +8804,32 @@
                     })
                     .filter(episode => {
                         if (this.searchFilters.number) {
-                        if (searchQuery === "") return true; // ✅ Show all episodes when search bar is empty
-                        
-                        const numberList = [];
-                        const stringList = [];
+                        if (searchQuery === "") return true;
 
+                        const matchList = [];
                         searchQuery.split(',').forEach(part => {
                             part = part.trim();
                             if (part.includes('-')) {
-                                // Handle ranges like "44-60"
-                                const [start, end] = part.split('-').map(num => parseInt(num.trim(), 10));
+                                const [startStr, endStr] = part.split('-').map(s => s.trim());
+                                const start = parseInt(startStr, 10);
+                                const end = parseInt(endStr, 10);
                                 if (!isNaN(start) && !isNaN(end) && start <= end) {
                                     for (let i = start; i <= end; i++) {
-                                        numberList.push(i.toString());
+                                        matchList.push(i.toString()); // Numeric range
                                     }
                                 }
-                            } else if (!isNaN(parseInt(part, 10))) {
-                                // Handle single numbers
-                                numberList.push(part.trim());
                             } else {
-                                // Handle text search
-                                stringList.push(part.trim());
+                                // Allow alphanumeric episode numbers (e.g., "KAITO1")
+                                matchList.push(part); // Add raw string (no parsing)
                             }
                         });
 
-                        return numberList.includes(episode.EpisodeNumber) || 
-                            stringList.some(str => episode.Title.includes(str));
+                        return matchList.includes(episode.EpisodeNumber); // Exact match
                     }
 
                         return (this.searchFilters.title && new RegExp(searchQuery, 'i').test(episode.EpisodeTitle)) ||
-                                (this.searchFilters.story && new RegExp(searchQuery, 'i').test(episode.EpisodeStory)) ||
-                                (this.searchFilters.summary && new RegExp(searchQuery, 'i').test(episode.EpisodeSummary));
+                            (this.searchFilters.story && new RegExp(searchQuery, 'i').test(episode.EpisodeStory)) ||
+                            (this.searchFilters.summary && new RegExp(searchQuery, 'i').test(episode.EpisodeSummary));
                     });
                 },
 
