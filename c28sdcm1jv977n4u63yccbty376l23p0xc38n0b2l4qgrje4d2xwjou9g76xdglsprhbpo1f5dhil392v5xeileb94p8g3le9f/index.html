@@ -733,7 +733,7 @@
                     </legend>
                     <div class="flex items-center text-blue font-bold gap-4 justify-center">
                         <label>
-                            <input type="radio" v-model="episodeTypeFilter" value="All" checked class="scale-100">
+                            <input type="radio" v-model="episodeTypeFilter" value="All" checked class="scale-150">
                             الكل
                         </label>
                         <div :class="{
@@ -741,7 +741,7 @@
                             'p-1': episodeTypeFilter === 'Filler' 
                         }">
                             <label :class="{'bg-teal-900 p-1 text-white rounded': episodeTypeFilter === 'Manga'}">
-                                <input type="radio" v-model="episodeTypeFilter" value="Manga" class="scale-100">
+                                <input type="radio" v-model="episodeTypeFilter" value="Manga" class="scale-150">
                                 مانغا
                             </label>
                         </div>
@@ -750,7 +750,7 @@
                                 'p-1': episodeTypeFilter === 'Manga'
                             }">
                             <label :class="{'bg-red-950 p-1 text-white rounded': episodeTypeFilter === 'Filler'}">
-                                <input type="radio" v-model="episodeTypeFilter" value="Filler" class="scale-100">
+                                <input type="radio" v-model="episodeTypeFilter" value="Filler" class="scale-150">
                                 فِلر
                             </label>
                         </div>
@@ -4880,7 +4880,7 @@
                             type="radio"
                             v-model="textNumberMatchMode"
                             value="enabled"
-                            class="scale-100"
+                            class="scale-150"
                           />
                           <span class="px-2 font-bold">تفعيل</span>
                         </label>
@@ -4889,7 +4889,7 @@
                             type="radio"
                             v-model="textNumberMatchMode"
                             value="disabled"
-                            class="scale-100"
+                            class="scale-150"
                           />
                           <span class="px-2 font-bold">تعطيل</span>
                         </label>
@@ -4904,7 +4904,7 @@
                     <input
                       type="checkbox"
                       v-model="searchFilters.title"
-                      class="scale-100"
+                      class="scale-150"
                       @change="ensureOneChecked('title')"
                     />
                     <span class="px-2 font-bold">العنوان</span>
@@ -4913,7 +4913,7 @@
                     <input
                       type="checkbox"
                       v-model="searchFilters.number"
-                      class="scale-100"
+                      class="scale-150"
                       @change="ensureOneChecked('number')"
                     />
                     <span class="px-2 font-bold">الرقم</span>
@@ -4922,7 +4922,7 @@
                     <input
                       type="checkbox"
                       v-model="searchFilters.story"
-                      class="scale-100"
+                      class="scale-150"
                       @change="ensureOneChecked('story')"
                     />
                     <span class="px-2 font-bold">القصة</span>
@@ -4931,7 +4931,7 @@
                     <input
                       type="checkbox"
                       v-model="searchFilters.summary"
-                      class="scale-100"
+                      class="scale-150"
                       @change="ensureOneChecked('summary')"
                     />
                     <span class="px-2 font-bold">الملخص</span>
