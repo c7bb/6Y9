@@ -4854,21 +4854,21 @@
                 <legend class="font-bold text-lg px-2">مستطيل البحث</legend>
             
     <!-- Search Input and Button with margin-bottom -->
-    <div class="flex flex-col w-full mb-4">
+    <div class="w-full mb-4">
         <div class="flex items-center w-full mb-2">
             <input v-model="searchQuery" class="border px-4 py-2 font-bold text-xl rounded w-full" placeholder="بحث...">
             <button @click="clearSearch" class="mr-2 px-4 py-2 bg-red-500 text-white font-bold rounded">مسح</button>
         </div>
         
         <!-- Radio Buttons for Text-Number Matching -->
-        <div class="mt-2 flex flex-col space-y-2">
+        <div class="flex flex-col space-y-2 mt-2 mr-2 ml-auto w-fit">
             <label class="flex items-center space-x-2">
                 <input type="radio" v-model="textNumberMatchMode" value="enabled" class="scale-150">
-                <span class="px-2 font-bold">تفعيل</span>
+                <span class="px-2 font-bold">تفعيل المطابقة النصية الرقمية</span>
             </label>
             <label class="flex items-center space-x-2">
                 <input type="radio" v-model="textNumberMatchMode" value="disabled" class="scale-150">
-                <span class="px-2 font-bold">تعطيل</span>
+                <span class="px-2 font-bold">تعطيل المطابقة النصية الرقمية</span>
             </label>
         </div>
     </div>
