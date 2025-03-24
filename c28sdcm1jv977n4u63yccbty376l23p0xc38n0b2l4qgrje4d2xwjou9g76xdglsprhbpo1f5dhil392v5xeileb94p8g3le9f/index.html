@@ -8804,28 +8804,34 @@
                     })
                     .filter(episode => {
                         if (this.searchFilters.number) {
-                        if (searchQuery === "") return true;
+        if (searchQuery === "") return true;
 
-                        const matchList = [];
-                        searchQuery.split(',').forEach(part => {
-                            part = part.trim();
-                            if (part.includes('-')) {
-                                const [startStr, endStr] = part.split('-').map(s => s.trim());
-                                const start = parseInt(startStr, 10);
-                                const end = parseInt(endStr, 10);
-                                if (!isNaN(start) && !isNaN(end) && start <= end) {
-                                    for (let i = start; i <= end; i++) {
-                                        matchList.push(i.toString()); // Numeric range
-                                    }
-                                }
-                            } else {
-                                // Allow alphanumeric episode numbers (e.g., "KAITO1")
-                                matchList.push(part); // Add raw string (no parsing)
-                            }
-                        });
+        const numberList = [];
 
-                        return matchList.includes(episode.EpisodeNumber); // Exact match
+        searchQuery.split(',').forEach(part => {
+            part = part.trim();
+            if (part.includes('-')) {
+                const [startStr, endStr] = part.split('-').map(s => s.trim());
+                const start = parseInt(startStr, 10);
+                const end = parseInt(endStr, 10);
+                if (!isNaN(start) && !isNaN(end) && start <= end) {
+                    for (let i = start; i <= end; i++) {
+                        numberList.push(i.toString());
                     }
+                }
+            } else {
+                // Add both numeric and non-numeric parts
+                const num = parseInt(part, 10);
+                if (!isNaN(num)) {
+                    numberList.push(num.toString());
+                } else if (part !== "") {
+                    numberList.push(part); // Add as raw string
+                }
+            }
+        });
+
+        return numberList.includes(episode.EpisodeNumber);
+    }
 
                         return (this.searchFilters.title && new RegExp(searchQuery, 'i').test(episode.EpisodeTitle)) ||
                             (this.searchFilters.story && new RegExp(searchQuery, 'i').test(episode.EpisodeStory)) ||
