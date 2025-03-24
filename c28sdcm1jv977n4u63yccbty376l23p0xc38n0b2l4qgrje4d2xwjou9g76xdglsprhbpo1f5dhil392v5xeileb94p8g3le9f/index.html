@@ -4852,74 +4852,93 @@
 
             <fieldset class="border p-4 rounded w-full">
                 <legend class="font-bold text-lg px-2">مستطيل البحث</legend>
-                
+              
                 <!-- Search Input and Button with margin-bottom -->
                 <div class="w-full mb-4">
-                    <div class="flex items-center w-full mb-2">
-                        <input v-model="searchQuery" class="border px-4 py-2 font-bold text-xl rounded w-full" placeholder="بحث...">
-                        <button @click="clearSearch" class="mr-2 px-4 py-2 bg-red-500 text-white font-bold rounded">مسح</button>
-                    </div>
-                    
-                    <!-- Radio Buttons for Text-Number Matching -->
-                    <div class="flex items-center space-x-4 mt-2">
+                  <div class="flex items-center w-full mb-2">
+                    <!-- The search input -->
+                    <input
+                      v-model="searchQuery"
+                      class="border px-4 py-2 font-bold text-xl rounded w-full"
+                      placeholder="بحث..."
+                    />
+              
+                    <!-- Button and Radio Buttons in a column -->
+                    <div class="flex flex-col items-end ml-2">
+                      <!-- The "مسح" button -->
+                      <button
+                        @click="clearSearch"
+                        class="px-4 py-2 bg-red-500 text-white font-bold rounded"
+                      >
+                        مسح
+                      </button>
+              
+                      <!-- Radio Buttons for Text-Number Matching (now under the button) -->
+                      <div class="flex flex-col space-y-2 mt-2">
                         <label class="flex items-center space-x-2">
-                            <input 
-                                type="radio" 
-                                v-model="textNumberMatchMode" 
-                                value="enabled" 
-                                class="form-radio text-blue-600"
-                            >
-                            <span class="font-bold">تفعيل</span>
+                          <input
+                            type="radio"
+                            v-model="textNumberMatchMode"
+                            value="enabled"
+                            class="scale-150"
+                          />
+                          <span class="px-2 font-bold">تفعيل</span>
                         </label>
                         <label class="flex items-center space-x-2">
-                            <input 
-                                type="radio" 
-                                v-model="textNumberMatchMode" 
-                                value="disabled" 
-                                class="form-radio text-blue-600"
-                            >
-                            <span class="font-bold">تعطيل</span>
+                          <input
+                            type="radio"
+                            v-model="textNumberMatchMode"
+                            value="disabled"
+                            class="scale-150"
+                          />
+                          <span class="px-2 font-bold">تعطيل</span>
                         </label>
+                      </div>
                     </div>
+                  </div>
                 </div>
-            
+              
                 <!-- Centered Checkboxes -->
-                <div class="flex flex-wrap gap-4 justify-center">
-                    <label class="flex items-center space-x-2">
-                        <input 
-                            type="checkbox" 
-                            v-model="searchFilters.summary" 
-                            class="form-checkbox text-blue-600"
-                        >
-                        <span class="font-bold">الملخص</span>
-                    </label>
-                    <label class="flex items-center space-x-2">
-                        <input 
-                            type="checkbox" 
-                            v-model="searchFilters.story" 
-                            class="form-checkbox text-blue-600"
-                        >
-                        <span class="font-bold">القصة</span>
-                    </label>
-                    <label class="flex items-center space-x-2">
-                        <input 
-                            type="checkbox" 
-                            v-model="searchFilters.number" 
-                            class="form-checkbox text-blue-600"
-                        >
-                        <span class="font-bold">الرقم</span>
-                    </label>
-                    <label class="flex items-center space-x-2">
-                        <input 
-                            type="checkbox" 
-                            v-model="searchFilters.title" 
-                            class="form-checkbox text-blue-600" 
-                            checked
-                        >
-                        <span class="font-bold">العنوان</span>
-                    </label>
+                <div class="flex flex-wrap gap-4 mt-2 justify-center">
+                  <label class="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      v-model="searchFilters.title"
+                      class="scale-150"
+                      @change="ensureOneChecked('title')"
+                    />
+                    <span class="px-2 font-bold">العنوان</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      v-model="searchFilters.number"
+                      class="scale-150"
+                      @change="ensureOneChecked('number')"
+                    />
+                    <span class="px-2 font-bold">الرقم</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      v-model="searchFilters.story"
+                      class="scale-150"
+                      @change="ensureOneChecked('story')"
+                    />
+                    <span class="px-2 font-bold">القصة</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      v-model="searchFilters.summary"
+                      class="scale-150"
+                      @change="ensureOneChecked('summary')"
+                    />
+                    <span class="px-2 font-bold">الملخص</span>
+                  </label>
                 </div>
-            </fieldset>                                   
+              </fieldset>
+                                                 
 
             <!-- Manga Announcement Box -->
             <div class="relative w-full max-w-2xl p-4 mt-4 bg-black bg-opacity-85 rounded-lg shadow-lg border border-yellow-500 animate-borderMove">
