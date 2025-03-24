@@ -723,7 +723,7 @@
                     <option value="criminal_hanzawa">المجرم هانزاوا</option>
                 </select>
             
-                <fieldset class="border border-gray-300 rounded p-4 w-1/2">
+                <fieldset class="border border-gray-300 rounded p-2 w-1/2">
                     <legend class="px-2 font-bold text-white-600 text-xs">{{ episodeTypeLegend }}
                         <button 
                             class="bg-orange-500 text-white font-bold py-2 px-1 rounded hover:bg-orange-800 transition text-xs" 
@@ -4899,8 +4899,8 @@
                 </div>
               
                 <!-- Centered Checkboxes -->
-                <div class="flex flex-wrap gap-1 mt-2 justify-center text-xs">
-                  <label class="flex items-center">
+                <div class="flex flex-wrap mt-2 justify-center text-xs">
+                  <label class="flex items-center space-x-1">
                     <input
                       type="checkbox"
                       v-model="searchFilters.title"
@@ -4909,7 +4909,7 @@
                     />
                     <span class="px-2 font-bold">العنوان</span>
                   </label>
-                  <label class="flex items-center">
+                  <label class="flex items-center space-x-1">
                     <input
                       type="checkbox"
                       v-model="searchFilters.number"
@@ -4918,7 +4918,7 @@
                     />
                     <span class="px-2 font-bold">الرقم</span>
                   </label>
-                  <label class="flex items-center">
+                  <label class="flex items-center space-x-1">
                     <input
                       type="checkbox"
                       v-model="searchFilters.story"
@@ -4927,7 +4927,7 @@
                     />
                     <span class="px-2 font-bold">القصة</span>
                   </label>
-                  <label class="flex items-center">
+                  <label class="flex items-center space-x-1">
                     <input
                       type="checkbox"
                       v-model="searchFilters.summary"
