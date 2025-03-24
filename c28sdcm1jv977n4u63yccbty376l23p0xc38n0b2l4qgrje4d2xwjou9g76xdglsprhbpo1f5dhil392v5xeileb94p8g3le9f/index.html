@@ -724,7 +724,7 @@
                 </select>
             
                 <fieldset class="border border-gray-300 rounded p-4 w-1/2">
-                    <legend class="px-2 font-bold text-white-600">{{ episodeTypeLegend }}
+                    <legend class="px-2 font-bold text-white-600 text-xs">{{ episodeTypeLegend }}
                         <button 
                             class="bg-orange-500 text-white font-bold py-2 px-1 rounded hover:bg-orange-800 transition text-xs" 
                             @click="openEmptyPopup">
@@ -4904,7 +4904,7 @@
                     <input
                       type="checkbox"
                       v-model="searchFilters.title"
-                      class="scale-150"
+                      class="scale-100"
                       @change="ensureOneChecked('title')"
                     />
                     <span class="px-2 font-bold">العنوان</span>
@@ -4913,7 +4913,7 @@
                     <input
                       type="checkbox"
                       v-model="searchFilters.number"
-                      class="scale-150"
+                      class="scale-100"
                       @change="ensureOneChecked('number')"
                     />
                     <span class="px-2 font-bold">الرقم</span>
@@ -4922,7 +4922,7 @@
                     <input
                       type="checkbox"
                       v-model="searchFilters.story"
-                      class="scale-150"
+                      class="scale-100"
                       @change="ensureOneChecked('story')"
                     />
                     <span class="px-2 font-bold">القصة</span>
@@ -4931,7 +4931,7 @@
                     <input
                       type="checkbox"
                       v-model="searchFilters.summary"
-                      class="scale-150"
+                      class="scale-100"
                       @change="ensureOneChecked('summary')"
                     />
                     <span class="px-2 font-bold">الملخص</span>
