@@ -4893,7 +4893,7 @@
 
             <!-- Announcement Box -->
             <div class="relative w-full max-w-2xl p-4 mt-4 bg-black bg-opacity-85 rounded-lg shadow-lg border border-yellow-500 animate-borderMove">
-                <p class="text-white text-xl text-center font-bold">تم إضافة حلقة الأسبوع ({{ ep }})</p>
+                <p class="text-white text-xl text-center font-bold">تم إضافة حلقة الأسبوع الماضي ({{ ep }})</p>
                 <button 
                     v-if="episodes && episodes.length > 0"
                     @click="openEpisodeModal(ep)"
@@ -6210,7 +6210,11 @@
                             !e.EpisodeNumber.includes('الفيلم') &&
                             !e.EpisodeNumber.includes('قصة قصيرة') &&
                             !e.EpisodeNumber.includes('أوفا') &&
-                            !e.EpisodeNumber.includes('إصدار خاص')
+                            !e.EpisodeNumber.includes('إصدار خاص') &&
+                            !e.EpisodeNumber.includes('ماجيك كايتو') &&
+                            !e.EpisodeNumber.includes('فيلم تعاوني') &&
+                            !e.EpisodeNumber.includes('يوميات زيرو') &&
+                            !e.EpisodeNumber.includes('المجرم هانزاوا')
                         )
                         .forEach(ep => {
                             const season = ep.EpisodeSeason || 'default';
@@ -8800,36 +8804,37 @@
                     })
                     .filter(episode => {
                         if (this.searchFilters.number) {
-                            if (searchQuery === "") return true; // ✅ Show all episodes when search bar is empty
-                            
-                            // Convert search query into a list of numbers
-                            const numberList = [];
+                        if (searchQuery === "") return true; // ✅ Show all episodes when search bar is empty
+                        
+                        const numberList = [];
+                        const stringList = [];
 
-                            searchQuery.split(',').forEach(part => {
-                                part = part.trim();
-                                if (part.includes('-')) {
-                                    // Handle ranges like "44-60"
-                                    const [start, end] = part.split('-').map(num => parseInt(num.trim(), 10));
-                                    if (!isNaN(start) && !isNaN(end) && start <= end) {
-                                        for (let i = start; i <= end; i++) {
-                                            numberList.push(i.toString());
-                                        }
-                                    }
-                                } else {
-                                    // Handle single numbers
-                                    const num = parseInt(part, 10);
-                                    if (!isNaN(num)) {
-                                        numberList.push(num.toString());
+                        searchQuery.split(',').forEach(part => {
+                            part = part.trim();
+                            if (part.includes('-')) {
+                                // Handle ranges like "44-60"
+                                const [start, end] = part.split('-').map(num => parseInt(num.trim(), 10));
+                                if (!isNaN(start) && !isNaN(end) && start <= end) {
+                                    for (let i = start; i <= end; i++) {
+                                        numberList.push(i.toString());
                                     }
                                 }
-                            });
+                            } else if (!isNaN(parseInt(part, 10))) {
+                                // Handle single numbers
+                                numberList.push(part.trim());
+                            } else {
+                                // Handle text search
+                                stringList.push(part.trim());
+                            }
+                        });
 
-                            return numberList.includes(episode.EpisodeNumber);
-                        }
+                        return numberList.includes(episode.EpisodeNumber) || 
+                            stringList.some(str => episode.Title.includes(str));
+                    }
 
                         return (this.searchFilters.title && new RegExp(searchQuery, 'i').test(episode.EpisodeTitle)) ||
-                            (this.searchFilters.story && new RegExp(searchQuery, 'i').test(episode.EpisodeStory)) ||
-                            (this.searchFilters.summary && new RegExp(searchQuery, 'i').test(episode.EpisodeSummary));
+                                (this.searchFilters.story && new RegExp(searchQuery, 'i').test(episode.EpisodeStory)) ||
+                                (this.searchFilters.summary && new RegExp(searchQuery, 'i').test(episode.EpisodeSummary));
                     });
                 },
 
