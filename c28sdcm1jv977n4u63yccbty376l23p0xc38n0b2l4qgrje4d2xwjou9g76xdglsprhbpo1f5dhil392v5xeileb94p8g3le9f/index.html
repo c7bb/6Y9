@@ -723,10 +723,10 @@
                     <option value="criminal_hanzawa">المجرم هانزاوا</option>
                 </select>
             
-                <fieldset class="border border-gray-300 rounded p-2 w-1/2">
-                    <legend class="px-2 font-bold text-white-600 text-xs">{{ episodeTypeLegend }}
+                <fieldset class="border border-gray-300 rounded p-1 w-1/2">
+                    <legend class="px-2 font-bold text-white-600">{{ episodeTypeLegend }}
                         <button 
-                            class="bg-orange-500 text-white font-bold py-2 px-1 rounded hover:bg-orange-800 transition text-xs" 
+                            class="bg-orange-500 text-white font-bold py-2 px-1 rounded hover:bg-orange-800 transition" 
                             @click="openEmptyPopup">
                             المزيد
                         </button>
@@ -4899,42 +4899,42 @@
                 </div>
               
                 <!-- Centered Checkboxes -->
-                <div class="flex flex-wrap mt-2 justify-center text-xs">
-                  <label class="flex items-center space-x-1">
+                <div class="flex flex-wrap mt-2 justify-center text-sm">
+                  <label class="flex items-center">
                     <input
                       type="checkbox"
                       v-model="searchFilters.title"
                       class="scale-100"
                       @change="ensureOneChecked('title')"
                     />
-                    <span class="px-2 font-bold">العنوان</span>
+                    <span class="px-1 font-bold">العنوان</span>
                   </label>
-                  <label class="flex items-center space-x-1">
+                  <label class="flex items-center">
                     <input
                       type="checkbox"
                       v-model="searchFilters.number"
                       class="scale-100"
                       @change="ensureOneChecked('number')"
                     />
-                    <span class="px-2 font-bold">الرقم</span>
+                    <span class="px-1 font-bold">الرقم</span>
                   </label>
-                  <label class="flex items-center space-x-1">
+                  <label class="flex items-center">
                     <input
                       type="checkbox"
                       v-model="searchFilters.story"
                       class="scale-100"
                       @change="ensureOneChecked('story')"
                     />
-                    <span class="px-2 font-bold">القصة</span>
+                    <span class="px-1 font-bold">القصة</span>
                   </label>
-                  <label class="flex items-center space-x-1">
+                  <label class="flex items-center">
                     <input
                       type="checkbox"
                       v-model="searchFilters.summary"
                       class="scale-100"
                       @change="ensureOneChecked('summary')"
                     />
-                    <span class="px-2 font-bold">الملخص</span>
+                    <span class="px-1 font-bold">الملخص</span>
                   </label>
                 </div>
               </fieldset>
