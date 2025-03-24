@@ -4853,11 +4853,25 @@
             <fieldset class="border p-4 rounded w-full">
                 <legend class="font-bold text-lg px-2">مستطيل البحث</legend>
             
-                <!-- Search Input and Button with margin-bottom -->
-                <div class="flex items-center w-full mb-4">
-                    <input v-model="searchQuery" class="border px-4 py-2 font-bold text-xl rounded w-full" placeholder="بحث...">
-                    <button @click="clearSearch" class="mr-2 px-4 py-2 bg-red-500 text-white font-bold rounded">مسح</button>
-                </div>
+    <!-- Search Input and Button with margin-bottom -->
+    <div class="flex flex-col w-full mb-4">
+        <div class="flex items-center w-full mb-2">
+            <input v-model="searchQuery" class="border px-4 py-2 font-bold text-xl rounded w-full" placeholder="بحث...">
+            <button @click="clearSearch" class="mr-2 px-4 py-2 bg-red-500 text-white font-bold rounded">مسح</button>
+        </div>
+        
+        <!-- Radio Buttons for Text-Number Matching -->
+        <div class="mt-2 flex flex-col space-y-2">
+            <label class="flex items-center space-x-2">
+                <input type="radio" v-model="textNumberMatchMode" value="enabled" class="scale-150">
+                <span class="px-2 font-bold">تفعيل</span>
+            </label>
+            <label class="flex items-center space-x-2">
+                <input type="radio" v-model="textNumberMatchMode" value="disabled" class="scale-150">
+                <span class="px-2 font-bold">تعطيل</span>
+            </label>
+        </div>
+    </div>
             
                 <!-- Centered Checkboxes -->
                 <div class="flex flex-wrap gap-4 mt-2 justify-center">
@@ -5614,6 +5628,7 @@
                     progressInterval: null,
                     error: null,
                     searchQuery: '',
+                    textNumberMatchMode: 'disabled', // Default to disabled
                     selectedFilter: 'all',
                     currentPage: 1,
                     lastPage: 1,
@@ -8804,35 +8819,42 @@
                     })
                     .filter(episode => {
                         if (this.searchFilters.number) {
-    if (searchQuery === "") return true; // ✅ Show all episodes when search bar is empty
-    
-    // Convert search query into a list of numbers
-    const numberList = [];
-    searchQuery.split(',').forEach(part => {
-        part = part.trim();
-        if (part.includes('-')) {
-            // Handle ranges like "44-60"
-            const [start, end] = part.split('-').map(num => parseInt(num.trim(), 10));
-            if (!isNaN(start) && !isNaN(end) && start <= end) {
-                for (let i = start; i <= end; i++) {
-                    numberList.push(i.toString());
+                    if (searchQuery === "") return true; // ✅ Show all episodes when search bar is empty
+                    
+                    // Convert search query into a list of numbers
+                    const numberList = [];
+                    searchQuery.split(',').forEach(part => {
+                        part = part.trim();
+                        if (part.includes('-')) {
+                            // Handle ranges like "44-60"
+                            const [start, end] = part.split('-').map(num => parseInt(num.trim(), 10));
+                            if (!isNaN(start) && !isNaN(end) && start <= end) {
+                                for (let i = start; i <= end; i++) {
+                                    numberList.push(i.toString());
+                                }
+                            }
+                        } else {
+                            // Handle single numbers
+                            const num = parseInt(part, 10);
+                            if (!isNaN(num)) {
+                                numberList.push(num.toString());
+                            }
+                        }
+                    });
+                    
+                    // Extract number from episode.EpisodeNumber based on textNumberMatchMode
+                    let episodeNumber;
+                    if (this.textNumberMatchMode === 'enabled') {
+                        // Extract number at the end of the string
+                        const episodeNumberMatch = episode.EpisodeNumber.toString().match(/\d+$/);
+                        episodeNumber = episodeNumberMatch ? episodeNumberMatch[0] : episode.EpisodeNumber;
+                    } else {
+                        // Use the full episode number as before
+                        episodeNumber = episode.EpisodeNumber;
+                    }
+                    
+                    return numberList.includes(episodeNumber);
                 }
-            }
-        } else {
-            // Handle single numbers
-            const num = parseInt(part, 10);
-            if (!isNaN(num)) {
-                numberList.push(num.toString());
-            }
-        }
-    });
-    
-    // Extract number from episode.EpisodeNumber (assuming it could be text + number)
-    const episodeNumberMatch = episode.EpisodeNumber.toString().match(/\d+$/);
-    const episodeNumber = episodeNumberMatch ? episodeNumberMatch[0] : episode.EpisodeNumber;
-    
-    return numberList.includes(episodeNumber);
-}
 
                         return (this.searchFilters.title && new RegExp(searchQuery, 'i').test(episode.EpisodeTitle)) ||
                             (this.searchFilters.story && new RegExp(searchQuery, 'i').test(episode.EpisodeStory)) ||
