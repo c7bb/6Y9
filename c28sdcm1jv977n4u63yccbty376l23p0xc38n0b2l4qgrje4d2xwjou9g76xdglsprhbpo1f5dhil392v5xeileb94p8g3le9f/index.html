@@ -4859,12 +4859,12 @@
                     <!-- The search input -->
                     <input
                       v-model="searchQuery"
-                      class="border px-4 py-2 font-bold text-xl rounded w-full"
+                      :class="['border px-4 font-bold text-xl rounded w-full', searchFilters.number ? 'py-8' : 'py-2']"
                       placeholder="بحث..."
                     />
               
                     <!-- Button and Radio Buttons in a column -->
-                    <div class="flex flex-col items-end ml-2">
+                    <div class="flex flex-col items-end mr-2">
                       <!-- The "مسح" button -->
                       <button
                         @click="clearSearch"
@@ -4873,9 +4873,9 @@
                         مسح
                       </button>
               
-                      <!-- Radio Buttons for Text-Number Matching (now under the button) -->
-                      <div class="flex flex-col space-y-2 mt-2">
-                        <label class="flex items-center space-x-2">
+                      <!-- Radio Buttons for Text-Number Matching (only visible if 'number' is checked) -->
+                      <div v-if="searchFilters.number" class="flex flex-col space-y-2 mt-2 -ml-2">
+                        <label class="flex items-center">
                           <input
                             type="radio"
                             v-model="textNumberMatchMode"
@@ -4884,7 +4884,7 @@
                           />
                           <span class="px-2 font-bold">تفعيل</span>
                         </label>
-                        <label class="flex items-center space-x-2">
+                        <label class="flex items-center">
                           <input
                             type="radio"
                             v-model="textNumberMatchMode"
@@ -4899,7 +4899,7 @@
                 </div>
               
                 <!-- Centered Checkboxes -->
-                <div class="flex flex-wrap gap-4 mt-2 justify-center">
+                <div class="flex flex-wrap gap-1 mt-2 justify-center">
                   <label class="flex items-center space-x-2">
                     <input
                       type="checkbox"
@@ -4938,6 +4938,7 @@
                   </label>
                 </div>
               </fieldset>
+              
                                                  
 
             <!-- Manga Announcement Box -->
