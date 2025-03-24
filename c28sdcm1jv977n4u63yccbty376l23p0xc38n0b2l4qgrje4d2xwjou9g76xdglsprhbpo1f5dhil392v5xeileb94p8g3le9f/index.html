@@ -723,7 +723,7 @@
                     <option value="criminal_hanzawa">المجرم هانزاوا</option>
                 </select>
             
-                <fieldset class="border border-gray-300 rounded p-1 w-1/2">
+                <fieldset class="border border-gray-300 rounded p-2 w-1/2">
                     <legend class="px-2 font-bold text-white-600">{{ episodeTypeLegend }}
                         <button 
                             class="bg-orange-500 text-white font-bold py-2 px-1 rounded hover:bg-orange-800 transition" 
@@ -733,7 +733,7 @@
                     </legend>
                     <div class="flex items-center text-blue font-bold gap-4 justify-center">
                         <label>
-                            <input type="radio" v-model="episodeTypeFilter" value="All" checked class="scale-150">
+                            <input type="radio" v-model="episodeTypeFilter" value="All" checked class="scale-100">
                             الكل
                         </label>
                         <div :class="{
@@ -741,7 +741,7 @@
                             'p-1': episodeTypeFilter === 'Filler' 
                         }">
                             <label :class="{'bg-teal-900 p-1 text-white rounded': episodeTypeFilter === 'Manga'}">
-                                <input type="radio" v-model="episodeTypeFilter" value="Manga" class="scale-150">
+                                <input type="radio" v-model="episodeTypeFilter" value="Manga" class="scale-100">
                                 مانغا
                             </label>
                         </div>
@@ -750,7 +750,7 @@
                                 'p-1': episodeTypeFilter === 'Manga'
                             }">
                             <label :class="{'bg-red-950 p-1 text-white rounded': episodeTypeFilter === 'Filler'}">
-                                <input type="radio" v-model="episodeTypeFilter" value="Filler" class="scale-150">
+                                <input type="radio" v-model="episodeTypeFilter" value="Filler" class="scale-100">
                                 فِلر
                             </label>
                         </div>
@@ -4851,7 +4851,7 @@
             </div>   
 
             <fieldset class="border p-4 rounded w-full">
-                <legend class="font-bold text-lg px-2">مستطيل البحث</legend>
+                <legend class="font-bold text-lg px-2">مربع البحث</legend>
               
                 <!-- Search Input and Button with margin-bottom -->
                 <div class="w-full mb-4">
@@ -4907,7 +4907,7 @@
                       class="scale-100"
                       @change="ensureOneChecked('title')"
                     />
-                    <span class="px-1 font-bold">العنوان</span>
+                    <span class="px-2 font-bold">العنوان</span>
                   </label>
                   <label class="flex items-center">
                     <input
@@ -4916,7 +4916,7 @@
                       class="scale-100"
                       @change="ensureOneChecked('number')"
                     />
-                    <span class="px-1 font-bold">الرقم</span>
+                    <span class="px-2 font-bold">الرقم</span>
                   </label>
                   <label class="flex items-center">
                     <input
@@ -4925,7 +4925,7 @@
                       class="scale-100"
                       @change="ensureOneChecked('story')"
                     />
-                    <span class="px-1 font-bold">القصة</span>
+                    <span class="px-2 font-bold">القصة</span>
                   </label>
                   <label class="flex items-center">
                     <input
@@ -4934,7 +4934,7 @@
                       class="scale-100"
                       @change="ensureOneChecked('summary')"
                     />
-                    <span class="px-1 font-bold">الملخص</span>
+                    <span class="px-2 font-bold">الملخص</span>
                   </label>
                 </div>
               </fieldset>
