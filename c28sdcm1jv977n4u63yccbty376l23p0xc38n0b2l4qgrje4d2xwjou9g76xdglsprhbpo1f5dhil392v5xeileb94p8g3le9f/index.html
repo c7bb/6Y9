@@ -14383,23 +14383,29 @@
                         cover: "AgACAgQAAxkBAAI39mewS5AKaNozUttDedMhI3xOcZdzAAJ7xzEb4AyBUdi6fgZXlnXYAQADAgADdwADNgQ",
                         caption: caption,
                         parse_mode: "Markdown",
-                        //protect_content: true,
                     };
 
-                    const response = await fetch(url, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(body),
-                    });
+                    try {
+                        const response = await fetch(url, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(body),
+                        });
 
-                    // Parse the JSON response
-                    const data = await response.json();
+                        const text = await response.text(); // Get raw response text
+                        let data;
+                        try {
+                            data = JSON.parse(text); // Attempt to parse JSON
+                        } catch (e) {
+                            throw new Error("Invalid JSON response from Telegram:\n" + text);
+                        }
 
-                    // Throw an error with Telegram's description if available
-                    if (!data.ok) {
-                        throw new Error(data.description || response.statusText);
+                        if (!data.ok) {
+                            throw new Error("Telegram Error:\n" + (data.description || text));
+                        }
+                    } catch (error) {
+                        console.error("sendVideoResponse failed:", error);
+                        throw new Error(`sendVideoResponse failed:\n${error.message}`);
                     }
                 },
 
@@ -14410,23 +14416,29 @@
                         document: fileId,
                         caption: caption,
                         parse_mode: "Markdown",
-                        //protect_content: true,
                     };
 
-                    const response = await fetch(url, {
-                        method: "POST",
-                        headers: {
-                        "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(body),
-                    });
+                    try {
+                        const response = await fetch(url, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(body),
+                        });
 
-                    // Parse the JSON response
-                    const data = await response.json();
+                        const text = await response.text(); // Get raw response text
+                        let data;
+                        try {
+                            data = JSON.parse(text); // Attempt to parse JSON
+                        } catch (e) {
+                            throw new Error("Invalid JSON response from Telegram:\n" + text);
+                        }
 
-                    // If Telegram reports an error, throw it with the description from Telegram
-                    if (!data.ok) {
-                        throw new Error(data.description || response.statusText);
+                        if (!data.ok) {
+                            throw new Error("Telegram Error:\n" + (data.description || text));
+                        }
+                    } catch (error) {
+                        console.error("sendMangaResponse failed:", error);
+                        throw new Error(`sendMangaResponse failed:\n${error.message}`);
                     }
                 },
 
