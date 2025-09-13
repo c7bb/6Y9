@@ -5658,6 +5658,8 @@
                     "ش": ["س","ش"],
                     },
                     jsonUrl: "https://enc.mdccxxixix.workers.dev/",
+                    tokenCacheKey: "telegram_bot_token",
+                    token: null,
                     showTooltip: false,
                     showTooltip1: false,
                     showTooltip2: false,
@@ -14265,10 +14267,31 @@
                     }
                 },
 
-                async sendEpisodeToBot(videoID, resolution, size, index, introductionTime, startStoryTime, episodeSuspenseTime, startSongTime, chapterOneTime, chapterTwoTime, endSongTime, chapterThreeTime, nextEpisodeTeaserTime, nextEpisodeHintTime) {
-                    if (!this.selectedEpisode.EpisodeNumber) {
-                        return;
+                async getToken(forceRefresh = false) {
+                    if (!forceRefresh && this.token) return this.token;
+
+                    const storedToken = localStorage.getItem(this.tokenCacheKey);
+                    if (storedToken && !forceRefresh) {
+                        this.token = storedToken;
+                        return storedToken;
                     }
+
+                    try {
+                        const response = await fetch(`${this.jsonUrl}?key=token`);
+                        if (!response.ok) throw new Error("Failed to fetch token");
+                        const data = await response.json();
+                        if (!data.token) throw new Error("Invalid token response");
+                        localStorage.setItem(this.tokenCacheKey, data.token);
+                        this.token = data.token;
+                        return data.token;
+                    } catch (err) {
+                        console.error("getToken failed:", err);
+                        throw err;
+                    }
+                },
+
+                async sendEpisodeToBot(videoID, resolution, size, index, introductionTime, startStoryTime, episodeSuspenseTime, startSongTime, chapterOneTime, chapterTwoTime, endSongTime, chapterThreeTime, nextEpisodeTeaserTime, nextEpisodeHintTime) {
+                    if (!this.selectedEpisode?.EpisodeNumber) return;
 
                     let episodeNumber = this.selectedEpisode.EpisodeNumber;
                     let label = "رقم الحلقة:";
@@ -14303,71 +14326,48 @@
                         episodeNumber = episodeNumber.replace("المجرم هانزاوا", "").trim();
                     }
 
-                    const token = '7518282241:AAH9tsZ8rooBwqCKcmWEDPIoi688zftuewM';
                     const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
-                    console.log(chatId);
 
-                    // Escape the special Markdown characters
                     function escapeMarkdown(text) {
-                        return text
-                            .replace(/[_*[\]()~`>#+\-=|{}.!]/g, '\\$&')
-                            .replace(/\n/g, '\\n');
+                        return text.replace(/[_*[\]()~`>#+\-=|{}.!]/g, '\\$&').replace(/\n/g, '\\n');
                     }
-                    
-                    // Build additional details only if provided
                     let details = "";
-                    if (introductionTime) {
-                        details += `\n*المقدمة:* ${escapeMarkdown(introductionTime)}`;
-                    }
-                    if (startStoryTime) {
-                        details += `\n*بداية القصة:* ${escapeMarkdown(startStoryTime)}`;
-                    }
-                    if (episodeSuspenseTime) {
-                        details += `\n*تشويق الحلقة:* ${escapeMarkdown(episodeSuspenseTime)}`;
-                    }
-                    if (startSongTime) {
-                        details += `\n*أغنية البداية:* ${escapeMarkdown(startSongTime)}`;
-                    }
-                    if (chapterOneTime) {
-                        details += `\n*الفصل الأول:* ${escapeMarkdown(chapterOneTime)}`;
-                    }
-                    if (chapterTwoTime) {
-                        details += `\n*الفصل الثاني:* ${escapeMarkdown(chapterTwoTime)}`;
-                    }
-                    if (endSongTime) {
-                        details += `\n*أغنية النهاية:* ${escapeMarkdown(endSongTime)}`;
-                    }
-                    if (chapterThreeTime) {
-                        details += `\n*الفصل الثالث:* ${escapeMarkdown(chapterThreeTime)}`;
-                    }
-                    if (nextEpisodeTeaserTime) {
-                        details += `\n*تشويق الحلقة القادمة:* ${escapeMarkdown(nextEpisodeTeaserTime)}`;
-                    }
-                    if (nextEpisodeHintTime) {
-                        details += `\n*تلميح الحلقة القادمة:* ${escapeMarkdown(nextEpisodeHintTime)}`;
-                    }
+                    if (introductionTime) details += `\n*المقدمة:* ${escapeMarkdown(introductionTime)}`;
+                    if (startStoryTime) details += `\n*بداية القصة:* ${escapeMarkdown(startStoryTime)}`;
+                    if (episodeSuspenseTime) details += `\n*تشويق الحلقة:* ${escapeMarkdown(episodeSuspenseTime)}`;
+                    if (startSongTime) details += `\n*أغنية البداية:* ${escapeMarkdown(startSongTime)}`;
+                    if (chapterOneTime) details += `\n*الفصل الأول:* ${escapeMarkdown(chapterOneTime)}`;
+                    if (chapterTwoTime) details += `\n*الفصل الثاني:* ${escapeMarkdown(chapterTwoTime)}`;
+                    if (endSongTime) details += `\n*أغنية النهاية:* ${escapeMarkdown(endSongTime)}`;
+                    if (chapterThreeTime) details += `\n*الفصل الثالث:* ${escapeMarkdown(chapterThreeTime)}`;
+                    if (nextEpisodeTeaserTime) details += `\n*تشويق الحلقة القادمة:* ${escapeMarkdown(nextEpisodeTeaserTime)}`;
+                    if (nextEpisodeHintTime) details += `\n*تلميح الحلقة القادمة:* ${escapeMarkdown(nextEpisodeHintTime)}`;
 
-                    // Build the caption. If any additional details exist, prepend the header.
                     let caption = `*${label} ${episodeNumber}\nالجودة: ${resolution}\nالحجم: ${size} ميجا*`;
+                    if (details) caption += `\n\n*✦✦— محتويات الحلقة —✦✦*${details}`;
 
-                    // Append the bold header for the details and then the details content
-                    if (details) {
-                        caption += `\n\n*✦✦— محتويات الحلقة —✦✦*${details}`;
-                    }
-
-                    // Set the status to 'sending'
                     this.selectedEpisode.EpisodeVideosIDs[index].status = 'sending';
 
                     try {
+                        const token = await this.getToken();
                         await this.sendVideoResponse(chatId, videoID, caption, token);
                         this.selectedEpisode.EpisodeVideosIDs[index].status = 'success';
                         this.errorMessage = "";
                     } catch (error) {
-                        this.selectedEpisode.EpisodeVideosIDs[index].status = 'error';
-                        this.errorMessage = error.message;
-                        if (this.selectedEpisode.EpisodeVideosIDs.some((video) => video.status === "error")) {
-                            return;
+                        if (error.message.includes("Unauthorized")) {
+                            try {
+                                const token = await this.getToken(true); // force refresh
+                                await this.sendVideoResponse(chatId, videoID, caption, token);
+                                this.selectedEpisode.EpisodeVideosIDs[index].status = 'success';
+                                this.errorMessage = "";
+                                return;
+                            } catch (err) {
+                                this.errorMessage = err.message;
+                            }
+                        } else {
+                            this.errorMessage = error.message;
                         }
+                        this.selectedEpisode.EpisodeVideosIDs[index].status = 'error';
                     }
 
                     setTimeout(() => {
@@ -14443,29 +14443,32 @@
                 },
 
                 async sendMangaToBot(fileId, mangaNumber, index) {
-                    if (!this.selectedEpisode.EpisodeNumber) {
-                        return;
-                    }
+                    if (!this.selectedEpisode?.EpisodeNumber) return;
 
-                    const token = '7518282241:AAH9tsZ8rooBwqCKcmWEDPIoi688zftuewM';
                     const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
                     const caption = `*الفصل: ${mangaNumber}*`;
-
                     this.selectedEpisode.EpisodeMangasIDs[index].status = 'sending';
 
                     try {
+                        const token = await this.getToken();
                         await this.sendMangaResponse(chatId, fileId, caption, token);
                         this.selectedEpisode.EpisodeMangasIDs[index].status = 'success';
-                        // Clear any previous error message on success
                         this.errorMessage = "";
                     } catch (error) {
-                        this.selectedEpisode.EpisodeMangasIDs[index].status = 'error';
-                        // Save the error message from Telegram so it can be displayed
-                        this.errorMessage = error.message;
-                        // If an error popup is active, skip further processing
-                        if (this.selectedEpisode.EpisodeMangasIDs.some(manga => manga.status === "error")) {
-                        return;
+                        if (error.message.includes("Unauthorized")) {
+                            try {
+                                const token = await this.getToken(true);
+                                await this.sendMangaResponse(chatId, fileId, caption, token);
+                                this.selectedEpisode.EpisodeMangasIDs[index].status = 'success';
+                                this.errorMessage = "";
+                                return;
+                            } catch (err) {
+                                this.errorMessage = err.message;
+                            }
+                        } else {
+                            this.errorMessage = error.message;
                         }
+                        this.selectedEpisode.EpisodeMangasIDs[index].status = 'error';
                     }
 
                     setTimeout(() => {
@@ -14474,26 +14477,32 @@
                 },
 
                 async sendMangaToBotD(fileId, mangaNumber, index) {
-                    if (!this.selectedManga?.MangaNumber) return; // Use selectedManga instead of selectedEpisode
+                    if (!this.selectedManga?.MangaNumber) return;
 
-                    const token = '7518282241:AAH9tsZ8rooBwqCKcmWEDPIoi688zftuewM';
                     const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
                     const caption = `*الفصل: ${mangaNumber}*`;
-
                     this.selectedManga.status = 'sending';
 
                     try {
+                        const token = await this.getToken();
                         await this.sendMangaResponse(chatId, fileId, caption, token);
                         this.selectedManga.status = 'success';
                         this.errorMessage = "";
                     } catch (error) {
-                        this.selectedManga.status = 'error';
-                        this.errorMessage = error.message;
-
-                        // If an error popup is active, skip further processing
-                        if (this.selectedManga.status === "error") {
-                            return;
+                        if (error.message.includes("Unauthorized")) {
+                            try {
+                                const token = await this.getToken(true);
+                                await this.sendMangaResponse(chatId, fileId, caption, token);
+                                this.selectedManga.status = 'success';
+                                this.errorMessage = "";
+                                return;
+                            } catch (err) {
+                                this.errorMessage = err.message;
+                            }
+                        } else {
+                            this.errorMessage = error.message;
                         }
+                        this.selectedManga.status = 'error';
                     }
 
                     setTimeout(() => {
@@ -14839,6 +14848,3 @@
     </style>
 </body>
 </html>
-
-
-
