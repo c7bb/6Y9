@@ -704,6 +704,19 @@
             </div>
         </div> -->
 
+        <div id="app">
+            <div class="flex flex-col items-center justify-center mt-10 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+                <div class="relative overflow-hidden bg-yellow-200 border border-yellow-400 px-4 sm:px-6 md:px-8 py-3 sm:py-4 rounded-lg w-full max-w-2xl shadow-lg">
+                    <div class="flex items-center justify-center">
+                        <span class="font-bold text-red-700 text-center w-full whitespace-nowrap"
+                            :style="{ fontSize: fontSize + 'px' }">
+                            ✅ تم إصلاح مشكلة عدم فتح الحلقات والمانغا
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     <br>
         <!-- Search and Filters -->
         <div class="mb-4 flex flex-col gap-4 items-center">
@@ -5632,6 +5645,7 @@
         createApp({
             data() {
                 return {
+                    fontSize: 16,
                     menuOpen: false,
                     userJoined: false,
                     showEmptyPopup: false,
@@ -14719,6 +14733,15 @@
                     }
                 },
 
+                updateFontSize() {
+                    const screenWidth = window.innerWidth;
+
+                    const minSize = 12;
+                    const maxSize = 24;
+                    const calculated = screenWidth / 50;
+                    this.fontSize = Math.min(Math.max(calculated, minSize), maxSize);
+                },
+
             },
             
             async created() {
@@ -14748,6 +14771,9 @@
                         }
                     });
                 }
+
+                this.updateFontSize();
+                window.addEventListener('resize', this.updateFontSize);
             },
 
             unmounted() {
@@ -14758,6 +14784,7 @@
 
                 // Clean up event listener to prevent memory leaks
                 document.removeEventListener("click", this.closeMenu);
+                window.removeEventListener('resize', this.updateFontSize);
             }
 
         }).mount('#app');
@@ -14794,9 +14821,3 @@
     </style>
 </body>
 </html>
-
-
-
-
-
-
