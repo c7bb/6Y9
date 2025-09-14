@@ -14303,63 +14303,34 @@
                         episodeNumber = episodeNumber.replace("المجرم هانزاوا", "").trim();
                     }
 
-                    const token = '7518282241:AAH9tsZ8rooBwqCKcmWEDPIoi688zftuewM';
                     const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
                     console.log(chatId);
 
-                    // Escape the special Markdown characters
                     function escapeMarkdown(text) {
                         return text
                             .replace(/[_*[\]()~`>#+\-=|{}.!]/g, '\\$&')
                             .replace(/\n/g, '\\n');
                     }
                     
-                    // Build additional details only if provided
                     let details = "";
-                    if (introductionTime) {
-                        details += `\n*المقدمة:* ${escapeMarkdown(introductionTime)}`;
-                    }
-                    if (startStoryTime) {
-                        details += `\n*بداية القصة:* ${escapeMarkdown(startStoryTime)}`;
-                    }
-                    if (episodeSuspenseTime) {
-                        details += `\n*تشويق الحلقة:* ${escapeMarkdown(episodeSuspenseTime)}`;
-                    }
-                    if (startSongTime) {
-                        details += `\n*أغنية البداية:* ${escapeMarkdown(startSongTime)}`;
-                    }
-                    if (chapterOneTime) {
-                        details += `\n*الفصل الأول:* ${escapeMarkdown(chapterOneTime)}`;
-                    }
-                    if (chapterTwoTime) {
-                        details += `\n*الفصل الثاني:* ${escapeMarkdown(chapterTwoTime)}`;
-                    }
-                    if (endSongTime) {
-                        details += `\n*أغنية النهاية:* ${escapeMarkdown(endSongTime)}`;
-                    }
-                    if (chapterThreeTime) {
-                        details += `\n*الفصل الثالث:* ${escapeMarkdown(chapterThreeTime)}`;
-                    }
-                    if (nextEpisodeTeaserTime) {
-                        details += `\n*تشويق الحلقة القادمة:* ${escapeMarkdown(nextEpisodeTeaserTime)}`;
-                    }
-                    if (nextEpisodeHintTime) {
-                        details += `\n*تلميح الحلقة القادمة:* ${escapeMarkdown(nextEpisodeHintTime)}`;
-                    }
+                    if (introductionTime) details += `\n*المقدمة:* ${escapeMarkdown(introductionTime)}`;
+                    if (startStoryTime) details += `\n*بداية القصة:* ${escapeMarkdown(startStoryTime)}`;
+                    if (episodeSuspenseTime) details += `\n*تشويق الحلقة:* ${escapeMarkdown(episodeSuspenseTime)}`;
+                    if (startSongTime) details += `\n*أغنية البداية:* ${escapeMarkdown(startSongTime)}`;
+                    if (chapterOneTime) details += `\n*الفصل الأول:* ${escapeMarkdown(chapterOneTime)}`;
+                    if (chapterTwoTime) details += `\n*الفصل الثاني:* ${escapeMarkdown(chapterTwoTime)}`;
+                    if (endSongTime) details += `\n*أغنية النهاية:* ${escapeMarkdown(endSongTime)}`;
+                    if (chapterThreeTime) details += `\n*الفصل الثالث:* ${escapeMarkdown(chapterThreeTime)}`;
+                    if (nextEpisodeTeaserTime) details += `\n*تشويق الحلقة القادمة:* ${escapeMarkdown(nextEpisodeTeaserTime)}`;
+                    if (nextEpisodeHintTime) details += `\n*تلميح الحلقة القادمة:* ${escapeMarkdown(nextEpisodeHintTime)}`;
 
-                    // Build the caption. If any additional details exist, prepend the header.
                     let caption = `*${label} ${episodeNumber}\nالجودة: ${resolution}\nالحجم: ${size} ميجا*`;
+                    if (details) caption += `\n\n*✦✦— محتويات الحلقة —✦✦*${details}`;
 
-                    // Append the bold header for the details and then the details content
-                    if (details) {
-                        caption += `\n\n*✦✦— محتويات الحلقة —✦✦*${details}`;
-                    }
-
-                    // Set the status to 'sending'
                     this.selectedEpisode.EpisodeVideosIDs[index].status = 'sending';
 
                     try {
-                        await this.sendVideoResponse(chatId, videoID, caption, token);
+                        await this.sendVideoResponse(chatId, videoID, caption);
                         this.selectedEpisode.EpisodeVideosIDs[index].status = 'success';
                         this.errorMessage = "";
                     } catch (error) {
@@ -14372,32 +14343,32 @@
 
                     setTimeout(() => {
                         this.selectedEpisode.EpisodeVideosIDs[index].status = null;
-                    }, 2000);
+                    }, 5000);
                 },
 
-                async sendVideoResponse(chatId, fileId, caption, token) {
-                    const url = `https://api.telegram.org/bot${token}/sendVideo`;
-                    const body = {
+                async sendVideoResponse(chatId, fileId, caption) {
+                    const payload = {
+                        method: "sendVideo",
                         chat_id: chatId,
-                        video: fileId,
+                        file_id: fileId,
                         cover: "AgACAgQAAxkBAAI39mewS5AKaNozUttDedMhI3xOcZdzAAJ7xzEb4AyBUdi6fgZXlnXYAQADAgADdwADNgQ",
                         caption: caption,
-                        parse_mode: "Markdown",
+                        parse_mode: "Markdown"
                     };
 
                     try {
-                        const response = await fetch(url, {
+                        const response = await fetch(`${this.jsonUrl}/send`, {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(body),
+                            body: JSON.stringify(payload),
                         });
 
-                        const text = await response.text(); // Get raw response text
+                        const text = await response.text();
                         let data;
                         try {
-                            data = JSON.parse(text); // Attempt to parse JSON
+                            data = JSON.parse(text);
                         } catch (e) {
-                            throw new Error("Invalid JSON response from Telegram:\n" + text);
+                            throw new Error("Invalid JSON response from Worker:\n" + text);
                         }
 
                         if (!data.ok) {
@@ -14409,32 +14380,24 @@
                     }
                 },
 
-                async sendMangaResponse(chatId, fileId, caption, token) {
-                    const url = `https://api.telegram.org/bot${token}/sendDocument`;
-                    const body = {
+                async sendMangaResponse(chatId, fileId, caption) {
+                    const payload = {
+                        method: "sendDocument",
                         chat_id: chatId,
-                        document: fileId,
-                        caption: caption,
-                        parse_mode: "Markdown",
+                        file_id: fileId,
+                        caption: caption
                     };
 
                     try {
-                        const response = await fetch(url, {
+                        const response = await fetch(`${this.jsonUrl}/send`, {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(body),
+                            body: JSON.stringify(payload),
                         });
 
-                        const text = await response.text(); // Get raw response text
-                        let data;
-                        try {
-                            data = JSON.parse(text); // Attempt to parse JSON
-                        } catch (e) {
-                            throw new Error("Invalid JSON response from Telegram:\n" + text);
-                        }
-
+                        const data = await response.json();
                         if (!data.ok) {
-                            throw new Error("Telegram Error:\n" + (data.description || text));
+                            throw new Error(data.description || "Unknown Telegram error");
                         }
                     } catch (error) {
                         console.error("sendMangaResponse failed:", error);
@@ -14447,58 +14410,49 @@
                         return;
                     }
 
-                    const token = '7518282241:AAH9tsZ8rooBwqCKcmWEDPIoi688zftuewM';
                     const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
                     const caption = `*الفصل: ${mangaNumber}*`;
 
                     this.selectedEpisode.EpisodeMangasIDs[index].status = 'sending';
 
                     try {
-                        await this.sendMangaResponse(chatId, fileId, caption, token);
+                        await this.sendMangaResponse(chatId, fileId, caption);
                         this.selectedEpisode.EpisodeMangasIDs[index].status = 'success';
-                        // Clear any previous error message on success
                         this.errorMessage = "";
                     } catch (error) {
                         this.selectedEpisode.EpisodeMangasIDs[index].status = 'error';
-                        // Save the error message from Telegram so it can be displayed
                         this.errorMessage = error.message;
-                        // If an error popup is active, skip further processing
                         if (this.selectedEpisode.EpisodeMangasIDs.some(manga => manga.status === "error")) {
-                        return;
+                            return;
                         }
                     }
 
                     setTimeout(() => {
                         this.selectedEpisode.EpisodeMangasIDs[index].status = null;
-                    }, 2000);
+                    }, 5000);
                 },
 
                 async sendMangaToBotD(fileId, mangaNumber, index) {
-                    if (!this.selectedManga?.MangaNumber) return; // Use selectedManga instead of selectedEpisode
+                    if (!this.selectedManga?.MangaNumber) return;
 
-                    const token = '7518282241:AAH9tsZ8rooBwqCKcmWEDPIoi688zftuewM';
                     const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
                     const caption = `*الفصل: ${mangaNumber}*`;
 
                     this.selectedManga.status = 'sending';
 
                     try {
-                        await this.sendMangaResponse(chatId, fileId, caption, token);
+                        await this.sendMangaResponse(chatId, fileId, caption);
                         this.selectedManga.status = 'success';
                         this.errorMessage = "";
                     } catch (error) {
                         this.selectedManga.status = 'error';
                         this.errorMessage = error.message;
-
-                        // If an error popup is active, skip further processing
-                        if (this.selectedManga.status === "error") {
-                            return;
-                        }
+                        if (this.selectedManga.status === "error") return;
                     }
 
                     setTimeout(() => {
                         this.selectedManga.status = null;
-                    }, 2000);
+                    }, 5000);
                 },
 
                 openSpecificEpisode(episodeCode) {
