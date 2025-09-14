@@ -5657,7 +5657,7 @@
                     "س": ["ش","س"],
                     "ش": ["س","ش"],
                     },
-                    jsonUrl: "https://enc.mdccxxixix.workers.dev/",
+                    jsonUrl: "https://cors-anywhere.com/https://enc.mdccxxixix.workers.dev/",
                     showTooltip: false,
                     showTooltip1: false,
                     showTooltip2: false,
@@ -14349,7 +14349,7 @@
                 async sendVideoResponse(chatId, fileId, caption) {
                     const payload = {
                         method: "sendVideo",
-                        chat_id: "1815567045",
+                        chat_id: chatId,
                         file_id: fileId,
                         cover: "AgACAgQAAxkBAAI39mewS5AKaNozUttDedMhI3xOcZdzAAJ7xzEb4AyBUdi6fgZXlnXYAQADAgADdwADNgQ",
                         caption: caption,
@@ -14793,4 +14793,5 @@
     </style>
 </body>
 </html>
+
 
