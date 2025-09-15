@@ -14361,22 +14361,21 @@
                 },
 
                 async sendVideoResponse(chatId, fileId, caption) {
-                    const payload = {
-                        method: "sendVideo",
-                        chat_id: chatId,
-                        file_id: fileId,
-                        cover: "AgACAgQAAxkBAAI39mewS5AKaNozUttDedMhI3xOcZdzAAJ7xzEb4AyBUdi6fgZXlnXYAQADAgADdwADNgQ",
-                        caption: caption,
-                        parse_mode: "Markdown"
-                    };
-
+                    const payload = new URLSearchParams();
+                    payload.append("method", "sendVideo");
+                    payload.append("chat_id", chatId);
+                    payload.append("file_id", fileId);
+                    payload.append("caption", caption);
+                    payload.append("parse_mode", "Markdown");
+                    payload.append("cover", "AgACAgQAAxkBAAI39mewS5AKaNozUttDedMhI3xOcZdzAAJ7xzEb4AyBUdi6fgZXlnXYAQADAgADdwADNgQ");
+                
                     try {
                         const response = await fetch(`${this.jsonUrl}/send`, {
                             method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(payload),
+                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                            body: payload.toString(),
                         });
-
+                
                         const text = await response.text();
                         let data;
                         try {
@@ -14384,7 +14383,7 @@
                         } catch (e) {
                             throw new Error("Invalid JSON response from Worker:\n" + text);
                         }
-
+                
                         if (!data.ok) {
                             throw new Error("Telegram Error:\n" + (data.description || text));
                         }
@@ -14393,26 +14392,32 @@
                         throw new Error(`sendVideoResponse failed:\n${error.message}`);
                     }
                 },
-
+                
                 async sendMangaResponse(chatId, fileId, caption) {
-                    const payload = {
-                        method: "sendDocument",
-                        chat_id: chatId,
-                        file_id: fileId,
-                        caption: caption,
-                        parse_mode: "Markdown"
-                    };
-
+                    const payload = new URLSearchParams();
+                    payload.append("method", "sendDocument");
+                    payload.append("chat_id", chatId);
+                    payload.append("file_id", fileId);
+                    payload.append("caption", caption);
+                    payload.append("parse_mode", "Markdown");
+                
                     try {
                         const response = await fetch(`${this.jsonUrl}/send`, {
                             method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(payload),
+                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                            body: payload.toString(),
                         });
-
-                        const data = await response.json();
+                
+                        const text = await response.text();
+                        let data;
+                        try {
+                            data = JSON.parse(text);
+                        } catch (e) {
+                            throw new Error("Invalid JSON response from Worker:\n" + text);
+                        }
+                
                         if (!data.ok) {
-                            throw new Error(data.description || "Unknown Telegram error");
+                            throw new Error("Telegram Error:\n" + (data.description || text));
                         }
                     } catch (error) {
                         console.error("sendMangaResponse failed:", error);
@@ -14821,3 +14826,4 @@
     </style>
 </body>
 </html>
+
