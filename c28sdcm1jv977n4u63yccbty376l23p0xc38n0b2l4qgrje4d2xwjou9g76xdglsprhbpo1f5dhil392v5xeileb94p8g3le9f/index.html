@@ -545,7 +545,7 @@
                                             @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
                                             class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50"
                                             :class="{ 'opacity-50 cursor-not-allowed': video.status === 'ratelimiting' }">
-                                            <span v-if="video.status === 'ratelimiting'">جاري التحميل...</span>
+                                            <span v-if="video.status === 'ratelimiting'"></span>
                                             <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
                                         </button>
                                         <img 
@@ -617,7 +617,7 @@
                                             @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
                                             class="bg-amber-700 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50"
                                             :class="{ 'opacity-50 cursor-not-allowed': video.status === 'ratelimiting' }">
-                                            <span v-if="video.status === 'ratelimiting'">جاري التحميل...</span>
+                                            <span v-if="video.status === 'ratelimiting'"></span>
                                             <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
                                         </button>
                                         <img 
@@ -688,7 +688,7 @@
                                                 @click="sendMangaToBotD(selectedManga.MangaFileID, selectedManga.MangaNumber, 0)"
                                                 class="w-full bg-green-500 text-white px-6 py-2 rounded hover:bg-blue-500 flex items-center justify-center shadow-md disabled:opacity-50" dir="ltr"
                                                 :class="{ 'opacity-50 cursor-not-allowed': selectedManga.status === 'ratelimiting' }">
-                                                <span v-if="selectedManga.status === 'ratelimiting'">جاري التحميل...</span>
+                                                <span v-if="selectedManga.status === 'ratelimiting'"></span>
                                                 <span v-else>{{ formatMangaSize(selectedManga.MangaFileSize) }}</span>
                                             </button>
                                             <img 
@@ -5423,7 +5423,7 @@
                                             dir="ltr"
                                             :class="{ 'opacity-50 cursor-not-allowed': manga.status === 'ratelimiting' }"
                                         >
-                                            <span v-if="manga.status === 'ratelimiting'">جاري التحميل...</span>
+                                            <span v-if="manga.status === 'ratelimiting'"></span>
                                             <span v-else>{{ manga.MangaNumber }} ({{ formatMangaSize(manga.MangaFileSize) }})</span>
                                         </button>
                                         <img 
@@ -5638,7 +5638,7 @@
                                                 @click="() => { sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime); }"
                                                 class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50"
                                                 :class="{ 'opacity-50 cursor-not-allowed': video.status === 'ratelimiting' }">
-                                                <span v-if="video.status === 'ratelimiting'">جاري التحميل...</span>
+                                                <span v-if="video.status === 'ratelimiting'"></span>
                                                 <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
                                             </button>
                                             <img 
