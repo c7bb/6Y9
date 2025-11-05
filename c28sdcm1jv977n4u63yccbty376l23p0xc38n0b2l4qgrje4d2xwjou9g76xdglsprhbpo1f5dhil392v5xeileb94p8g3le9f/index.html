@@ -541,10 +541,12 @@
                                         :key="video.VideoID" 
                                         class="relative flex flex-col gap-4">
                                         <button
-                                            :disabled="video.status === 'success'"
+                                            :disabled="video.status === 'success' || video.status === 'ratelimiting'"
                                             @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
-                                            class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50">
-                                            {{ video.Resolution }} ({{ video.Size }} MB)
+                                            class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50"
+                                            :class="{ 'opacity-50 cursor-not-allowed': video.status === 'ratelimiting' }">
+                                            <span v-if="video.status === 'ratelimiting'">جاري التحميل...</span>
+                                            <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
                                         </button>
                                         <img 
                                             v-if="video.status === 'success'" 
@@ -611,10 +613,12 @@
                                         :key="video.VideoID" 
                                         class="relative flex flex-col gap-4">
                                         <button
-                                            :disabled="video.status === 'success'"
+                                            :disabled="video.status === 'success' || video.status === 'ratelimiting'"
                                             @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
-                                            class="bg-amber-700 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50">
-                                            {{ video.Resolution }} ({{ video.Size }} MB)
+                                            class="bg-amber-700 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50"
+                                            :class="{ 'opacity-50 cursor-not-allowed': video.status === 'ratelimiting' }">
+                                            <span v-if="video.status === 'ratelimiting'">جاري التحميل...</span>
+                                            <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
                                         </button>
                                         <img 
                                             v-if="video.status === 'success'" 
@@ -680,10 +684,12 @@
                                     <div class="relative flex flex-col gap-4">
                                         <div class="relative w-full">    
                                             <button
-                                                :disabled="selectedManga.status === 'success'"
+                                                :disabled="selectedManga.status === 'success' || selectedManga.status === 'ratelimiting'"
                                                 @click="sendMangaToBotD(selectedManga.MangaFileID, selectedManga.MangaNumber, 0)"
-                                                class="w-full bg-green-500 text-white px-6 py-2 rounded hover:bg-blue-500 flex items-center justify-center shadow-md disabled:opacity-50" dir="ltr">
-                                                {{ formatMangaSize(selectedManga.MangaFileSize) }}
+                                                class="w-full bg-green-500 text-white px-6 py-2 rounded hover:bg-blue-500 flex items-center justify-center shadow-md disabled:opacity-50" dir="ltr"
+                                                :class="{ 'opacity-50 cursor-not-allowed': selectedManga.status === 'ratelimiting' }">
+                                                <span v-if="selectedManga.status === 'ratelimiting'">جاري التحميل...</span>
+                                                <span v-else>{{ formatMangaSize(selectedManga.MangaFileSize) }}</span>
                                             </button>
                                             <img 
                                                 v-if="selectedManga.status === 'success'" 
@@ -5411,12 +5417,14 @@
                                         class="relative flex flex-col gap-4"
                                         >
                                         <button
-                                            :disabled="manga.status === 'success'"
+                                            :disabled="manga.status === 'success' || manga.status === 'ratelimiting'"
                                             @click="() => { sendMangaToBot(manga.MangaFileID, manga.MangaNumber, index); }"
                                             class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center justify-center shadow-md disabled:opacity-50"
                                             dir="ltr"
+                                            :class="{ 'opacity-50 cursor-not-allowed': manga.status === 'ratelimiting' }"
                                         >
-                                            {{ manga.MangaNumber }} ({{ formatMangaSize(manga.MangaFileSize) }})
+                                            <span v-if="manga.status === 'ratelimiting'">جاري التحميل...</span>
+                                            <span v-else>{{ manga.MangaNumber }} ({{ formatMangaSize(manga.MangaFileSize) }})</span>
                                         </button>
                                         <img 
                                             v-if="manga.status === 'success'" 
@@ -5626,10 +5634,12 @@
                                             :key="video.VideoID" 
                                             class="relative flex flex-col gap-4">
                                             <button
-                                                :disabled="video.status === 'success'"
+                                                :disabled="video.status === 'success' || video.status === 'ratelimiting'"
                                                 @click="() => { sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime); }"
-                                                class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50">
-                                                {{ video.Resolution }} ({{ video.Size }} MB)
+                                                class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50"
+                                                :class="{ 'opacity-50 cursor-not-allowed': video.status === 'ratelimiting' }">
+                                                <span v-if="video.status === 'ratelimiting'">جاري التحميل...</span>
+                                                <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
                                             </button>
                                             <img 
                                                 v-if="video.status === 'success'" 
@@ -6322,6 +6332,7 @@
                     spoilerVisible: false,
                     nextEpisodeExists: false,
                     previousEpisodeExists: false,
+                    ratelimiting: false,
                 };
             },
             computed: {
@@ -14389,6 +14400,21 @@
                         return;
                     }
 
+                    // Set ratelimiting for all other buttons
+                    this.ratelimiting = true;
+                    if (this.selectedEpisode.EpisodeVideosIDs) {
+                        this.selectedEpisode.EpisodeVideosIDs.forEach((video, i) => {
+                            if (i !== index) {
+                                video.status = 'ratelimiting';
+                            }
+                        });
+                    }
+                    if (this.selectedEpisode.EpisodeMangasIDs) {
+                        this.selectedEpisode.EpisodeMangasIDs.forEach((manga) => {
+                            manga.status = 'ratelimiting';
+                        });
+                    }
+
                     let episodeNumber = this.selectedEpisode.EpisodeNumber;
                     let label = "رقم الحلقة:";
 
@@ -14460,8 +14486,26 @@
                         }
                     }
 
+                    // Clear status after 5 seconds
                     setTimeout(() => {
                         this.selectedEpisode.EpisodeVideosIDs[index].status = null;
+                        this.ratelimiting = false;
+                        
+                        // Clear ratelimiting status from all other buttons
+                        if (this.selectedEpisode.EpisodeVideosIDs) {
+                            this.selectedEpisode.EpisodeVideosIDs.forEach((video) => {
+                                if (video.status === 'ratelimiting') {
+                                    video.status = null;
+                                }
+                            });
+                        }
+                        if (this.selectedEpisode.EpisodeMangasIDs) {
+                            this.selectedEpisode.EpisodeMangasIDs.forEach((manga) => {
+                                if (manga.status === 'ratelimiting') {
+                                    manga.status = null;
+                                }
+                            });
+                        }
                     }, 5000);
                 },
 
@@ -14535,6 +14579,21 @@
                         return;
                     }
 
+                    // Set ratelimiting for all other buttons
+                    this.ratelimiting = true;
+                    if (this.selectedEpisode.EpisodeVideosIDs) {
+                        this.selectedEpisode.EpisodeVideosIDs.forEach((video) => {
+                            video.status = 'ratelimiting';
+                        });
+                    }
+                    if (this.selectedEpisode.EpisodeMangasIDs) {
+                        this.selectedEpisode.EpisodeMangasIDs.forEach((manga, i) => {
+                            if (i !== index) {
+                                manga.status = 'ratelimiting';
+                            }
+                        });
+                    }
+
                     const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
                     const caption = `*الفصل: ${mangaNumber}*`;
 
@@ -14552,13 +14611,44 @@
                         }
                     }
 
+                    // Clear status after 5 seconds
                     setTimeout(() => {
                         this.selectedEpisode.EpisodeMangasIDs[index].status = null;
+                        this.ratelimiting = false;
+                        
+                        // Clear ratelimiting status from all other buttons
+                        if (this.selectedEpisode.EpisodeVideosIDs) {
+                            this.selectedEpisode.EpisodeVideosIDs.forEach((video) => {
+                                if (video.status === 'ratelimiting') {
+                                    video.status = null;
+                                }
+                            });
+                        }
+                        if (this.selectedEpisode.EpisodeMangasIDs) {
+                            this.selectedEpisode.EpisodeMangasIDs.forEach((manga) => {
+                                if (manga.status === 'ratelimiting') {
+                                    manga.status = null;
+                                }
+                            });
+                        }
                     }, 5000);
                 },
 
                 async sendMangaToBotD(fileId, mangaNumber, index) {
                     if (!this.selectedManga?.MangaNumber) return;
+
+                    // Set ratelimiting for all other buttons
+                    this.ratelimiting = true;
+                    if (this.selectedEpisode?.EpisodeVideosIDs) {
+                        this.selectedEpisode.EpisodeVideosIDs.forEach((video) => {
+                            video.status = 'ratelimiting';
+                        });
+                    }
+                    if (this.selectedEpisode?.EpisodeMangasIDs) {
+                        this.selectedEpisode.EpisodeMangasIDs.forEach((manga) => {
+                            manga.status = 'ratelimiting';
+                        });
+                    }
 
                     const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
                     const caption = `*الفصل: ${mangaNumber}*`;
@@ -14575,8 +14665,26 @@
                         if (this.selectedManga.status === "error") return;
                     }
 
+                    // Clear status after 5 seconds
                     setTimeout(() => {
                         this.selectedManga.status = null;
+                        this.ratelimiting = false;
+                        
+                        // Clear ratelimiting status from all other buttons
+                        if (this.selectedEpisode?.EpisodeVideosIDs) {
+                            this.selectedEpisode.EpisodeVideosIDs.forEach((video) => {
+                                if (video.status === 'ratelimiting') {
+                                    video.status = null;
+                                }
+                            });
+                        }
+                        if (this.selectedEpisode?.EpisodeMangasIDs) {
+                            this.selectedEpisode.EpisodeMangasIDs.forEach((manga) => {
+                                if (manga.status === 'ratelimiting') {
+                                    manga.status = null;
+                                }
+                            });
+                        }
                     }, 5000);
                 },
 
@@ -14789,6 +14897,8 @@
                         });
                         }
                     }
+                    // Reset ratelimiting flag
+                    this.ratelimiting = false;
                 },
 
                 handleEpisodeGroupChange(index) {
