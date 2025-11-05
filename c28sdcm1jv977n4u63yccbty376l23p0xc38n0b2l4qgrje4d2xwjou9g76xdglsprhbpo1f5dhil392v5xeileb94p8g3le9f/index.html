@@ -541,7 +541,7 @@
                                         :key="video.VideoID" 
                                         class="relative flex flex-col gap-4">
                                         <button
-                                            :disabled="isRateLimiting || video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending'"
+                                            :disabled="video.status === 'success'"
                                             @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
                                             class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50">
                                             {{ video.Resolution }} ({{ video.Size }} MB)
@@ -611,7 +611,7 @@
                                         :key="video.VideoID" 
                                         class="relative flex flex-col gap-4">
                                         <button
-                                            :disabled="isRateLimiting || video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending'"
+                                            :disabled="video.status === 'success'"
                                             @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
                                             class="bg-amber-700 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50">
                                             {{ video.Resolution }} ({{ video.Size }} MB)
@@ -680,7 +680,7 @@
                                     <div class="relative flex flex-col gap-4">
                                         <div class="relative w-full">    
                                             <button
-                                                :disabled="isRateLimiting || selectedManga.status === 'success' || selectedManga.status === 'ratelimiting' || selectedManga.status === 'sending'"
+                                                :disabled="selectedManga.status === 'success'"
                                                 @click="sendMangaToBotD(selectedManga.MangaFileID, selectedManga.MangaNumber, 0)"
                                                 class="w-full bg-green-500 text-white px-6 py-2 rounded hover:bg-blue-500 flex items-center justify-center shadow-md disabled:opacity-50" dir="ltr">
                                                 {{ formatMangaSize(selectedManga.MangaFileSize) }}
@@ -5411,7 +5411,7 @@
                                         class="relative flex flex-col gap-4"
                                         >
                                         <button
-                                            :disabled="isRateLimiting || manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending'"
+                                            :disabled="manga.status === 'success'"
                                             @click="() => { sendMangaToBot(manga.MangaFileID, manga.MangaNumber, index); }"
                                             class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center justify-center shadow-md disabled:opacity-50"
                                             dir="ltr"
@@ -5626,7 +5626,7 @@
                                             :key="video.VideoID" 
                                             class="relative flex flex-col gap-4">
                                             <button
-                                                :disabled="isRateLimiting || video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending'"
+                                                :disabled="video.status === 'success'"
                                                 @click="() => { sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime); }"
                                                 class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50">
                                                 {{ video.Resolution }} ({{ video.Size }} MB)
@@ -5710,8 +5710,6 @@
                         summary: false,
                     },
                     errorMessage: "",
-                    isRateLimiting: false,
-                    rateLimitTimeout: 5000,
                     ep: 1180,
                     mangaCh: 1153,
                     replacementDict: {
@@ -13015,8 +13013,8 @@
                 },
                 closeModal() {
                     this.showModal = false;
-                    // Avoid clearing statuses while rate limiting is active
-                    if (!this.isRateLimiting && this.selectedEpisode) {
+                    // Reset status for all videos and mangas when closing modal
+                    if (this.selectedEpisode) {
                         if (this.selectedEpisode.EpisodeVideosIDs) {
                             this.selectedEpisode.EpisodeVideosIDs.forEach((video, index) => {
                                 this.selectedEpisode.EpisodeVideosIDs[index].status = null;
@@ -14387,7 +14385,7 @@
                 },
 
                 async sendEpisodeToBot(videoID, resolution, size, index, introductionTime, startStoryTime, episodeSuspenseTime, startSongTime, chapterOneTime, chapterTwoTime, endSongTime, chapterThreeTime, nextEpisodeTeaserTime, nextEpisodeHintTime) {
-                    if (!this.selectedEpisode?.EpisodeNumber || this.isRateLimiting) {
+                    if (!this.selectedEpisode.EpisodeNumber) {
                         return;
                     }
 
@@ -14427,43 +14425,6 @@
                     const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
                     console.log(chatId);
 
-                    this.isRateLimiting = true;
-                    const episodeRef = this.selectedEpisode;
-                    const selectedMangaRef = this.selectedManga;
-
-                    if (episodeRef?.EpisodeVideosIDs) {
-                        episodeRef.EpisodeVideosIDs.forEach((video, i) => {
-                            if (!video.hasOwnProperty('status')) {
-                                this.$set(video, 'status', null);
-                            }
-                            if (i === index) {
-                                this.$set(video, 'status', 'sending');
-                            } else if (video.status !== 'success' && video.status !== 'error') {
-                                this.$set(video, 'status', 'ratelimiting');
-                            }
-                        });
-                    }
-
-                    if (episodeRef?.EpisodeMangasIDs) {
-                        episodeRef.EpisodeMangasIDs.forEach((manga) => {
-                            if (!manga.hasOwnProperty('status')) {
-                                this.$set(manga, 'status', null);
-                            }
-                            if (manga.status !== 'success' && manga.status !== 'error') {
-                                this.$set(manga, 'status', 'ratelimiting');
-                            }
-                        });
-                    }
-
-                    if (selectedMangaRef) {
-                        if (!selectedMangaRef.hasOwnProperty('status')) {
-                            this.$set(this.selectedManga, 'status', null);
-                        }
-                        if (selectedMangaRef.status !== 'success' && selectedMangaRef.status !== 'error') {
-                            this.$set(selectedMangaRef, 'status', 'ratelimiting');
-                        }
-                    }
-
                     function escapeMarkdown(text) {
                         return text
                             .replace(/[_*[\]()~`>#+\-=|{}.!]/g, '\\$&')
@@ -14500,30 +14461,8 @@
                     }
 
                     setTimeout(() => {
-                        this.isRateLimiting = false;
-
-                        if (episodeRef?.EpisodeVideosIDs) {
-                            episodeRef.EpisodeVideosIDs.forEach((video) => {
-                                if (video.status === 'ratelimiting' || video.status === 'sending' || video.status === 'success' || video.status === 'error') {
-                                    this.$set(video, 'status', null);
-                                }
-                            });
-                        }
-
-                        if (episodeRef?.EpisodeMangasIDs) {
-                            episodeRef.EpisodeMangasIDs.forEach((manga) => {
-                                if (manga.status === 'ratelimiting' || manga.status === 'sending' || manga.status === 'success' || manga.status === 'error') {
-                                    this.$set(manga, 'status', null);
-                                }
-                            });
-                        }
-
-                        if (selectedMangaRef) {
-                            if (selectedMangaRef.status === 'ratelimiting' || selectedMangaRef.status === 'sending' || selectedMangaRef.status === 'success' || selectedMangaRef.status === 'error') {
-                                this.$set(selectedMangaRef, 'status', null);
-                            }
-                        }
-                    }, this.rateLimitTimeout);
+                        this.selectedEpisode.EpisodeVideosIDs[index].status = null;
+                    }, 5000);
                 },
 
                 async sendVideoResponse(chatId, fileId, caption) {
@@ -14592,160 +14531,53 @@
                 },
 
                 async sendMangaToBot(fileId, mangaNumber, index) {
-                    if (!this.selectedEpisode?.EpisodeNumber || this.isRateLimiting) {
+                    if (!this.selectedEpisode.EpisodeNumber) {
                         return;
                     }
 
                     const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
                     const caption = `*الفصل: ${mangaNumber}*`;
 
-                    this.isRateLimiting = true;
-                    const episodeRef = this.selectedEpisode;
-                    const selectedMangaRef = this.selectedManga;
-
-                    if (episodeRef?.EpisodeVideosIDs) {
-                        episodeRef.EpisodeVideosIDs.forEach((video) => {
-                            if (!video.hasOwnProperty('status')) {
-                                this.$set(video, 'status', null);
-                            }
-                            if (video.status !== 'success' && video.status !== 'error') {
-                                this.$set(video, 'status', 'ratelimiting');
-                            }
-                        });
-                    }
-
-                    if (episodeRef?.EpisodeMangasIDs) {
-                        episodeRef.EpisodeMangasIDs.forEach((manga, i) => {
-                            if (!manga.hasOwnProperty('status')) {
-                                this.$set(manga, 'status', null);
-                            }
-                            if (i === index) {
-                                this.$set(manga, 'status', 'sending');
-                            } else if (manga.status !== 'success' && manga.status !== 'error') {
-                                this.$set(manga, 'status', 'ratelimiting');
-                            }
-                        });
-                    }
-
-                    if (selectedMangaRef) {
-                        if (!selectedMangaRef.hasOwnProperty('status')) {
-                            this.$set(this.selectedManga, 'status', null);
-                        }
-                        if (selectedMangaRef.status !== 'success' && selectedMangaRef.status !== 'error') {
-                            this.$set(selectedMangaRef, 'status', 'ratelimiting');
-                        }
-                    }
+                    this.selectedEpisode.EpisodeMangasIDs[index].status = 'sending';
 
                     try {
                         await this.sendMangaResponse(chatId, fileId, caption);
-                        if (episodeRef?.EpisodeMangasIDs?.[index]) {
-                            this.$set(episodeRef.EpisodeMangasIDs[index], 'status', 'success');
-                        }
+                        this.selectedEpisode.EpisodeMangasIDs[index].status = 'success';
                         this.errorMessage = "";
                     } catch (error) {
-                        if (episodeRef?.EpisodeMangasIDs?.[index]) {
-                            this.$set(episodeRef.EpisodeMangasIDs[index], 'status', 'error');
-                        }
+                        this.selectedEpisode.EpisodeMangasIDs[index].status = 'error';
                         this.errorMessage = error.message;
+                        if (this.selectedEpisode.EpisodeMangasIDs.some(manga => manga.status === "error")) {
+                            return;
+                        }
                     }
 
                     setTimeout(() => {
-                        this.isRateLimiting = false;
-
-                        if (episodeRef?.EpisodeMangasIDs) {
-                            episodeRef.EpisodeMangasIDs.forEach((manga) => {
-                                if (manga.status === 'ratelimiting' || manga.status === 'sending' || manga.status === 'success' || manga.status === 'error') {
-                                    this.$set(manga, 'status', null);
-                                }
-                            });
-                        }
-
-                        if (episodeRef?.EpisodeVideosIDs) {
-                            episodeRef.EpisodeVideosIDs.forEach((video) => {
-                                if (video.status === 'ratelimiting' || video.status === 'sending' || video.status === 'success' || video.status === 'error') {
-                                    this.$set(video, 'status', null);
-                                }
-                            });
-                        }
-
-                        if (selectedMangaRef) {
-                            if (selectedMangaRef.status === 'ratelimiting' || selectedMangaRef.status === 'sending' || selectedMangaRef.status === 'success' || selectedMangaRef.status === 'error') {
-                                this.$set(selectedMangaRef, 'status', null);
-                            }
-                        }
-                    }, this.rateLimitTimeout);
+                        this.selectedEpisode.EpisodeMangasIDs[index].status = null;
+                    }, 5000);
                 },
 
                 async sendMangaToBotD(fileId, mangaNumber, index) {
-                    if (!this.selectedManga?.MangaNumber || this.isRateLimiting) return;
+                    if (!this.selectedManga?.MangaNumber) return;
 
                     const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
                     const caption = `*الفصل: ${mangaNumber}*`;
 
-                    this.isRateLimiting = true;
-                    const selectedMangaRef = this.selectedManga;
-                    const episodeRef = this.selectedEpisode;
-
-                    if (!selectedMangaRef.hasOwnProperty('status')) {
-                        this.$set(selectedMangaRef, 'status', null);
-                    }
-                    this.$set(selectedMangaRef, 'status', 'sending');
-
-                    if (episodeRef?.EpisodeVideosIDs) {
-                        episodeRef.EpisodeVideosIDs.forEach((video) => {
-                            if (!video.hasOwnProperty('status')) {
-                                this.$set(video, 'status', null);
-                            }
-                            if (video.status !== 'success' && video.status !== 'error') {
-                                this.$set(video, 'status', 'ratelimiting');
-                            }
-                        });
-                    }
-
-                    if (episodeRef?.EpisodeMangasIDs) {
-                        episodeRef.EpisodeMangasIDs.forEach((manga) => {
-                            if (!manga.hasOwnProperty('status')) {
-                                this.$set(manga, 'status', null);
-                            }
-                            if (manga.status !== 'success' && manga.status !== 'error') {
-                                this.$set(manga, 'status', 'ratelimiting');
-                            }
-                        });
-                    }
+                    this.selectedManga.status = 'sending';
 
                     try {
                         await this.sendMangaResponse(chatId, fileId, caption);
-                        this.$set(selectedMangaRef, 'status', 'success');
+                        this.selectedManga.status = 'success';
                         this.errorMessage = "";
                     } catch (error) {
-                        this.$set(selectedMangaRef, 'status', 'error');
+                        this.selectedManga.status = 'error';
                         this.errorMessage = error.message;
                         if (this.selectedManga.status === "error") return;
                     }
 
                     setTimeout(() => {
-                        this.isRateLimiting = false;
-
-                        if (selectedMangaRef.status === 'ratelimiting' || selectedMangaRef.status === 'sending' || selectedMangaRef.status === 'success' || selectedMangaRef.status === 'error') {
-                            this.$set(selectedMangaRef, 'status', null);
-                        }
-
-                        if (episodeRef?.EpisodeVideosIDs) {
-                            episodeRef.EpisodeVideosIDs.forEach((video) => {
-                                if (video.status === 'ratelimiting' || video.status === 'sending' || video.status === 'success' || video.status === 'error') {
-                                    this.$set(video, 'status', null);
-                                }
-                            });
-                        }
-
-                        if (episodeRef?.EpisodeMangasIDs) {
-                            episodeRef.EpisodeMangasIDs.forEach((manga) => {
-                                if (manga.status === 'ratelimiting' || manga.status === 'sending' || manga.status === 'success' || manga.status === 'error') {
-                                    this.$set(manga, 'status', null);
-                                }
-                            });
-                        }
-                    }, this.rateLimitTimeout);
+                        this.selectedManga.status = null;
+                    }, 5000);
                 },
 
                 openSpecificEpisode(episodeCode) {
@@ -14764,9 +14596,6 @@
                 },
 
                 clearError() {
-                    if (this.isRateLimiting) {
-                        return;
-                    }
                     // Check if selectedEpisode and EpisodeMangasIDs exist, then reset the status of mangas with 'error'
                     if (this.selectedEpisode?.EpisodeMangasIDs) {
                         this.selectedEpisode.EpisodeMangasIDs.forEach((manga) => {
@@ -14903,10 +14732,6 @@
                 },
 
                 closeDirectWindow() {
-                    this.showDirectWindow = false;
-                    if (this.isRateLimiting) {
-                        return;
-                    }
                     // Reset status for all videos and episode mangas when closing modal 
                     if (this.selectedEpisode) {
                         if (this.selectedEpisode.EpisodeVideosIDs) {
@@ -14951,9 +14776,6 @@
                 },
 
                 resetStatusForEpisodeManga() {
-                    if (this.isRateLimiting) {
-                        return;
-                    }
                     // Reset status for all videos and episode mangas when closing modal 
                     if (this.selectedEpisode) {
                         if (this.selectedEpisode.EpisodeVideosIDs) {
