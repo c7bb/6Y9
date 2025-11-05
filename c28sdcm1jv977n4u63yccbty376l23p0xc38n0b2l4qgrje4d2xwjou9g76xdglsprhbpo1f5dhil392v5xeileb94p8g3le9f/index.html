@@ -14386,10 +14386,10 @@
 
                     try {
                         await this.sendVideoResponse(chatId, videoID, caption);
-                        this.selectedEpisode.EpisodeVideosIDs.status = 'success';
+                        this.selectedEpisode.EpisodeVideosIDs[index].status = 'success';
                         this.errorMessage = "";
                     } catch (error) {
-                        this.selectedEpisode.EpisodeVideosIDs.status = 'error';
+                        this.selectedEpisode.EpisodeVideosIDs[index].status = 'error';
                         this.errorMessage = error.message;
                         if (this.selectedEpisode.EpisodeVideosIDs.some((video) => video.status === "error")) {
                             return;
