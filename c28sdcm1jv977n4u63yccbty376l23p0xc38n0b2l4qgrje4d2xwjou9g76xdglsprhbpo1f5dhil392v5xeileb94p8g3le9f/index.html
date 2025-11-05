@@ -530,16 +530,8 @@
                                     <div class="flex items-center justify-between px-4">
                                         <button v-if="hasPreviousEpisode" @click="navigateToPreviousEpisode();" class="hover:opacity-70 transition-opacity">
                                             <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/previous.png" alt="السابق" class="h-8 w-8" />
-                                        </button>
-                                        <span class="text-lg font-bold text-center flex-1">{{ selectedEpisode.EpisodeNumber }}</span>
-                                        <div v-if="!hasPreviousEpisode" class="w-8"></div>
-                                    </div>
-                                    <div v-for="(video, index) in selectedEpisode.EpisodeVideosIDs" 
-                                        :key="video.VideoID" 
-                                        class="relative flex flex-col gap-4">
-                                        <button
-                                            :disabled="video.status === 'success' || video.status === 'disabled'"
-                                            @click="handleVideoClick(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
+                                            :disabled="video.status === 'success'"
+                                            @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
                                             class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50">
                                             {{ video.Resolution }} ({{ video.Size }} MB)
                                         </button>
@@ -14749,29 +14741,6 @@
                     if (currentIndex !== -1 && currentIndex > 0) {
                         this.selectedEpisode = currentGroup[currentIndex - 1];
                     }
-                },
-
-                handleVideoClick(videoID, resolution, size, clickedIndex, introductionTime, startStoryTime, episodeSuspenseTime, startSongTime, chapterOneTime, chapterTwoTime, endSongTime, chapterThreeTime, nextEpisodeTeaserTime, nextEpisodeHintTime) {
-                    // Disable all video buttons
-                    if (this.selectedEpisode && this.selectedEpisode.EpisodeVideosIDs) {
-                        this.selectedEpisode.EpisodeVideosIDs.forEach((video, index) => {
-                            this.selectedEpisode.EpisodeVideosIDs[index].status = 'disabled';
-                        });
-                    }
-
-                    // Call the original sendEpisodeToBot method
-                    this.sendEpisodeToBot(videoID, resolution, size, clickedIndex, introductionTime, startStoryTime, episodeSuspenseTime, startSongTime, chapterOneTime, chapterTwoTime, endSongTime, chapterThreeTime, nextEpisodeTeaserTime, nextEpisodeHintTime);
-
-                    // Re-enable and reset all buttons after 2 seconds
-                    setTimeout(() => {
-                        if (this.selectedEpisode && this.selectedEpisode.EpisodeVideosIDs) {
-                            this.selectedEpisode.EpisodeVideosIDs.forEach((video, index) => {
-                                if (this.selectedEpisode.EpisodeVideosIDs[index].status === 'disabled') {
-                                    this.selectedEpisode.EpisodeVideosIDs[index].status = null;
-                                }
-                            });
-                        }
-                    }, 10000);
                 },
 
                 selectMovie(movie) {
