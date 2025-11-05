@@ -541,7 +541,7 @@
                                         :key="video.VideoID" 
                                         class="relative flex flex-col gap-4">
                                         <button
-                                            :disabled="video.status === 'success'"
+                                            :disabled="video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending'"
                                             @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
                                             class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50">
                                             {{ video.Resolution }} ({{ video.Size }} MB)
@@ -597,7 +597,7 @@
                                         :key="video.VideoID" 
                                         class="relative flex flex-col gap-4">
                                         <button
-                                            :disabled="video.status === 'success'"
+                                            :disabled="video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending'"
                                             @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
                                             class="bg-amber-700 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50">
                                             {{ video.Resolution }} ({{ video.Size }} MB)
@@ -652,7 +652,7 @@
                                         <span class="text-lg font-bold text-center">{{ selectedManga.MangaNumber }}</span>
                                         <div class="relative w-full">    
                                             <button
-                                                :disabled="selectedManga.status === 'success'"
+                                                :disabled="selectedManga.status === 'success' || selectedManga.status === 'ratelimiting' || selectedManga.status === 'sending'"
                                                 @click="sendMangaToBotD(selectedManga.MangaFileID, selectedManga.MangaNumber, 0)"
                                                 class="w-full bg-green-500 text-white px-6 py-2 rounded hover:bg-blue-500 flex items-center justify-center shadow-md disabled:opacity-50" dir="ltr">
                                                 {{ formatMangaSize(selectedManga.MangaFileSize) }}
@@ -14382,6 +14382,24 @@
                     let caption = `*${label} ${episodeNumber}\nالجودة: ${resolution}\nالحجم: ${size} ميجا*`;
                     if (details) caption += `\n\n*✦✦— محتويات الحلقة —✦✦*${details}`;
 
+                    // Set all other videos to ratelimiting
+                    if (this.selectedEpisode.EpisodeVideosIDs) {
+                        this.selectedEpisode.EpisodeVideosIDs.forEach((video, i) => {
+                            if (i !== index && video.status !== 'success' && video.status !== 'error') {
+                                this.selectedEpisode.EpisodeVideosIDs[i].status = 'ratelimiting';
+                            }
+                        });
+                    }
+                    
+                    // Set all mangas to ratelimiting
+                    if (this.selectedEpisode.EpisodeMangasIDs) {
+                        this.selectedEpisode.EpisodeMangasIDs.forEach((manga, i) => {
+                            if (manga.status !== 'success' && manga.status !== 'error') {
+                                this.selectedEpisode.EpisodeMangasIDs[i].status = 'ratelimiting';
+                            }
+                        });
+                    }
+
                     this.selectedEpisode.EpisodeVideosIDs[index].status = 'sending';
 
                     try {
@@ -14392,8 +14410,39 @@
                         this.selectedEpisode.EpisodeVideosIDs[index].status = 'error';
                         this.errorMessage = error.message;
                         if (this.selectedEpisode.EpisodeVideosIDs.some((video) => video.status === "error")) {
+                            // Clear ratelimiting status
+                            if (this.selectedEpisode.EpisodeVideosIDs) {
+                                this.selectedEpisode.EpisodeVideosIDs.forEach((video, i) => {
+                                    if (video.status === 'ratelimiting') {
+                                        this.selectedEpisode.EpisodeVideosIDs[i].status = null;
+                                    }
+                                });
+                            }
+                            if (this.selectedEpisode.EpisodeMangasIDs) {
+                                this.selectedEpisode.EpisodeMangasIDs.forEach((manga, i) => {
+                                    if (manga.status === 'ratelimiting') {
+                                        this.selectedEpisode.EpisodeMangasIDs[i].status = null;
+                                    }
+                                });
+                            }
                             return;
                         }
+                    }
+
+                    // Clear ratelimiting status after success
+                    if (this.selectedEpisode.EpisodeVideosIDs) {
+                        this.selectedEpisode.EpisodeVideosIDs.forEach((video, i) => {
+                            if (video.status === 'ratelimiting') {
+                                this.selectedEpisode.EpisodeVideosIDs[i].status = null;
+                            }
+                        });
+                    }
+                    if (this.selectedEpisode.EpisodeMangasIDs) {
+                        this.selectedEpisode.EpisodeMangasIDs.forEach((manga, i) => {
+                            if (manga.status === 'ratelimiting') {
+                                this.selectedEpisode.EpisodeMangasIDs[i].status = null;
+                            }
+                        });
                     }
 
                     setTimeout(() => {
@@ -14474,6 +14523,24 @@
                     const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
                     const caption = `*الفصل: ${mangaNumber}*`;
 
+                    // Set all videos to ratelimiting
+                    if (this.selectedEpisode.EpisodeVideosIDs) {
+                        this.selectedEpisode.EpisodeVideosIDs.forEach((video, i) => {
+                            if (video.status !== 'success' && video.status !== 'error') {
+                                this.selectedEpisode.EpisodeVideosIDs[i].status = 'ratelimiting';
+                            }
+                        });
+                    }
+
+                    // Set all other mangas to ratelimiting
+                    if (this.selectedEpisode.EpisodeMangasIDs) {
+                        this.selectedEpisode.EpisodeMangasIDs.forEach((manga, i) => {
+                            if (i !== index && manga.status !== 'success' && manga.status !== 'error') {
+                                this.selectedEpisode.EpisodeMangasIDs[i].status = 'ratelimiting';
+                            }
+                        });
+                    }
+
                     this.selectedEpisode.EpisodeMangasIDs[index].status = 'sending';
 
                     try {
@@ -14484,8 +14551,39 @@
                         this.selectedEpisode.EpisodeMangasIDs[index].status = 'error';
                         this.errorMessage = error.message;
                         if (this.selectedEpisode.EpisodeMangasIDs.some(manga => manga.status === "error")) {
+                            // Clear ratelimiting status
+                            if (this.selectedEpisode.EpisodeVideosIDs) {
+                                this.selectedEpisode.EpisodeVideosIDs.forEach((video, i) => {
+                                    if (video.status === 'ratelimiting') {
+                                        this.selectedEpisode.EpisodeVideosIDs[i].status = null;
+                                    }
+                                });
+                            }
+                            if (this.selectedEpisode.EpisodeMangasIDs) {
+                                this.selectedEpisode.EpisodeMangasIDs.forEach((manga, i) => {
+                                    if (manga.status === 'ratelimiting') {
+                                        this.selectedEpisode.EpisodeMangasIDs[i].status = null;
+                                    }
+                                });
+                            }
                             return;
                         }
+                    }
+
+                    // Clear ratelimiting status after success
+                    if (this.selectedEpisode.EpisodeVideosIDs) {
+                        this.selectedEpisode.EpisodeVideosIDs.forEach((video, i) => {
+                            if (video.status === 'ratelimiting') {
+                                this.selectedEpisode.EpisodeVideosIDs[i].status = null;
+                            }
+                        });
+                    }
+                    if (this.selectedEpisode.EpisodeMangasIDs) {
+                        this.selectedEpisode.EpisodeMangasIDs.forEach((manga, i) => {
+                            if (manga.status === 'ratelimiting') {
+                                this.selectedEpisode.EpisodeMangasIDs[i].status = null;
+                            }
+                        });
                     }
 
                     setTimeout(() => {
