@@ -5153,31 +5153,31 @@
                             
                             <button @click="goToFirstPage" 
                                     class="bg-green-700 text-white font-bold px-4 py-2 rounded 
-                                        hover:bg-green-600 
-                                        transition-all duration-100 active:bg-green-800 active:scale-70">
+                                        hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed
+                                        transition-all duration-100 active:bg-green-800 active:scale-90">
                                 الأول
                             </button>
                             
                             <button @click="nextPage" 
                                     :disabled="currentPage === totalPages"
                                     class="bg-blue-700 text-white font-bold px-4 py-2 rounded 
-                                        hover:bg-blue-600 
-                                        transition-all duration-100 active:bg-blue-800 active:scale-95">
+                                        hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed
+                                        transition-all duration-100 active:bg-blue-800 active:scale-90">
                                 التالي
                             </button>
                             
                             <button @click="prevPage" 
                                     :disabled="currentPage === 1"
                                     class="bg-blue-700 text-white font-bold px-4 py-2 rounded 
-                                        hover:bg-blue-600 
+                                        hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed
                                         transition-all duration-100 active:bg-blue-800 active:scale-90">
                                 السابق
                             </button>
                             
                             <button @click="goToLastPage" 
                                     class="bg-green-700 text-white font-bold px-4 py-2 rounded 
-                                        hover:bg-green-600 
-                                        transition-all duration-100 active:bg-green-800 active:scale-100">
+                                        hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed
+                                        transition-all duration-100 active:bg-green-800 active:scale-90">
                                 الأخير
                             </button>
                             
@@ -5694,8 +5694,8 @@
                 <button @click="nextPage" 
                         :disabled="currentPage === totalPages"
                         class="bg-blue-700 text-white font-bold px-5 py-2 rounded 
-                            hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed 
-                            transition-all duration-200 active:bg-blue-800 active:scale-90">
+                            hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed 
+                            transition-all duration-100 active:bg-blue-800 active:scale-90">
                     التالي
                 </button>
 
@@ -5714,8 +5714,8 @@
                 <button @click="prevPage" 
                         :disabled="currentPage === 1"
                         class="bg-blue-700 text-white font-bold px-5 py-2 rounded 
-                            hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed
-                            transition-all duration-200 active:bg-blue-800 active:scale-90">
+                            hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed
+                            transition-all duration-100 active:bg-blue-800 active:scale-90">
                     السابق
                 </button>
 
