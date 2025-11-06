@@ -1016,43 +1016,45 @@
                                 <div>
                                     <fieldset v-if="filterShinichiKudoEpisodes" class="border border-orange-400 p-4 rounded">
                                         <legend class="font-bold mb-2">
-                                            <input @click="resetShinichiKudoFilters" type="checkbox" v-model="filterShinichiKudoEpisodes" class="scale-150 ml-2">
-                                            <span>شينتشي كودو ({{ ShinichiKudoEpisodesCount }})</span>
+                                            <div class="transition-all duration-100 active:bg-blue-800 active:scale-90">
+                                                <input @click="resetShinichiKudoFilters" type="checkbox" v-model="filterShinichiKudoEpisodes" class="scale-150 ml-2">
+                                                <span>شينتشي كودو ({{ ShinichiKudoEpisodesCount }})</span>
+                                            </div>                                            
                                         </legend>
 
                                         <div class="ml-4 flex space-x-2">
-                                            <label class="flex items-center">
+                                            <label class="flex items-center transition-all duration-100 active:bg-blue-800 active:scale-90">
                                                 <input type="radio" value="All" v-model="filterLogicShinichiKudo" class="scale-150">
                                                 <span class="px-2">دمج</span>
                                             </label>
-                                            <label class="flex items-center px-4">
+                                            <label class="flex items-center px-4 transition-all duration-100 active:bg-blue-800 active:scale-90">
                                                 <input type="radio" value="Some" v-model="filterLogicShinichiKudo" class="scale-150">
-                                                <span class="px-2">ح مشترك</span>
+                                                <span class="px-2">مشترك</span>
                                             </label>
                                         </div>
                                         <br />
-                                        <label class="flex items-center space-x-2">
+                                        <label class="flex items-center space-x-2 transition-all duration-100 active:bg-blue-800 active:scale-90">
                                             <input type="checkbox" v-model="filterShinichiKudoSceneEpisodes" class="scale-150">
                                             <span class="px-2 font-bold">مشهد ({{ ShinichiKudoSceneEpisodesCount }})</span>
                                         </label>
                                         <br />
-                                        <label class="flex items-center space-x-2">
+                                        <label class="flex items-center space-x-2 transition-all duration-100 active:bg-blue-800 active:scale-90">
                                             <input type="checkbox" v-model="filterShinichiKudoBackgroundEpisodes" class="scale-150">
                                             <span class="px-2 font-bold">خلفية ({{ ShinichiKudoBackgroundEpisodesCount }})</span>
                                         </label>
                                         <br />
-                                        <label class="flex items-center space-x-2">
+                                        <label class="flex items-center space-x-2 transition-all duration-100 active:bg-blue-800 active:scale-90">
                                             <input type="checkbox" v-model="filterShinichiKudoFlashbackEpisodes" class="scale-150">
                                             <span class="px-2 font-bold">حدث في الماضي ({{ ShinichiKudoFlashbackEpisodesCount }})</span>
                                         </label>
                                         <br />
-                                        <label class="flex items-center space-x-2">
+                                        <label class="flex items-center space-x-2 transition-all duration-100 active:bg-blue-800 active:scale-90">
                                             <input type="checkbox" v-model="filterShinichiKudoOtherEpisodes" class="scale-150">
                                             <span class="px-2 font-bold">أخرى ({{ ShinichiKudoOtherEpisodesCount }})</span>
                                         </label>
                                     </fieldset>
                                 
-                                    <label class="flex items-center space-x-2" v-else>
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:bg-blue-800 active:scale-90" v-else>
                                         <input 
                                             type="checkbox" 
                                             v-model="filterShinichiKudoEpisodes" 
