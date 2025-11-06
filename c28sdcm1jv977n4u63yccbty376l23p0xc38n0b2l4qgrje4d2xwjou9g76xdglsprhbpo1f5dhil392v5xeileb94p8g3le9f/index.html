@@ -14535,9 +14535,6 @@
                     } catch (error) {
                         this.selectedEpisode.EpisodeVideosIDs[index].status = 'error';
                         this.errorMessage = error.message;
-                        if (this.selectedEpisode.EpisodeVideosIDs.some((video) => video.status === "error")) {
-                            return;
-                        }
                     }
 
                     // Clear status after 5 seconds
@@ -14660,9 +14657,6 @@
                     } catch (error) {
                         this.selectedEpisode.EpisodeMangasIDs[index].status = 'error';
                         this.errorMessage = error.message;
-                        if (this.selectedEpisode.EpisodeMangasIDs.some(manga => manga.status === "error")) {
-                            return;
-                        }
                     }
 
                     // Clear status after 5 seconds
@@ -14716,7 +14710,6 @@
                     } catch (error) {
                         this.selectedManga.status = 'error';
                         this.errorMessage = error.message;
-                        if (this.selectedManga.status === "error") return;
                     }
 
                     // Clear status after 5 seconds
