@@ -813,7 +813,7 @@
                             'p-1': episodeTypeFilter !== 'Filler', 
                             'p-1': episodeTypeFilter === 'Filler' 
                         }">
-                            <label class="transition-all duration-100 active:scale-90" :class="{'bg-teal-900 p-1 text-white rounded': episodeTypeFilter === 'Manga'}">
+                            <label :class="{'bg-teal-900 p-1 text-white rounded transition-all duration-100 active:scale-90': episodeTypeFilter === 'Manga', 'transition-all duration-100 active:scale-90': episodeTypeFilter !== 'Manga'}">
                                 <input type="radio" v-model="episodeTypeFilter" value="Manga" class="scale-150">
                                 مانغا
                             </label>
@@ -822,7 +822,7 @@
                                 'p-1': episodeTypeFilter !== 'Manga', 
                                 'p-1': episodeTypeFilter === 'Manga'
                             }">
-                            <label class="transition-all duration-100 active:scale-90" :class="{'bg-red-950 p-1 text-white rounded': episodeTypeFilter === 'Filler'}">
+                            <label :class="{'bg-red-950 p-1 text-white rounded transition-all duration-100 active:scale-90': episodeTypeFilter === 'Filler', 'transition-all duration-100 active:scale-90': episodeTypeFilter !== 'Filler'}">
                                 <input type="radio" v-model="episodeTypeFilter" value="Filler" class="scale-150">
                                 فِلر
                             </label>
@@ -14589,7 +14589,7 @@
 
                         if (!response.ok) {
                             const status = data?.status || response.status;
-                            throw new Error(`Telegram Error (${status}):\n` + (data.description || text));
+                            throw new Error(`Telegram Error: (${status})\n` + (data.description || text));
                         }
 
                     } catch (error) {
@@ -14623,7 +14623,7 @@
 
                         if (!response.ok) {
                             const status = data?.status || response.status;
-                            throw new Error(`Telegram Error (${status}):\n` + (data.description || text));
+                            throw new Error(`Telegram Error: (${status})\n` + (data.description || text));
                         }
 
                     } catch (error) {
