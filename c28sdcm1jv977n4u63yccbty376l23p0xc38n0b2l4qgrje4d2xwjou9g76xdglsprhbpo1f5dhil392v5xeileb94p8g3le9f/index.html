@@ -405,16 +405,16 @@
 
             <!-- Updated Menu Button -->
             <div class="fixed top-4 right-4 z-50 menu-container">
-                <button @click.stop="toggleMenu" class="bg-gray-700 text-white p-2 rounded flex flex-col items-center">
+                <button @click.stop="toggleMenu" class="bg-gray-700 text-white p-2 rounded flex flex-col items-center transition-all duration-100 active:scale-90">
                     <span class="block w-6 h-1 bg-white mb-1"></span>
                     <span class="block w-6 h-1 bg-white mb-1"></span>
                     <span class="block w-6 h-1 bg-white"></span>
                 </button>
 
                 <div v-if="menuOpen" class="absolute right-0 mt-2 bg-sky-900 shadow-lg rounded py-2 w-32">
-                    <button @click="openDirectWindow('episodes')" class="block w-full px-4 py-2 text-base font-bold text-white hover:bg-teal-600">حلقات</button>
-                    <button @click="openDirectWindow('movies')" class="block w-full px-4 py-2 text-base font-bold text-white hover:bg-teal-600">أفلام</button>
-                    <button @click="openDirectWindow('mangas')" class="block w-full px-4 py-2 text-base font-bold text-white hover:bg-teal-600">مانغا</button>
+                    <button @click="openDirectWindow('episodes')" class="block w-full px-4 py-2 text-base font-bold text-white hover:bg-teal-600 transition-all duration-100 active:scale-90">حلقات</button>
+                    <button @click="openDirectWindow('movies')" class="block w-full px-4 py-2 text-base font-bold text-white hover:bg-teal-600 transition-all duration-100 active:scale-90">أفلام</button>
+                    <button @click="openDirectWindow('mangas')" class="block w-full px-4 py-2 text-base font-bold text-white hover:bg-teal-600 transition-all duration-100 active:scale-90">مانغا</button>
                 </div>
             </div>
 
@@ -432,15 +432,15 @@
                         <fieldset class="border p-2 rounded mt-2">
                             <legend class="px-2">اختر نوع المحتوى:</legend>
                             <div class="flex justify-around">
-                                <label class="flex items-center">
+                                <label class="flex items-center transition-all duration-100 active:scale-90">
                                     <input type="radio" v-model="selectedCategory" value="episodes" class="ml-2" @change="resetEpisodesView">
                                     حلقات
                                 </label>
-                                <label class="flex items-center">
+                                <label class="flex items-center transition-all duration-100 active:scale-90">
                                     <input type="radio" v-model="selectedCategory" value="movies" class="ml-2" @change="resetMoviesView">
                                     أفلام
                                 </label>
-                                <label class="flex items-center">
+                                <label class="flex items-center transition-all duration-100 active:scale-90">
                                     <input type="radio" v-model="selectedCategory" value="mangas" class="ml-2" @change="resetMangasView">
                                     مانغا
                                 </label>
@@ -481,13 +481,13 @@
                             <div class="p-4 bg-cyan-900 flex justify-between">
                             <a
                                 href="https://t.me/DCRef_bot"
-                                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+                                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all duration-100 active:scale-90"
                             >
                                 أضغط هنا للذهاب إلى البوت
                             </a>
                             <button
                                 @click="clearError()"
-                                class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+                                class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition-all duration-100 active:scale-90"
                             >
                                 إغلاق
                             </button>
@@ -574,7 +574,7 @@
                                 <button 
                                 v-for="(group, index) in groupedMovies" 
                                 @click="handleMovieGroupChange(index)" 
-                                :class="['px-3 py-1 rounded', activeTab.movies === index ? 'bg-blue-500 text-white' : 'bg-gray-700']">
+                                :class="['px-3 py-1 rounded transition-all duration-100 active:scale-90', activeTab.movies === index ? 'bg-blue-500 text-white' : 'bg-gray-700']">
                                 {{ group.range }}
                             </button>                            
                             </div>
@@ -589,7 +589,7 @@
                                     <button 
                                     v-for="movie in groupedMovies[activeTab.movies]?.items" 
                                     @click="selectMovie(movie)" 
-                                    class="bg-amber-700 text-white p-2 rounded hover:bg-green-500">
+                                    class="bg-amber-700 text-white p-2 rounded hover:bg-green-500 transition-all duration-100 active:scale-90">
                                     {{ movie.EpisodeNumber }}
                                 </button>                                
                                 </div>
@@ -646,7 +646,7 @@
                                 <button 
                                 v-for="(group, index) in groupedMangas" 
                                 @click="handleMangaGroupChange(index)" 
-                                :class="['px-3 py-1 rounded', activeTab.mangas === index ? 'bg-blue-500 text-white' : 'bg-gray-700']">
+                                :class="['px-3 py-1 rounded transition-all duration-100 active:scale-90', activeTab.mangas === index ? 'bg-blue-500 text-white' : 'bg-gray-700']">
                                 {{ group.range }}
                             </button>                            
                             </div>
@@ -661,7 +661,7 @@
                                     <button 
                                     v-for="manga in groupedMangas[activeTab.mangas]?.items" 
                                     @click="selectManga(manga)" 
-                                    class="bg-green-500 text-white p-2 rounded hover:bg-blue-500">
+                                    class="bg-green-500 text-white p-2 rounded hover:bg-blue-500 transition-all duration-100 active:scale-90">
                                     {{ manga.MangaNumber }}
                                 </button>                                
                                 </div>
@@ -781,7 +781,7 @@
         <!-- Search and Filters -->
         <div class="flex flex-col gap-4 items-center">
             <div class="flex gap-4 w-full justify-center">
-                <select v-model="selectedFilter" class="border px-4 font-bold py-2 rounded">
+                <select v-model="selectedFilter" class="border px-4 font-bold py-2 rounded transition-all duration-100 active:scale-90">
                     <option value="all">الكل</option>
                     <option value="anime">الحلقات</option>
                     <option value="movies">أفلام</option>
@@ -805,7 +805,7 @@
                         </button>
                     </legend>
                     <div class="flex items-center text-blue font-bold gap-4 justify-center">
-                        <label>
+                        <label class="transition-all duration-100 active:scale-90">
                             <input type="radio" v-model="episodeTypeFilter" value="All" checked class="scale-150">
                             الكل
                         </label>
@@ -813,7 +813,7 @@
                             'p-1': episodeTypeFilter !== 'Filler', 
                             'p-1': episodeTypeFilter === 'Filler' 
                         }">
-                            <label :class="{'bg-teal-900 p-1 text-white rounded': episodeTypeFilter === 'Manga'}">
+                            <label class="transition-all duration-100 active:scale-90" :class="{'bg-teal-900 p-1 text-white rounded transition-all duration-100 active:scale-90': episodeTypeFilter === 'Manga'}">
                                 <input type="radio" v-model="episodeTypeFilter" value="Manga" class="scale-150">
                                 مانغا
                             </label>
@@ -822,7 +822,7 @@
                                 'p-1': episodeTypeFilter !== 'Manga', 
                                 'p-1': episodeTypeFilter === 'Manga'
                             }">
-                            <label :class="{'bg-red-950 p-1 text-white rounded': episodeTypeFilter === 'Filler'}">
+                            <label class="transition-all duration-100 active:scale-90" :class="{'bg-red-950 p-1 text-white rounded transition-all duration-100 active:scale-90': episodeTypeFilter === 'Filler'}">
                                 <input type="radio" v-model="episodeTypeFilter" value="Filler" class="scale-150">
                                 فِلر
                             </label>
@@ -861,7 +861,7 @@
                         <!-- User Guide Section -->
                         <div class="bg-gray-800 text-white p-4 rounded mb-4">
                             <h3 class="text-lg font-bold mb-2">الشرح التوضيحي</h3>
-                            <ul class="list-disc pl-5 text-base">
+                            <ul class="list-disc pl-5 pr-2 text-base">
                                 <li class="mb-2">استخدم الفلاتر الموجودة في الأسفل لتحديد المحتوى الذي ترغب في عرضه وتقييده داخل الجدول.</li>
                                 <li class="mb-2">لعرض نتائج التصفية، انتقل إلى الجدول عن طريق إغلاق هذه النافذة بالضغط على زر الإغلاق (الزر الأحمر) في الزاوية العلوية اليسرى.</li>
                                 <li>لإعادة التصفية إلى الوضع الافتراضي، اضغط على زر إعادة التعيين (الزر البرتقالي) في الزاوية العلوية اليسرى.</li>                                
@@ -870,62 +870,62 @@
 
                         <fieldset class="border p-4 rounded">
                             <legend class="font-bold text-lg px-2 mb-2">حسب التصنيف</legend>
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="radio" v-model="selectedFilter" value="all" class="scale-150">
                                 <span class="px-2 font-bold">الكل ({{ episodeTypeAllCount }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="radio" v-model="selectedFilter" value="anime" class="scale-150">
                                 <span class="px-2 font-bold">حلقات ({{ episodeTypeAnimeCount }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="radio" v-model="selectedFilter" value="movies" class="scale-150" />
                                 <span class="px-2 font-bold">أفلام ({{ episodeTypeMovieCount }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="radio" v-model="selectedFilter" value="hourly_special" class="scale-150" />
                                 <span class="px-2 font-bold">خاصة "ساعة" ({{ episodeTypeHourlySpecialCount }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="radio" v-model="selectedFilter" value="two_hour_special" class="scale-150" />
                                 <span class="px-2 font-bold">خاصة "ساعتين" ({{ episodeTypeTwoHourSpecialCount }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="radio" v-model="selectedFilter" value="short_story" class="scale-150" />
                                 <span class="px-2 font-bold">قصة قصيرة ({{ episodeTypeShortStoryCount }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="radio" v-model="selectedFilter" value="ova" class="scale-150" />
                                 <span class="px-2 font-bold">أوفا ({{ episodeTypeOVA }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="radio" v-model="selectedFilter" value="movie_special" class="scale-150" />
                                 <span class="px-2 font-bold">خاصة بالفيلم ({{ episodeTypeMovieSpecial }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="radio" v-model="selectedFilter" value="special_release" class="scale-150" />
                                 <span class="px-2 font-bold">إصدار خاص ({{ episodeTypeSpecialRelease }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="radio" v-model="selectedFilter" value="magic_kaito" class="scale-150" />
                                 <span class="px-2 font-bold">ماجيك كايتو ({{ episodeTypeMagicKaito }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="radio" v-model="selectedFilter" value="zero_diaries" class="scale-150" />
                                 <span class="px-2 font-bold">يوميات زيرو ({{ episodeTypeZeroDiaries }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="radio" v-model="selectedFilter" value="hanazawa" class="scale-150" />
                                 <span class="px-2 font-bold">المجرم هانزاوا ({{ episodeTypeHanazawa }})</span>
                             </label>
@@ -935,17 +935,17 @@
 
                         <fieldset class="border p-4 rounded">
                             <legend class="font-bold text-lg px-2 mb-2">حسب النوع</legend>
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="radio" v-model="episodeTypeFilter" value="All" class="scale-150">
                                 <span class="px-2 font-bold">الكل ({{ episodeTypeAllCount }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="radio" v-model="episodeTypeFilter" value="Manga" class="scale-150">
                                 <span class="px-2 font-bold">مانغا ({{ episodeTypeMangaCount }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="radio" v-model="episodeTypeFilter" value="Filler" class="scale-150" />
                                 <span class="px-2 font-bold">فِلر ({{ episodeTypeFillerCount }})</span>
                             </label>
@@ -955,27 +955,27 @@
 
                         <fieldset class="border p-4 rounded">
                             <legend class="font-bold text-lg px-2 mb-2">حسب المجموعة</legend>
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="checkbox" v-model="filterBlackOrganization" class="scale-150">
                                 <span class="px-2 font-bold">المنظمة السوداء ({{ blackOrganizationCount }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="checkbox" v-model="filterDetectiveBoys" class="scale-150" />
                                 <span class="px-2 font-bold">فريق المتحرين الصغار ({{ detectiveBoysCount }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="checkbox" v-model="filterFBI" class="scale-150" />
                                 <span class="px-2 font-bold">مكتب التحقيقات الفيدرالي ({{ FBICount }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="checkbox" v-model="filterPSB" class="scale-150" />
                                 <span class="px-2 font-bold">مكتب الأمن العام ({{ PSBCount }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="checkbox" v-model="filterPoliceAcademy" class="scale-150" />
                                 <span class="px-2 font-bold">أكاديمية الشرطة ({{ policeAcademyCount }})</span>
                             </label>
@@ -985,32 +985,32 @@
 
                         <fieldset class="border p-4 rounded">
                             <legend class="font-bold text-lg px-2 mb-2">حسب المشهد</legend>
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="checkbox" v-model="filterScaryEpisodes" class="scale-150">
                                 <span class="px-2 font-bold">مرعب ({{ ScaryEpisodesCount }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="checkbox" v-model="filterSadyEpisodes" class="scale-150">
                                 <span class="px-2 font-bold">حزين ({{ SadyEpisodesCount }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="checkbox" v-model="filterRomanceEpisodes" class="scale-150">
                                 <span class="px-2 font-bold">رومانسي ({{ RomanceEpisodesCount }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="checkbox" v-model="filterNewCharacter" class="scale-150">
                                 <span class="px-2 font-bold">شخصية جديدة ({{ NewCharacterEpisodesCount }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="checkbox" v-model="filterDevelopmentCharacter" class="scale-150">
                                 <span class="px-2 font-bold">تطور الشخصية ({{ DevelopmentCharacterEpisodesCount }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="checkbox" v-model="filterFlashBackEpisodes" class="scale-150">
                                 <span class="px-2 font-bold">ذكريات من الماضي ({{ FlashBackEpisodesCount }})</span>
                             </label>
@@ -1033,7 +1033,7 @@
                                         <div class="ml-4 flex space-x-2">
                                             <label class="flex items-center">
                                                 <input type="radio" value="All" v-model="filterLogicShinichiKudo" class="scale-150">
-                                                <span class="px-2">دمج ح</span>
+                                                <span class="px-2">دمج</span>
                                             </label>
                                             <label class="flex items-center px-4">
                                                 <input type="radio" value="Some" v-model="filterLogicShinichiKudo" class="scale-150">
@@ -5312,6 +5312,7 @@
                                 <div class="flex space-x-2">
                                     <!-- Next Episode Button -->
                                     <button 
+                                        v-if="nextEpisodeExists" 
                                         :disabled="!selectedEpisode.EpisodeParts || !nextEpisodeExists" 
                                         @click="fetchNextEpisode" 
                                         class="focus:outline-none ml-12 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -5321,6 +5322,7 @@
                                     
                                     <!-- Previous Episode Button -->
                                     <button 
+                                        v-if="previousEpisodeExists" 
                                         :disabled="!selectedEpisode.EpisodeParts || !previousEpisodeExists" 
                                         @click="fetchPreviousEpisode" 
                                         class="focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
