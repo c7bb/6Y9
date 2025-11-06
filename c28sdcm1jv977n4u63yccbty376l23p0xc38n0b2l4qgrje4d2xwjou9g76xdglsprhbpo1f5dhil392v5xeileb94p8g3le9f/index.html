@@ -781,19 +781,19 @@
         <!-- Search and Filters -->
         <div class="flex flex-col gap-4 items-center">
             <div class="flex gap-4 w-full justify-center">
-                <select v-model="selectedFilter" class="border px-4 font-bold py-2 rounded transition-all duration-100 active:scale-90">
-                    <option value="all" class="transition-all duration-100 active:scale-90">الكل</option>
-                    <option value="anime" class="transition-all duration-100 active:scale-90">الحلقات</option>
-                    <option value="movies" class="transition-all duration-100 active:scale-90">أفلام</option>
-                    <option value="hourly_special" class="transition-all duration-100 active:scale-90">خاصة (ساعة)</option>
-                    <option value="two_hour_special" class="transition-all duration-100 active:scale-90">خاصة (ساعتين)</option>
-                    <option value="short_story" class="transition-all duration-100 active:scale-90">قصة قصيرة</option>
-                    <option value="ova" class="transition-all duration-100 active:scale-90">أوفا</option>
-                    <option value="movie_special" class="transition-all duration-100 active:scale-90">خاصة بالفيلم</option>
-                    <option value="special_release" class="transition-all duration-100 active:scale-90">إصدار خاص</option>
-                    <option value="magic_kaito" class="transition-all duration-100 active:scale-90">ماجيك كايتو</option>
-                    <option value="zero_diaries" class="transition-all duration-100 active:scale-90">يوميات زيرو</option>
-                    <option value="criminal_hanzawa" class="transition-all duration-100 active:scale-90">المجرم هانزاوا</option>
+                <select v-model="selectedFilter" class="border px-4 font-bold py-2 rounded">
+                    <option value="all">الكل</option>
+                    <option value="anime">الحلقات</option>
+                    <option value="movies">أفلام</option>
+                    <option value="hourly_special">خاصة (ساعة)</option>
+                    <option value="two_hour_special">خاصة (ساعتين)</option>
+                    <option value="short_story">قصة قصيرة</option>
+                    <option value="ova">أوفا</option>
+                    <option value="movie_special">خاصة بالفيلم</option>
+                    <option value="special_release">إصدار خاص</option>
+                    <option value="magic_kaito">ماجيك كايتو</option>
+                    <option value="zero_diaries">يوميات زيرو</option>
+                    <option value="criminal_hanzawa">المجرم هانزاوا</option>
                 </select>
             
                 <fieldset class="border border-gray-300 rounded p-2 w-1/2">
@@ -5697,7 +5697,7 @@
 
                 <button @click="nextPage" 
                         :disabled="currentPage === totalPages"
-                        class="bg-blue-700 text-white font-bold px-5 py-2 rounded 
+                        class="bg-blue-700 text-white font-bold px-3 py-3 rounded 
                             hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed 
                             transition-all duration-100 active:bg-blue-800 active:scale-90">
                     التالي
@@ -5717,7 +5717,7 @@
 
                 <button @click="prevPage" 
                         :disabled="currentPage === 1"
-                        class="bg-blue-700 text-white font-bold px-5 py-2 rounded 
+                        class="bg-blue-700 text-white font-bold px-3 py-3 rounded 
                             hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed
                             transition-all duration-100 active:bg-blue-800 active:scale-90">
                     السابق
