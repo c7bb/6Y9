@@ -14535,6 +14535,9 @@
                     } catch (error) {
                         this.selectedEpisode.EpisodeVideosIDs[index].status = 'error';
                         this.errorMessage = error.message;
+                        if (this.selectedEpisode.EpisodeVideosIDs.some((video) => video.status === "error")) {
+                            return;
+                        }
                     }
 
                     // Clear status after 5 seconds
@@ -14584,7 +14587,7 @@
                             throw new Error("Invalid JSON response from Worker:\n" + text);
                         }
 
-                        if (!response.ok) {
+                        if (!data.ok) {
                             throw new Error("Telegram Error:\n" + (data.description || text));
                         }
                     } catch (error) {
@@ -14616,7 +14619,7 @@
                             throw new Error("Invalid JSON response from Worker:\n" + text);
                         }
 
-                        if (!response.ok) {
+                        if (!data.ok) {
                             throw new Error("Telegram Error:\n" + (data.description || text));
                         }
                     } catch (error) {
@@ -14657,6 +14660,9 @@
                     } catch (error) {
                         this.selectedEpisode.EpisodeMangasIDs[index].status = 'error';
                         this.errorMessage = error.message;
+                        if (this.selectedEpisode.EpisodeMangasIDs.some(manga => manga.status === "error")) {
+                            return;
+                        }
                     }
 
                     // Clear status after 5 seconds
@@ -14710,6 +14716,7 @@
                     } catch (error) {
                         this.selectedManga.status = 'error';
                         this.errorMessage = error.message;
+                        if (this.selectedManga.status === "error") return;
                     }
 
                     // Clear status after 5 seconds
