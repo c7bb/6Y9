@@ -5089,14 +5089,14 @@
                       <!-- The "مسح" button -->
                       <button
                         @click="clearSearch"
-                        class="px-4 py-2 bg-red-500 text-white font-bold rounded"
+                        class="px-4 py-2 bg-red-500 text-white font-bold rounded transition-all duration-100 active:scale-90"
                       >
                         مسح
                       </button>
               
                       <!-- Radio Buttons for Text-Number Matching (only visible if 'number' is checked) -->
                       <div v-if="searchFilters.number" class="flex flex-col space-y-2 mt-2 -ml-2">
-                        <label class="flex items-center">
+                        <label class="flex items-center transition-all duration-100 active:scale-90">
                           <input
                             type="radio"
                             v-model="textNumberMatchMode"
@@ -5105,7 +5105,7 @@
                           />
                           <span class="px-2 font-bold">تفعيل</span>
                         </label>
-                        <label class="flex items-center">
+                        <label class="flex items-center transition-all duration-100 active:scale-90">
                           <input
                             type="radio"
                             v-model="textNumberMatchMode"
@@ -5121,7 +5121,7 @@
               
                 <!-- Centered Checkboxes -->
                 <div class="flex flex-wrap mt-2 justify-center text-lg">
-                  <label class="flex items-center">
+                  <label class="flex items-center transition-all duration-100 active:scale-90">
                     <input
                       type="checkbox"
                       v-model="searchFilters.title"
@@ -5130,7 +5130,7 @@
                     />
                     <span class="px-2 font-bold">العنوان</span>
                   </label>
-                  <label class="flex items-center">
+                  <label class="flex items-center transition-all duration-100 active:scale-90">
                     <input
                       type="checkbox"
                       v-model="searchFilters.number"
@@ -5139,7 +5139,7 @@
                     />
                     <span class="px-2 font-bold">الرقم</span>
                   </label>
-                  <label class="flex items-center">
+                  <label class="flex items-center transition-all duration-100 active:scale-90">
                     <input
                       type="checkbox"
                       v-model="searchFilters.story"
@@ -5148,7 +5148,7 @@
                     />
                     <span class="px-2 font-bold">القصة</span>
                   </label>
-                  <label class="flex items-center">
+                  <label class="flex items-center transition-all duration-100 active:scale-90">
                     <input
                       type="checkbox"
                       v-model="searchFilters.summary"
@@ -5168,7 +5168,7 @@
                 <button 
                     v-if="mangas && mangas.length > 0"
                     @click="openMangaModal(mangaCh)"
-                    class="mt-4 w-full py-2 bg-green-600 text-white font-bold text-lg rounded hover:bg-blue-500 transition-transform transform hover:scale-105 animate-bounce">
+                    class="mt-4 w-full py-2 bg-green-600 text-white font-bold text-lg rounded hover:bg-blue-500 transition-transform transform hover:scale-105 animate-bounce transition-all duration-100 active:scale-90">
                     أضغط هنا لفتح الفصل
                 </button>
             </div>
@@ -5180,7 +5180,7 @@
                 <button 
                     v-if="episodes && episodes.length > 0"
                     @click="openEpisodeModal(ep)"
-                    class="mt-4 w-full py-2 bg-teal-600 text-white font-bold text-lg rounded hover:bg-teal-500 transition-transform transform hover:scale-105 animate-bounce">
+                    class="mt-4 w-full py-2 bg-teal-600 text-white font-bold text-lg rounded hover:bg-teal-500 transition-transform transform hover:scale-105 animate-bounce transition-all duration-100 active:scale-90">
                     أضغط هنا لفتح الحلقة
                 </button>
             </div>
@@ -5428,7 +5428,7 @@
                         <th :class="['border border-gray-300 text-xl px-4 py-2 text-center w-5/6', isAnyFilterActive ? 'bg-orange-500' : '']">
                             {{ episodeTitleHeader }}
                             <br />
-                            <span v-if="isAnyFilterActive" @click="openEmptyPopup" class="text-base text-black cursor-pointer">
+                            <span v-if="isAnyFilterActive" @click="openEmptyPopup" class="text-base text-black cursor-pointer transition-all duration-100 active:scale-90">
                                 ~ (التصفية قيد التشغيل حالياً) ~
                             </span>
                             <br v-if="isAnyFilterActive" />
@@ -5446,7 +5446,7 @@
                                 {{ episode.EpisodeNumber }}
                             </td>
                             <!-- <td class="border border-gray-300 px-4 text-lg font-bold py-2 text-center cursor-pointer">{{ episode.EpisodeTitle }}</td> -->
-                            <td class="border border-gray-300 px-4 text-lg font-bold py-2 text-center cursor-pointer" @click="openModal(episode)">{{ episode.EpisodeTitle }}</td>
+                            <td class="border border-gray-300 px-4 text-lg font-bold py-2 text-center cursor-pointer transition-all duration-100 active:scale-90" @click="openModal(episode)">{{ episode.EpisodeTitle }}</td>
                         </tr>
                     </tbody>
             
@@ -5463,7 +5463,7 @@
                                         v-if="selectedEpisode.EpisodeParts" 
                                         :disabled="!nextEpisodeExists" 
                                         @click="fetchNextEpisode" 
-                                        class="focus:outline-none ml-12 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        class="focus:outline-none ml-12 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90"
                                     >
                                         <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/next.png" alt="التالي" class="h-8 w-8" />
                                     </button>
@@ -5473,7 +5473,7 @@
                                         v-if="selectedEpisode.EpisodeParts" 
                                         :disabled="!previousEpisodeExists" 
                                         @click="fetchPreviousEpisode" 
-                                        class="focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                                        class="focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90"
                                     >
                                         <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/previous.png" alt="السابق" class="h-8 w-8" />
                                     </button>
@@ -5481,7 +5481,7 @@
                                 <!-- Middle: Empty Space or Title Placeholder -->
                                 <div class="flex-1"></div>
                                 <!-- Left Side: Close Modal Button -->
-                                <button @click="closeModal" class="text-red-600 hover:text-yellow-300 font-bold focus:outline-none">
+                                <button @click="closeModal" class="text-red-600 hover:text-yellow-300 font-bold focus:outline-none transition-all duration-100 active:scale-90">
                                     <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png" alt="Close" class="h-8 w-8" />
                                 </button>
 
@@ -5593,7 +5593,7 @@
                                         <button
                                             :disabled="manga.status === 'success' || manga.status === 'ratelimiting'"
                                             @click="() => { sendMangaToBot(manga.MangaFileID, manga.MangaNumber, index); }"
-                                            class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center justify-center shadow-md disabled:opacity-50"
+                                            class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90"
                                             dir="ltr"
                                             :class="{ 'opacity-50 cursor-not-allowed': manga.status === 'ratelimiting' }"
                                         >
@@ -5650,13 +5650,13 @@
                                         <div class="p-4 bg-cyan-900 flex justify-between">
                                         <a
                                             href="https://t.me/DCRef_bot"
-                                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+                                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all duration-100 active:scale-90"
                                         >
                                             أضغط هنا للذهاب إلى البوت
                                         </a>
                                         <button
                                             @click="clearError()"
-                                            class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+                                            class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition-all duration-100 active:scale-90"
                                         >
                                             إغلاق
                                         </button>
@@ -5688,7 +5688,7 @@
                                     <span>الأحداث : </span>
                                     <template v-for="(char, index) in selectedEpisode.EpisodeEvents" :key="index" class="text-lg">
                                         <template v-if="char === 'س'">
-                                            <div class="tooltip-container inline-block h-6 w-6 mr-1">
+                                            <div class="tooltip-container inline-block h-6 w-6 mr-1 transition-all duration-100 active:scale-90">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/Plot-BO.png" 
                                                     alt="المنظمة السوداء، " 
                                                     class="inline-block h-6 w-6">
@@ -5696,7 +5696,7 @@
                                             </div>
                                         </template>
                                         <template v-else-if="char === 'ج'">
-                                            <div class="tooltip-container inline-block h-6 w-6 mr-1">
+                                            <div class="tooltip-container inline-block h-6 w-6 mr-1 transition-all duration-100 active:scale-90">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/Plot-New.png" 
                                                     alt="شخصية جديدة، " 
                                                     class="inline-block h-6 w-6">
@@ -5704,7 +5704,7 @@
                                             </div>
                                         </template>
                                         <template v-else-if="char === 'ر'">
-                                            <div class="tooltip-container inline-block h-6 w-6 mr-1">
+                                            <div class="tooltip-container inline-block h-6 w-6 mr-1 transition-all duration-100 active:scale-90">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/Plot-Romance.png" 
                                                     alt="قصة رومانسية، " 
                                                     class="inline-block h-6 w-6">
@@ -5712,7 +5712,7 @@
                                             </div>
                                         </template>
                                         <template v-else-if="char === 'ت'">
-                                            <div class="tooltip-container inline-block h-6 w-6 mr-1">
+                                            <div class="tooltip-container inline-block h-6 w-6 mr-1 transition-all duration-100 active:scale-90">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/Plot-Char.png" 
                                                     alt="تطور شخصية، " 
                                                     class="inline-block h-6 w-6">
@@ -5720,7 +5720,7 @@
                                             </div>
                                         </template>
                                         <template v-else-if="char === 'ط'">
-                                            <div class="tooltip-container inline-block h-6 w-6 mr-1">
+                                            <div class="tooltip-container inline-block h-6 w-6 mr-1 transition-all duration-100 active:scale-90">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/Plot-DB.png" 
                                                     alt="فريق المتحرين الصغار، " 
                                                     class="inline-block h-6 w-6">
@@ -5728,7 +5728,7 @@
                                             </div>
                                         </template>
                                         <template v-else-if="char === 'م'">
-                                            <div class="tooltip-container inline-block h-6 w-6 mr-1">
+                                            <div class="tooltip-container inline-block h-6 w-6 mr-1 transition-all duration-100 active:scale-90">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/Plot-Past.png" 
                                                     alt="ذكريات من الماضي، " 
                                                     class="inline-block h-6 w-6">
@@ -5736,7 +5736,7 @@
                                             </div>
                                         </template>
                                         <template v-else-if="char === 'ه'">
-                                            <div class="tooltip-container inline-block h-6 w-6 mr-1">
+                                            <div class="tooltip-container inline-block h-6 w-6 mr-1 transition-all duration-100 active:scale-90">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/PlotHH.png" 
                                                     alt="هيجي هاتوري، " 
                                                     class="inline-block h-6 w-6">
@@ -5744,7 +5744,7 @@
                                             </div>
                                         </template>
                                         <template v-else-if="char === 'ك'">
-                                            <div class="tooltip-container inline-block h-6 w-6 mr-1">
+                                            <div class="tooltip-container inline-block h-6 w-6 mr-1 transition-all duration-100 active:scale-90">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/Plot-MK.png" 
                                                     alt="كايتو كيد، " 
                                                     class="inline-block h-6 w-6">
@@ -5752,7 +5752,7 @@
                                             </div>
                                         </template>
                                         <template v-else-if="char === 'ف'">
-                                            <div class="tooltip-container inline-block h-6 w-6 mr-1">
+                                            <div class="tooltip-container inline-block h-6 w-6 mr-1 transition-all duration-100 active:scale-90">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/Plot-FBI.png" 
                                                     alt="مكتب التحقيقات الفيدرالي (FBI)، " 
                                                     class="inline-block h-6 w-6">
@@ -5761,7 +5761,7 @@
                                         </template>
 
                                         <template v-else-if="char === 'ع'">
-                                            <div class="tooltip-container inline-block h-6 w-6 mr-1">
+                                            <div class="tooltip-container inline-block h-6 w-6 mr-1 transition-all duration-100 active:scale-90">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/Plot-PSB.png" 
                                                     alt="مكتب الأمن العام (PSB)، " 
                                                     class="inline-block h-6 w-6">
@@ -5785,7 +5785,7 @@
                                 </fieldset>
 
                                 <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeSummary !== ''" class="border p-2 border-orange-400 rounded mb-2">
-                                    <legend class="font-bold cursor-pointer animate-bounce" @click="toggleSpoiler">
+                                    <legend class="font-bold cursor-pointer animate-bounce transition-all duration-100 active:scale-90" @click="toggleSpoiler">
                                         <span class="text-lg">
                                             <span v-html="highlightSpoilerText()"></span>
                                         </span>
@@ -5813,7 +5813,7 @@
                                             <button
                                                 :disabled="video.status === 'success' || video.status === 'ratelimiting'"
                                                 @click="() => { sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime); }"
-                                                class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50"
+                                                class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90"
                                                 :class="{ 'opacity-50 cursor-not-allowed': video.status === 'ratelimiting' }">
                                                 <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ video.Size }} MB)</span>
                                                 <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
@@ -5878,23 +5878,23 @@
 
             <!-- Page Size Controls (Right) -->
             <div class="text-center font-bold justify-center">
-                <label class="inline-flex items-center mx-1">
+                <label class="inline-flex items-center mx-1 transition-all duration-100 active:scale-90">
                     <input type="radio" v-model="pageSize" :value="5" class="form-radio text-blue-500 mx-1" />
                     <span class="ml-2">5</span>
                 </label>
-                <label class="inline-flex items-center mx-1">
+                <label class="inline-flex items-center mx-1 transition-all duration-100 active:scale-90">
                     <input type="radio" v-model="pageSize" :value="10" class="form-radio text-blue-500 mx-1" />
                     <span class="ml-2">10</span>
                 </label>
-                <label class="inline-flex items-center mx-1">
+                <label class="inline-flex items-center mx-1 transition-all duration-100 active:scale-90">
                     <input type="radio" v-model="pageSize" :value="15" class="form-radio text-blue-500 mx-1" />
                     <span class="ml-2">15</span>
                 </label>
-                <label class="inline-flex items-center mx-1">
+                <label class="inline-flex items-center mx-1 transition-all duration-100 active:scale-90">
                     <input type="radio" v-model="pageSize" :value="20" class="form-radio text-blue-500 mx-1" />
                     <span class="ml-2">20</span>
                 </label>
-                <label class="inline-flex items-center mx-1">
+                <label class="inline-flex items-center mx-1 transition-all duration-100 active:scale-90">
                     <input type="radio" v-model="pageSize" :value="25" class="form-radio text-blue-500 mx-1" />
                     <span class="ml-2">25</span>
                 </label>
