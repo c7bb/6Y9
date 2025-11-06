@@ -5148,27 +5148,46 @@
                         </fieldset>
 
 
-                                <!-- Pagination Controls -->
-            <div class="flex flex-wrap justify-between items-center" id="pagination-buttons">
-                <button @click="goToFirstPage" class="bg-green-800 text-white font-bold px-4 py-2 rounded hover:bg-blue-300">
-                    الأول
-                </button>
-                <button @click="nextPage" class="bg-blue-700 text-white font-bold px-4 py-2 rounded hover:bg-green-400" :disabled="currentPage === totalPages">
-                    التالي
-                </button>
-                <button @click="prevPage" class="bg-blue-700 text-white font-bold px-4 py-2 rounded hover:bg-green-400" :disabled="currentPage === 1">
-                    السابق
-                </button>
-                <button @click="goToLastPage" class="bg-green-800 text-white font-bold px-4 py-2 rounded hover:bg-blue-300">
-                    الأخير
-                </button>
-            </div>
+                        <!-- Pagination Controls -->
+                        <div class="flex flex-wrap justify-between items-center" id="pagination-buttons">
+                            
+                            <button @click="goToFirstPage" 
+                                    class="bg-green-800 text-white font-bold px-4 py-2 rounded 
+                                        hover:bg-blue-300 
+                                        transition-all duration-150 active:bg-green-900 active:scale-95">
+                                الأول
+                            </button>
+                            
+                            <button @click="nextPage" 
+                                    :disabled="currentPage === totalPages"
+                                    class="bg-blue-700 text-white font-bold px-4 py-2 rounded 
+                                        hover:bg-green-400 
+                                        transition-all duration-150 active:bg-blue-800 active:scale-95">
+                                التالي
+                            </button>
+                            
+                            <button @click="prevPage" 
+                                    :disabled="currentPage === 1"
+                                    class="bg-blue-700 text-white font-bold px-4 py-2 rounded 
+                                        hover:bg-green-400 
+                                        transition-all duration-150 active:bg-blue-800 active:scale-95">
+                                السابق
+                            </button>
+                            
+                            <button @click="goToLastPage" 
+                                    class="bg-green-800 text-white font-bold px-4 py-2 rounded 
+                                        hover:bg-blue-300 
+                                        transition-all duration-150 active:bg-green-900 active:scale-95">
+                                الأخير
+                            </button>
+                            
+                        </div>
 
         </div>
 
         <!-- Table -->
         <!-- Progress Spinner -->
-        <div v-if="loading" class="text-center py-4">
+        <div v-if="loading" class="text-center py-2">
             <div class="relative w-24 h-24 mx-auto">
               <div class="w-full h-full animate-spin">
                 <svg class="w-full h-full" viewBox="0 0 100 100" style="transform: rotate(-90deg);">
@@ -5670,14 +5689,36 @@
             </table>
 
             <!-- Pagination Controls -->
-            <div class="flex flex-wrap justify-between items-center mt-4" id="pagination-buttons">
-                <span class="font-bold" id="pagination-buttons">صفحة</span>
-                <select v-model="currentPage" @change="handlePageSelect" class="w-20 px-2 py-1 rounded border font-bold border-gray-300 text-center">
-                    <option v-for="page in totalPages" :key="page" :value="page">
-                        {{ page }}
-                    </option>
-                </select>
-                <span class="font-bold" id="pagination-buttons">من {{ totalPages }}</span>
+            <div class="flex justify-between items-center mt-4">
+
+                <button @click="nextPage" 
+                        :disabled="currentPage === totalPages"
+                        class="bg-blue-700 text-white font-bold px-5 py-2 rounded 
+                            hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed 
+                            transition-all duration-150 active:bg-blue-800 active:scale-95">
+                    التالي
+                </button>
+
+                <div class="flex items-center gap-2 text-white font-bold">
+                    <span>صفحة</span>
+                    <select v-model="currentPage" 
+                            @change="handlePageSelect" 
+                            class="w-24 px-2 py-1 rounded border border-gray-500 bg-gray-800 text-center font-bold">
+                        <option v-for="page in totalPages" :key="page" :value="page">
+                            {{ page }}
+                        </option>
+                    </select>
+                    <span>من {{ totalPages }}</span>
+                </div>
+
+                <button @click="prevPage" 
+                        :disabled="currentPage === 1"
+                        class="bg-blue-700 text-white font-bold px-5 py-2 rounded 
+                            hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed
+                            transition-all duration-150 active:bg-blue-800 active:scale-95">
+                    السابق
+                </button>
+
             </div>
 
             <!-- Page Size Controls (Right) -->
