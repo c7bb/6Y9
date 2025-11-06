@@ -782,18 +782,18 @@
         <div class="flex flex-col gap-4 items-center">
             <div class="flex gap-4 w-full justify-center">
                 <select v-model="selectedFilter" class="border px-4 font-bold py-2 rounded transition-all duration-100 active:scale-90">
-                    <option value="all">الكل</option>
-                    <option value="anime">الحلقات</option>
-                    <option value="movies">أفلام</option>
-                    <option value="hourly_special">خاصة (ساعة)</option>
-                    <option value="two_hour_special">خاصة (ساعتين)</option>
-                    <option value="short_story">قصة قصيرة</option>
-                    <option value="ova">أوفا</option>
-                    <option value="movie_special">خاصة بالفيلم</option>
-                    <option value="special_release">إصدار خاص</option>
-                    <option value="magic_kaito">ماجيك كايتو</option>
-                    <option value="zero_diaries">يوميات زيرو</option>
-                    <option value="criminal_hanzawa">المجرم هانزاوا</option>
+                    <option value="all" class="transition-all duration-100 active:scale-90">الكل</option>
+                    <option value="anime" class="transition-all duration-100 active:scale-90">الحلقات</option>
+                    <option value="movies" class="transition-all duration-100 active:scale-90">أفلام</option>
+                    <option value="hourly_special" class="transition-all duration-100 active:scale-90">خاصة (ساعة)</option>
+                    <option value="two_hour_special" class="transition-all duration-100 active:scale-90">خاصة (ساعتين)</option>
+                    <option value="short_story" class="transition-all duration-100 active:scale-90">قصة قصيرة</option>
+                    <option value="ova" class="transition-all duration-100 active:scale-90">أوفا</option>
+                    <option value="movie_special" class="transition-all duration-100 active:scale-90">خاصة بالفيلم</option>
+                    <option value="special_release" class="transition-all duration-100 active:scale-90">إصدار خاص</option>
+                    <option value="magic_kaito" class="transition-all duration-100 active:scale-90">ماجيك كايتو</option>
+                    <option value="zero_diaries" class="transition-all duration-100 active:scale-90">يوميات زيرو</option>
+                    <option value="criminal_hanzawa" class="transition-all duration-100 active:scale-90">المجرم هانزاوا</option>
                 </select>
             
                 <fieldset class="border border-gray-300 rounded p-2 w-1/2">
@@ -813,7 +813,7 @@
                             'p-1': episodeTypeFilter !== 'Filler', 
                             'p-1': episodeTypeFilter === 'Filler' 
                         }">
-                            <label class="transition-all duration-100 active:scale-90" :class="{'bg-teal-900 p-1 text-white rounded transition-all duration-100 active:scale-90': episodeTypeFilter === 'Manga'}">
+                            <label class="transition-all duration-100 active:scale-90" :class="{'bg-teal-900 p-1 text-white rounded': episodeTypeFilter === 'Manga'}">
                                 <input type="radio" v-model="episodeTypeFilter" value="Manga" class="scale-150">
                                 مانغا
                             </label>
@@ -822,7 +822,7 @@
                                 'p-1': episodeTypeFilter !== 'Manga', 
                                 'p-1': episodeTypeFilter === 'Manga'
                             }">
-                            <label class="transition-all duration-100 active:scale-90" :class="{'bg-red-950 p-1 text-white rounded transition-all duration-100 active:scale-90': episodeTypeFilter === 'Filler'}">
+                            <label class="transition-all duration-100 active:scale-90" :class="{'bg-red-950 p-1 text-white rounded': episodeTypeFilter === 'Filler'}">
                                 <input type="radio" v-model="episodeTypeFilter" value="Filler" class="scale-150">
                                 فِلر
                             </label>
