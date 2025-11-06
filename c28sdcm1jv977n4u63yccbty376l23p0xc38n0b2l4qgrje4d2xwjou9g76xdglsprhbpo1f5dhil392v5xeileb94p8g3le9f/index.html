@@ -805,15 +805,15 @@
                         </button>
                     </legend>
                     <div class="flex items-center text-blue font-bold gap-4 justify-center">
-                        <label class="transition-all duration-100 active:scale-90">
+                        <label class="py-2 transition-all duration-100 active:scale-90 rounded">
                             <input type="radio" v-model="episodeTypeFilter" value="All" checked class="scale-150">
                             الكل
                         </label>
-                        <label class="transition-all duration-100 active:scale-90" :class="{'bg-teal-900 p-1 text-white rounded': episodeTypeFilter === 'Manga'}">
+                        <label class="py-2 transition-all duration-100 active:scale-90 rounded" :class="{'bg-teal-900 text-white': episodeTypeFilter === 'Manga'}">
                             <input type="radio" v-model="episodeTypeFilter" value="Manga" class="scale-150">
                             مانغا
                         </label>
-                        <label class="transition-all duration-100 active:scale-90" :class="{'bg-red-950 p-1 text-white rounded': episodeTypeFilter === 'Filler'}">
+                        <label class="py-2 transition-all duration-100 active:scale-90 rounded" :class="{'bg-red-950 text-white': episodeTypeFilter === 'Filler'}">
                             <input type="radio" v-model="episodeTypeFilter" value="Filler" class="scale-150">
                             فِلر
                         </label>
