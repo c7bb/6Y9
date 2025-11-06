@@ -14591,8 +14591,8 @@
                             throw new Error("Telegram Error:\n" + (data.description || text));
                         }
                     } catch (error) {
-                        console.error("sendVideoResponse failed:", error);
-                        throw new Error(`sendVideoResponse failed:\n${error.message}`);
+                        console.error(error);
+                        throw new Error(error.message);
                     }
                 },
                 
