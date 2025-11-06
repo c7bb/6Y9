@@ -14571,14 +14571,14 @@
                     payload.append("caption", caption);
                     payload.append("parse_mode", "Markdown");
                     payload.append("cover", "AgACAgQAAxkBAAI39mewS5AKaNozUttDedMhI3xOcZdzAAJ7xzEb4AyBUdi6fgZXlnXYAQADAgADdwADNgQ");
-                
+
                     try {
                         const response = await fetch(`${this.jsonUrl}/send`, {
                             method: "POST",
                             headers: { "Content-Type": "application/x-www-form-urlencoded" },
                             body: payload.toString(),
                         });
-                
+
                         const text = await response.text();
                         let data;
                         try {
@@ -14586,8 +14586,8 @@
                         } catch (e) {
                             throw new Error("Invalid JSON response from Worker:\n" + text);
                         }
-                
-                        if (!data.ok) {
+
+                        if (!response.ok) {
                             throw new Error("Telegram Error:\n" + (data.description || text));
                         }
                     } catch (error) {
@@ -14603,14 +14603,14 @@
                     payload.append("file_id", fileId);
                     payload.append("caption", caption);
                     payload.append("parse_mode", "Markdown");
-                
+
                     try {
                         const response = await fetch(`${this.jsonUrl}/send`, {
                             method: "POST",
                             headers: { "Content-Type": "application/x-www-form-urlencoded" },
                             body: payload.toString(),
                         });
-                
+
                         const text = await response.text();
                         let data;
                         try {
@@ -14618,13 +14618,13 @@
                         } catch (e) {
                             throw new Error("Invalid JSON response from Worker:\n" + text);
                         }
-                
-                        if (!data.ok) {
+
+                        if (!response.ok) {
                             throw new Error("Telegram Error:\n" + (data.description || text));
                         }
                     } catch (error) {
-                        console.error("sendMangaResponse failed:", error);
-                        throw new Error(`sendMangaResponse failed:\n${error.message}`);
+                        console.error(error);
+                        throw new Error(error.message);
                     }
                 },
 
