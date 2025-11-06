@@ -1016,45 +1016,45 @@
                                 <div>
                                     <fieldset v-if="filterShinichiKudoEpisodes" class="border border-orange-400 p-4 rounded">
                                         <legend class="font-bold mb-2">
-                                            <label class="transition-all duration-100 active:bg-blue-800 active:scale-90">
+                                            <label class="transition-all duration-100 active:scale-90">
                                                 <input @click="resetShinichiKudoFilters" type="checkbox" v-model="filterShinichiKudoEpisodes" class="scale-150 ml-2">
                                                 <span>شينتشي كودو ({{ ShinichiKudoEpisodesCount }})</span>
                                             </label>                                            
                                         </legend>
 
                                         <div class="ml-4 flex space-x-2">
-                                            <label class="flex items-center transition-all duration-100 active:bg-blue-800 active:scale-90">
+                                            <label class="flex items-center transition-all duration-100 active:scale-90">
                                                 <input type="radio" value="All" v-model="filterLogicShinichiKudo" class="scale-150">
                                                 <span class="px-2">دمج</span>
                                             </label>
-                                            <label class="flex items-center px-4 transition-all duration-100 active:bg-blue-800 active:scale-90">
+                                            <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                                 <input type="radio" value="Some" v-model="filterLogicShinichiKudo" class="scale-150">
                                                 <span class="px-2">مشترك</span>
                                             </label>
                                         </div>
                                         <br />
-                                        <label class="flex items-center space-x-2 transition-all duration-100 active:bg-blue-800 active:scale-90">
+                                        <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                             <input type="checkbox" v-model="filterShinichiKudoSceneEpisodes" class="scale-150">
                                             <span class="px-2 font-bold">مشهد ({{ ShinichiKudoSceneEpisodesCount }})</span>
                                         </label>
                                         <br />
-                                        <label class="flex items-center space-x-2 transition-all duration-100 active:bg-blue-800 active:scale-90">
+                                        <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                             <input type="checkbox" v-model="filterShinichiKudoBackgroundEpisodes" class="scale-150">
                                             <span class="px-2 font-bold">خلفية ({{ ShinichiKudoBackgroundEpisodesCount }})</span>
                                         </label>
                                         <br />
-                                        <label class="flex items-center space-x-2 transition-all duration-100 active:bg-blue-800 active:scale-90">
+                                        <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                             <input type="checkbox" v-model="filterShinichiKudoFlashbackEpisodes" class="scale-150">
                                             <span class="px-2 font-bold">حدث في الماضي ({{ ShinichiKudoFlashbackEpisodesCount }})</span>
                                         </label>
                                         <br />
-                                        <label class="flex items-center space-x-2 transition-all duration-100 active:bg-blue-800 active:scale-90">
+                                        <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                             <input type="checkbox" v-model="filterShinichiKudoOtherEpisodes" class="scale-150">
                                             <span class="px-2 font-bold">أخرى ({{ ShinichiKudoOtherEpisodesCount }})</span>
                                         </label>
                                     </fieldset>
                                 
-                                    <label class="flex items-center space-x-2 transition-all duration-100 active:bg-blue-800 active:scale-90" v-else>
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                         <input 
                                             type="checkbox" 
                                             v-model="filterShinichiKudoEpisodes" 
@@ -1064,17 +1064,17 @@
                                     </label>
                                 </div>                                                                                            
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="checkbox" v-model="filterConanEdogawaEpisodes" class="scale-150">
                                 <span class="px-2 font-bold">كونان إدوغاوا ({{ ConanEdogawaEpisodesCount }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="checkbox" v-model="filterRanMouriEpisodes" class="scale-150">
                                 <span class="px-2 font-bold">ران موري ({{ RanMouriEpisodesCount }})</span>
                             </label>
                             <br />
-                            <label class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                 <input type="checkbox" v-model="filterKogoroMouriEpisodes" class="scale-150">
                                 <span class="px-2 font-bold">كوغورو موري ({{ KogoroMouriEpisodesCount }})</span>
                             </label>                                                                                  
@@ -1088,43 +1088,45 @@
                                 <div>
                                     <fieldset v-if="filterAyumiYoshidaEpisodes" class="border border-orange-400 p-4 rounded">
                                         <legend class="font-bold mb-2">
-                                            <input @click="resetAyumiYoshidaFilters" type="checkbox" v-model="filterAyumiYoshidaEpisodes" class="scale-150 ml-2">
-                                            <span>أيومي يوشيدا ({{ AyumiYoshidaEpisodesCount }})</span>
+                                            <label class="transition-all duration-100 active:scale-90">
+                                                <input @click="resetAyumiYoshidaFilters" type="checkbox" v-model="filterAyumiYoshidaEpisodes" class="scale-150 ml-2">
+                                                <span>أيومي يوشيدا ({{ AyumiYoshidaEpisodesCount }})</span>
+                                            </label>
                                         </legend>
 
                                         <div class="ml-4 flex space-x-2">
-                                            <label class="flex items-center">
+                                            <label class="flex items-center transition-all duration-100 active:scale-90">
                                                 <input type="radio" value="All" v-model="filterLogicAyumiYoshida" class="scale-150">
                                                 <span class="px-2">دمج</span>
                                             </label>
-                                            <label class="flex items-center px-4">
+                                            <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                                 <input type="radio" value="Some" v-model="filterLogicAyumiYoshida" class="scale-150">
                                                 <span class="px-2">مشترك</span>
                                             </label>
                                         </div>
                                         <br />
-                                        <label class="flex items-center space-x-2">
+                                        <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                             <input type="checkbox" v-model="filterAyumiYoshidaSceneEpisodes" class="scale-150">
                                             <span class="px-2 font-bold">مشهد ({{ AyumiYoshidaSceneEpisodesCount }})</span>
                                         </label>
                                         <br />
-                                        <label class="flex items-center space-x-2">
+                                        <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                             <input type="checkbox" v-model="filterAyumiYoshidaBackgroundEpisodes" class="scale-150">
                                             <span class="px-2 font-bold">خلفية ({{ AyumiYoshidaBackgroundEpisodesCount }})</span>
                                         </label>
                                         <br />
-                                        <label class="flex items-center space-x-2">
+                                        <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                             <input type="checkbox" v-model="filterAyumiYoshidaFlashbackEpisodes" class="scale-150">
                                             <span class="px-2 font-bold">حدث في الماضي ({{ AyumiYoshidaFlashbackEpisodesCount }})</span>
                                         </label>
                                         <br />
-                                        <label class="flex items-center space-x-2">
+                                        <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                             <input type="checkbox" v-model="filterAyumiYoshidaOtherEpisodes" class="scale-150">
                                             <span class="px-2 font-bold">أخرى ({{ AyumiYoshidaOtherEpisodesCount }})</span>
                                         </label>
                                     </fieldset>
                                 
-                                    <label class="flex items-center space-x-2" v-else>
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                         <input 
                                             type="checkbox" 
                                             v-model="filterAyumiYoshidaEpisodes" 
@@ -1137,43 +1139,45 @@
                             <div>
                                 <fieldset v-if="filterMitsuhikoTsuburayaEpisodes" class="border border-orange-400 p-4 rounded">
                                     <legend class="font-bold mb-2">
-                                        <input @click="resetMitsuhikoTsuburayaFilters" type="checkbox" v-model="filterMitsuhikoTsuburayaEpisodes" class="scale-150 ml-2">
-                                        <span>ميتسوهيكو تسوبورايا ({{ MitsuhikoTsuburayaEpisodesCount }})</span>
+                                        <label class="transition-all duration-100 active:scale-90">
+                                            <input @click="resetMitsuhikoTsuburayaFilters" type="checkbox" v-model="filterMitsuhikoTsuburayaEpisodes" class="scale-150 ml-2">
+                                            <span>ميتسوهيكو تسوبورايا ({{ MitsuhikoTsuburayaEpisodesCount }})</span>
+                                        </label>
                                     </legend>
 
                                     <div class="ml-4 flex space-x-2">
-                                        <label class="flex items-center">
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
                                             <input type="radio" value="All" v-model="filterLogicMitsuhikoTsuburaya" class="scale-150">
                                             <span class="px-2">دمج</span>
                                         </label>
-                                        <label class="flex items-center px-4">
+                                        <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                             <input type="radio" value="Some" v-model="filterLogicMitsuhikoTsuburaya" class="scale-150">
                                             <span class="px-2">مشترك</span>
                                         </label>
                                     </div>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterMitsuhikoTsuburayaSceneEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">مشهد ({{ MitsuhikoTsuburayaSceneEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterMitsuhikoTsuburayaBackgroundEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">خلفية ({{ MitsuhikoTsuburayaBackgroundEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterMitsuhikoTsuburayaFlashbackEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">حدث في الماضي ({{ MitsuhikoTsuburayaFlashbackEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterMitsuhikoTsuburayaOtherEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">أخرى ({{ MitsuhikoTsuburayaOtherEpisodesCount }})</span>
                                     </label>
                                 </fieldset>
                             
-                                <label class="flex items-center space-x-2" v-else>
+                                <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                     <input 
                                         type="checkbox" 
                                         v-model="filterMitsuhikoTsuburayaEpisodes" 
@@ -1186,42 +1190,44 @@
                             <div>
                                 <fieldset v-if="filterGentaKojimaEpisodes" class="border border-orange-400 p-4 rounded">
                                     <legend class="font-bold mb-2">
-                                        <input @click="resetGentaKojimaFilters" type="checkbox" v-model="filterGentaKojimaEpisodes" class="scale-150 ml-2">
-                                        <span>جينتا كوجيما ({{ GentaKojimaEpisodesCount }})</span>
+                                        <label class="transition-all duration-100 active:scale-90">
+                                            <input @click="resetGentaKojimaFilters" type="checkbox" v-model="filterGentaKojimaEpisodes" class="scale-150 ml-2">
+                                            <span>جينتا كوجيما ({{ GentaKojimaEpisodesCount }})</span>
+                                        </label>
                                     </legend>
                                     <div class="ml-4 flex space-x-2">
-                                        <label class="flex items-center">
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
                                             <input type="radio" value="All" v-model="filterLogicGentaKojima" class="scale-150">
                                             <span class="px-2">دمج</span>
                                         </label>
-                                        <label class="flex items-center px-4">
+                                        <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                             <input type="radio" value="Some" v-model="filterLogicGentaKojima" class="scale-150">
                                             <span class="px-2">مشترك</span>
                                         </label>
                                     </div>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterGentaKojimaSceneEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">مشهد ({{ GentaKojimaSceneEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterGentaKojimaBackgroundEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">خلفية ({{ GentaKojimaBackgroundEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterGentaKojimaFlashbackEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">حدث في الماضي ({{ GentaKojimaFlashbackEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterGentaKojimaOtherEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">أخرى ({{ GentaKojimaOtherEpisodesCount }})</span>
                                     </label>
                                 </fieldset>
                             
-                                <label class="flex items-center space-x-2" v-else>
+                                <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                     <input 
                                         type="checkbox" 
                                         v-model="filterGentaKojimaEpisodes" 
@@ -1234,42 +1240,44 @@
                             <div>
                                 <fieldset v-if="filterAiHaibaraEpisodes" class="border border-orange-400 p-4 rounded">
                                     <legend class="font-bold mb-2">
-                                        <input @click="resetAiHaibaraFilters" type="checkbox" v-model="filterAiHaibaraEpisodes" class="scale-150 ml-2">
-                                        <span>آي هايبرا ({{ AiHaibaraEpisodesCount }})</span>
+                                        <label class="transition-all duration-100 active:scale-90">
+                                            <input @click="resetAiHaibaraFilters" type="checkbox" v-model="filterAiHaibaraEpisodes" class="scale-150 ml-2">
+                                            <span>آي هايبرا ({{ AiHaibaraEpisodesCount }})</span>
+                                        </label>
                                     </legend>
                                     <div class="ml-4 flex space-x-2">
-                                        <label class="flex items-center">
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
                                             <input type="radio" value="All" v-model="filterLogicAiHaibara" class="scale-150">
                                             <span class="px-2">دمج</span>
                                         </label>
-                                        <label class="flex items-center px-4">
+                                        <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                             <input type="radio" value="Some" v-model="filterLogicAiHaibara" class="scale-150">
                                             <span class="px-2">مشترك</span>
                                         </label>
                                     </div>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterAiHaibaraSceneEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">مشهد ({{ AiHaibaraSceneEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterAiHaibaraBackgroundEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">خلفية ({{ AiHaibaraBackgroundEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterAiHaibaraFlashbackEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">حدث في الماضي ({{ AiHaibaraFlashbackEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterAiHaibaraOtherEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">أخرى ({{ AiHaibaraOtherEpisodesCount }})</span>
                                     </label>
                                 </fieldset>
                             
-                                <label class="flex items-center space-x-2" v-else>
+                                <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                     <input 
                                         type="checkbox" 
                                         v-model="filterAiHaibaraEpisodes" 
@@ -1288,42 +1296,44 @@
                                 <div>
                                     <fieldset v-if="filterHiroshiAgasaEpisodes" class="border border-orange-400 p-4 rounded">
                                         <legend class="font-bold mb-2">
-                                            <input @click="resetHiroshiAgasaFilters" type="checkbox" v-model="filterHiroshiAgasaEpisodes" class="scale-150 ml-2">
-                                            <span>هيروشي أغاسا ({{ HiroshiAgasaEpisodesCount }})</span>
+                                            <label class="transition-all duration-100 active:scale-90">
+                                                <input @click="resetHiroshiAgasaFilters" type="checkbox" v-model="filterHiroshiAgasaEpisodes" class="scale-150 ml-2">
+                                                <span>هيروشي أغاسا ({{ HiroshiAgasaEpisodesCount }})</span>
+                                            </label>
                                         </legend>
                                         <div class="ml-4 flex space-x-2">
-                                            <label class="flex items-center">
+                                            <label class="flex items-center transition-all duration-100 active:scale-90">
                                                 <input type="radio" value="All" v-model="filterLogicHiroshiAgasa" class="scale-150">
                                                 <span class="px-2">دمج</span>
                                             </label>
-                                            <label class="flex items-center px-4">
+                                            <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                                 <input type="radio" value="Some" v-model="filterLogicHiroshiAgasa" class="scale-150">
                                                 <span class="px-2">مشترك</span>
                                             </label>
                                         </div>
                                         <br />
-                                        <label class="flex items-center space-x-2">
+                                        <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                             <input type="checkbox" v-model="filterHiroshiAgasaSceneEpisodes" class="scale-150">
                                             <span class="px-2 font-bold">مشهد ({{ HiroshiAgasaSceneEpisodesCount }})</span>
                                         </label>
                                         <br />
-                                        <label class="flex items-center space-x-2">
+                                        <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                             <input type="checkbox" v-model="filterHiroshiAgasaBackgroundEpisodes" class="scale-150">
                                             <span class="px-2 font-bold">خلفية ({{ HiroshiAgasaBackgroundEpisodesCount }})</span>
                                         </label>
                                         <br />
-                                        <label class="flex items-center space-x-2">
+                                        <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                             <input type="checkbox" v-model="filterHiroshiAgasaFlashbackEpisodes" class="scale-150">
                                             <span class="px-2 font-bold">حدث في الماضي ({{ HiroshiAgasaFlashbackEpisodesCount }})</span>
                                         </label>
                                         <br />
-                                        <label class="flex items-center space-x-2">
+                                        <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                             <input type="checkbox" v-model="filterHiroshiAgasaOtherEpisodes" class="scale-150">
                                             <span class="px-2 font-bold">أخرى ({{ HiroshiAgasaOtherEpisodesCount }})</span>
                                         </label>
                                     </fieldset>
                                 
-                                    <label class="flex items-center space-x-2" v-else>
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                         <input 
                                             type="checkbox" 
                                             v-model="filterHiroshiAgasaEpisodes" 
@@ -1336,42 +1346,44 @@
                             <div>
                                 <fieldset v-if="filterSonokoSuzukiEpisodes" class="border border-orange-400 p-4 rounded">
                                     <legend class="font-bold mb-2">
-                                        <input @click="resetSonokoSuzukiFilters" type="checkbox" v-model="filterSonokoSuzukiEpisodes" class="scale-150 ml-2">
-                                        <span>سونوكو سوزوكي ({{ SonokoSuzukiEpisodesCount }})</span>
+                                        <label class="transition-all duration-100 active:scale-90">
+                                            <input @click="resetSonokoSuzukiFilters" type="checkbox" v-model="filterSonokoSuzukiEpisodes" class="scale-150 ml-2">
+                                            <span>سونوكو سوزوكي ({{ SonokoSuzukiEpisodesCount }})</span>
+                                        </label>
                                     </legend>
                                     <div class="ml-4 flex space-x-2">
-                                        <label class="flex items-center">
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
                                             <input type="radio" value="All" v-model="filterLogicSonokoSuzuki" class="scale-150">
                                             <span class="px-2">دمج</span>
                                         </label>
-                                        <label class="flex items-center px-4">
+                                        <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                             <input type="radio" value="Some" v-model="filterLogicSonokoSuzuki" class="scale-150">
                                             <span class="px-2">مشترك</span>
                                         </label>
                                     </div>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterSonokoSuzukiSceneEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">مشهد ({{ SonokoSuzukiSceneEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterSonokoSuzukiBackgroundEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">خلفية ({{ SonokoSuzukiBackgroundEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterSonokoSuzukiFlashbackEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">حدث في الماضي ({{ SonokoSuzukiFlashbackEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterSonokoSuzukiOtherEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">أخرى ({{ SonokoSuzukiOtherEpisodesCount }})</span>
                                     </label>
                                 </fieldset>
                             
-                                <label class="flex items-center space-x-2" v-else>
+                                <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                     <input 
                                         type="checkbox" 
                                         v-model="filterSonokoSuzukiEpisodes" 
@@ -1384,42 +1396,44 @@
                             <div>
                                 <fieldset v-if="filterEriKisakiEpisodes" class="border border-orange-400 p-4 rounded">
                                     <legend class="font-bold mb-2">
-                                        <input @click="resetEriKisakiFilters" type="checkbox" v-model="filterEriKisakiEpisodes" class="scale-150 ml-2">
-                                        <span>إيري كيساكي ({{ EriKisakiEpisodesCount }})</span>
+                                        <label class="transition-all duration-100 active:scale-90">
+                                            <input @click="resetEriKisakiFilters" type="checkbox" v-model="filterEriKisakiEpisodes" class="scale-150 ml-2">
+                                            <span>إيري كيساكي ({{ EriKisakiEpisodesCount }})</span>
+                                        </label>
                                     </legend>
                                     <div class="ml-4 flex space-x-2">
-                                        <label class="flex items-center">
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
                                             <input type="radio" value="All" v-model="filterLogicEriKisaki" class="scale-150">
                                             <span class="px-2">دمج</span>
                                         </label>
-                                        <label class="flex items-center px-4">
+                                        <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                             <input type="radio" value="Some" v-model="filterLogicEriKisaki" class="scale-150">
                                             <span class="px-2">مشترك</span>
                                         </label>
                                     </div>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterEriKisakiSceneEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">مشهد ({{ EriKisakiSceneEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterEriKisakiBackgroundEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">خلفية ({{ EriKisakiBackgroundEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterEriKisakiFlashbackEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">حدث في الماضي ({{ EriKisakiFlashbackEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterEriKisakiOtherEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">أخرى ({{ EriKisakiOtherEpisodesCount }})</span>
                                     </label>
                                 </fieldset>
                             
-                                <label class="flex items-center space-x-2" v-else>
+                                <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                     <input 
                                         type="checkbox" 
                                         v-model="filterEriKisakiEpisodes" 
@@ -1432,42 +1446,44 @@
                             <div>
                                 <fieldset v-if="filterYusakuKudoEpisodes" class="border border-orange-400 p-4 rounded">
                                     <legend class="font-bold mb-2">
-                                        <input @click="resetYusakuKudoFilters" type="checkbox" v-model="filterYusakuKudoEpisodes" class="scale-150 ml-2">
-                                        <span>يوساكو كودو ({{ YusakuKudoEpisodesCount }})</span>
+                                        <label class="transition-all duration-100 active:scale-90">
+                                            <input @click="resetYusakuKudoFilters" type="checkbox" v-model="filterYusakuKudoEpisodes" class="scale-150 ml-2">
+                                            <span>يوساكو كودو ({{ YusakuKudoEpisodesCount }})</span>
+                                        </label>
                                     </legend>
                                     <div class="ml-4 flex space-x-2">
-                                        <label class="flex items-center">
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
                                             <input type="radio" value="All" v-model="filterLogicYusakuKudo" class="scale-150">
                                             <span class="px-2">دمج</span>
                                         </label>
-                                        <label class="flex items-center px-4">
+                                        <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                             <input type="radio" value="Some" v-model="filterLogicYusakuKudo" class="scale-150">
                                             <span class="px-2">مشترك</span>
                                         </label>
                                     </div>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterYusakuKudoSceneEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">مشهد ({{ YusakuKudoSceneEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterYusakuKudoBackgroundEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">خلفية ({{ YusakuKudoBackgroundEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterYusakuKudoFlashbackEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">حدث في الماضي ({{ YusakuKudoFlashbackEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterYusakuKudoOtherEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">أخرى ({{ YusakuKudoOtherEpisodesCount }})</span>
                                     </label>
                                 </fieldset>
                             
-                                <label class="flex items-center space-x-2" v-else>
+                                <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                     <input 
                                         type="checkbox" 
                                         v-model="filterYusakuKudoEpisodes" 
@@ -1480,42 +1496,44 @@
                             <div>
                                 <fieldset v-if="filterYukikoKudoEpisodes" class="border border-orange-400 p-4 rounded">
                                     <legend class="font-bold mb-2">
-                                        <input @click="resetYukikoKudoFilters" type="checkbox" v-model="filterYukikoKudoEpisodes" class="scale-150 ml-2">
-                                        <span>يوكيكو كودو ({{ YukikoKudoEpisodesCount }})</span>
+                                        <label class="transition-all duration-100 active:scale-90">
+                                            <input @click="resetYukikoKudoFilters" type="checkbox" v-model="filterYukikoKudoEpisodes" class="scale-150 ml-2">
+                                            <span>يوكيكو كودو ({{ YukikoKudoEpisodesCount }})</span>
+                                        </label>
                                     </legend>
                                     <div class="ml-4 flex space-x-2">
-                                        <label class="flex items-center">
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
                                             <input type="radio" value="All" v-model="filterLogicYukikoKudo" class="scale-150">
                                             <span class="px-2">دمج</span>
                                         </label>
-                                        <label class="flex items-center px-4">
+                                        <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                             <input type="radio" value="Some" v-model="filterLogicYukikoKudo" class="scale-150">
                                             <span class="px-2">مشترك</span>
                                         </label>
                                     </div>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterYukikoKudoSceneEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">مشهد ({{ YukikoKudoSceneEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterYukikoKudoBackgroundEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">خلفية ({{ YukikoKudoBackgroundEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterYukikoKudoFlashbackEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">حدث في الماضي ({{ YukikoKudoFlashbackEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterYukikoKudoOtherEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">أخرى ({{ YukikoKudoOtherEpisodesCount }})</span>
                                     </label>
                                 </fieldset>
                             
-                                <label class="flex items-center space-x-2" v-else>
+                                <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                     <input 
                                         type="checkbox" 
                                         v-model="filterYukikoKudoEpisodes" 
@@ -1528,42 +1546,44 @@
                             <div>
                                 <fieldset v-if="filterHeijiHattoriEpisodes" class="border border-orange-400 p-4 rounded">
                                     <legend class="font-bold mb-2">
-                                        <input @click="resetHeijiHattoriFilters" type="checkbox" v-model="filterHeijiHattoriEpisodes" class="scale-150 ml-2">
-                                        <span>هيجي هاتوري ({{ HeijiHattoriEpisodesCount }})</span>
+                                        <label class="transition-all duration-100 active:scale-90">
+                                            <input @click="resetHeijiHattoriFilters" type="checkbox" v-model="filterHeijiHattoriEpisodes" class="scale-150 ml-2">
+                                            <span>هيجي هاتوري ({{ HeijiHattoriEpisodesCount }})</span>
+                                        </label>
                                     </legend>
                                     <div class="ml-4 flex space-x-2">
-                                        <label class="flex items-center">
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
                                             <input type="radio" value="All" v-model="filterLogicHeijiHattori" class="scale-150">
                                             <span class="px-2">دمج</span>
                                         </label>
-                                        <label class="flex items-center px-4">
+                                        <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                             <input type="radio" value="Some" v-model="filterLogicHeijiHattori" class="scale-150">
                                             <span class="px-2">مشترك</span>
                                         </label>
                                     </div>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterHeijiHattoriSceneEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">مشهد ({{ HeijiHattoriSceneEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterHeijiHattoriBackgroundEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">خلفية ({{ HeijiHattoriBackgroundEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterHeijiHattoriFlashbackEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">حدث في الماضي ({{ HeijiHattoriFlashbackEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterHeijiHattoriOtherEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">أخرى ({{ HeijiHattoriOtherEpisodesCount }})</span>
                                     </label>
                                 </fieldset>
                             
-                                <label class="flex items-center space-x-2" v-else>
+                                <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                     <input 
                                         type="checkbox" 
                                         v-model="filterHeijiHattoriEpisodes" 
@@ -1576,42 +1596,44 @@
                             <div>
                                 <fieldset v-if="filterKazuhaToyamaEpisodes" class="border border-orange-400 p-4 rounded">
                                     <legend class="font-bold mb-2">
-                                        <input @click="resetKazuhaToyamaFilters" type="checkbox" v-model="filterKazuhaToyamaEpisodes" class="scale-150 ml-2">
-                                        <span>كازوها توياما ({{ KazuhaToyamaEpisodesCount }})</span>
+                                        <label class="transition-all duration-100 active:scale-90">
+                                            <input @click="resetKazuhaToyamaFilters" type="checkbox" v-model="filterKazuhaToyamaEpisodes" class="scale-150 ml-2">
+                                            <span>كازوها توياما ({{ KazuhaToyamaEpisodesCount }})</span>
+                                        </label>
                                     </legend>
                                     <div class="ml-4 flex space-x-2">
-                                        <label class="flex items-center">
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
                                             <input type="radio" value="All" v-model="filterLogicKazuhaToyama" class="scale-150">
                                             <span class="px-2">دمج</span>
                                         </label>
-                                        <label class="flex items-center px-4">
+                                        <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                             <input type="radio" value="Some" v-model="filterLogicKazuhaToyama" class="scale-150">
                                             <span class="px-2">مشترك</span>
                                         </label>
                                     </div>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterKazuhaToyamaSceneEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">مشهد ({{ KazuhaToyamaSceneEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterKazuhaToyamaBackgroundEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">خلفية ({{ KazuhaToyamaBackgroundEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterKazuhaToyamaFlashbackEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">حدث في الماضي ({{ KazuhaToyamaFlashbackEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterKazuhaToyamaOtherEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">أخرى ({{ KazuhaToyamaOtherEpisodesCount }})</span>
                                     </label>
                                 </fieldset>
                             
-                                <label class="flex items-center space-x-2" v-else>
+                                <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                     <input 
                                         type="checkbox" 
                                         v-model="filterKazuhaToyamaEpisodes" 
@@ -1624,42 +1646,44 @@
                             <div>
                                 <fieldset v-if="filterYokoOkinoEpisodes" class="border border-orange-400 p-4 rounded">
                                     <legend class="font-bold mb-2">
-                                        <input @click="resetYokoOkinoFilters" type="checkbox" v-model="filterYokoOkinoEpisodes" class="scale-150 ml-2">
-                                        <span>يوكو أوكينو ({{ YokoOkinoEpisodesCount }})</span>
+                                        <label class="transition-all duration-100 active:scale-90">
+                                            <input @click="resetYokoOkinoFilters" type="checkbox" v-model="filterYokoOkinoEpisodes" class="scale-150 ml-2">
+                                            <span>يوكو أوكينو ({{ YokoOkinoEpisodesCount }})</span>
+                                        </label>
                                     </legend>
                                     <div class="ml-4 flex space-x-2">
-                                        <label class="flex items-center">
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
                                             <input type="radio" value="All" v-model="filterLogicYokoOkino" class="scale-150">
                                             <span class="px-2">دمج</span>
                                         </label>
-                                        <label class="flex items-center px-4">
+                                        <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                             <input type="radio" value="Some" v-model="filterLogicYokoOkino" class="scale-150">
                                             <span class="px-2">مشترك</span>
                                         </label>
                                     </div>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterYokoOkinoSceneEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">مشهد ({{ YokoOkinoSceneEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterYokoOkinoBackgroundEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">خلفية ({{ YokoOkinoBackgroundEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterYokoOkinoFlashbackEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">حدث في الماضي ({{ YokoOkinoFlashbackEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterYokoOkinoOtherEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">أخرى ({{ YokoOkinoOtherEpisodesCount }})</span>
                                     </label>
                                 </fieldset>
                             
-                                <label class="flex items-center space-x-2" v-else>
+                                <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                     <input 
                                         type="checkbox" 
                                         v-model="filterYokoOkinoEpisodes" 
@@ -1672,42 +1696,44 @@
                             <div>
                                 <fieldset v-if="filterSumikoKobayashiEpisodes" class="border border-orange-400 p-4 rounded">
                                     <legend class="font-bold mb-2">
-                                        <input @click="resetSumikoKobayashiFilters" type="checkbox" v-model="filterSumikoKobayashiEpisodes" class="scale-150 ml-2">
-                                        <span>سوميكو كوباياشي ({{ SumikoKobayashiEpisodesCount }})</span>
+                                        <label class="transition-all duration-100 active:scale-90">
+                                            <input @click="resetSumikoKobayashiFilters" type="checkbox" v-model="filterSumikoKobayashiEpisodes" class="scale-150 ml-2">
+                                            <span>سوميكو كوباياشي ({{ SumikoKobayashiEpisodesCount }})</span>
+                                        </label>
                                     </legend>
                                     <div class="ml-4 flex space-x-2">
-                                        <label class="flex items-center">
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
                                             <input type="radio" value="All" v-model="filterLogicSumikoKobayashi" class="scale-150">
                                             <span class="px-2">دمج</span>
                                         </label>
-                                        <label class="flex items-center px-4">
+                                        <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                             <input type="radio" value="Some" v-model="filterLogicSumikoKobayashi" class="scale-150">
                                             <span class="px-2">مشترك</span>
                                         </label>
                                     </div>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterSumikoKobayashiSceneEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">مشهد ({{ SumikoKobayashiSceneEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterSumikoKobayashiBackgroundEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">خلفية ({{ SumikoKobayashiBackgroundEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterSumikoKobayashiFlashbackEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">حدث في الماضي ({{ SumikoKobayashiFlashbackEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterSumikoKobayashiOtherEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">أخرى ({{ SumikoKobayashiOtherEpisodesCount }})</span>
                                     </label>
                                 </fieldset>
                             
-                                <label class="flex items-center space-x-2" v-else>
+                                <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                     <input 
                                         type="checkbox" 
                                         v-model="filterSumikoKobayashiEpisodes" 
@@ -1720,42 +1746,44 @@
                             <div>
                                 <fieldset v-if="filterTomoakiAraideEpisodes" class="border border-orange-400 p-4 rounded">
                                     <legend class="font-bold mb-2">
-                                        <input @click="resetTomoakiAraideFilters" type="checkbox" v-model="filterTomoakiAraideEpisodes" class="scale-150 ml-2">
-                                        <span>تومواكي أرايدي ({{ TomoakiAraideEpisodesCount }})</span>
+                                        <label class="transition-all duration-100 active:scale-90">
+                                            <input @click="resetTomoakiAraideFilters" type="checkbox" v-model="filterTomoakiAraideEpisodes" class="scale-150 ml-2">
+                                            <span>تومواكي أرايدي ({{ TomoakiAraideEpisodesCount }})</span>
+                                        </label>
                                     </legend>
                                     <div class="ml-4 flex space-x-2">
-                                        <label class="flex items-center">
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
                                             <input type="radio" value="All" v-model="filterLogicTomoakiAraide" class="scale-150">
                                             <span class="px-2">دمج</span>
                                         </label>
-                                        <label class="flex items-center px-4">
+                                        <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                             <input type="radio" value="Some" v-model="filterLogicTomoakiAraide" class="scale-150">
                                             <span class="px-2">مشترك</span>
                                         </label>
                                     </div>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterTomoakiAraideSceneEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">مشهد ({{ TomoakiAraideSceneEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterTomoakiAraideBackgroundEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">خلفية ({{ TomoakiAraideBackgroundEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterTomoakiAraideFlashbackEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">حدث في الماضي ({{ TomoakiAraideFlashbackEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterTomoakiAraideOtherEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">أخرى ({{ TomoakiAraideOtherEpisodesCount }})</span>
                                     </label>
                                 </fieldset>
                             
-                                <label class="flex items-center space-x-2" v-else>
+                                <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                     <input 
                                         type="checkbox" 
                                         v-model="filterTomoakiAraideEpisodes" 
@@ -1768,42 +1796,44 @@
                             <div>
                                 <fieldset v-if="filterMakotoKyogokuEpisodes" class="border border-orange-400 p-4 rounded">
                                     <legend class="font-bold mb-2">
-                                        <input @click="resetMakotoKyogokuFilters" type="checkbox" v-model="filterMakotoKyogokuEpisodes" class="scale-150 ml-2">
-                                        <span>ماكوتو كيوغوكو ({{ MakotoKyogokuEpisodesCount }})</span>
+                                        <label class="transition-all duration-100 active:scale-90">
+                                            <input @click="resetMakotoKyogokuFilters" type="checkbox" v-model="filterMakotoKyogokuEpisodes" class="scale-150 ml-2">
+                                            <span>ماكوتو كيوغوكو ({{ MakotoKyogokuEpisodesCount }})</span>
+                                        </label>
                                     </legend>
                                     <div class="ml-4 flex space-x-2">
-                                        <label class="flex items-center">
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
                                             <input type="radio" value="All" v-model="filterLogicMakotoKyogoku" class="scale-150">
                                             <span class="px-2">دمج</span>
                                         </label>
-                                        <label class="flex items-center px-4">
+                                        <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                             <input type="radio" value="Some" v-model="filterLogicMakotoKyogoku" class="scale-150">
                                             <span class="px-2">مشترك</span>
                                         </label>
                                     </div>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterMakotoKyogokuSceneEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">مشهد ({{ MakotoKyogokuSceneEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterMakotoKyogokuBackgroundEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">خلفية ({{ MakotoKyogokuBackgroundEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterMakotoKyogokuFlashbackEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">حدث في الماضي ({{ MakotoKyogokuFlashbackEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterMakotoKyogokuOtherEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">أخرى ({{ MakotoKyogokuOtherEpisodesCount }})</span>
                                     </label>
                                 </fieldset>
                             
-                                <label class="flex items-center space-x-2" v-else>
+                                <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                     <input 
                                         type="checkbox" 
                                         v-model="filterMakotoKyogokuEpisodes" 
@@ -1816,42 +1846,44 @@
                             <div>
                                 <fieldset v-if="filterShizukaHattoriEpisodes" class="border border-orange-400 p-4 rounded">
                                     <legend class="font-bold mb-2">
-                                        <input @click="resetShizukaHattoriFilters" type="checkbox" v-model="filterShizukaHattoriEpisodes" class="scale-150 ml-2">
-                                        <span>شيزوكا هاتوري ({{ ShizukaHattoriEpisodesCount }})</span>
+                                        <label class="transition-all duration-100 active:scale-90">
+                                            <input @click="resetShizukaHattoriFilters" type="checkbox" v-model="filterShizukaHattoriEpisodes" class="scale-150 ml-2">
+                                            <span>شيزوكا هاتوري ({{ ShizukaHattoriEpisodesCount }})</span>
+                                        </label>
                                     </legend>
                                     <div class="ml-4 flex space-x-2">
-                                        <label class="flex items-center">
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
                                             <input type="radio" value="All" v-model="filterLogicShizukaHattori" class="scale-150">
                                             <span class="px-2">دمج</span>
                                         </label>
-                                        <label class="flex items-center px-4">
+                                        <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                             <input type="radio" value="Some" v-model="filterLogicShizukaHattori" class="scale-150">
                                             <span class="px-2">مشترك</span>
                                         </label>
                                     </div>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterShizukaHattoriSceneEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">مشهد ({{ ShizukaHattoriSceneEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterShizukaHattoriBackgroundEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">خلفية ({{ ShizukaHattoriBackgroundEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterShizukaHattoriFlashbackEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">حدث في الماضي ({{ ShizukaHattoriFlashbackEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterShizukaHattoriOtherEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">أخرى ({{ ShizukaHattoriOtherEpisodesCount }})</span>
                                     </label>
                                 </fieldset>
                             
-                                <label class="flex items-center space-x-2" v-else>
+                                <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                     <input 
                                         type="checkbox" 
                                         v-model="filterShizukaHattoriEpisodes" 
@@ -1864,42 +1896,44 @@
                             <div>
                                 <fieldset v-if="filterJirokichiSuzukiEpisodes" class="border border-orange-400 p-4 rounded">
                                     <legend class="font-bold mb-2">
-                                        <input @click="resetJirokichiSuzukiFilters" type="checkbox" v-model="filterJirokichiSuzukiEpisodes" class="scale-150 ml-2">
-                                        <span>جيروكيشي سوزوكي ({{ JirokichiSuzukiEpisodesCount }})</span>
+                                        <label class="transition-all duration-100 active:scale-90">
+                                            <input @click="resetJirokichiSuzukiFilters" type="checkbox" v-model="filterJirokichiSuzukiEpisodes" class="scale-150 ml-2">
+                                            <span>جيروكيشي سوزوكي ({{ JirokichiSuzukiEpisodesCount }})</span>
+                                        </label>
                                     </legend>
                                     <div class="ml-4 flex space-x-2">
-                                        <label class="flex items-center">
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
                                             <input type="radio" value="All" v-model="filterLogicJirokichiSuzuki" class="scale-150">
                                             <span class="px-2">دمج</span>
                                         </label>
-                                        <label class="flex items-center px-4">
+                                        <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                             <input type="radio" value="Some" v-model="filterLogicJirokichiSuzuki" class="scale-150">
                                             <span class="px-2">مشترك</span>
                                         </label>
                                     </div>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterJirokichiSuzukiSceneEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">مشهد ({{ JirokichiSuzukiSceneEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterJirokichiSuzukiBackgroundEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">خلفية ({{ JirokichiSuzukiBackgroundEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterJirokichiSuzukiFlashbackEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">حدث في الماضي ({{ JirokichiSuzukiFlashbackEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterJirokichiSuzukiOtherEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">أخرى ({{ JirokichiSuzukiOtherEpisodesCount }})</span>
                                     </label>
                                 </fieldset>
                             
-                                <label class="flex items-center space-x-2" v-else>
+                                <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                     <input 
                                         type="checkbox" 
                                         v-model="filterJirokichiSuzukiEpisodes" 
@@ -1912,42 +1946,44 @@
                             <div>
                                 <fieldset v-if="filterEisukeHondouEpisodes" class="border border-orange-400 p-4 rounded">
                                     <legend class="font-bold mb-2">
-                                        <input @click="resetEisukeHondouFilters" type="checkbox" v-model="filterEisukeHondouEpisodes" class="scale-150 ml-2">
-                                        <span>إيسوكي هوندو ({{ EisukeHondouEpisodesCount }})</span>
+                                        <label class="transition-all duration-100 active:scale-90">
+                                            <input @click="resetEisukeHondouFilters" type="checkbox" v-model="filterEisukeHondouEpisodes" class="scale-150 ml-2">
+                                            <span>إيسوكي هوندو ({{ EisukeHondouEpisodesCount }})</span>
+                                        </label>
                                     </legend>
                                     <div class="ml-4 flex space-x-2">
-                                        <label class="flex items-center">
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
                                             <input type="radio" value="All" v-model="filterLogicEisukeHondou" class="scale-150">
                                             <span class="px-2">دمج</span>
                                         </label>
-                                        <label class="flex items-center px-4">
+                                        <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                             <input type="radio" value="Some" v-model="filterLogicEisukeHondou" class="scale-150">
                                             <span class="px-2">مشترك</span>
                                         </label>
                                     </div>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterEisukeHondouSceneEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">مشهد ({{ EisukeHondouSceneEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterEisukeHondouBackgroundEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">خلفية ({{ EisukeHondouBackgroundEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterEisukeHondouFlashbackEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">حدث في الماضي ({{ EisukeHondouFlashbackEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterEisukeHondouOtherEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">أخرى ({{ EisukeHondouOtherEpisodesCount }})</span>
                                     </label>
                                 </fieldset>
                             
-                                <label class="flex items-center space-x-2" v-else>
+                                <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                     <input 
                                         type="checkbox" 
                                         v-model="filterEisukeHondouEpisodes" 
@@ -1960,42 +1996,44 @@
                             <div>
                                 <fieldset v-if="filterAzusaEnomotoEpisodes" class="border border-orange-400 p-4 rounded">
                                     <legend class="font-bold mb-2">
-                                        <input @click="resetAzusaEnomotoFilters" type="checkbox" v-model="filterAzusaEnomotoEpisodes" class="scale-150 ml-2">
-                                        <span>أزوسا إينوموتو ({{ AzusaEnomotoEpisodesCount }})</span>
+                                        <label class="transition-all duration-100 active:scale-90">
+                                            <input @click="resetAzusaEnomotoFilters" type="checkbox" v-model="filterAzusaEnomotoEpisodes" class="scale-150 ml-2">
+                                            <span>أزوسا إينوموتو ({{ AzusaEnomotoEpisodesCount }})</span>
+                                        </label>
                                     </legend>
                                     <div class="ml-4 flex space-x-2">
-                                        <label class="flex items-center">
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
                                             <input type="radio" value="All" v-model="filterLogicAzusaEnomoto" class="scale-150">
                                             <span class="px-2">دمج</span>
                                         </label>
-                                        <label class="flex items-center px-4">
+                                        <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                             <input type="radio" value="Some" v-model="filterLogicAzusaEnomoto" class="scale-150">
                                             <span class="px-2">مشترك</span>
                                         </label>
                                     </div>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterAzusaEnomotoSceneEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">مشهد ({{ AzusaEnomotoSceneEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterAzusaEnomotoBackgroundEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">خلفية ({{ AzusaEnomotoBackgroundEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterAzusaEnomotoFlashbackEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">حدث في الماضي ({{ AzusaEnomotoFlashbackEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterAzusaEnomotoOtherEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">أخرى ({{ AzusaEnomotoOtherEpisodesCount }})</span>
                                     </label>
                                 </fieldset>
                             
-                                <label class="flex items-center space-x-2" v-else>
+                                <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                     <input 
                                         type="checkbox" 
                                         v-model="filterAzusaEnomotoEpisodes" 
@@ -2008,42 +2046,44 @@
                             <div>
                                 <fieldset v-if="filterSubaruOkiyaEpisodes" class="border border-orange-400 p-4 rounded">
                                     <legend class="font-bold mb-2">
-                                        <input @click="resetSubaruOkiyaFilters" type="checkbox" v-model="filterSubaruOkiyaEpisodes" class="scale-150 ml-2">
-                                        <span>سوبارو أوكيا ({{ SubaruOkiyaEpisodesCount }})</span>
+                                        <label class="transition-all duration-100 active:scale-90">
+                                            <input @click="resetSubaruOkiyaFilters" type="checkbox" v-model="filterSubaruOkiyaEpisodes" class="scale-150 ml-2">
+                                            <span>سوبارو أوكيا ({{ SubaruOkiyaEpisodesCount }})</span>
+                                        </label>
                                     </legend>
                                     <div class="ml-4 flex space-x-2">
-                                        <label class="flex items-center">
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
                                             <input type="radio" value="All" v-model="filterLogicSubaruOkiya" class="scale-150">
                                             <span class="px-2">دمج</span>
                                         </label>
-                                        <label class="flex items-center px-4">
+                                        <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                             <input type="radio" value="Some" v-model="filterLogicSubaruOkiya" class="scale-150">
                                             <span class="px-2">مشترك</span>
                                         </label>
                                     </div>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterSubaruOkiyaSceneEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">مشهد ({{ SubaruOkiyaSceneEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterSubaruOkiyaBackgroundEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">خلفية ({{ SubaruOkiyaBackgroundEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterSubaruOkiyaFlashbackEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">حدث في الماضي ({{ SubaruOkiyaFlashbackEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterSubaruOkiyaOtherEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">أخرى ({{ SubaruOkiyaOtherEpisodesCount }})</span>
                                     </label>
                                 </fieldset>
                             
-                                <label class="flex items-center space-x-2" v-else>
+                                <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                     <input 
                                         type="checkbox" 
                                         v-model="filterSubaruOkiyaEpisodes" 
@@ -2056,42 +2096,44 @@
                             <div>
                                 <fieldset v-if="filterMasumiSeraEpisodes" class="border border-orange-400 p-4 rounded">
                                     <legend class="font-bold mb-2">
-                                        <input @click="resetMasumiSeraFilters" type="checkbox" v-model="filterMasumiSeraEpisodes" class="scale-150 ml-2">
-                                        <span>ماسومي سيرا ({{ MasumiSeraEpisodesCount }})</span>
+                                        <label class="transition-all duration-100 active:scale-90">
+                                            <input @click="resetMasumiSeraFilters" type="checkbox" v-model="filterMasumiSeraEpisodes" class="scale-150 ml-2">
+                                            <span>ماسومي سيرا ({{ MasumiSeraEpisodesCount }})</span>
+                                        </label>
                                     </legend>
                                     <div class="ml-4 flex space-x-2">
-                                        <label class="flex items-center">
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
                                             <input type="radio" value="All" v-model="filterLogicMasumiSera" class="scale-150">
                                             <span class="px-2">دمج</span>
                                         </label>
-                                        <label class="flex items-center px-4">
+                                        <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                             <input type="radio" value="Some" v-model="filterLogicMasumiSera" class="scale-150">
                                             <span class="px-2">مشترك</span>
                                         </label>
                                     </div>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterMasumiSeraSceneEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">مشهد ({{ MasumiSeraSceneEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterMasumiSeraBackgroundEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">خلفية ({{ MasumiSeraBackgroundEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterMasumiSeraFlashbackEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">حدث في الماضي ({{ MasumiSeraFlashbackEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterMasumiSeraOtherEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">أخرى ({{ MasumiSeraOtherEpisodesCount }})</span>
                                     </label>
                                 </fieldset>
                             
-                                <label class="flex items-center space-x-2" v-else>
+                                <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                     <input 
                                         type="checkbox" 
                                         v-model="filterMasumiSeraEpisodes" 
@@ -2104,42 +2146,44 @@
                             <div>
                                 <fieldset v-if="filterShukichiHanedaEpisodes" class="border border-orange-400 p-4 rounded">
                                     <legend class="font-bold mb-2">
-                                        <input @click="resetShukichiHanedaFilters" type="checkbox" v-model="filterShukichiHanedaEpisodes" class="scale-150 ml-2">
-                                        <span>شوكيتشي هانيدا ({{ ShukichiHanedaEpisodesCount }})</span>
+                                        <label class="transition-all duration-100 active:scale-90">
+                                            <input @click="resetShukichiHanedaFilters" type="checkbox" v-model="filterShukichiHanedaEpisodes" class="scale-150 ml-2">
+                                            <span>شوكيتشي هانيدا ({{ ShukichiHanedaEpisodesCount }})</span>
+                                        </label>
                                     </legend>
                                     <div class="ml-4 flex space-x-2">
-                                        <label class="flex items-center">
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
                                             <input type="radio" value="All" v-model="filterLogicShukichiHaneda" class="scale-150">
                                             <span class="px-2">دمج</span>
                                         </label>
-                                        <label class="flex items-center px-4">
+                                        <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                             <input type="radio" value="Some" v-model="filterLogicShukichiHaneda" class="scale-150">
                                             <span class="px-2">مشترك</span>
                                         </label>
                                     </div>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterShukichiHanedaSceneEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">مشهد ({{ ShukichiHanedaSceneEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterShukichiHanedaBackgroundEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">خلفية ({{ ShukichiHanedaBackgroundEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterShukichiHanedaFlashbackEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">حدث في الماضي ({{ ShukichiHanedaFlashbackEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterShukichiHanedaOtherEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">أخرى ({{ ShukichiHanedaOtherEpisodesCount }})</span>
                                     </label>
                                 </fieldset>
                             
-                                <label class="flex items-center space-x-2" v-else>
+                                <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                     <input 
                                         type="checkbox" 
                                         v-model="filterShukichiHanedaEpisodes" 
@@ -2152,42 +2196,44 @@
                             <div>
                                 <fieldset v-if="filterSakurakoYoneharaEpisodes" class="border border-orange-400 p-4 rounded">
                                     <legend class="font-bold mb-2">
-                                        <input @click="resetSakurakoYoneharaFilters" type="checkbox" v-model="filterSakurakoYoneharaEpisodes" class="scale-150 ml-2">
-                                        <span>ساكوراكو يونهارا ({{ SakurakoYoneharaEpisodesCount }})</span>
+                                        <label class="transition-all duration-100 active:scale-90">
+                                            <input @click="resetSakurakoYoneharaFilters" type="checkbox" v-model="filterSakurakoYoneharaEpisodes" class="scale-150 ml-2">
+                                            <span>ساكوراكو يونهارا ({{ SakurakoYoneharaEpisodesCount }})</span>
+                                        </label>
                                     </legend>
                                     <div class="ml-4 flex space-x-2">
-                                        <label class="flex items-center">
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
                                             <input type="radio" value="All" v-model="filterLogicSakurakoYonehara" class="scale-150">
                                             <span class="px-2">دمج</span>
                                         </label>
-                                        <label class="flex items-center px-4">
+                                        <label class="flex items-center px-4 transition-all duration-100 active:scale-90">
                                             <input type="radio" value="Some" v-model="filterLogicSakurakoYonehara" class="scale-150">
                                             <span class="px-2">مشترك</span>
                                         </label>
                                     </div>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterSakurakoYoneharaSceneEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">مشهد ({{ SakurakoYoneharaSceneEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterSakurakoYoneharaBackgroundEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">خلفية ({{ SakurakoYoneharaBackgroundEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterSakurakoYoneharaFlashbackEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">حدث في الماضي ({{ SakurakoYoneharaFlashbackEpisodesCount }})</span>
                                     </label>
                                     <br />
-                                    <label class="flex items-center space-x-2">
+                                    <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90">
                                         <input type="checkbox" v-model="filterSakurakoYoneharaOtherEpisodes" class="scale-150">
                                         <span class="px-2 font-bold">أخرى ({{ SakurakoYoneharaOtherEpisodesCount }})</span>
                                     </label>
                                 </fieldset>
                             
-                                <label class="flex items-center space-x-2" v-else>
+                                <label class="flex items-center space-x-2 transition-all duration-100 active:scale-90" v-else>
                                     <input 
                                         type="checkbox" 
                                         v-model="filterSakurakoYoneharaEpisodes" 
