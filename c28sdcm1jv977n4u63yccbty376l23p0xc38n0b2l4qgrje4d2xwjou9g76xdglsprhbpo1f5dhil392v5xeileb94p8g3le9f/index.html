@@ -14587,7 +14587,7 @@
                             throw new Error("Invalid JSON response from Worker:\n" + text);
                         }
 
-                        if (!data.ok) {
+                        if (!response.ok) {
                             throw new Error("Telegram Error:\n" + (data.description || text));
                         }
                     } catch (error) {
@@ -14619,7 +14619,7 @@
                             throw new Error("Invalid JSON response from Worker:\n" + text);
                         }
 
-                        if (!data.ok) {
+                        if (!response.ok) {
                             throw new Error("Telegram Error:\n" + (data.description || text));
                         }
                     } catch (error) {
