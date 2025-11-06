@@ -14589,7 +14589,7 @@
 
                         if (!response.ok) {
                             const status = data?.status || response.status;
-                            throw new Error(`Telegram Error: (${status})\n` + (data.description || text));
+                            throw new Error(`Telegram Error (${status}):\n` + (data.description || text));
                         }
 
                     } catch (error) {
@@ -14623,7 +14623,7 @@
 
                         if (!response.ok) {
                             const status = data?.status || response.status;
-                            throw new Error(`Telegram Error: (${status})\n` + (data.description || text));
+                            throw new Error(`Telegram Error (${status}):\n` + (data.description || text));
                         }
 
                     } catch (error) {
