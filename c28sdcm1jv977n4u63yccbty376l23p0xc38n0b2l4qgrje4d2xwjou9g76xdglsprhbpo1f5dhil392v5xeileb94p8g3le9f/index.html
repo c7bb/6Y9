@@ -5428,7 +5428,7 @@
                         <th :class="['border border-gray-300 text-xl px-4 py-2 text-center w-5/6', isAnyFilterActive ? 'bg-orange-500' : '']">
                             {{ episodeTitleHeader }}
                             <br />
-                            <span v-if="isAnyFilterActive" @click="openEmptyPopup" class="text-base text-black cursor-pointer transition-all duration-100 active:scale-90">
+                            <span v-if="isAnyFilterActive" @click="openEmptyPopup" class="inline-block text-base text-black cursor-pointer transition-all duration-100 active:scale-90">
                                 ~ (التصفية قيد التشغيل حالياً) ~
                             </span>
                             <br v-if="isAnyFilterActive" />
