@@ -14588,14 +14588,16 @@
                         }
 
                         if (!response.ok) {
-                            throw new Error("Telegram Error:\n" + (data.description || text));
+                            const status = data?.status || response.status;
+                            throw new Error(`Telegram Error: (${status})\n` + (data.description || text));
                         }
+
                     } catch (error) {
                         console.error(error);
                         throw new Error(error.message);
                     }
                 },
-                
+
                 async sendMangaResponse(chatId, fileId, caption) {
                     const payload = new URLSearchParams();
                     payload.append("method", "sendDocument");
@@ -14620,8 +14622,10 @@
                         }
 
                         if (!response.ok) {
-                            throw new Error("Telegram Error:\n" + (data.description || text));
+                            const status = data?.status || response.status;
+                            throw new Error(`Telegram Error: (${status})\n` + (data.description || text));
                         }
+
                     } catch (error) {
                         console.error(error);
                         throw new Error(error.message);
