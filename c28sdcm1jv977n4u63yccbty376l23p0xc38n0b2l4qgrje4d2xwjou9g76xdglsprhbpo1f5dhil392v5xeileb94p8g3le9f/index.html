@@ -424,7 +424,7 @@
                     <div class="sticky top-0 bg-cyan-900 pt-4 pl-4 pr-4 pb-2">
                         <div class="flex justify-between items-center">
                             <h2 class="text-xl font-bold">النافذة المباشرة</h2>
-                            <button @click="closeDirectWindow" class="text-red-600 hover:text-yellow-300">
+                            <button @click="closeDirectWindow" class="text-red-600 hover:text-yellow-300 transition-all duration-100 active:scale-90">
                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png" alt="Close" class="h-8 w-8" />
                               </button>                              
                         </div>
@@ -509,7 +509,7 @@
                             <fieldset class="border p-2 rounded">
                                 <legend class="flex items-center gap-2">
                                     <span>الحلقات المتاحة</span>
-                                    <button v-if="selectedEpisode" @click="resetEpisodesView" class="p-1 hover:bg-gray-700 rounded">
+                                    <button v-if="selectedEpisode" @click="resetEpisodesView" class="p-1 hover:bg-gray-700 rounded transition-all duration-100 active:scale-90">
                                         <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/previous.png" alt="رجوع" class="h-6 w-6" />
                                     </button>
                                 </legend>
@@ -524,7 +524,7 @@
                                 <div v-else class="flex flex-col justify-center gap-4">
                                     <div class="flex items-center px-4">
                                         <div class="w-8 flex justify-start">
-                                            <button :disabled="!hasNextEpisode" @click="navigateToNextEpisode(); resetStatusForEpisodeManga();" class="hover:opacity-70 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
+                                            <button :disabled="!hasNextEpisode" @click="navigateToNextEpisode(); resetStatusForEpisodeManga();" class="hover:opacity-70 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/next.png" alt="التالي" class="h-8 w-8" />
                                             </button>
                                         </div>
@@ -532,7 +532,7 @@
                                             <span class="text-lg font-bold">{{ selectedEpisode.EpisodeNumber }}</span>
                                         </div>
                                         <div class="w-8 flex justify-end">
-                                            <button :disabled="!hasPreviousEpisode" @click="navigateToPreviousEpisode(); resetStatusForEpisodeManga();" class="hover:opacity-70 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
+                                            <button :disabled="!hasPreviousEpisode" @click="navigateToPreviousEpisode(); resetStatusForEpisodeManga();" class="hover:opacity-70 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/previous.png" alt="السابق" class="h-8 w-8" />
                                             </button>
                                         </div>
@@ -581,7 +581,7 @@
                             <fieldset class="border p-2 rounded">
                                 <legend class="flex items-center gap-2">
                                     <span>الأفلام المتاحة</span>
-                                    <button v-if="selectedEpisode" @click="resetMoviesView" class="p-1 hover:bg-gray-700 rounded">
+                                    <button v-if="selectedEpisode" @click="resetMoviesView" class="p-1 hover:bg-gray-700 rounded transition-all duration-100 active:scale-90">
                                         <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/previous.png" alt="رجوع" class="h-6 w-6" />
                                     </button>
                                 </legend>
@@ -596,7 +596,7 @@
                                 <div v-else class="flex flex-col justify-center gap-4">
                                     <div class="flex items-center px-4">
                                         <div class="w-8 flex justify-start">
-                                            <button :disabled="!hasNextMovie" @click="navigateToNextMovie(); resetStatusForEpisodeManga();" class="hover:opacity-70 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
+                                            <button :disabled="!hasNextMovie" @click="navigateToNextMovie(); resetStatusForEpisodeManga();" class="hover:opacity-70 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/next.png" alt="التالي" class="h-8 w-8" />
                                             </button>
                                         </div>
@@ -604,7 +604,7 @@
                                             <span class="text-lg font-bold">{{ selectedEpisode.EpisodeNumber }}</span>
                                         </div>
                                         <div class="w-8 flex justify-end">
-                                            <button :disabled="!hasPreviousMovie" @click="navigateToPreviousMovie(); resetStatusForEpisodeManga();" class="hover:opacity-70 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
+                                            <button :disabled="!hasPreviousMovie" @click="navigateToPreviousMovie(); resetStatusForEpisodeManga();" class="hover:opacity-70 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/previous.png" alt="السابق" class="h-8 w-8" />
                                             </button>
                                         </div>
@@ -653,7 +653,7 @@
                             <fieldset class="border p-2 rounded">
                                 <legend class="flex items-center gap-2">
                                     <span>الفصول المتاحة</span>
-                                    <button v-if="selectedManga" @click="resetMangasView" class="p-1 hover:bg-gray-700 rounded">
+                                    <button v-if="selectedManga" @click="resetMangasView" class="p-1 hover:bg-gray-700 rounded transition-all duration-100 active:scale-90">
                                         <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/previous.png" alt="رجوع" class="h-6 w-6" />
                                     </button>
                                 </legend>
@@ -668,7 +668,7 @@
                                 <div v-else class="flex flex-col justify-center gap-4">
                                     <div class="flex items-center px-4">
                                         <div class="w-8 flex justify-start">
-                                            <button :disabled="!hasNextManga" @click="navigateToNextManga(); resetStatusForEpisodeManga();" class="hover:opacity-70 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
+                                            <button :disabled="!hasNextManga" @click="navigateToNextManga(); resetStatusForEpisodeManga();" class="hover:opacity-70 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/next.png" alt="التالي" class="h-8 w-8" />
                                             </button>
                                         </div>
@@ -676,7 +676,7 @@
                                             <span class="text-lg font-bold">{{ selectedManga.MangaNumber }}</span>
                                         </div>
                                         <div class="w-8 flex justify-end">
-                                            <button :disabled="!hasPreviousManga" @click="navigateToPreviousManga(); resetStatusForEpisodeManga();resetStatusForEpisodeManga();" class="hover:opacity-70 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
+                                            <button :disabled="!hasPreviousManga" @click="navigateToPreviousManga(); resetStatusForEpisodeManga();resetStatusForEpisodeManga();" class="hover:opacity-70 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/previous.png" alt="السابق" class="h-8 w-8" />
                                             </button>
                                         </div>
@@ -686,7 +686,7 @@
                                             <button
                                                 :disabled="selectedManga.status === 'success' || selectedManga.status === 'ratelimiting'"
                                                 @click="sendMangaToBotD(selectedManga.MangaFileID, selectedManga.MangaNumber, 0)"
-                                                class="w-full bg-green-500 text-white px-6 py-2 rounded hover:bg-blue-500 flex items-center justify-center shadow-md disabled:opacity-50" dir="ltr"
+                                                class="w-full bg-green-500 text-white px-6 py-2 rounded hover:bg-blue-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90" dir="ltr"
                                                 :class="{ 'opacity-50 cursor-not-allowed': selectedManga.status === 'ratelimiting' }">
                                                 <span v-if="selectedManga.status === 'ratelimiting'">{{ formatMangaSize(selectedManga.MangaFileSize) }}</span>
                                                 <span v-else>{{ formatMangaSize(selectedManga.MangaFileSize) }}</span>
@@ -719,7 +719,7 @@
         <button 
         @click="reloadPage" 
         :disabled="waitTime > 0" 
-        class="bg-blue-500 text-white font-bold py-2 px-4 rounded"
+        class="bg-blue-500 text-white font-bold py-2 px-4 rounded transition-all duration-100 active:scale-90"
         :class="{'opacity-50 cursor-not-allowed': waitTime > 0, 'hover:bg-blue-700': waitTime === 0}">
         حاول مرة أخرى
     </button>    
@@ -799,7 +799,7 @@
                 <fieldset class="border border-gray-300 rounded p-2 w-1/2">
                     <legend class="px-1 font-bold text-white-600 text-sm">{{ episodeTypeLegend }}
                         <button 
-                            class="bg-orange-500 text-white font-bold py-2 px-1 rounded hover:bg-orange-800 transition text-sm" 
+                            class="bg-orange-500 text-white font-bold py-2 px-1 rounded hover:bg-orange-800 transition text-sm transition-all duration-100 active:scale-90" 
                             @click="openEmptyPopup">
                             المزيد
                         </button>
@@ -840,7 +840,7 @@
                             <!-- Close Button in the Top Left of the Title -->
                             <button 
                                 @click="closeEmptyPopup" 
-                                class="absolute top-0 left-0 text-yellow-300 hover:text-yellow-600 font-bold focus:outline-none">
+                                class="absolute top-0 left-0 text-yellow-300 hover:text-yellow-600 font-bold focus:outline-none transition-all duration-100 active:scale-90">
                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png" alt="Close" class="h-8 w-8"/>
                             </button>
                             تصفية موسعة 
@@ -848,10 +848,10 @@
                     
                             <!-- Reset Button (Refresh Icon with Image) -->
                             <button 
-                                @click="resetFilters" 
-                                class="absolute top-0 left-14 text-yellow-300 hover:text-yellow-600 font-bold focus:outline-none">
-                                <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/redo.png" alt="Reset" class="h-8 w-8"/>
-                            </button>
+                            @click="resetFilters" 
+                            class="absolute top-0 left-14 text-yellow-300 hover:text-yellow-600 font-bold focus:outline-none transition-all duration-100 active:scale-90">
+                            <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/redo.png" alt="Reset" class="h-8 w-8"/>
+                        </button>
                         </h2>
                     </div>                    
                     
