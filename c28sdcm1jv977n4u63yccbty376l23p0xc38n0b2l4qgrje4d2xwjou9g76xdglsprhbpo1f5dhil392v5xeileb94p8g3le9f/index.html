@@ -5697,22 +5697,22 @@
 
                 <button @click="nextPage" 
                         :disabled="currentPage === totalPages"
-                        class="bg-blue-700 text-white font-bold px-3 py-3 rounded 
+                        class="bg-blue-700 text-white font-bold px-4 py-2 rounded 
                             hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed 
                             transition-all duration-100 active:bg-blue-800 active:scale-90">
                     التالي
                 </button>
 
                 <div class="flex items-center gap-2 text-white font-bold">
-                    <span>صفحة</span>
+                    <!-- <span>صفحة</span> -->
                     <select v-model="currentPage" 
                             @change="handlePageSelect" 
-                            class="w-24 px-2 py-1 rounded border border-gray-500 bg-gray-800 text-center font-bold">
+                            class="w-24 px-2 py-2 rounded border border-gray-500 bg-gray-800 text-center font-bold">
                         <option v-for="page in totalPages" :key="page" :value="page">
                             {{ page }}
                         </option>
                     </select>
-                    <span>من {{ totalPages }}</span>
+                    <!-- <span>من {{ totalPages }}</span> -->
                 </div>
 
                 <button @click="prevPage" 
