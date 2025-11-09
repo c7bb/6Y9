@@ -14937,6 +14937,9 @@
                     if (this.selectedEpisode?.status === "error") {
                         this.selectedEpisode.status = null;
                     }
+
+                    // Reset ratelimiting flag
+                    this.ratelimiting = false;
                 },
 
                 async checkTelegram() {
