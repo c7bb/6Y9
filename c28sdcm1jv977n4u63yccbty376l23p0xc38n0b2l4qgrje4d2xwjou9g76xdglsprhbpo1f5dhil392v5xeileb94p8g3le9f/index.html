@@ -547,7 +547,7 @@
                                             @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
                                             class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90"
                                             :class="{ 'opacity-50 cursor-not-allowed': video.status === 'ratelimiting' }">
-                                            <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ video.Size }} MB)</span>
+                                            <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ video.Size }} MB) - {{ getCountdown(`video-${selectedEpisode.EpisodeNumber}-${index}`) }}s</span>
                                             <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
                                         </button>
                                         <img 
@@ -621,7 +621,7 @@
                                             @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
                                             class="bg-amber-700 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90"
                                             :class="{ 'opacity-50 cursor-not-allowed': video.status === 'ratelimiting' }">
-                                            <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ video.Size }} MB)</span>
+                                            <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ video.Size }} MB) - {{ getCountdown(`video-${selectedEpisode.EpisodeNumber}-${index}`) }}s</span>
                                             <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
                                         </button>
                                         <img 
@@ -694,7 +694,7 @@
                                                 @click="sendMangaToBotD(selectedManga.MangaFileID, selectedManga.MangaNumber, 0)"
                                                 class="w-full bg-green-500 text-white px-6 py-2 rounded hover:bg-blue-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90" dir="ltr"
                                                 :class="{ 'opacity-50 cursor-not-allowed': selectedManga.status === 'ratelimiting' }">
-                                                <span v-if="selectedManga.status === 'ratelimiting'">{{ formatMangaSize(selectedManga.MangaFileSize) }}</span>
+                                                <span v-if="selectedManga.status === 'ratelimiting'">{{ formatMangaSize(selectedManga.MangaFileSize) }} - {{ getCountdown(`manga-${selectedManga.MangaNumber}`) }}s</span>
                                                 <span v-else>{{ formatMangaSize(selectedManga.MangaFileSize) }}</span>
                                             </button>
                                             <img 
@@ -5603,7 +5603,7 @@
                                             dir="ltr"
                                             :class="{ 'opacity-50 cursor-not-allowed': manga.status === 'ratelimiting' }"
                                         >
-                                            <span v-if="manga.status === 'ratelimiting'">{{ manga.MangaNumber }} ({{ formatMangaSize(manga.MangaFileSize) }})</span>
+                                            <span v-if="manga.status === 'ratelimiting'">{{ manga.MangaNumber }} ({{ formatMangaSize(manga.MangaFileSize) }}) - {{ getCountdown(`manga-${selectedEpisode.EpisodeNumber}-${index}`) }}s</span>
                                             <span v-else>{{ manga.MangaNumber }} ({{ formatMangaSize(manga.MangaFileSize) }})</span>
                                         </button>
                                         <img 
@@ -5821,7 +5821,7 @@
                                                 @click="() => { sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime); }"
                                                 class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90"
                                                 :class="{ 'opacity-50 cursor-not-allowed': video.status === 'ratelimiting' }">
-                                                <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ video.Size }} MB)</span>
+                                                <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ video.Size }} MB) - {{ getCountdown(`video-${selectedEpisode.EpisodeNumber}-${index}`) }}s</span>
                                                 <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
                                             </button>
                                             <img 
@@ -5929,6 +5929,8 @@
                     },
                     errorMessage: "",
                     statusClearTimeout: 2000,
+                    countdowns: {},
+                    countdownIntervals: {},
 
                     ep: 1181,
                     mangaCh: 1153,
@@ -14616,12 +14618,14 @@
                         this.selectedEpisode.EpisodeVideosIDs.forEach((video, i) => {
                             if (i !== index) {
                                 video.status = 'ratelimiting';
+                                this.startCountdown(`video-${this.selectedEpisode.EpisodeNumber}-${i}`);
                             }
                         });
                     }
                     if (this.selectedEpisode.EpisodeMangasIDs) {
-                        this.selectedEpisode.EpisodeMangasIDs.forEach((manga) => {
+                        this.selectedEpisode.EpisodeMangasIDs.forEach((manga, mangaIndex) => {
                             manga.status = 'ratelimiting';
+                            this.startCountdown(`manga-${this.selectedEpisode.EpisodeNumber}-${mangaIndex}`);
                         });
                     }
 
@@ -14703,16 +14707,18 @@
                         
                         // Clear ratelimiting status from all other buttons
                         if (this.selectedEpisode.EpisodeVideosIDs) {
-                            this.selectedEpisode.EpisodeVideosIDs.forEach((video) => {
+                            this.selectedEpisode.EpisodeVideosIDs.forEach((video, i) => {
                                 if (video.status === 'ratelimiting') {
                                     video.status = null;
+                                    this.stopCountdown(`video-${this.selectedEpisode.EpisodeNumber}-${i}`);
                                 }
                             });
                         }
                         if (this.selectedEpisode.EpisodeMangasIDs) {
-                            this.selectedEpisode.EpisodeMangasIDs.forEach((manga) => {
+                            this.selectedEpisode.EpisodeMangasIDs.forEach((manga, mangaIndex) => {
                                 if (manga.status === 'ratelimiting') {
                                     manga.status = null;
+                                    this.stopCountdown(`manga-${this.selectedEpisode.EpisodeNumber}-${mangaIndex}`);
                                 }
                             });
                         }
@@ -14796,14 +14802,16 @@
                     // Set ratelimiting for all other buttons
                     this.ratelimiting = true;
                     if (this.selectedEpisode.EpisodeVideosIDs) {
-                        this.selectedEpisode.EpisodeVideosIDs.forEach((video) => {
+                        this.selectedEpisode.EpisodeVideosIDs.forEach((video, i) => {
                             video.status = 'ratelimiting';
+                            this.startCountdown(`video-${this.selectedEpisode.EpisodeNumber}-${i}`);
                         });
                     }
                     if (this.selectedEpisode.EpisodeMangasIDs) {
                         this.selectedEpisode.EpisodeMangasIDs.forEach((manga, i) => {
                             if (i !== index) {
                                 manga.status = 'ratelimiting';
+                                this.startCountdown(`manga-${this.selectedEpisode.EpisodeNumber}-${i}`);
                             }
                         });
                     }
@@ -14832,16 +14840,18 @@
                         
                         // Clear ratelimiting status from all other buttons
                         if (this.selectedEpisode.EpisodeVideosIDs) {
-                            this.selectedEpisode.EpisodeVideosIDs.forEach((video) => {
+                            this.selectedEpisode.EpisodeVideosIDs.forEach((video, i) => {
                                 if (video.status === 'ratelimiting') {
                                     video.status = null;
+                                    this.stopCountdown(`video-${this.selectedEpisode.EpisodeNumber}-${i}`);
                                 }
                             });
                         }
                         if (this.selectedEpisode.EpisodeMangasIDs) {
-                            this.selectedEpisode.EpisodeMangasIDs.forEach((manga) => {
+                            this.selectedEpisode.EpisodeMangasIDs.forEach((manga, i) => {
                                 if (manga.status === 'ratelimiting') {
                                     manga.status = null;
+                                    this.stopCountdown(`manga-${this.selectedEpisode.EpisodeNumber}-${i}`);
                                 }
                             });
                         }
@@ -14854,13 +14864,15 @@
                     // Set ratelimiting for all other buttons
                     this.ratelimiting = true;
                     if (this.selectedEpisode?.EpisodeVideosIDs) {
-                        this.selectedEpisode.EpisodeVideosIDs.forEach((video) => {
+                        this.selectedEpisode.EpisodeVideosIDs.forEach((video, i) => {
                             video.status = 'ratelimiting';
+                            this.startCountdown(`video-${this.selectedEpisode.EpisodeNumber}-${i}`);
                         });
                     }
                     if (this.selectedEpisode?.EpisodeMangasIDs) {
-                        this.selectedEpisode.EpisodeMangasIDs.forEach((manga) => {
+                        this.selectedEpisode.EpisodeMangasIDs.forEach((manga, mangaIndex) => {
                             manga.status = 'ratelimiting';
+                            this.startCountdown(`manga-${this.selectedEpisode.EpisodeNumber}-${mangaIndex}`);
                         });
                     }
 
@@ -14886,16 +14898,18 @@
                         
                         // Clear ratelimiting status from all other buttons
                         if (this.selectedEpisode?.EpisodeVideosIDs) {
-                            this.selectedEpisode.EpisodeVideosIDs.forEach((video) => {
+                            this.selectedEpisode.EpisodeVideosIDs.forEach((video, i) => {
                                 if (video.status === 'ratelimiting') {
                                     video.status = null;
+                                    this.stopCountdown(`video-${this.selectedEpisode.EpisodeNumber}-${i}`);
                                 }
                             });
                         }
                         if (this.selectedEpisode?.EpisodeMangasIDs) {
-                            this.selectedEpisode.EpisodeMangasIDs.forEach((manga) => {
+                            this.selectedEpisode.EpisodeMangasIDs.forEach((manga, mangaIndex) => {
                                 if (manga.status === 'ratelimiting') {
                                     manga.status = null;
+                                    this.stopCountdown(`manga-${this.selectedEpisode.EpisodeNumber}-${mangaIndex}`);
                                 }
                             });
                         }
@@ -15243,6 +15257,35 @@
                     const maxSize = 24;
                     const calculated = screenWidth / 50;
                     this.fontSize = Math.min(Math.max(calculated, minSize), maxSize);
+                },
+
+                startCountdown(key) {
+                    // Clear any existing countdown for this key
+                    this.stopCountdown(key);
+                    
+                    // Initialize countdown in seconds
+                    this.countdowns[key] = Math.ceil(this.statusClearTimeout / 1000);
+                    
+                    // Start interval to update countdown every second
+                    this.countdownIntervals[key] = setInterval(() => {
+                        if (this.countdowns[key] > 0) {
+                            this.countdowns[key]--;
+                        } else {
+                            this.stopCountdown(key);
+                        }
+                    }, 1000);
+                },
+
+                stopCountdown(key) {
+                    if (this.countdownIntervals[key]) {
+                        clearInterval(this.countdownIntervals[key]);
+                        delete this.countdownIntervals[key];
+                        delete this.countdowns[key];
+                    }
+                },
+
+                getCountdown(key) {
+                    return this.countdowns[key] || 0;
                 },
 
             },
