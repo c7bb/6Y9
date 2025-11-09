@@ -405,7 +405,7 @@
 
             <!-- Updated Menu Button -->
             <div class="fixed top-4 right-4 z-50 menu-container">
-                <button @click.stop="toggleMenu" class="bg-gray-700 text-white p-2 rounded flex flex-col items-center transition-all duration-100 active:scale-90">
+                <button @click.stop="toggleMenu" :disabled="loading" class="bg-gray-700 text-white p-2 rounded flex flex-col items-center transition-all duration-100 active:scale-90 disabled:cursor-not-allowed">
                     <span class="block w-6 h-1 bg-white mb-1"></span>
                     <span class="block w-6 h-1 bg-white mb-1"></span>
                     <span class="block w-6 h-1 bg-white"></span>
@@ -620,7 +620,7 @@
                                         <button
                                             :disabled="video.status === 'success' || video.status === 'ratelimiting'"
                                             @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
-                                            class="bg-amber-700 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90"
+                                            class="bg-amber-700 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed"
                                             :class="{ 'opacity-50 cursor-not-allowed': video.status === 'ratelimiting' }">
                                             <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ video.Size }} MB)</span>
                                             <span v-else-if="video.countdown !== undefined">{{ video.countdown }}</span>
@@ -694,7 +694,7 @@
                                             <button
                                                 :disabled="selectedManga.status === 'success' || selectedManga.status === 'ratelimiting'"
                                                 @click="sendMangaToBotD(selectedManga.MangaFileID, selectedManga.MangaNumber, 0)"
-                                                class="w-full bg-green-500 text-white px-6 py-2 rounded hover:bg-blue-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90" dir="ltr"
+                                                class="w-full bg-green-500 text-white px-6 py-2 rounded hover:bg-blue-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed" dir="ltr"
                                                 :class="{ 'opacity-50 cursor-not-allowed': selectedManga.status === 'ratelimiting' }">
                                                 <span v-if="selectedManga.status === 'ratelimiting'">{{ formatMangaSize(selectedManga.MangaFileSize) }}</span>
                                                 <span v-else-if="selectedManga.countdown !== undefined">{{ selectedManga.countdown }}</span>
@@ -5366,7 +5366,7 @@
                 {{ loadProgress }}%
               </div>
             </div>
-          </div>          
+        </div>          
         <div v-else>
             <table class="min-w-full border-collapse border border-gray-300">
                 <thead>
@@ -5602,7 +5602,7 @@
                                         <button
                                             :disabled="manga.status === 'success' || manga.status === 'ratelimiting'"
                                             @click="() => { sendMangaToBot(manga.MangaFileID, manga.MangaNumber, index); }"
-                                            class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90"
+                                            class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed"
                                             dir="ltr"
                                             :class="{ 'opacity-50 cursor-not-allowed': manga.status === 'ratelimiting' }"
                                         >
@@ -5823,7 +5823,7 @@
                                             <button
                                                 :disabled="video.status === 'success' || video.status === 'ratelimiting'"
                                                 @click="() => { sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime); }"
-                                                class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90"
+                                                class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed"
                                                 :class="{ 'opacity-50 cursor-not-allowed': video.status === 'ratelimiting' }">
                                                 <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ video.Size }} MB)</span>
                                                 <span v-else-if="video.countdown !== undefined">{{ video.countdown }}</span>
