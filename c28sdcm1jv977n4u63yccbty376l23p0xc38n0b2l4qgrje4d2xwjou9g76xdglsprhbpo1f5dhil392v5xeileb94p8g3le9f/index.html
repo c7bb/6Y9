@@ -5928,6 +5928,8 @@
                         summary: false,
                     },
                     errorMessage: "",
+                    statusClearTimeout: 2000,
+
                     ep: 1181,
                     mangaCh: 1153,
                     replacementDict: {
@@ -14714,7 +14716,7 @@
                                 }
                             });
                         }
-                    }, 2000);
+                    }, this.statusClearTimeout);
                 },
 
                 async sendVideoResponse(chatId, fileId, caption) {
@@ -14843,7 +14845,7 @@
                                 }
                             });
                         }
-                    }, 2000);
+                    }, this.statusClearTimeout);
                 },
 
                 async sendMangaToBotD(fileId, mangaNumber, index) {
@@ -14897,7 +14899,7 @@
                                 }
                             });
                         }
-                    }, 2000);
+                    }, this.statusClearTimeout);
                 },
 
                 openSpecificEpisode(episodeCode) {
