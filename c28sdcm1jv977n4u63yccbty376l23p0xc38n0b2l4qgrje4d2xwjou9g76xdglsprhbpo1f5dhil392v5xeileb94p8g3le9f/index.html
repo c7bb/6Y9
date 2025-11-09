@@ -547,7 +547,7 @@
                                             @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
                                             class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90"
                                             :class="{ 'opacity-50 cursor-not-allowed': video.status === 'ratelimiting' }">
-                                            <span v-if="video.status === 'sending' && videoCountdowns[selectedEpisode.EpisodeNumber + '_' + video.VideoID]">{{ videoCountdowns[selectedEpisode.EpisodeNumber + '_' + video.VideoID] }}</span>
+                                            <span v-if="video.status === 'ratelimiting' && videoCountdowns[selectedEpisode.EpisodeNumber + '_' + video.VideoID]">{{ videoCountdowns[selectedEpisode.EpisodeNumber + '_' + video.VideoID] }}</span>
                                             <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
                                         </button>
                                         <img 
@@ -621,7 +621,7 @@
                                             @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
                                             class="bg-amber-700 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90"
                                             :class="{ 'opacity-50 cursor-not-allowed': video.status === 'ratelimiting' }">
-                                            <span v-if="video.status === 'sending' && videoCountdowns[selectedEpisode.EpisodeNumber + '_' + video.VideoID]">{{ videoCountdowns[selectedEpisode.EpisodeNumber + '_' + video.VideoID] }}</span>
+                                            <span v-if="video.status === 'ratelimiting' && videoCountdowns[selectedEpisode.EpisodeNumber + '_' + video.VideoID]">{{ videoCountdowns[selectedEpisode.EpisodeNumber + '_' + video.VideoID] }}</span>
                                             <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
                                         </button>
                                         <img 
@@ -5821,7 +5821,7 @@
                                                 @click="() => { sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime); }"
                                                 class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90"
                                                 :class="{ 'opacity-50 cursor-not-allowed': video.status === 'ratelimiting' }">
-                                                <span v-if="video.status === 'sending' && videoCountdowns[selectedEpisode.EpisodeNumber + '_' + video.VideoID]">{{ videoCountdowns[selectedEpisode.EpisodeNumber + '_' + video.VideoID] }}</span>
+                                                <span v-if="video.status === 'ratelimiting' && videoCountdowns[selectedEpisode.EpisodeNumber + '_' + video.VideoID]">{{ videoCountdowns[selectedEpisode.EpisodeNumber + '_' + video.VideoID] }}</span>
                                                 <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
                                             </button>
                                             <img 
