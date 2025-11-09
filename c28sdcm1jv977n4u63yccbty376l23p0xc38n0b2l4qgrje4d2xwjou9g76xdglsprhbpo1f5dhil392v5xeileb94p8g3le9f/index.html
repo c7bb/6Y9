@@ -5461,8 +5461,8 @@
                                     <!-- Next Episode Button -->
                                     <button 
                                         v-if="selectedEpisode.EpisodeParts" 
-                                        :disabled="!nextEpisodeExists" 
-                                        @click="fetchNextEpisode" 
+                                        :disabled="!nextEpisodeExists || selectedEpisode.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting')" 
+                                        @click="fetchNextEpisode(); resetStatusForEpisodeManga();" 
                                         class="focus:outline-none ml-12 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90"
                                     >
                                         <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/next.png" alt="التالي" class="h-8 w-8" />
@@ -5471,8 +5471,8 @@
                                     <!-- Previous Episode Button -->
                                     <button 
                                         v-if="selectedEpisode.EpisodeParts" 
-                                        :disabled="!previousEpisodeExists" 
-                                        @click="fetchPreviousEpisode" 
+                                        :disabled="!previousEpisodeExists || selectedEpisode.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting')" 
+                                        @click="fetchPreviousEpisode(); resetStatusForEpisodeManga();" 
                                         class="focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90"
                                     >
                                         <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/previous.png" alt="السابق" class="h-8 w-8" />
