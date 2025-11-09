@@ -14688,7 +14688,7 @@
                         }
                     }
 
-                    // Clear status after 5 seconds
+                    // Clear status after 2 seconds
                     setTimeout(() => {
                         this.selectedEpisode.EpisodeVideosIDs[index].status = null;
                         this.ratelimiting = false;
@@ -14817,7 +14817,7 @@
                         }
                     }
 
-                    // Clear status after 5 seconds
+                    // Clear status after 2 seconds
                     setTimeout(() => {
                         this.selectedEpisode.EpisodeMangasIDs[index].status = null;
                         this.ratelimiting = false;
@@ -14871,7 +14871,7 @@
                         if (this.selectedManga.status === "error") return;
                     }
 
-                    // Clear status after 5 seconds
+                    // Clear status after 2 seconds
                     setTimeout(() => {
                         this.selectedManga.status = null;
                         this.ratelimiting = false;
@@ -14915,6 +14915,7 @@
                         this.selectedEpisode.EpisodeMangasIDs.forEach((manga) => {
                             if (manga.status === "error") {
                                 manga.status = null;
+                                this.ratelimiting = false;
                             }
                         });
                     }
@@ -14924,6 +14925,7 @@
                         this.selectedEpisode.EpisodeVideosIDs.forEach((video) => {
                             if (video.status === "error") {
                                 video.status = null;
+                                this.ratelimiting = false;
                             }
                         });
                     }
@@ -14931,15 +14933,14 @@
                     // Reset the status of selectedManga if it has an 'error' status
                     if (this.selectedManga?.status === "error") {
                         this.selectedManga.status = null;
+                        this.ratelimiting = false;
                     }
 
                     // Reset the status of selectedEpisode if it has an 'error' status
                     if (this.selectedEpisode?.status === "error") {
                         this.selectedEpisode.status = null;
+                        this.ratelimiting = false;
                     }
-
-                    // Reset ratelimiting flag
-                    this.ratelimiting = false;
                 },
 
                 async checkTelegram() {
