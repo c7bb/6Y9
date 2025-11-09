@@ -14685,12 +14685,12 @@
                     if (details) caption += `\n\n*✦✦— محتويات الحلقة —✦✦*${details}`;
 
                     this.selectedEpisode.EpisodeVideosIDs[index].status = 'sending';
-                    // Initialize countdown for this specific button
-                    this.startCountdown(index);
 
                     try {
                         await this.sendVideoResponse(chatId, videoID, caption);
                         this.selectedEpisode.EpisodeVideosIDs[index].status = 'success';
+                        // Initialize countdown for this specific button
+                        this.startCountdown(index);
                         this.errorMessage = "";
                     } catch (error) {
                         this.selectedEpisode.EpisodeVideosIDs[index].status = 'error';
