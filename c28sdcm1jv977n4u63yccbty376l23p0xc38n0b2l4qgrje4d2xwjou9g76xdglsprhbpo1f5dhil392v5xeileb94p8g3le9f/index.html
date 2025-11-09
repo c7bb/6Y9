@@ -697,6 +697,7 @@
                                                 class="w-full bg-green-500 text-white px-6 py-2 rounded hover:bg-blue-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90" dir="ltr"
                                                 :class="{ 'opacity-50 cursor-not-allowed': selectedManga.status === 'ratelimiting' }">
                                                 <span v-if="selectedManga.status === 'ratelimiting'">{{ formatMangaSize(selectedManga.MangaFileSize) }}</span>
+                                                <span v-else-if="selectedManga.countdown !== undefined">{{ selectedManga.countdown }}</span>
                                                 <span v-else>{{ formatMangaSize(selectedManga.MangaFileSize) }}</span>
                                             </button>
                                             <img 
@@ -5606,6 +5607,7 @@
                                             :class="{ 'opacity-50 cursor-not-allowed': manga.status === 'ratelimiting' }"
                                         >
                                             <span v-if="manga.status === 'ratelimiting'">{{ manga.MangaNumber }} ({{ formatMangaSize(manga.MangaFileSize) }})</span>
+                                            <span v-else-if="manga.countdown !== undefined">{{ manga.countdown }}</span>
                                             <span v-else>{{ manga.MangaNumber }} ({{ formatMangaSize(manga.MangaFileSize) }})</span>
                                         </button>
                                         <img 
@@ -14689,7 +14691,6 @@
                     try {
                         await this.sendVideoResponse(chatId, videoID, caption);
                         this.selectedEpisode.EpisodeVideosIDs[index].status = 'success';
-                        // Initialize countdown for this specific button
                         this.startCountdown(index);
                         this.errorMessage = "";
                     } catch (error) {
@@ -14731,6 +14732,12 @@
                                 if (manga.status === 'ratelimiting') {
                                     manga.status = null;
                                 }
+                                // Clear countdown for ratelimiting buttons as well
+                                if (manga.countdownInterval) {
+                                    clearInterval(manga.countdownInterval);
+                                    manga.countdownInterval = null;
+                                }
+                                manga.countdown = undefined;
                             });
                         }
                     }, this.statusClearTimeout);
@@ -14833,6 +14840,7 @@
                     try {
                         await this.sendMangaResponse(chatId, fileId, caption);
                         this.selectedEpisode.EpisodeMangasIDs[index].status = 'success';
+                        this.startCountdownForManga(index);
                         this.errorMessage = "";
                     } catch (error) {
                         this.selectedEpisode.EpisodeMangasIDs[index].status = 'error';
@@ -14844,6 +14852,13 @@
 
                     // Clear status after 2 seconds
                     setTimeout(() => {
+                        // Clear countdown and interval for the clicked button
+                        if (this.selectedEpisode.EpisodeMangasIDs[index].countdownInterval) {
+                            clearInterval(this.selectedEpisode.EpisodeMangasIDs[index].countdownInterval);
+                            this.selectedEpisode.EpisodeMangasIDs[index].countdownInterval = null;
+                        }
+                        this.selectedEpisode.EpisodeMangasIDs[index].countdown = undefined;
+                        
                         this.selectedEpisode.EpisodeMangasIDs[index].status = null;
                         this.ratelimiting = false;
                         
@@ -14853,6 +14868,12 @@
                                 if (video.status === 'ratelimiting') {
                                     video.status = null;
                                 }
+                                // Clear countdown for ratelimiting buttons as well
+                                if (video.countdownInterval) {
+                                    clearInterval(video.countdownInterval);
+                                    video.countdownInterval = null;
+                                }
+                                video.countdown = undefined;
                             });
                         }
                         if (this.selectedEpisode.EpisodeMangasIDs) {
@@ -14860,6 +14881,12 @@
                                 if (manga.status === 'ratelimiting') {
                                     manga.status = null;
                                 }
+                                // Clear countdown for ratelimiting buttons as well
+                                if (manga.countdownInterval) {
+                                    clearInterval(manga.countdownInterval);
+                                    manga.countdownInterval = null;
+                                }
+                                manga.countdown = undefined;
                             });
                         }
                     }, this.statusClearTimeout);
@@ -14889,6 +14916,7 @@
                     try {
                         await this.sendMangaResponse(chatId, fileId, caption);
                         this.selectedManga.status = 'success';
+                        this.startCountdownForMangaD();
                         this.errorMessage = "";
                     } catch (error) {
                         this.selectedManga.status = 'error';
@@ -14898,6 +14926,13 @@
 
                     // Clear status after 2 seconds
                     setTimeout(() => {
+                        // Clear countdown and interval for the clicked button
+                        if (this.selectedManga.countdownInterval) {
+                            clearInterval(this.selectedManga.countdownInterval);
+                            this.selectedManga.countdownInterval = null;
+                        }
+                        this.selectedManga.countdown = undefined;
+                        
                         this.selectedManga.status = null;
                         this.ratelimiting = false;
                         
@@ -14907,6 +14942,12 @@
                                 if (video.status === 'ratelimiting') {
                                     video.status = null;
                                 }
+                                // Clear countdown for ratelimiting buttons as well
+                                if (video.countdownInterval) {
+                                    clearInterval(video.countdownInterval);
+                                    video.countdownInterval = null;
+                                }
+                                video.countdown = undefined;
                             });
                         }
                         if (this.selectedEpisode?.EpisodeMangasIDs) {
@@ -14914,6 +14955,12 @@
                                 if (manga.status === 'ratelimiting') {
                                     manga.status = null;
                                 }
+                                // Clear countdown for ratelimiting buttons as well
+                                if (manga.countdownInterval) {
+                                    clearInterval(manga.countdownInterval);
+                                    manga.countdownInterval = null;
+                                }
+                                manga.countdown = undefined;
                             });
                         }
                     }, this.statusClearTimeout);
@@ -14938,6 +14985,12 @@
                     // Reset ALL statuses for episode mangas (not just errors)
                     if (this.selectedEpisode?.EpisodeMangasIDs) {
                         this.selectedEpisode.EpisodeMangasIDs.forEach((manga) => {
+                            // Clear countdown interval if it exists
+                            if (manga.countdownInterval) {
+                                clearInterval(manga.countdownInterval);
+                                manga.countdownInterval = null;
+                            }
+                            manga.countdown = undefined;
                             manga.status = null;
                         });
                     }
@@ -14957,6 +15010,12 @@
 
                     // Reset the status of selectedManga
                     if (this.selectedManga) {
+                        // Clear countdown interval if it exists
+                        if (this.selectedManga.countdownInterval) {
+                            clearInterval(this.selectedManga.countdownInterval);
+                            this.selectedManga.countdownInterval = null;
+                        }
+                        this.selectedManga.countdown = undefined;
                         this.selectedManga.status = null;
                     }
 
@@ -15091,6 +15150,12 @@
                         }
                         if (this.selectedEpisode.EpisodeMangasIDs) {
                         this.selectedEpisode.EpisodeMangasIDs.forEach((manga, index) => {
+                            // Clear countdown interval if it exists
+                            if (manga.countdownInterval) {
+                                clearInterval(manga.countdownInterval);
+                                manga.countdownInterval = null;
+                            }
+                            manga.countdown = undefined;
                             this.selectedEpisode.EpisodeMangasIDs[index].status = null;
                         });
                         }
@@ -15098,6 +15163,12 @@
                     
                     // Additionally, reset the manga status if a manga is selected
                     if (this.selectedManga) {
+                        // Clear countdown interval if it exists
+                        if (this.selectedManga.countdownInterval) {
+                            clearInterval(this.selectedManga.countdownInterval);
+                            this.selectedManga.countdownInterval = null;
+                        }
+                        this.selectedManga.countdown = undefined;
                         this.selectedManga.status = null;
                     }
 
@@ -15141,6 +15212,12 @@
                         }
                         if (this.selectedEpisode.EpisodeMangasIDs) {
                         this.selectedEpisode.EpisodeMangasIDs.forEach((manga, index) => {
+                            // Clear countdown interval if it exists
+                            if (manga.countdownInterval) {
+                                clearInterval(manga.countdownInterval);
+                                manga.countdownInterval = null;
+                            }
+                            manga.countdown = undefined;
                             this.selectedEpisode.EpisodeMangasIDs[index].status = null;
                         });
                         }
@@ -15298,6 +15375,50 @@
                             // Clear the interval when countdown reaches 0
                             clearInterval(this.selectedEpisode.EpisodeVideosIDs[index].countdownInterval);
                             this.selectedEpisode.EpisodeVideosIDs[index].countdownInterval = null;
+                        }
+                    }, 1000);
+                },
+
+                startCountdownForManga(index) {
+                    // Initialize countdown value from statusClearTimeout (converted to seconds)
+                    const countdownSeconds = Math.ceil(this.statusClearTimeout / 1000);
+                    this.selectedEpisode.EpisodeMangasIDs[index].countdown = countdownSeconds;
+                    
+                    // Clear any existing interval for this manga
+                    if (this.selectedEpisode.EpisodeMangasIDs[index].countdownInterval) {
+                        clearInterval(this.selectedEpisode.EpisodeMangasIDs[index].countdownInterval);
+                    }
+                    
+                    // Start the countdown interval
+                    this.selectedEpisode.EpisodeMangasIDs[index].countdownInterval = setInterval(() => {
+                        if (this.selectedEpisode.EpisodeMangasIDs[index].countdown > 0) {
+                            this.selectedEpisode.EpisodeMangasIDs[index].countdown--;
+                        } else {
+                            // Clear the interval when countdown reaches 0
+                            clearInterval(this.selectedEpisode.EpisodeMangasIDs[index].countdownInterval);
+                            this.selectedEpisode.EpisodeMangasIDs[index].countdownInterval = null;
+                        }
+                    }, 1000);
+                },
+
+                startCountdownForMangaD() {
+                    // Initialize countdown value from statusClearTimeout (converted to seconds)
+                    const countdownSeconds = Math.ceil(this.statusClearTimeout / 1000);
+                    this.selectedManga.countdown = countdownSeconds;
+                    
+                    // Clear any existing interval for this manga
+                    if (this.selectedManga.countdownInterval) {
+                        clearInterval(this.selectedManga.countdownInterval);
+                    }
+                    
+                    // Start the countdown interval
+                    this.selectedManga.countdownInterval = setInterval(() => {
+                        if (this.selectedManga.countdown > 0) {
+                            this.selectedManga.countdown--;
+                        } else {
+                            // Clear the interval when countdown reaches 0
+                            clearInterval(this.selectedManga.countdownInterval);
+                            this.selectedManga.countdownInterval = null;
                         }
                     }, 1000);
                 },
