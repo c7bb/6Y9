@@ -405,7 +405,7 @@
 
             <!-- Updated Menu Button -->
             <div class="fixed top-4 right-4 z-50 menu-container">
-                <button @click.stop="toggleMenu" :disabled="loading" class="bg-gray-700 text-white p-2 rounded flex flex-col items-center transition-all duration-100 active:scale-90 disabled:cursor-not-allowed">
+                <button @click.stop="toggleMenu" :disabled="loading" class="bg-gray-700 text-white p-2 rounded flex flex-col items-center transition-all duration-100 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed">
                     <span class="block w-6 h-1 bg-white mb-1"></span>
                     <span class="block w-6 h-1 bg-white mb-1"></span>
                     <span class="block w-6 h-1 bg-white"></span>
@@ -786,9 +786,10 @@
             </div>
         </div> -->
 
-    <br>
+        <br>
         <!-- Search and Filters -->
-        <div class="flex flex-col gap-4 items-center">
+         <div v-if="loading"></div>
+        <div v-else class="flex flex-col gap-4 items-center">
             <div class="flex gap-4 w-full justify-center">
                 <select v-model="selectedFilter" class="border px-4 font-bold py-2 rounded">
                     <option value="all">الكل</option>
