@@ -14910,37 +14910,32 @@
                 },
 
                 clearError() {
-                    // Check if selectedEpisode and EpisodeMangasIDs exist, then reset the status of mangas with 'error'
+                    // Reset ALL statuses for episode mangas (not just errors)
                     if (this.selectedEpisode?.EpisodeMangasIDs) {
                         this.selectedEpisode.EpisodeMangasIDs.forEach((manga) => {
-                            if (manga.status === "error") {
-                                manga.status = null;
-                                this.ratelimiting = false;
-                            }
+                            manga.status = null;
                         });
                     }
 
-                    // Check if selectedEpisode and EpisodeVideosIDs exist, then reset the status of videos with 'error'
+                    // Reset ALL statuses for episode videos (not just errors)
                     if (this.selectedEpisode?.EpisodeVideosIDs) {
                         this.selectedEpisode.EpisodeVideosIDs.forEach((video) => {
-                            if (video.status === "error") {
-                                video.status = null;
-                                this.ratelimiting = false;
-                            }
+                            video.status = null;
                         });
                     }
 
-                    // Reset the status of selectedManga if it has an 'error' status
-                    if (this.selectedManga?.status === "error") {
+                    // Reset the status of selectedManga
+                    if (this.selectedManga) {
                         this.selectedManga.status = null;
-                        this.ratelimiting = false;
                     }
 
-                    // Reset the status of selectedEpisode if it has an 'error' status
-                    if (this.selectedEpisode?.status === "error") {
+                    // Reset the status of selectedEpisode
+                    if (this.selectedEpisode) {
                         this.selectedEpisode.status = null;
-                        this.ratelimiting = false;
                     }
+
+                    // Always reset ratelimiting flag
+                    this.ratelimiting = false;
                 },
 
                 async checkTelegram() {
