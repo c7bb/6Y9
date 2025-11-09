@@ -433,15 +433,15 @@
                             <legend class="px-2">اختر نوع المحتوى:</legend>
                             <div class="flex justify-around">
                                 <label class="flex items-center transition-all duration-100 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed">
-                                    <input type="radio" v-model="selectedCategory" value="episodes" class="ml-2" @change="resetEpisodesView">
+                                    <input type="radio" v-model="selectedCategory" value="episodes" class="ml-2" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting'" @change="resetEpisodesView">
                                     حلقات
                                 </label>
                                 <label class="flex items-center transition-all duration-100 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed">
-                                    <input type="radio" v-model="selectedCategory" value="movies" class="ml-2" @change="resetMoviesView">
+                                    <input type="radio" v-model="selectedCategory" value="movies" class="ml-2" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting'" @change="resetMoviesView">
                                     أفلام
                                 </label>
                                 <label class="flex items-center transition-all duration-100 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed">
-                                    <input type="radio" v-model="selectedCategory" value="mangas" class="ml-2" @change="resetMangasView">
+                                    <input type="radio" v-model="selectedCategory" value="mangas" class="ml-2" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting'" @change="resetMangasView">
                                     مانغا
                                 </label>
                             </div>
