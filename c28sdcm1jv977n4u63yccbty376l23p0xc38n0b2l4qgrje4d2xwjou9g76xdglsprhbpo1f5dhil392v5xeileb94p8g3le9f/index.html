@@ -431,16 +431,16 @@
                         
                         <fieldset class="border p-2 rounded mt-2">
                             <legend class="px-2">اختر نوع المحتوى:</legend>
-                            <div class="flex justify-around disabled:cursor-not-allowed disabled:opacity-50" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting'">
-                                <label class="flex items-center transition-all duration-100 active:scale-90 disabled:cursor-not-allowed disabled:opacity-50" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting'">
+                            <div class="flex justify-around">
+                                <label class="flex items-center transition-all duration-100 active:scale-90">
                                     <input type="radio" v-model="selectedCategory" value="episodes" class="ml-2" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting'" @change="resetEpisodesView">
                                     حلقات
                                 </label>
-                                <label class="flex items-center transition-all duration-100 active:scale-90 disabled:cursor-not-allowed disabled:opacity-50" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting'">
+                                <label class="flex items-center transition-all duration-100 active:scale-90">
                                     <input type="radio" v-model="selectedCategory" value="movies" class="ml-2" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting'" @change="resetMoviesView">
                                     أفلام
                                 </label>
-                                <label class="flex items-center transition-all duration-100 active:scale-90 disabled:cursor-not-allowed disabled:opacity-50" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting'">
+                                <label class="flex items-center transition-all duration-100 active:scale-90">
                                     <input type="radio" v-model="selectedCategory" value="mangas" class="ml-2" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting'" @change="resetMangasView">
                                     مانغا
                                 </label>
