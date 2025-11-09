@@ -548,6 +548,7 @@
                                             class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90"
                                             :class="{ 'opacity-50 cursor-not-allowed': video.status === 'ratelimiting' }">
                                             <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ video.Size }} MB)</span>
+                                            <span v-else-if="video.countdown !== undefined">{{ video.countdown }}</span>
                                             <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
                                         </button>
                                         <img 
@@ -622,6 +623,7 @@
                                             class="bg-amber-700 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90"
                                             :class="{ 'opacity-50 cursor-not-allowed': video.status === 'ratelimiting' }">
                                             <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ video.Size }} MB)</span>
+                                            <span v-else-if="video.countdown !== undefined">{{ video.countdown }}</span>
                                             <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
                                         </button>
                                         <img 
@@ -5822,7 +5824,8 @@
                                                 class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90"
                                                 :class="{ 'opacity-50 cursor-not-allowed': video.status === 'ratelimiting' }">
                                                 <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ video.Size }} MB)</span>
-                                                <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
+                                                <span v-else-if="video.countdown !== undefined">{{ video.countdown }}</span>
+                                            <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
                                             </button>
                                             <img 
                                                 v-if="video.status === 'success'" 
@@ -14682,6 +14685,8 @@
                     if (details) caption += `\n\n*✦✦— محتويات الحلقة —✦✦*${details}`;
 
                     this.selectedEpisode.EpisodeVideosIDs[index].status = 'sending';
+                    // Initialize countdown for this specific button
+                    this.startCountdown(index);
 
                     try {
                         await this.sendVideoResponse(chatId, videoID, caption);
@@ -14697,6 +14702,13 @@
 
                     // Clear status after 2 seconds
                     setTimeout(() => {
+                        // Clear countdown and interval for the clicked button
+                        if (this.selectedEpisode.EpisodeVideosIDs[index].countdownInterval) {
+                            clearInterval(this.selectedEpisode.EpisodeVideosIDs[index].countdownInterval);
+                            this.selectedEpisode.EpisodeVideosIDs[index].countdownInterval = null;
+                        }
+                        this.selectedEpisode.EpisodeVideosIDs[index].countdown = undefined;
+                        
                         this.selectedEpisode.EpisodeVideosIDs[index].status = null;
                         this.ratelimiting = false;
                         
@@ -14706,6 +14718,12 @@
                                 if (video.status === 'ratelimiting') {
                                     video.status = null;
                                 }
+                                // Clear countdown for ratelimiting buttons as well
+                                if (video.countdownInterval) {
+                                    clearInterval(video.countdownInterval);
+                                    video.countdownInterval = null;
+                                }
+                                video.countdown = undefined;
                             });
                         }
                         if (this.selectedEpisode.EpisodeMangasIDs) {
@@ -14927,6 +14945,12 @@
                     // Reset ALL statuses for episode videos (not just errors)
                     if (this.selectedEpisode?.EpisodeVideosIDs) {
                         this.selectedEpisode.EpisodeVideosIDs.forEach((video) => {
+                            // Clear countdown interval if it exists
+                            if (video.countdownInterval) {
+                                clearInterval(video.countdownInterval);
+                                video.countdownInterval = null;
+                            }
+                            video.countdown = undefined;
                             video.status = null;
                         });
                     }
@@ -15056,6 +15080,12 @@
                     if (this.selectedEpisode) {
                         if (this.selectedEpisode.EpisodeVideosIDs) {
                         this.selectedEpisode.EpisodeVideosIDs.forEach((video, index) => {
+                            // Clear countdown interval if it exists
+                            if (video.countdownInterval) {
+                                clearInterval(video.countdownInterval);
+                                video.countdownInterval = null;
+                            }
+                            video.countdown = undefined;
                             this.selectedEpisode.EpisodeVideosIDs[index].status = null;
                         });
                         }
@@ -15100,6 +15130,12 @@
                     if (this.selectedEpisode) {
                         if (this.selectedEpisode.EpisodeVideosIDs) {
                         this.selectedEpisode.EpisodeVideosIDs.forEach((video, index) => {
+                            // Clear countdown interval if it exists
+                            if (video.countdownInterval) {
+                                clearInterval(video.countdownInterval);
+                                video.countdownInterval = null;
+                            }
+                            video.countdown = undefined;
                             this.selectedEpisode.EpisodeVideosIDs[index].status = null;
                         });
                         }
@@ -15242,6 +15278,28 @@
                     const maxSize = 24;
                     const calculated = screenWidth / 50;
                     this.fontSize = Math.min(Math.max(calculated, minSize), maxSize);
+                },
+
+                startCountdown(index) {
+                    // Initialize countdown value from statusClearTimeout (converted to seconds)
+                    const countdownSeconds = Math.ceil(this.statusClearTimeout / 1000);
+                    this.selectedEpisode.EpisodeVideosIDs[index].countdown = countdownSeconds;
+                    
+                    // Clear any existing interval for this video
+                    if (this.selectedEpisode.EpisodeVideosIDs[index].countdownInterval) {
+                        clearInterval(this.selectedEpisode.EpisodeVideosIDs[index].countdownInterval);
+                    }
+                    
+                    // Start the countdown interval
+                    this.selectedEpisode.EpisodeVideosIDs[index].countdownInterval = setInterval(() => {
+                        if (this.selectedEpisode.EpisodeVideosIDs[index].countdown > 0) {
+                            this.selectedEpisode.EpisodeVideosIDs[index].countdown--;
+                        } else {
+                            // Clear the interval when countdown reaches 0
+                            clearInterval(this.selectedEpisode.EpisodeVideosIDs[index].countdownInterval);
+                            this.selectedEpisode.EpisodeVideosIDs[index].countdownInterval = null;
+                        }
+                    }, 1000);
                 },
 
             },
