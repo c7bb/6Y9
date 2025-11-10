@@ -6718,19 +6718,29 @@
                             !e.EpisodeNumber.includes('المجرم هانزاوا')
                         );
                     
-                    const chunkSize = 99;
-                    return filteredEpisodes.reduce((acc, _, i, arr) => {
-                        if (i % chunkSize === 0) {
-                            return [
-                                ...acc,
-                                {
-                                    range: `${arr[i].EpisodeNumber}-${arr[Math.min(i + chunkSize - 1, arr.length - 1)].EpisodeNumber}`,
-                                    items: arr.slice(i, i + chunkSize)
-                                }
-                            ];
+                    // Group episodes by their number ranges (1-99, 100-199, 200-299, etc.)
+                    const ranges = {};
+                    filteredEpisodes.forEach(ep => {
+                        const episodeNum = parseInt(ep.EpisodeNumber);
+                        if (!isNaN(episodeNum)) {
+                            const rangeStart = Math.floor((episodeNum - 1) / 100) * 100 + 1;
+                            const rangeEnd = rangeStart + 99;
+                            const rangeKey = `${rangeStart}-${rangeEnd}`;
+                            
+                            if (!ranges[rangeKey]) {
+                                ranges[rangeKey] = [];
+                            }
+                            ranges[rangeKey].push(ep);
                         }
-                        return acc;
-                    }, []);
+                    });
+                    
+                    // Convert to array and sort by range start
+                    return Object.keys(ranges)
+                        .sort((a, b) => parseInt(a.split('-')[0]) - parseInt(b.split('-')[0]))
+                        .map(rangeKey => ({
+                            range: rangeKey,
+                            items: ranges[rangeKey]
+                        }));
                 },
 
                 groupedMovies() {
