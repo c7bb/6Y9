@@ -5329,8 +5329,10 @@
                                         class="w-full py-2 bg-teal-600 text-white font-bold text-lg rounded hover:bg-teal-500 transition-all duration-100 hover:scale-105 active:scale-90">
                                         {{ ep }}
                                     </button>
-                                    <p v-if="episodeOfWeekTimeAgo" class="text-white text-xs text-center mt-2">
-                                        {{ episodeOfWeekTimeAgo }}
+                                    <p v-if="episodeOfWeekTimeAgo || episodeOfWeekTimeAgoEnglish" 
+                                       @click="toggleTimeFormat" 
+                                       class="text-white text-xs text-center mt-2 cursor-pointer hover:text-gray-300 transition-colors duration-200">
+                                        {{ showEnglishTimeFormat ? episodeOfWeekTimeAgoEnglish : episodeOfWeekTimeAgo }}
                                     </p>
                                 </div>
                                 <!-- Manga Column -->
@@ -6703,6 +6705,8 @@
                     previousEpisodeExists: false,
                     ratelimiting: false,
                     episodeOfWeekTimeAgo: '',
+                    episodeOfWeekTimeAgoEnglish: '',
+                    showEnglishTimeFormat: false,
                 };
             },
             computed: {
@@ -13270,6 +13274,53 @@
 
                     this.episodeOfWeekTimeAgo = timeAgoText;
                     console.log('Final timeAgoText:', timeAgoText, 'episodeOfWeekTimeAgo:', this.episodeOfWeekTimeAgo);
+                    
+                    // Also calculate English format
+                    this.updateEpisodeTimeAgoEnglish(episodeDate);
+                },
+
+                updateEpisodeTimeAgoEnglish(episodeDate) {
+                    const now = new Date();
+                    const diffMs = now - episodeDate;
+                    
+                    // Calculate each time unit
+                    const totalSeconds = Math.floor(diffMs / 1000);
+                    const totalMinutes = Math.floor(totalSeconds / 60);
+                    const totalHours = Math.floor(totalMinutes / 60);
+                    const totalDays = Math.floor(totalHours / 24);
+                    const totalMonths = Math.floor(totalDays / 30);
+                    const totalYears = Math.floor(totalDays / 365);
+                    
+                    // Calculate remainders
+                    const years = totalYears;
+                    const months = totalMonths - (years * 12);
+                    const weeks = Math.floor((totalDays - (totalYears * 365) - (months * 30)) / 7);
+                    const days = totalDays - (years * 365) - (months * 30) - (weeks * 7);
+                    const hours = totalHours - (totalDays * 24);
+                    const minutes = totalMinutes - (totalHours * 60);
+                    
+                    // Build compact format string
+                    let parts = [];
+                    if (years > 0) parts.push(`${years}y`);
+                    if (months > 0) parts.push(`${months}m`);
+                    if (weeks > 0) parts.push(`${weeks}w`);
+                    if (days > 0) parts.push(`${days}d`);
+                    if (hours > 0) parts.push(`${hours}h`);
+                    if (minutes > 0) parts.push(`${minutes}min`);
+                    
+                    // If less than a minute, show seconds
+                    if (parts.length === 0) {
+                        const seconds = totalSeconds;
+                        parts.push(`${seconds}s`);
+                    }
+                    
+                    this.episodeOfWeekTimeAgoEnglish = parts.join('');
+                    console.log('English format:', this.episodeOfWeekTimeAgoEnglish);
+                },
+
+                toggleTimeFormat() {
+                    this.showEnglishTimeFormat = !this.showEnglishTimeFormat;
+                    console.log('Toggled time format, showEnglish:', this.showEnglishTimeFormat);
                 },
 
                 nextPage() {
