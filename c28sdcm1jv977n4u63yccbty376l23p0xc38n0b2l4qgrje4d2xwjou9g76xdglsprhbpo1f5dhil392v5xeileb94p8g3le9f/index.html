@@ -413,98 +413,51 @@
     }
 </style>
 <style>
-  /* ======================================
-    CSS جديد لنافذة البحث الرئيسية
-    ======================================
-    هذا الكلاس يعوض الكلاسات التي حذفناها من الـ HTML
-  */
-  .search-window-main {
-    /* (border-2 border-green-600) 
-      لون الإطار الأخضر 
-    */
-    border: 2px solid #10b981;
-    
-    /* =================
-      <<<  هذا هو الحل الرئيسي  >>>
-      إلغاء الإطار العلوي للنافذة
-      =================
-    */
-    border-top: none;
+    /* Apple Notch Style */
+    .search-notch {
+        position: absolute;
+        top: -35px;
+        left: 50%;
+        width: 80px;
+        height: 35px;
+        background-color: #1f2937;
+        border-radius: 28px 28px 0 0;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ef4444;
+        font-size: 1.125rem;
+        font-weight: bold;
+        border: 2px solid #10b981;
+        border-bottom: none;
+    }
 
-    /* (rounded-xl) */
-    border-radius: 0.75rem; /* 12px */
+    .search-notch::before,
+    .search-notch::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: -14px;
+        width: 14px;
+        height: 7px;
+        background-size: 50% 100%;
+        background-repeat: no-repeat;
+        background-image: radial-gradient(
+            circle at 0 0,
+            transparent 6px,
+            #1f2937 7px
+        );
+    }
 
-    /* جعل الزوايا العلوية حادة (0) 
-      لتلتقي بسلاسة مع الـ "notch"
-    */
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-  }
-
-  /* ======================================
-    Apple Notch Style (تعديلات بسيطة)
-    ======================================
-  */
-  .search-notch {
-    position: absolute;
-    /* تعديل: 
-      -35px (ارتفاع النوتش)
-      -2px  (عرض الإطار الذي أزلناه)
-      المجموع = -37px
-    */
-    top: -37px;
-    left: 50%;
-    width: 80px;
-    height: 35px;
-    /* (bg-gray-800) */
-    background-color: #1f2937;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ef4444;
-    font-size: 1.125rem;
-    font-weight: bold;
-    /* (border-2 border-green-600) */
-    border: 2px solid #10b981;
-    border-bottom: none;
-
-    /* تعديل: 
-      جعل الزوايا العلوية للـ "notch" 
-      بنفس انحناء النافذة (12px)
-    */
-    border-top-left-radius: 0.75rem; /* 12px */
-    border-top-right-radius: 0.75rem; /* 12px */
-  }
-
-  .search-notch::before,
-  .search-notch::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: -14px;
-    width: 14px;
-    height: 7px;
-    background-size: 50% 100%;
-    background-repeat: no-repeat;
-    /* هذا الكود يرسم "فجوة" شفافة في الخلفية
-      اللون #1f2937 يجب أن يطابق لون خلفية النوتش
-    */
-    background-image: radial-gradient(
-        circle at 0 0,
-        transparent 6px,
-        #1f2937 7px 
-    );
-  }
-
-  .search-notch::after {
-    left: 100%;
-    background-image: radial-gradient(
-        circle at 100% 0,
-        transparent 6px,
-        #1f2937 7px
-    );
-  }
+    .search-notch::after {
+        left: 100%;
+        background-image: radial-gradient(
+            circle at 100% 0,
+            transparent 6px,
+            #1f2937 7px
+        );
+    }
 </style>
 <meta name='probely-verification' content='d1a5235e-0470-4602-aae0-84688966eb19' />
 </head>
@@ -528,94 +481,94 @@
 
             <!-- 🔍 Search Button + Popup -->
             <div class="fixed top-4 left-4 z-50">
-  <button
-    @click.stop="toggleSearch" :disabled="loading"
-    class="bg-gray-700 text-white p-2 rounded-full shadow-md transition-all duration-100 active:scale-90 hover:bg-teal-600 disabled:opacity-50 disabled:cursor-not-allowed"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-    viewBox="0 0 24 24" stroke="currentColor">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-      d="M21 21l-4.35-4.35m1.85-5.65A7 7 0 1110 4a7 7 0 018.5 7z" />
-    </svg>
-  </button>
+                <button
+                    @click.stop="toggleSearch" :disabled="loading"
+                    class="bg-gray-700 text-white p-2 rounded-full shadow-md transition-all duration-100 active:scale-90 hover:bg-teal-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-4.35-4.35m1.85-5.65A7 7 0 1110 4a7 7 0 018.5 7z" />
+                    </svg>
+                </button>
 
-  <transition name="fade-slide">
-    <div
-      v-if="searchOpen"
-      class="relative"
-    >
-      <div
-        class="absolute top-4 left-0 bg-gray-800 shadow-2xl p-4 w-80 sm:w-96 text-gray-100 search-window-main"
-        @click.stop
-      >
-        <div class="search-notch">
-          {{ totalEpisodes }}
-        </div>
+                <transition name="fade-slide">
+                    <div
+                    v-if="searchOpen"
+                    class="relative"
+                    >
+                        <div
+                        class="absolute top-4 left-0 bg-gray-800 border-2 border-green-600 rounded-xl shadow-2xl p-4 w-80 sm:w-96 text-gray-100"
+                        @click.stop
+                        >
+                            <div class="search-notch">
+                                {{ totalEpisodes }}
+                            </div>
+                            
+                            <div class="relative">
+                                <input
+                                v-model="searchQuery"
+                                type="text"
+                                placeholder="ابحث..."
+                                class="w-full p-2 text-lg bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-teal-400"
+                                />
+                                <button
+                                @click="clearSearch"
+                                class="absolute top-2 left-3 text-xl text-red-600 font-black transition-all duration-100 active:scale-90"
+                                >
+                                ✕
+                                </button>
+                            </div>
 
-        <div class="relative">
-          <input
-            v-model="searchQuery"
-            type="text"
-            placeholder="ابحث..."
-            class="w-full p-2 text-lg bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-teal-400"
-          />
-          <button
-            @click="clearSearch"
-            class="absolute top-2 left-3 text-xl text-red-600 font-black transition-all duration-100 active:scale-90"
-          >
-            ✕
-          </button>
-        </div>
+                            <fieldset class="mt-4">
+                                <div class="flex justify-center mt-2 text-lg">
+                                    <div class="grid grid-cols-2 gap-y-4 gap-x-4">
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
+                                            <input
+                                                type="checkbox"
+                                                v-model="searchFilters.number"
+                                                class="scale-100"
+                                                @change="ensureOneChecked('number')"
+                                            />
+                                            <span class="px-2 font-bold">الرقم</span>
+                                        </label>
 
-        <fieldset class="mt-4">
-          <div class="flex justify-center mt-2 text-lg">
-            <div class="grid grid-cols-2 gap-y-4 gap-x-4">
-              <label class="flex items-center transition-all duration-100 active:scale-90">
-                <input
-                  type="checkbox"
-                  v-model="searchFilters.number"
-                  class="scale-100"
-                  @change="ensureOneChecked('number')"
-                />
-                <span class="px-2 font-bold">الرقم</span>
-              </label>
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
+                                            <input
+                                                type="checkbox"
+                                                v-model="searchFilters.title"
+                                                class="scale-100"
+                                                @change="ensureOneChecked('title')"
+                                            />
+                                            <span class="px-2 font-bold">العنوان</span>
+                                        </label>
 
-              <label class="flex items-center transition-all duration-100 active:scale-90">
-                <input
-                  type="checkbox"
-                  v-model="searchFilters.title"
-                  class="scale-100"
-                  @change="ensureOneChecked('title')"
-                />
-                <span class="px-2 font-bold">العنوان</span>
-              </label>
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
+                                            <input
+                                                type="checkbox"
+                                                v-model="searchFilters.story"
+                                                class="scale-100"
+                                                @change="ensureOneChecked('story')"
+                                            />
+                                            <span class="px-2 font-bold">القصة</span>
+                                        </label>
 
-              <label class="flex items-center transition-all duration-100 active:scale-90">
-                <input
-                  type="checkbox"
-                  v-model="searchFilters.story"
-                  class="scale-100"
-                  @change="ensureOneChecked('story')"
-                />
-                <span class="px-2 font-bold">القصة</span>
-              </label>
-
-              <label class="flex items-center transition-all duration-100 active:scale-90">
-                <input
-                  type="checkbox"
-                  v-model="searchFilters.summary"
-                  class="scale-100"
-                  @change="ensureOneChecked('summary')"
-                />
-                <span class="px-2 font-bold">الملخص</span>
-              </label>
+                                        <label class="flex items-center transition-all duration-100 active:scale-90">
+                                            <input
+                                                type="checkbox"
+                                                v-model="searchFilters.summary"
+                                                class="scale-100"
+                                                @change="ensureOneChecked('summary')"
+                                            />
+                                            <span class="px-2 font-bold">الملخص</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </transition>
             </div>
-          </div>
-        </fieldset>
-      </div>
-    </div>
-  </transition>
-</div>
 
             <!-- Updated Direct Window Modal -->
             <div v-if="showDirectWindow" class="fixed z-50 inset-0 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center">
