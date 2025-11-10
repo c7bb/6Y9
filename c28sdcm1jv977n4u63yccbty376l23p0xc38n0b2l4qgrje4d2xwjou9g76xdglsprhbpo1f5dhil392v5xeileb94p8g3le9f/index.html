@@ -6856,7 +6856,9 @@
                 },
 
                 episodeOfWeek() {
-                    return this.episodes.find(e => e.EpisodeNumber === String(this.ep));
+                    const episode = this.episodes.find(e => e.EpisodeNumber === String(this.ep));
+                    console.log('episodeOfWeek - ep:', this.ep, 'found episode:', episode);
+                    return episode;
                 },
 
                 filteredEpisodes() {
@@ -13135,12 +13137,22 @@
             },
             methods: {
                 updateEpisodeTimeAgo() {
-                    if (!this.episodeOfWeek || !this.episodeOfWeek.EpisodeBCDate) {
+                    console.log('updateEpisodeTimeAgo called - episodeOfWeek:', this.episodeOfWeek);
+                    
+                    if (!this.episodeOfWeek) {
+                        console.log('No episodeOfWeek found');
+                        this.episodeOfWeekTimeAgo = '';
+                        return;
+                    }
+                    
+                    if (!this.episodeOfWeek.EpisodeBCDate) {
+                        console.log('No EpisodeBCDate in episode:', this.episodeOfWeek);
                         this.episodeOfWeekTimeAgo = '';
                         return;
                     }
 
                     const bcDate = this.episodeOfWeek.EpisodeBCDate;
+                    console.log('Processing EpisodeBCDate:', bcDate);
                     const dateParts = bcDate.split('/');
                     if (dateParts.length !== 3) {
                         this.episodeOfWeekTimeAgo = '';
@@ -13233,6 +13245,7 @@
                     }
 
                     this.episodeOfWeekTimeAgo = timeAgoText;
+                    console.log('Final timeAgoText:', timeAgoText, 'episodeOfWeekTimeAgo:', this.episodeOfWeekTimeAgo);
                 },
 
                 nextPage() {
@@ -15801,10 +15814,15 @@
                 window.addEventListener('resize', this.updateFontSize);
 
                 // Initialize episode time ago and set up interval to update it
+                console.log('mounted - Setting up episode time ago timer');
+                console.log('mounted - ep value:', this.ep);
+                console.log('mounted - episodes length:', this.episodes.length);
                 this.updateEpisodeTimeAgo();
                 this.episodeTimeInterval = setInterval(() => {
+                    console.log('Timer tick - updating episode time ago');
                     this.updateEpisodeTimeAgo();
                 }, 60000); // Update every minute
+                console.log('mounted - Timer set up complete');
             },
 
             unmounted() {
