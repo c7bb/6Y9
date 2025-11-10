@@ -481,120 +481,94 @@
 
             <!-- 🔍 Search Button + Popup -->
             <div class="fixed top-4 left-4 z-50">
-                <!-- 🔍 Icon -->
-                <button
-                    @click.stop="toggleSearch" :disabled="loading"
-                    class="bg-gray-700 text-white p-2 rounded-full shadow-md transition-all duration-100 active:scale-90 hover:bg-teal-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M21 21l-4.35-4.35m1.85-5.65A7 7 0 1110 4a7 7 0 018.5 7z" />
-                    </svg>
-                </button>
+    <button
+        @click.stop="toggleSearch" :disabled="loading"
+        class="bg-gray-700 text-white p-2 rounded-full shadow-md transition-all duration-100 active:scale-90 hover:bg-teal-600 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+        viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-4.35-4.35m1.85-5.65A7 7 0 1110 4a7 7 0 018.5 7z" />
+        </svg>
+    </button>
 
-                <!-- 🔽 Search Window -->
-                <transition name="fade-slide">
-                    <div
-                    v-if="searchOpen"
-                    class="relative"
+    <transition name="fade-slide">
+        <div
+        v-if="searchOpen"
+        class="relative"
+        >
+            <div
+            class="absolute top-12 left-0 bg-gray-800 border-2 border-green-600 rounded-xl shadow-2xl p-4 w-80 sm:w-96 text-gray-100"
+            @click.stop
+            >
+                <div class="search-notch">
+                    {{ totalEpisodes }}
+                </div>
+                
+                <div class="relative">
+                    <input
+                    v-model="searchQuery"
+                    type="text"
+                    placeholder="ابحث..."
+                    class="w-full p-2 text-lg bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-teal-400"
+                    />
+                    <button
+                    @click="clearSearch"
+                    class="absolute top-2 left-3 text-xl text-red-600 font-black transition-all duration-100 active:scale-90"
                     >
-                        <!-- Apple Notch -->
-                        <div class="search-notch">
-                            {{ totalEpisodes }}
-                        </div>
-                        <!-- Search Window -->
-                        <div
-                        class="absolute top-12 left-0 bg-gray-800 border-2 border-green-600 rounded-xl shadow-2xl p-4 w-80 sm:w-96 text-gray-100"
-                        @click.stop
-                        >
-                        <!-- 🔤 Search Input -->
-                        <div class="relative">
-                            <input
-                            v-model="searchQuery"
-                            type="text"
-                            placeholder="ابحث..."
-                            class="w-full p-2 text-lg bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-teal-400"
-                            />
-                            <button
-                            @click="clearSearch"
-                            class="absolute top-2 left-3 text-xl text-red-600 font-black transition-all duration-100 active:scale-90"
-                            >
-                            ✕
-                            </button>
-                        </div>
+                    ✕
+                    </button>
+                </div>
 
-                        <!-- 🧩 Search Filters -->
-                        <fieldset class="mt-4">
-                            <!-- Radio Buttons (تظهر فقط لو 'number' مفعّل) -->
-                            <!-- <div v-if="searchFilters.number" class="flex flex-col space-y-2 mt-2">
-                                <label class="flex items-center transition-all duration-100 active:scale-90">
-                                    <input
-                                    type="radio"
-                                    v-model="textNumberMatchMode"
-                                    value="enabled"
-                                    class="scale-150"
-                                    />
-                                    <span class="px-2 font-bold">تفعيل</span>
-                                </label>
-                                <label class="flex items-center transition-all duration-100 active:scale-90">
-                                    <input
-                                    type="radio"
-                                    v-model="textNumberMatchMode"
-                                    value="disabled"
-                                    class="scale-150"
-                                    />
-                                    <span class="px-2 font-bold">تعطيل</span>
-                                </label>
-                            </div> -->
-                            <div class="flex justify-center mt-2 text-lg">
-                                <div class="grid grid-cols-2 gap-y-4 gap-x-4">
-                                    <label class="flex items-center transition-all duration-100 active:scale-90">
-                                        <input
-                                            type="checkbox"
-                                            v-model="searchFilters.number"
-                                            class="scale-100"
-                                            @change="ensureOneChecked('number')"
-                                        />
-                                        <span class="px-2 font-bold">الرقم</span>
-                                    </label>
+                <fieldset class="mt-4">
+                    <div class="flex justify-center mt-2 text-lg">
+                        <div class="grid grid-cols-2 gap-y-4 gap-x-4">
+                            <label class="flex items-center transition-all duration-100 active:scale-90">
+                                <input
+                                    type="checkbox"
+                                    v-model="searchFilters.number"
+                                    class="scale-100"
+                                    @change="ensureOneChecked('number')"
+                                />
+                                <span class="px-2 font-bold">الرقم</span>
+                            </label>
 
-                                    <label class="flex items-center transition-all duration-100 active:scale-90">
-                                        <input
-                                            type="checkbox"
-                                            v-model="searchFilters.title"
-                                            class="scale-100"
-                                            @change="ensureOneChecked('title')"
-                                        />
-                                        <span class="px-2 font-bold">العنوان</span>
-                                    </label>
+                            <label class="flex items-center transition-all duration-100 active:scale-90">
+                                <input
+                                    type="checkbox"
+                                    v-model="searchFilters.title"
+                                    class="scale-100"
+                                    @change="ensureOneChecked('title')"
+                                />
+                                <span class="px-2 font-bold">العنوان</span>
+                            </label>
 
-                                    <label class="flex items-center transition-all duration-100 active:scale-90">
-                                        <input
-                                            type="checkbox"
-                                            v-model="searchFilters.story"
-                                            class="scale-100"
-                                            @change="ensureOneChecked('story')"
-                                        />
-                                        <span class="px-2 font-bold">القصة</span>
-                                    </label>
+                            <label class="flex items-center transition-all duration-100 active:scale-90">
+                                <input
+                                    type="checkbox"
+                                    v-model="searchFilters.story"
+                                    class="scale-100"
+                                    @change="ensureOneChecked('story')"
+                                />
+                                <span class="px-2 font-bold">القصة</span>
+                            </label>
 
-                                    <label class="flex items-center transition-all duration-100 active:scale-90">
-                                        <input
-                                            type="checkbox"
-                                            v-model="searchFilters.summary"
-                                            class="scale-100"
-                                            @change="ensureOneChecked('summary')"
-                                        />
-                                        <span class="px-2 font-bold">الملخص</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </fieldset>
+                            <label class="flex items-center transition-all duration-100 active:scale-90">
+                                <input
+                                    type="checkbox"
+                                    v-model="searchFilters.summary"
+                                    class="scale-100"
+                                    @change="ensureOneChecked('summary')"
+                                />
+                                <span class="px-2 font-bold">الملخص</span>
+                            </label>
                         </div>
                     </div>
-                </transition>
+                </fieldset>
             </div>
+        </div>
+    </transition>
+</div>
 
             <!-- Updated Direct Window Modal -->
             <div v-if="showDirectWindow" class="fixed z-50 inset-0 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center">
