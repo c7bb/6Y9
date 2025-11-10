@@ -13153,14 +13153,38 @@
 
                     const bcDate = this.episodeOfWeek.EpisodeBCDate;
                     console.log('Processing EpisodeBCDate:', bcDate);
-                    const dateParts = bcDate.split('/');
-                    if (dateParts.length !== 3) {
+                    
+                    let episodeDate;
+                    
+                    // Check if date format is YYYY-MM-DD (with dashes)
+                    if (bcDate.includes('-')) {
+                        const dateParts = bcDate.split('-');
+                        if (dateParts.length !== 3) {
+                            console.log('Invalid date format with dashes:', bcDate);
+                            this.episodeOfWeekTimeAgo = '';
+                            return;
+                        }
+                        const [year, month, day] = dateParts.map(Number);
+                        episodeDate = new Date(year, month - 1, day);
+                        console.log('Parsed date (YYYY-MM-DD):', episodeDate);
+                    } 
+                    // Check if date format is DD/MM/YYYY (with slashes)
+                    else if (bcDate.includes('/')) {
+                        const dateParts = bcDate.split('/');
+                        if (dateParts.length !== 3) {
+                            console.log('Invalid date format with slashes:', bcDate);
+                            this.episodeOfWeekTimeAgo = '';
+                            return;
+                        }
+                        const [day, month, year] = dateParts.map(Number);
+                        episodeDate = new Date(year, month - 1, day);
+                        console.log('Parsed date (DD/MM/YYYY):', episodeDate);
+                    } 
+                    else {
+                        console.log('Unknown date format:', bcDate);
                         this.episodeOfWeekTimeAgo = '';
                         return;
                     }
-
-                    const [day, month, year] = dateParts.map(Number);
-                    const episodeDate = new Date(year, month - 1, day);
                     const now = new Date();
                     const diffMs = now - episodeDate;
                     const diffSeconds = Math.floor(diffMs / 1000);
