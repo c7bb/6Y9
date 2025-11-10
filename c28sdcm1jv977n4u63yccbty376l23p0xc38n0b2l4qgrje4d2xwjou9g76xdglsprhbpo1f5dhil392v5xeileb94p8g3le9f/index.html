@@ -9370,17 +9370,24 @@
                             const numberList = [];
                             searchQuery.split(',').forEach(part => {
                                 part = part.trim();
-                                if (part.includes('-')) {
-                                    // Handle ranges like "44-60"
-                                    const [start, end] = part.split('-').map(num => parseInt(num.trim(), 10));
+                                if (part.includes('-') && !part.match(/^\d+\.\d+-/)) {
+                                    // Handle ranges like "44-60" (but not decimals like "1076.5-")
+                                    const [start, end] = part.split('-').map(num => parseFloat(num.trim()));
                                     if (!isNaN(start) && !isNaN(end) && start <= end) {
-                                        for (let i = start; i <= end; i++) {
-                                            numberList.push(i.toString());
+                                        // For integer ranges, add all integers in the range
+                                        if (Number.isInteger(start) && Number.isInteger(end)) {
+                                            for (let i = start; i <= end; i++) {
+                                                numberList.push(i.toString());
+                                            }
+                                        } else {
+                                            // For decimal ranges, just add start and end
+                                            numberList.push(start.toString());
+                                            numberList.push(end.toString());
                                         }
                                     }
                                 } else {
-                                    // Handle single numbers
-                                    const num = parseInt(part, 10);
+                                    // Handle single numbers (including decimals)
+                                    const num = parseFloat(part);
                                     if (!isNaN(num)) {
                                         numberList.push(num.toString());
                                     }
@@ -9390,12 +9397,12 @@
                             // Extract number from episode.EpisodeNumber based on textNumberMatchMode
                             let episodeNumber;
                             if (this.textNumberMatchMode === 'enabled') {
-                                // Extract number at the end of the string
-                                const episodeNumberMatch = episode.EpisodeNumber.toString().match(/\d+$/);
+                                // Extract number at the end of the string (including decimals)
+                                const episodeNumberMatch = episode.EpisodeNumber.toString().match(/\d+\.?\d*$/);
                                 episodeNumber = episodeNumberMatch ? episodeNumberMatch[0] : episode.EpisodeNumber;
                             } else {
                                 // Use the full episode number as before
-                                episodeNumber = episode.EpisodeNumber;
+                                episodeNumber = episode.EpisodeNumber.toString();
                             }
                             
                             matchConditions.push(numberList.includes(episodeNumber));
