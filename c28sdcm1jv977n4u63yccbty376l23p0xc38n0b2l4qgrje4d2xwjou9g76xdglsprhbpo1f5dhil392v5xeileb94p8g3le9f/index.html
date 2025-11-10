@@ -9325,47 +9325,65 @@
                         return true;
                     })
                     .filter(episode => {
+                        if (searchQuery === "") return true; // Show all episodes when search bar is empty
+                        
+                        // Build an array of conditions based on checked filters
+                        const matchConditions = [];
+                        
+                        // Number filter logic
                         if (this.searchFilters.number) {
-                    if (searchQuery === "") return true; // ✅ Show all episodes when search bar is empty
-                    
-                    // Convert search query into a list of numbers
-                    const numberList = [];
-                    searchQuery.split(',').forEach(part => {
-                        part = part.trim();
-                        if (part.includes('-')) {
-                            // Handle ranges like "44-60"
-                            const [start, end] = part.split('-').map(num => parseInt(num.trim(), 10));
-                            if (!isNaN(start) && !isNaN(end) && start <= end) {
-                                for (let i = start; i <= end; i++) {
-                                    numberList.push(i.toString());
+                            // Convert search query into a list of numbers
+                            const numberList = [];
+                            searchQuery.split(',').forEach(part => {
+                                part = part.trim();
+                                if (part.includes('-')) {
+                                    // Handle ranges like "44-60"
+                                    const [start, end] = part.split('-').map(num => parseInt(num.trim(), 10));
+                                    if (!isNaN(start) && !isNaN(end) && start <= end) {
+                                        for (let i = start; i <= end; i++) {
+                                            numberList.push(i.toString());
+                                        }
+                                    }
+                                } else {
+                                    // Handle single numbers
+                                    const num = parseInt(part, 10);
+                                    if (!isNaN(num)) {
+                                        numberList.push(num.toString());
+                                    }
                                 }
+                            });
+                            
+                            // Extract number from episode.EpisodeNumber based on textNumberMatchMode
+                            let episodeNumber;
+                            if (this.textNumberMatchMode === 'enabled') {
+                                // Extract number at the end of the string
+                                const episodeNumberMatch = episode.EpisodeNumber.toString().match(/\d+$/);
+                                episodeNumber = episodeNumberMatch ? episodeNumberMatch[0] : episode.EpisodeNumber;
+                            } else {
+                                // Use the full episode number as before
+                                episodeNumber = episode.EpisodeNumber;
                             }
-                        } else {
-                            // Handle single numbers
-                            const num = parseInt(part, 10);
-                            if (!isNaN(num)) {
-                                numberList.push(num.toString());
-                            }
+                            
+                            matchConditions.push(numberList.includes(episodeNumber));
                         }
-                    });
-                    
-                    // Extract number from episode.EpisodeNumber based on textNumberMatchMode
-                    let episodeNumber;
-                    if (this.textNumberMatchMode === 'enabled') {
-                        // Extract number at the end of the string
-                        const episodeNumberMatch = episode.EpisodeNumber.toString().match(/\d+$/);
-                        episodeNumber = episodeNumberMatch ? episodeNumberMatch[0] : episode.EpisodeNumber;
-                    } else {
-                        // Use the full episode number as before
-                        episodeNumber = episode.EpisodeNumber;
-                    }
-                    
-                    return numberList.includes(episodeNumber);
-                }
-
-                        return (this.searchFilters.title && new RegExp(searchQuery, 'i').test(episode.EpisodeTitle)) ||
-                            (this.searchFilters.story && new RegExp(searchQuery, 'i').test(episode.EpisodeStory)) ||
-                            (this.searchFilters.summary && new RegExp(searchQuery, 'i').test(episode.EpisodeSummary));
+                        
+                        // Title filter logic
+                        if (this.searchFilters.title) {
+                            matchConditions.push(new RegExp(searchQuery, 'i').test(episode.EpisodeTitle));
+                        }
+                        
+                        // Story filter logic
+                        if (this.searchFilters.story) {
+                            matchConditions.push(new RegExp(searchQuery, 'i').test(episode.EpisodeStory));
+                        }
+                        
+                        // Summary filter logic
+                        if (this.searchFilters.summary) {
+                            matchConditions.push(new RegExp(searchQuery, 'i').test(episode.EpisodeSummary));
+                        }
+                        
+                        // Return true if ANY condition is true (OR logic)
+                        return matchConditions.length > 0 && matchConditions.some(condition => condition);
                     });
                 },
 
