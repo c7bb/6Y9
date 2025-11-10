@@ -494,44 +494,50 @@
                             </div> -->
 
                             <!-- Checkboxes -->
-                            <div class="flex flex-wrap mt-2 justify-center text-lg">
-                                <label class="flex items-center transition-all duration-100 active:scale-90">
-                                    <input
-                                    type="checkbox"
-                                    v-model="searchFilters.number"
-                                    class="scale-100"
-                                    @change="ensureOneChecked('number')"
-                                    />
-                                    <span class="px-2 font-bold">الرقم</span>
-                                </label>   
-                                <label class="flex items-center transition-all duration-100 active:scale-90">
-                                    <input
-                                    type="checkbox"
-                                    v-model="searchFilters.title"
-                                    class="scale-100"
-                                    @change="ensureOneChecked('title')"
-                                    />
-                                    <span class="px-2 font-bold">العنوان</span>
-                                </label>
-                                <br><br>
-                                <label class="flex items-center transition-all duration-100 active:scale-90">
-                                    <input
-                                    type="checkbox"
-                                    v-model="searchFilters.story"
-                                    class="scale-100"
-                                    @change="ensureOneChecked('story')"
-                                    />
-                                    <span class="px-2 font-bold">القصة</span>
-                                </label>
-                                <label class="flex items-center transition-all duration-100 active:scale-90">
-                                    <input
-                                    type="checkbox"
-                                    v-model="searchFilters.summary"
-                                    class="scale-100"
-                                    @change="ensureOneChecked('summary')"
-                                    />
-                                    <span class="px-2 font-bold">الملخص</span>
-                                </label>
+                            <div class="flex flex-wrap mt-2 justify-center text-lg gap-4">
+                                <!-- الصف الأول -->
+                                <div class="flex gap-4">
+                                    <label class="flex items-center transition-all duration-100 active:scale-90">
+                                        <input
+                                            type="checkbox"
+                                            v-model="searchFilters.number"
+                                            class="scale-100"
+                                            @change="ensureOneChecked('number')"
+                                        />
+                                        <span class="px-2 font-bold">الرقم</span>
+                                    </label>
+                                    <label class="flex items-center transition-all duration-100 active:scale-90">
+                                        <input
+                                            type="checkbox"
+                                            v-model="searchFilters.title"
+                                            class="scale-100"
+                                            @change="ensureOneChecked('title')"
+                                        />
+                                        <span class="px-2 font-bold">العنوان</span>
+                                    </label>
+                                </div>
+
+                                <!-- الصف الثاني -->
+                                <div class="flex gap-4 mt-2">
+                                    <label class="flex items-center transition-all duration-100 active:scale-90">
+                                        <input
+                                            type="checkbox"
+                                            v-model="searchFilters.story"
+                                            class="scale-100"
+                                            @change="ensureOneChecked('story')"
+                                        />
+                                        <span class="px-2 font-bold">القصة</span>
+                                    </label>
+                                    <label class="flex items-center transition-all duration-100 active:scale-90">
+                                        <input
+                                            type="checkbox"
+                                            v-model="searchFilters.summary"
+                                            class="scale-100"
+                                            @change="ensureOneChecked('summary')"
+                                        />
+                                        <span class="px-2 font-bold">الملخص</span>
+                                    </label>
+                                </div>
                             </div>
                         </fieldset>
                     </div>
