@@ -15222,6 +15222,11 @@
 
                 toggleMenu() {
                     this.menuOpen = !this.menuOpen;
+                    // Close search popup when menu is opened
+                    if (this.menuOpen && this.searchOpen) {
+                        this.searchOpen = false;
+                        document.removeEventListener("click", this.closeSearchOutside);
+                    }
                 },
 
                 closeMenu(event) {
@@ -15465,6 +15470,10 @@
 
                 toggleSearch() {
                     this.searchOpen = !this.searchOpen;
+                    // Close menu when search is opened
+                    if (this.searchOpen && this.menuOpen) {
+                        this.menuOpen = false;
+                    }
                     if (this.searchOpen) {
                     this.$nextTick(() => {
                         document.addEventListener("click", this.closeSearchOutside);
