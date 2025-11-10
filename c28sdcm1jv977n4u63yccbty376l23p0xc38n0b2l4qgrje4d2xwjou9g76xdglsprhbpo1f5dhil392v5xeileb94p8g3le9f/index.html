@@ -412,6 +412,46 @@
         animation: ticker 15s linear infinite;
     }
 </style>
+<style>
+.notch {
+  position: absolute;
+  bottom: 100%; /* يجعلها فوق الزر مباشرة */
+  left: 50%;
+  width: 80px;
+  height: 35px;
+  background-color: #222;
+  border-radius: 28px 28px 0 0;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff4444;
+  font-weight: bold;
+  font-size: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.notch::before,
+.notch::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 14px;
+  height: 7px;
+  background-repeat: no-repeat;
+  background-size: 50% 100%;
+}
+
+.notch::before {
+  left: -7px;
+  background-image: radial-gradient(circle at 0 0, transparent 6px, #222 7px);
+}
+
+.notch::after {
+  right: -7px;
+  background-image: radial-gradient(circle at 100% 0, transparent 6px, #222 7px);
+}
+</style>
 <meta name='probely-verification' content='d1a5235e-0470-4602-aae0-84688966eb19' />
 </head>
 <body class="bg-gray-800 p-4 relative">
@@ -433,7 +473,12 @@
             </div>
 
             <!-- 🔍 Search Button + Popup -->
-            <div class="fixed top-4 left-4 z-50">
+            <div class="fixed top-4 left-4 z-50 relative">
+                <!-- 🔢 Notch -->
+                <div class="notch">
+                    ({{ totalEpisodes }})
+                </div>
+
                 <!-- 🔍 Icon -->
                 <button
                     @click.stop="toggleSearch" :disabled="loading"
@@ -471,27 +516,6 @@
 
                         <!-- 🧩 Search Filters -->
                         <fieldset class="mt-4">
-                            <!-- Radio Buttons (تظهر فقط لو 'number' مفعّل) -->
-                            <!-- <div v-if="searchFilters.number" class="flex flex-col space-y-2 mt-2">
-                                <label class="flex items-center transition-all duration-100 active:scale-90">
-                                    <input
-                                    type="radio"
-                                    v-model="textNumberMatchMode"
-                                    value="enabled"
-                                    class="scale-150"
-                                    />
-                                    <span class="px-2 font-bold">تفعيل</span>
-                                </label>
-                                <label class="flex items-center transition-all duration-100 active:scale-90">
-                                    <input
-                                    type="radio"
-                                    v-model="textNumberMatchMode"
-                                    value="disabled"
-                                    class="scale-150"
-                                    />
-                                    <span class="px-2 font-bold">تعطيل</span>
-                                </label>
-                            </div> -->
                             <div class="flex justify-center mt-2 text-lg">
                                 <div class="grid grid-cols-2 gap-y-4 gap-x-4">
                                     <label class="flex items-center transition-all duration-100 active:scale-90">
