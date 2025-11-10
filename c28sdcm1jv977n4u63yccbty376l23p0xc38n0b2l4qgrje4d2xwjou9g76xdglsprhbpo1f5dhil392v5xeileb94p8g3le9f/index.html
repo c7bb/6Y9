@@ -5580,18 +5580,18 @@
                                 </div>
                             </div>
                         </th>                
-                        <th :class="['border border-gray-300 text-xl px-4 py-2 text-center w-5/6', isAnyFilterActive ? 'bg-orange-500' : '']">
+                        <th :class="['border border-gray-300 text-xl px-4 py-2 text-center w-5/6', (isAnyFilterActive || searchQuery) ? 'bg-orange-500' : '']">
                             {{ episodeTitleHeader }}
                             <br />
                             <span v-if="isAnyFilterActive" @click="openEmptyPopup" class="inline-block text-base text-black cursor-pointer transition-all duration-100 active:scale-90">
                                 (التصفية قيد التشغيل حالياً)
                             </span>
                             <br v-if="isAnyFilterActive" />
-                            <span v-if="searchQuery" @click="toggleSearch" class="inline-block text-base text-black cursor-pointer transition-all duration-100 active:scale-90">
+                            <span v-if="searchQuery" @click="searchOpen = !searchOpen" class="inline-block text-base text-black cursor-pointer transition-all duration-100 active:scale-90">
                                 (البحث قيد التشغيل حالياً)
                             </span>
                             <br v-if="searchQuery" />
-                            <span :class="['text-base', isAnyFilterActive ? 'text-white' : 'text-red-600']">
+                            <span :class="['text-base', (isAnyFilterActive || searchQuery) ? 'text-white' : 'text-red-600']">
                                 انقر على أي عنوان لعرض تفاصيله
                             </span>
                         </th>                                                                          
