@@ -6705,8 +6705,7 @@
                 },
 
                 groupedEpisodes() {
-                    const seasons = {};
-                    this.episodes
+                    const filteredEpisodes = this.episodes
                         .filter(e => 
                             e.EpisodeVideosIDs && e.EpisodeVideosIDs.length > 0 &&
                             !e.EpisodeNumber.includes('الفيلم') &&
@@ -6717,17 +6716,21 @@
                             !e.EpisodeNumber.includes('فيلم تعاوني') &&
                             !e.EpisodeNumber.includes('يوميات زيرو') &&
                             !e.EpisodeNumber.includes('المجرم هانزاوا')
-                        )
-                        .forEach(ep => {
-                            const season = ep.EpisodeSeason || 'default';
-                            if (!seasons[season]) seasons[season] = [];
-                            seasons[season].push(ep);
-                        });
+                        );
                     
-                    return Object.values(seasons).map(group => ({
-                        range: `${group[0].EpisodeNumber}-${group[group.length - 1].EpisodeNumber}`,
-                        items: group
-                    }));
+                    const chunkSize = 99;
+                    return filteredEpisodes.reduce((acc, _, i, arr) => {
+                        if (i % chunkSize === 0) {
+                            return [
+                                ...acc,
+                                {
+                                    range: `${arr[i].EpisodeNumber}-${arr[Math.min(i + chunkSize - 1, arr.length - 1)].EpisodeNumber}`,
+                                    items: arr.slice(i, i + chunkSize)
+                                }
+                            ];
+                        }
+                        return acc;
+                    }, []);
                 },
 
                 groupedMovies() {
