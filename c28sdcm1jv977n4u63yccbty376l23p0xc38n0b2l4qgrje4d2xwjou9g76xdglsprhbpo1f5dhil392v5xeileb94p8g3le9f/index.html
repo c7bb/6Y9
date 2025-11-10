@@ -6032,7 +6032,7 @@
             </div>
 
             <div class="text-center font-bold justify-center my-4">
-                <span>{{ currentPage }}/{{ totalPages }}</span>
+                <span>{{ displayCurrentPage }}/{{ totalPages }}</span>
             </div>
 
             <!-- Page Size Controls (Right) -->
@@ -10856,6 +10856,9 @@
                 },
                 totalPages() {
                     return Math.ceil(this.filteredEpisodes.length / this.pageSize);
+                },
+                displayCurrentPage() {
+                    return this.totalPages === 0 ? 0 : this.currentPage;
                 },
                 paginatedEpisodes() {
                     const start = (this.currentPage - 1) * this.pageSize;
