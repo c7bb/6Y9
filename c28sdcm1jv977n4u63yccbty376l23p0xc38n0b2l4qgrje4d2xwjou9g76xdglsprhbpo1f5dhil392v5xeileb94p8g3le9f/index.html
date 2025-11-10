@@ -435,7 +435,6 @@
 
     .search-notch::before,
     .search-notch::after {
-        content: '';
         position: absolute;
         bottom: 0;
         left: -14px;
@@ -445,15 +444,6 @@
         background-repeat: no-repeat;
         background-image: radial-gradient(
             circle at 0 0,
-            transparent 6px,
-            #1f2937 7px
-        );
-    }
-
-    .search-notch::after {
-        left: 100%;
-        background-image: radial-gradient(
-            circle at 100% 0,
             transparent 6px,
             #1f2937 7px
         );
