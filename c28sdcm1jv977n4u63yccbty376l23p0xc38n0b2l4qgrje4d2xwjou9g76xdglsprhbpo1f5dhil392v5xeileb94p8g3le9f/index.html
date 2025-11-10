@@ -5320,17 +5320,6 @@
                         <!-- Manga Announcement Box -->
                         <div class="relative w-full max-w-2xl p-4 mt-4 bg-black bg-opacity-85 rounded-lg shadow-lg border border-yellow-500 animate-borderMove">
                             <div class="grid grid-cols-2 gap-4">
-                                <!-- Manga Column -->
-                                <div class="flex flex-col items-center">
-                                    <p class="text-white text-lg text-center font-bold mb-4">فصل المانغا</p>
-                                    <button 
-                                        v-if="mangas && mangas.length > 0"
-                                        @click="openMangaModal(mangaCh)"
-                                        class="w-full py-2 bg-green-600 text-white font-bold text-lg rounded hover:bg-blue-500 transition-all duration-100 hover:scale-105 active:scale-90">
-                                        {{ mangaCh }}
-                                    </button>
-                                </div>
-                                
                                 <!-- Episode Column -->
                                 <div class="flex flex-col items-center">
                                     <p class="text-white text-lg text-center font-bold mb-4">حلقة الأسبوع</p>
@@ -5339,6 +5328,16 @@
                                         @click="openEpisodeModal(ep)"
                                         class="w-full py-2 bg-teal-600 text-white font-bold text-lg rounded hover:bg-teal-500 transition-all duration-100 hover:scale-105 active:scale-90">
                                         {{ ep }}
+                                    </button>
+                                </div>
+                                <!-- Manga Column -->
+                                <div class="flex flex-col items-center">
+                                    <p class="text-white text-lg text-center font-bold mb-4">فصل المانغا</p>
+                                    <button 
+                                        v-if="mangas && mangas.length > 0"
+                                        @click="openMangaModal(mangaCh)"
+                                        class="w-full py-2 bg-green-600 text-white font-bold text-lg rounded hover:bg-blue-500 transition-all duration-100 hover:scale-105 active:scale-90">
+                                        {{ mangaCh }}
                                     </button>
                                 </div>
                             </div>
