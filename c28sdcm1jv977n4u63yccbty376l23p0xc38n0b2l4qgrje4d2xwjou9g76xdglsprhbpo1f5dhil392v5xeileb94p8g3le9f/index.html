@@ -6718,13 +6718,13 @@
                             !e.EpisodeNumber.includes('المجرم هانزاوا')
                         );
                     
-                    // Group episodes by their number ranges (1-99, 100-199, 200-299, etc.)
+                    // Group episodes by their number ranges (1-100, 101-200, 201-300, etc.)
                     const ranges = {};
                     filteredEpisodes.forEach(ep => {
                         const episodeNum = parseInt(ep.EpisodeNumber);
                         if (!isNaN(episodeNum)) {
-                            const rangeStart = Math.floor((episodeNum - 1) / 100) * 100 + 1;
-                            const rangeEnd = rangeStart + 99;
+                            const rangeStart = Math.ceil(episodeNum / 100) * 100 - 99;
+                            const rangeEnd = Math.ceil(episodeNum / 100) * 100;
                             const rangeKey = `${rangeStart}-${rangeEnd}`;
                             
                             if (!ranges[rangeKey]) {
