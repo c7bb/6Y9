@@ -13410,6 +13410,11 @@
                                             this.mangas = data.Mangas || [];
                                             this.loading = false;
                                             localStorage.removeItem('waitTime');
+                                            
+                                            // Update episode time ago after data loads
+                                            console.log('Data loaded, calling updateEpisodeTimeAgo');
+                                            this.updateEpisodeTimeAgo();
+                                            
                                             resolve();
                                         }, 300); // Delay to show 100% progress
                                     }
@@ -15817,7 +15822,20 @@
                 console.log('mounted - Setting up episode time ago timer');
                 console.log('mounted - ep value:', this.ep);
                 console.log('mounted - episodes length:', this.episodes.length);
-                this.updateEpisodeTimeAgo();
+                
+                // Only call if episodes are already loaded
+                if (this.episodes && this.episodes.length > 0) {
+                    this.updateEpisodeTimeAgo();
+                } else {
+                    // If episodes aren't loaded yet, watch for changes
+                    this.$watch('episodes', (newEpisodes) => {
+                        if (newEpisodes && newEpisodes.length > 0) {
+                            console.log('Episodes loaded, updating time ago');
+                            this.updateEpisodeTimeAgo();
+                        }
+                    });
+                }
+                
                 this.episodeTimeInterval = setInterval(() => {
                     console.log('Timer tick - updating episode time ago');
                     this.updateEpisodeTimeAgo();
