@@ -5317,28 +5317,32 @@
               
                                                  
 
-            <!-- Manga Announcement Box -->
-            <div class="relative w-full max-w-2xl p-4 mt-4 bg-black bg-opacity-85 rounded-lg shadow-lg border border-yellow-500 animate-borderMove">
-                <p class="text-white text-xl text-center font-bold">فصل المانغا  ({{ mangaCh }})</p>
-                <button 
-                    v-if="mangas && mangas.length > 0"
-                    @click="openMangaModal(mangaCh)"
-                    class="mt-4 w-full py-2 bg-green-600 text-white font-bold text-lg rounded hover:bg-blue-500 transition-all duration-100 hover:scale-105 active:scale-90">
-                    أضغط هنا لفتح الفصل
-                </button>
-            </div>
-
-            <!-- Announcement Box -->
-            <div class="relative w-full max-w-2xl p-4 mt-4 bg-black bg-opacity-85 rounded-lg shadow-lg border border-yellow-500 animate-borderMove">
-                <p class="text-white text-xl text-center font-bold">حلقة الأسبوع ({{ ep }})</p>
-                <!-- <p class="text-white text-xl text-center font-bold">حلقة ({{ ep }})</p> -->
-                <button 
-                    v-if="episodes && episodes.length > 0"
-                    @click="openEpisodeModal(ep)"
-                    class="mt-4 w-full py-2 bg-teal-600 text-white font-bold text-lg rounded hover:bg-teal-500 transition-all duration-100 hover:scale-105 active:scale-90">
-                    أضغط هنا لفتح الحلقة
-                </button>
-            </div>
+                        <!-- Manga Announcement Box -->
+                        <div class="relative w-full max-w-2xl p-4 mt-4 bg-black bg-opacity-85 rounded-lg shadow-lg border border-yellow-500 animate-borderMove">
+                            <div class="grid grid-cols-2 gap-4">
+                                <!-- Manga Column -->
+                                <div class="flex flex-col items-center">
+                                    <p class="text-white text-xl text-center font-bold mb-4">مانغا</p>
+                                    <button 
+                                        v-if="mangas && mangas.length > 0"
+                                        @click="openMangaModal(mangaCh)"
+                                        class="w-full py-2 bg-green-600 text-white font-bold text-lg rounded hover:bg-blue-500 transition-all duration-100 hover:scale-105 active:scale-90">
+                                        {{ mangaCh }}
+                                    </button>
+                                </div>
+                                
+                                <!-- Episode Column -->
+                                <div class="flex flex-col items-center">
+                                    <p class="text-white text-xl text-center font-bold mb-4">حلقة</p>
+                                    <button 
+                                        v-if="episodes && episodes.length > 0"
+                                        @click="openEpisodeModal(ep)"
+                                        class="w-full py-2 bg-teal-600 text-white font-bold text-lg rounded hover:bg-teal-500 transition-all duration-100 hover:scale-105 active:scale-90">
+                                        {{ ep }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Centered Description Box for Colors and Their Names with "معاني الألوان" Legend -->
                         <fieldset class="my-4 w-full font-bold p-4 rounded border relative">
