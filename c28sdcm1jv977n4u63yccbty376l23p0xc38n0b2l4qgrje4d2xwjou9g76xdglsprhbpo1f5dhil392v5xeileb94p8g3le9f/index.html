@@ -59,6 +59,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
     <title>.</title>
     <style>
+        .fade-slide-enter-active,
+        .fade-slide-leave-active {
+        transition: all 0.25s ease;
+        }
+        .fade-slide-enter-from {
+        opacity: 0;
+        transform: translateY(-10px);
+        }
+        .fade-slide-leave-to {
+        opacity: 0;
+        transform: translateY(-10px);
+        }
+    </style>
+    <style>
         .always-visible-scrollbar {
             overflow-y: scroll !important; /* Always show scrollbar */
             scrollbar-width: thin; /* For Firefox */
@@ -416,6 +430,111 @@
                     <button @click="openDirectWindow('movies')" class="block w-full px-4 py-2 text-base font-bold text-white hover:bg-teal-600 transition-all duration-100 active:scale-90">أفلام</button>
                     <button @click="openDirectWindow('mangas')" class="block w-full px-4 py-2 text-base font-bold text-white hover:bg-teal-600 transition-all duration-100 active:scale-90">مانغا</button>
                 </div>
+            </div>
+
+            <!-- 🔍 Search Button + Popup -->
+            <div class="fixed top-4 left-4 z-50">
+                <!-- 🔍 Icon -->
+                <button
+                    @click.stop="toggleSearch" :disabled="loading"
+                    class="bg-gray-700 text-white p-2 rounded-full shadow-md transition-all duration-200 active:scale-90 hover:bg-teal-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-4.35-4.35m1.85-5.65A7 7 0 1110 4a7 7 0 018.5 7z" />
+                    </svg>
+                </button>
+
+                <!-- 🔽 Search Window -->
+                <transition name="fade-slide">
+                    <div
+                    v-if="searchOpen"
+                    class="absolute top-12 left-0 bg-gray-800 border border-gray-600 rounded-xl shadow-2xl p-4 w-80 sm:w-96 text-gray-100"
+                    @click.stop
+                    >
+                    <!-- 🔤 Search Input -->
+                    <div class="relative">
+                        <input
+                        v-model="searchQuery"
+                        type="text"
+                        placeholder="ابحث..."
+                        class="w-full p-2 text-lg bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-teal-400"
+                        />
+                        <button
+                        @click="clearSearch"
+                        class="absolute top-2 right-2 text-red-400 hover:text-red-600 transition"
+                        >
+                        ✕
+                        </button>
+                    </div>
+
+                    <!-- 🧩 Search Filters -->
+                    <fieldset class="mt-3 border border-gray-600 rounded-lg p-3">
+                        <!-- Radio Buttons (تظهر فقط لو 'number' مفعّل) -->
+                        <div v-if="searchFilters.number" class="flex flex-col space-y-2 mt-2">
+                        <label class="flex items-center transition-all duration-100 active:scale-90">
+                            <input
+                            type="radio"
+                            v-model="textNumberMatchMode"
+                            value="enabled"
+                            class="scale-150"
+                            />
+                            <span class="px-2 font-bold">تفعيل</span>
+                        </label>
+                        <label class="flex items-center transition-all duration-100 active:scale-90">
+                            <input
+                            type="radio"
+                            v-model="textNumberMatchMode"
+                            value="disabled"
+                            class="scale-150"
+                            />
+                            <span class="px-2 font-bold">تعطيل</span>
+                        </label>
+                        </div>
+
+                        <!-- Checkboxes -->
+                        <div class="flex flex-wrap mt-2 justify-center text-lg">
+                        <label class="flex items-center transition-all duration-100 active:scale-90">
+                            <input
+                            type="checkbox"
+                            v-model="searchFilters.title"
+                            class="scale-100"
+                            @change="ensureOneChecked('title')"
+                            />
+                            <span class="px-2 font-bold">العنوان</span>
+                        </label>
+                        <label class="flex items-center transition-all duration-100 active:scale-90">
+                            <input
+                            type="checkbox"
+                            v-model="searchFilters.number"
+                            class="scale-100"
+                            @change="ensureOneChecked('number')"
+                            />
+                            <span class="px-2 font-bold">الرقم</span>
+                        </label>
+                        <label class="flex items-center transition-all duration-100 active:scale-90">
+                            <input
+                            type="checkbox"
+                            v-model="searchFilters.story"
+                            class="scale-100"
+                            @change="ensureOneChecked('story')"
+                            />
+                            <span class="px-2 font-bold">القصة</span>
+                        </label>
+                        <label class="flex items-center transition-all duration-100 active:scale-90">
+                            <input
+                            type="checkbox"
+                            v-model="searchFilters.summary"
+                            class="scale-100"
+                            @change="ensureOneChecked('summary')"
+                            />
+                            <span class="px-2 font-bold">الملخص</span>
+                        </label>
+                        </div>
+                    </fieldset>
+                    </div>
+                </transition>
             </div>
 
             <!-- Updated Direct Window Modal -->
@@ -5962,6 +6081,7 @@
                     error: null,
                     searchQuery: '',
                     textNumberMatchMode: 'disabled', // Default to disabled
+                    searchOpen: false,
                     selectedFilter: 'all',
                     currentPage: 1,
                     lastPage: 1,
@@ -15341,6 +15461,24 @@
 
                     if (checkedFilters.length === 0) {
                         this.searchFilters[changedKey] = true; // Prevent unchecking the last one
+                    }
+                },
+
+                toggleSearch() {
+                    this.searchOpen = !this.searchOpen;
+                    if (this.searchOpen) {
+                    this.$nextTick(() => {
+                        document.addEventListener("click", this.closeSearchOutside);
+                    });
+                    } else {
+                    document.removeEventListener("click", this.closeSearchOutside);
+                    }
+                },
+                closeSearchOutside(e) {
+                    const popup = document.querySelector(".absolute.bg-gray-800");
+                    if (popup && !popup.contains(e.target)) {
+                    this.searchOpen = false;
+                    document.removeEventListener("click", this.closeSearchOutside);
                     }
                 },
 
