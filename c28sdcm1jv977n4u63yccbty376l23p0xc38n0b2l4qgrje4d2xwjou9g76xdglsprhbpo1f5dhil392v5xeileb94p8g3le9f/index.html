@@ -6725,29 +6725,36 @@
                         )
                         .sort((a, b) => parseFloat(a.EpisodeNumber) - parseFloat(b.EpisodeNumber));
 
-                    // Group episodes in fixed ranges of 99 (1-99, 100-199, 200-299, etc.)
-                    const chunkSize = 99;
+                    // Manually defined episode ranges
+                    const ranges = [
+                        { start: 1, end: 99 },
+                        { start: 100, end: 199 },
+                        { start: 200, end: 299 },
+                        { start: 300, end: 399 },
+                        { start: 400, end: 499 },
+                        { start: 500, end: 599 },
+                        { start: 600, end: 699 },
+                        { start: 700, end: 799 },
+                        { start: 800, end: 899 },
+                        { start: 900, end: 999 },
+                        { start: 1000, end: 1099 },
+                        { start: 1100, end: 1199 }
+                    ];
+                    
                     const groups = [];
                     
-                    // Create groups based on fixed ranges
-                    if (validEpisodes.length > 0) {
-                        const maxEpisode = parseFloat(validEpisodes[validEpisodes.length - 1].EpisodeNumber);
-                        const numGroups = Math.ceil(maxEpisode / chunkSize);
+                    // Filter episodes into each range
+                    for (const range of ranges) {
+                        const groupEpisodes = validEpisodes.filter(ep => {
+                            const epNum = parseFloat(ep.EpisodeNumber);
+                            return epNum >= range.start && epNum <= range.end;
+                        });
                         
-                        for (let i = 0; i < numGroups; i++) {
-                            const startRange = i * chunkSize + 1;
-                            const endRange = (i + 1) * chunkSize;
-                            const groupEpisodes = validEpisodes.filter(ep => {
-                                const epNum = parseFloat(ep.EpisodeNumber);
-                                return epNum >= startRange && epNum <= endRange;
+                        if (groupEpisodes.length > 0) {
+                            groups.push({
+                                range: `${range.start}–${range.end}`,
+                                items: groupEpisodes
                             });
-                            
-                            if (groupEpisodes.length > 0) {
-                                groups.push({
-                                    range: `${startRange}–${endRange}`,
-                                    items: groupEpisodes
-                                });
-                            }
                         }
                     }
                     
