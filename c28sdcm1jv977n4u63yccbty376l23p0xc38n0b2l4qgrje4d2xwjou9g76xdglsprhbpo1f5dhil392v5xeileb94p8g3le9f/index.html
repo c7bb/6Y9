@@ -450,7 +450,7 @@
                 <transition name="fade-slide">
                     <div
                     v-if="searchOpen"
-                    class="absolute top-12 left-0 bg-gray-800 border border-gray-600 rounded-xl shadow-2xl p-4 w-80 sm:w-96 text-gray-100"
+                    class="absolute top-12 left-0 bg-gray-800 border border-teal-600 rounded-xl shadow-2xl p-4 w-80 sm:w-96 text-gray-100"
                     @click.stop
                     >
                     <!-- 🔤 Search Input -->
@@ -472,26 +472,26 @@
                     <!-- 🧩 Search Filters -->
                     <fieldset class="mt-3 border border-gray-600 rounded-lg p-3">
                         <!-- Radio Buttons (تظهر فقط لو 'number' مفعّل) -->
-                        <div v-if="searchFilters.number" class="flex flex-col space-y-2 mt-2">
-                        <label class="flex items-center transition-all duration-100 active:scale-90">
-                            <input
-                            type="radio"
-                            v-model="textNumberMatchMode"
-                            value="enabled"
-                            class="scale-150"
-                            />
-                            <span class="px-2 font-bold">تفعيل</span>
-                        </label>
-                        <label class="flex items-center transition-all duration-100 active:scale-90">
-                            <input
-                            type="radio"
-                            v-model="textNumberMatchMode"
-                            value="disabled"
-                            class="scale-150"
-                            />
-                            <span class="px-2 font-bold">تعطيل</span>
-                        </label>
-                        </div>
+                        <!-- <div v-if="searchFilters.number" class="flex flex-col space-y-2 mt-2">
+                            <label class="flex items-center transition-all duration-100 active:scale-90">
+                                <input
+                                type="radio"
+                                v-model="textNumberMatchMode"
+                                value="enabled"
+                                class="scale-150"
+                                />
+                                <span class="px-2 font-bold">تفعيل</span>
+                            </label>
+                            <label class="flex items-center transition-all duration-100 active:scale-90">
+                                <input
+                                type="radio"
+                                v-model="textNumberMatchMode"
+                                value="disabled"
+                                class="scale-150"
+                                />
+                                <span class="px-2 font-bold">تعطيل</span>
+                            </label>
+                        </div> -->
 
                         <!-- Checkboxes -->
                         <div class="flex flex-wrap mt-2 justify-center text-lg">
@@ -6076,7 +6076,7 @@
                     progressInterval: null,
                     error: null,
                     searchQuery: '',
-                    textNumberMatchMode: 'disabled', // Default to disabled
+                    textNumberMatchMode: 'enabled', // Default to disabled
                     searchOpen: false,
                     selectedFilter: 'all',
                     currentPage: 1,
