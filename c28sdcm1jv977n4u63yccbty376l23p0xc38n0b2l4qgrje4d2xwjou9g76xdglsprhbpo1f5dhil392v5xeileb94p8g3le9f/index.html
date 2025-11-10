@@ -5331,7 +5331,7 @@
                                     </button>
                                     <p v-if="episodeOfWeekTimeAgo || episodeOfWeekTimeAgoEnglish" 
                                        @click="toggleTimeFormat" 
-                                       class="text-white text-xs text-center mt-2 cursor-pointer hover:text-gray-300 transition-colors duration-200">
+                                       class="text-white text-xs text-center mt-3 cursor-pointer hover:text-gray-300 transition-colors duration-200">
                                         {{ showEnglishTimeFormat ? episodeOfWeekTimeAgoEnglish : episodeOfWeekTimeAgo }}
                                     </p>
                                 </div>
@@ -5344,6 +5344,11 @@
                                         class="w-full py-2 bg-green-600 text-white font-bold text-lg rounded hover:bg-blue-500 transition-all duration-100 hover:scale-105 active:scale-90">
                                         {{ mangaCh }}
                                     </button>
+                                    <p v-if="mangaOfWeekTimeAgo || mangaOfWeekTimeAgoEnglish" 
+                                       @click="toggleTimeFormatManga" 
+                                       class="text-white text-xs text-center mt-3 cursor-pointer hover:text-gray-300 transition-colors duration-200">
+                                        {{ showEnglishTimeFormatManga ? mangaOfWeekTimeAgoEnglish : mangaOfWeekTimeAgo }}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -6707,6 +6712,10 @@
                     episodeOfWeekTimeAgo: '',
                     episodeOfWeekTimeAgoEnglish: '',
                     showEnglishTimeFormat: false,
+                    mangaOfWeekTimeAgo: '',
+                    mangaOfWeekTimeAgoEnglish: '',
+                    showEnglishTimeFormatManga: false,
+                    mangaUpdateDate: '',
                 };
             },
             computed: {
@@ -13313,7 +13322,6 @@
                         const seconds = totalSeconds;
                         parts.push(`${seconds}s`);
                     }
-                    
                     this.episodeOfWeekTimeAgoEnglish = parts.join('');
                     console.log('English format:', this.episodeOfWeekTimeAgoEnglish);
                 },
@@ -13321,6 +13329,196 @@
                 toggleTimeFormat() {
                     this.showEnglishTimeFormat = !this.showEnglishTimeFormat;
                     console.log('Toggled time format, showEnglish:', this.showEnglishTimeFormat);
+                },
+                
+                toggleTimeFormatManga() {
+                    this.showEnglishTimeFormatManga = !this.showEnglishTimeFormatManga;
+                    console.log('Toggled manga time format, showEnglish:', this.showEnglishTimeFormatManga);
+                },
+
+                async loadMangaUpdateDate() {
+                    try {
+                        const response = await fetch('./lmcud.txt');
+                        const text = await response.text();
+                        this.mangaUpdateDate = text.trim();
+                        console.log('Loaded manga update date:', this.mangaUpdateDate);
+                        this.updateMangaTimeAgo();
+                    } catch (error) {
+                        console.error('Error loading manga update date:', error);
+                    }
+                },
+
+                updateMangaTimeAgo() {
+                    console.log('updateMangaTimeAgo called - mangaUpdateDate:', this.mangaUpdateDate);
+                    
+                    if (!this.mangaUpdateDate) {
+                        console.log('No mangaUpdateDate found');
+                        this.mangaOfWeekTimeAgo = '';
+                        return;
+                    }
+
+                    const dateText = this.mangaUpdateDate;
+                    console.log('Processing manga date:', dateText);
+                    
+                    let mangaDate;
+                    
+                    // Check if date format is YYYY-MM-DD (with dashes)
+                    if (dateText.includes('-')) {
+                        const dateParts = dateText.split('-');
+                        if (dateParts.length !== 3) {
+                            console.log('Invalid date format with dashes:', dateText);
+                            this.mangaOfWeekTimeAgo = '';
+                            return;
+                        }
+                        const [year, month, day] = dateParts.map(Number);
+                        mangaDate = new Date(year, month - 1, day);
+                        console.log('Parsed manga date (YYYY-MM-DD):', mangaDate);
+                    } 
+                    // Check if date format is DD/MM/YYYY (with slashes)
+                    else if (dateText.includes('/')) {
+                        const dateParts = dateText.split('/');
+                        if (dateParts.length !== 3) {
+                            console.log('Invalid date format with slashes:', dateText);
+                            this.mangaOfWeekTimeAgo = '';
+                            return;
+                        }
+                        const [day, month, year] = dateParts.map(Number);
+                        mangaDate = new Date(year, month - 1, day);
+                        console.log('Parsed manga date (DD/MM/YYYY):', mangaDate);
+                    } 
+                    else {
+                        console.log('Unknown date format:', dateText);
+                        this.mangaOfWeekTimeAgo = '';
+                        return;
+                    }
+                    
+                    const now = new Date();
+                    const diffMs = now - mangaDate;
+                    const diffSeconds = Math.floor(diffMs / 1000);
+                    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+                    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                    const diffMonths = Math.floor(diffDays / 30);
+                    const diffYears = Math.floor(diffDays / 365);
+
+                    // Check for remainders to determine if we need "أكثر من"
+                    const hasExtraSeconds = diffSeconds % 60 > 0;
+                    const hasExtraMinutes = diffMinutes % 60 > 0;
+                    const hasExtraHours = diffHours % 24 > 0;
+                    const hasExtraDays = diffDays % 30 > 0;
+                    const hasExtraMonths = (diffDays % 365) >= 30;
+
+                    let timeAgoText = '';
+                    const moreThan = 'أكثر من ';
+
+                    if (diffMinutes < 1) {
+                        timeAgoText = 'الآن';
+                    } else if (diffMinutes === 1 && !hasExtraSeconds) {
+                        timeAgoText = 'دقيقة مضت';
+                    } else if (diffMinutes === 1 && hasExtraSeconds) {
+                        timeAgoText = moreThan + 'دقيقة مضت';
+                    } else if (diffMinutes === 2 && !hasExtraSeconds) {
+                        timeAgoText = 'دقيقتان مضتا';
+                    } else if (diffMinutes === 2 && hasExtraSeconds) {
+                        timeAgoText = moreThan + 'دقيقتان مضتا';
+                    } else if (diffMinutes >= 3 && diffMinutes <= 10) {
+                        timeAgoText = (hasExtraSeconds ? moreThan : '') + `${diffMinutes} دقائق مضت`;
+                    } else if (diffMinutes >= 11 && diffMinutes <= 59) {
+                        timeAgoText = (hasExtraSeconds ? moreThan : '') + `${diffMinutes} دقيقة مضت`;
+                    } else if (diffHours === 1 && !hasExtraMinutes) {
+                        timeAgoText = 'ساعة مضت';
+                    } else if (diffHours === 1 && hasExtraMinutes) {
+                        timeAgoText = moreThan + 'ساعة مضت';
+                    } else if (diffHours === 2 && !hasExtraMinutes) {
+                        timeAgoText = 'ساعتان مضتا';
+                    } else if (diffHours === 2 && hasExtraMinutes) {
+                        timeAgoText = moreThan + 'ساعتان مضتا';
+                    } else if (diffHours >= 3 && diffHours <= 10) {
+                        timeAgoText = (hasExtraMinutes ? moreThan : '') + `${diffHours} ساعات مضت`;
+                    } else if (diffHours >= 11 && diffHours <= 23) {
+                        timeAgoText = (hasExtraMinutes ? moreThan : '') + `${diffHours} ساعة مضت`;
+                    } else if (diffDays === 1 && !hasExtraHours) {
+                        timeAgoText = 'يوم مضى';
+                    } else if (diffDays === 1 && hasExtraHours) {
+                        timeAgoText = moreThan + 'يوم مضى';
+                    } else if (diffDays === 2 && !hasExtraHours) {
+                        timeAgoText = 'يومان مضيا';
+                    } else if (diffDays === 2 && hasExtraHours) {
+                        timeAgoText = moreThan + 'يومان مضيا';
+                    } else if (diffDays >= 3 && diffDays <= 10) {
+                        timeAgoText = (hasExtraHours ? moreThan : '') + `${diffDays} أيام مضت`;
+                    } else if (diffDays >= 11 && diffDays < 30) {
+                        timeAgoText = (hasExtraHours ? moreThan : '') + `${diffDays} يومًا مضت`;
+                    } else if (diffMonths === 1 && !hasExtraDays) {
+                        timeAgoText = 'شهر مضى';
+                    } else if (diffMonths === 1 && hasExtraDays) {
+                        timeAgoText = moreThan + 'شهر مضى';
+                    } else if (diffMonths === 2 && !hasExtraDays) {
+                        timeAgoText = 'شهران مضيا';
+                    } else if (diffMonths === 2 && hasExtraDays) {
+                        timeAgoText = moreThan + 'شهران مضيا';
+                    } else if (diffMonths >= 3 && diffMonths <= 10) {
+                        timeAgoText = (hasExtraDays ? moreThan : '') + `${diffMonths} أشهر مضت`;
+                    } else if (diffMonths >= 11 && diffMonths < 12) {
+                        timeAgoText = (hasExtraDays ? moreThan : '') + `${diffMonths} شهرًا مضت`;
+                    } else if (diffYears === 1 && !hasExtraMonths) {
+                        timeAgoText = 'سنة مضت';
+                    } else if (diffYears === 1 && hasExtraMonths) {
+                        timeAgoText = moreThan + 'سنة مضت';
+                    } else if (diffYears === 2 && !hasExtraMonths) {
+                        timeAgoText = 'سنتان مضتا';
+                    } else if (diffYears === 2 && hasExtraMonths) {
+                        timeAgoText = moreThan + 'سنتان مضتا';
+                    } else if (diffYears >= 3 && diffYears <= 10) {
+                        timeAgoText = (hasExtraMonths ? moreThan : '') + `${diffYears} سنوات مضت`;
+                    } else {
+                        timeAgoText = (hasExtraMonths ? moreThan : '') + `${diffYears} سنة مضت`;
+                    }
+
+                    this.mangaOfWeekTimeAgo = timeAgoText;
+                    console.log('Final manga timeAgoText:', timeAgoText, 'mangaOfWeekTimeAgo:', this.mangaOfWeekTimeAgo);
+                    
+                    // Also calculate English format
+                    this.updateMangaTimeAgoEnglish(mangaDate);
+                },
+
+                updateMangaTimeAgoEnglish(mangaDate) {
+                    const now = new Date();
+                    const diffMs = now - mangaDate;
+                    
+                    // Calculate each time unit
+                    const totalSeconds = Math.floor(diffMs / 1000);
+                    const totalMinutes = Math.floor(totalSeconds / 60);
+                    const totalHours = Math.floor(totalMinutes / 60);
+                    const totalDays = Math.floor(totalHours / 24);
+                    const totalMonths = Math.floor(totalDays / 30);
+                    const totalYears = Math.floor(totalDays / 365);
+                    
+                    // Calculate remainders
+                    const years = totalYears;
+                    const months = totalMonths - (years * 12);
+                    const weeks = Math.floor((totalDays - (totalYears * 365) - (months * 30)) / 7);
+                    const days = totalDays - (years * 365) - (months * 30) - (weeks * 7);
+                    const hours = totalHours - (totalDays * 24);
+                    const minutes = totalMinutes - (totalHours * 60);
+                    
+                    // Build compact format string
+                    let parts = [];
+                    if (years > 0) parts.push(`${years}y`);
+                    if (months > 0) parts.push(`${months}m`);
+                    if (weeks > 0) parts.push(`${weeks}w`);
+                    if (days > 0) parts.push(`${days}d`);
+                    if (hours > 0) parts.push(`${hours}h`);
+                    if (minutes > 0) parts.push(`${minutes}min`);
+                    
+                    // If less than a minute, show seconds
+                    if (parts.length === 0) {
+                        const seconds = totalSeconds;
+                        parts.push(`${seconds}s`);
+                    }
+                    
+                    this.mangaOfWeekTimeAgoEnglish = parts.join('');
+                    console.log('Manga English format:', this.mangaOfWeekTimeAgoEnglish);
                 },
 
                 nextPage() {
@@ -15916,6 +16114,16 @@
                     this.updateEpisodeTimeAgo();
                 }, 60000); // Update every minute
                 console.log('mounted - Timer set up complete');
+                
+                // Load manga update date and set up interval
+                console.log('mounted - Loading manga update date');
+                this.loadMangaUpdateDate();
+                
+                this.mangaTimeInterval = setInterval(() => {
+                    console.log('Timer tick - updating manga time ago');
+                    this.updateMangaTimeAgo();
+                }, 60000); // Update every minute
+                console.log('mounted - Manga timer set up complete');
             },
 
             unmounted() {
@@ -15923,6 +16131,7 @@
                 // Clear any app-specific intervals/timeouts
                 if (this.intervalId) clearInterval(this.intervalId);
                 if (this.episodeTimeInterval) clearInterval(this.episodeTimeInterval);
+                if (this.mangaTimeInterval) clearInterval(this.mangaTimeInterval);
                 if (this.timeoutId) clearTimeout(this.timeoutId);
 
                 // Clean up event listener to prevent memory leaks
