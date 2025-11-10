@@ -433,15 +433,15 @@
                             <legend class="px-2">اختر نوع المحتوى:</legend>
                             <div class="flex justify-around">
                                 <label class="flex items-center transition-all duration-100 active:scale-90">
-                                    <input type="radio" v-model="selectedCategory" value="episodes" class="ml-2" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting'" @change="resetEpisodesView">
+                                    <input type="radio" v-model="selectedCategory" value="episodes" class="ml-2" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting' || selectedManga?.status === 'sending'" @change="resetEpisodesView">
                                     حلقات
                                 </label>
                                 <label class="flex items-center transition-all duration-100 active:scale-90">
-                                    <input type="radio" v-model="selectedCategory" value="movies" class="ml-2" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting'" @change="resetMoviesView">
+                                    <input type="radio" v-model="selectedCategory" value="movies" class="ml-2" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting' || selectedManga?.status === 'sending'" @change="resetMoviesView">
                                     أفلام
                                 </label>
                                 <label class="flex items-center transition-all duration-100 active:scale-90">
-                                    <input type="radio" v-model="selectedCategory" value="mangas" class="ml-2" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting'" @change="resetMangasView">
+                                    <input type="radio" v-model="selectedCategory" value="mangas" class="ml-2" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting' || selectedManga?.status === 'sending'" @change="resetMangasView">
                                     مانغا
                                 </label>
                             </div>
@@ -501,7 +501,7 @@
                             <div class="flex flex-wrap gap-2 mb-4 justify-center" dir="ltr"> <!-- Align buttons to the left -->
                                 <button 
                                 v-for="(group, index) in groupedEpisodes" 
-                                :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting')"
+                                :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')"
                                 @click="handleEpisodeGroupChange(index)" 
                                 :class="['px-3 py-1 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90', activeTab.episodes === index ? 'bg-blue-500 text-white' : 'bg-gray-700']">
                                 {{ group.range }}
@@ -510,14 +510,14 @@
                             <fieldset class="border p-2 rounded">
                                 <legend class="flex items-center gap-2">
                                     <span>الحلقات المتاحة</span>
-                                    <button v-if="selectedEpisode" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting')" @click="resetEpisodesView" class="p-1 hover:bg-gray-700 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
+                                    <button v-if="selectedEpisode" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')" @click="resetEpisodesView" class="p-1 hover:bg-gray-700 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
                                         <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/previous.png" alt="رجوع" class="h-6 w-6" />
                                     </button>
                                 </legend>
                                 <div v-if="!selectedEpisode" class="grid grid-cols-3 gap-2" dir="ltr">
                                     <button 
                                         v-for="episode in groupedEpisodes[activeTab.episodes]?.items" 
-                                        :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting')"
+                                        :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')"
                                         @click="selectEpisode(episode)" 
                                         class="bg-blue-500 text-white p-2 rounded hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
                                         {{ episode.EpisodeNumber }}
@@ -526,7 +526,7 @@
                                 <div v-else class="flex flex-col justify-center gap-4">
                                     <div class="flex items-center px-4">
                                         <div class="w-8 flex justify-start">
-                                            <button :disabled="!hasNextEpisode || selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting')" @click="navigateToNextEpisode(); resetStatusForEpisodeManga();" class="transition-opacity disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
+                                            <button :disabled="!hasNextEpisode || selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')" @click="navigateToNextEpisode(); resetStatusForEpisodeManga();" class="transition-opacity disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/next.png" alt="التالي" class="h-8 w-8" />
                                             </button>
                                         </div>
@@ -534,7 +534,7 @@
                                             <span class="text-lg font-bold">{{ selectedEpisode.EpisodeNumber }}</span>
                                         </div>
                                         <div class="w-8 flex justify-end">
-                                            <button :disabled="!hasPreviousEpisode || selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting')" @click="navigateToPreviousEpisode(); resetStatusForEpisodeManga();" class="transition-opacity disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
+                                            <button :disabled="!hasPreviousEpisode || selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')" @click="navigateToPreviousEpisode(); resetStatusForEpisodeManga();" class="transition-opacity disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/previous.png" alt="السابق" class="h-8 w-8" />
                                             </button>
                                         </div>
@@ -543,10 +543,9 @@
                                         :key="video.VideoID" 
                                         class="relative flex flex-col gap-4">
                                         <button
-                                            :disabled="video.status === 'success' || video.status === 'ratelimiting'"
+                                            :disabled="video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending'"
                                             @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
-                                            class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed"
-                                            :class="{ 'opacity-50 cursor-not-allowed': video.status === 'ratelimiting' }">
+                                            class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed">
                                             <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ video.Size }} MB)</span>
                                             <span v-else-if="video.countdown !== undefined">{{ video.countdown }}</span>
                                             <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
@@ -576,7 +575,7 @@
                             <div class="flex flex-wrap gap-2 mb-4 justify-center" dir="ltr">
                                 <button 
                                 v-for="(group, index) in groupedMovies" 
-                                :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting')"
+                                :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')"
                                 @click="handleMovieGroupChange(index)" 
                                 :class="['px-3 py-1 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90', activeTab.movies === index ? 'bg-blue-500 text-white' : 'bg-gray-700']">
                                 {{ group.range }}
@@ -585,14 +584,14 @@
                             <fieldset class="border p-2 rounded">
                                 <legend class="flex items-center gap-2">
                                     <span>الأفلام المتاحة</span>
-                                    <button v-if="selectedEpisode" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting')" @click="resetMoviesView" class="p-1 hover:bg-gray-700 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
+                                    <button v-if="selectedEpisode" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')" @click="resetMoviesView" class="p-1 hover:bg-gray-700 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
                                         <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/previous.png" alt="رجوع" class="h-6 w-6" />
                                     </button>
                                 </legend>
                                 <div v-if="!selectedEpisode" class="grid grid-cols-3 gap-2">
                                     <button 
                                     v-for="movie in groupedMovies[activeTab.movies]?.items" 
-                                    :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting')"
+                                    :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')"
                                     @click="selectMovie(movie)" 
                                     class="bg-amber-700 text-white p-2 rounded hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
                                     {{ movie.EpisodeNumber }}
@@ -601,7 +600,7 @@
                                 <div v-else class="flex flex-col justify-center gap-4">
                                     <div class="flex items-center px-4">
                                         <div class="w-8 flex justify-start">
-                                            <button :disabled="!hasNextMovie || selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting')" @click="navigateToNextMovie(); resetStatusForEpisodeManga();" class="transition-opacity disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
+                                            <button :disabled="!hasNextMovie || selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')" @click="navigateToNextMovie(); resetStatusForEpisodeManga();" class="transition-opacity disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/next.png" alt="التالي" class="h-8 w-8" />
                                             </button>
                                         </div>
@@ -609,7 +608,7 @@
                                             <span class="text-lg font-bold">{{ selectedEpisode.EpisodeNumber }}</span>
                                         </div>
                                         <div class="w-8 flex justify-end">
-                                            <button :disabled="!hasPreviousMovie || selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting')" @click="navigateToPreviousMovie(); resetStatusForEpisodeManga();" class="transition-opacity disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
+                                            <button :disabled="!hasPreviousMovie || selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')" @click="navigateToPreviousMovie(); resetStatusForEpisodeManga();" class="transition-opacity disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/previous.png" alt="السابق" class="h-8 w-8" />
                                             </button>
                                         </div>
@@ -618,10 +617,9 @@
                                         :key="video.VideoID" 
                                         class="relative flex flex-col gap-4">
                                         <button
-                                            :disabled="video.status === 'success' || video.status === 'ratelimiting'"
+                                            :disabled="video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending'"
                                             @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
-                                            class="bg-amber-700 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed"
-                                            :class="{ 'opacity-50 cursor-not-allowed': video.status === 'ratelimiting' }">
+                                            class="bg-amber-700 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed">
                                             <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ video.Size }} MB)</span>
                                             <span v-else-if="video.countdown !== undefined">{{ video.countdown }}</span>
                                             <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
@@ -651,7 +649,7 @@
                             <div class="flex flex-wrap gap-2 mb-4 justify-center" dir="ltr"> <!-- Align buttons to the left -->
                                 <button 
                                 v-for="(group, index) in groupedMangas" 
-                                :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting'"
+                                :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting' || selectedManga?.status === 'sending'"
                                 @click="handleMangaGroupChange(index)" 
                                 :class="['px-3 py-1 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90', activeTab.mangas === index ? 'bg-blue-500 text-white' : 'bg-gray-700']">
                                 {{ group.range }}
@@ -660,14 +658,14 @@
                             <fieldset class="border p-2 rounded">
                                 <legend class="flex items-center gap-2">
                                     <span>الفصول المتاحة</span>
-                                    <button v-if="selectedManga" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting'" @click="resetMangasView" class="p-1 hover:bg-gray-700 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
+                                    <button v-if="selectedManga" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting' || selectedManga?.status === 'sending'" @click="resetMangasView" class="p-1 hover:bg-gray-700 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
                                         <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/previous.png" alt="رجوع" class="h-6 w-6" />
                                     </button>
                                 </legend>
                                 <div v-if="!selectedManga" class="grid grid-cols-3 gap-2" dir="ltr">
                                     <button 
                                     v-for="manga in groupedMangas[activeTab.mangas]?.items" 
-                                    :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting'"
+                                    :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting' || selectedManga?.status === 'sending'"
                                     @click="selectManga(manga)" 
                                     class="bg-green-500 text-white p-2 rounded hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
                                     {{ manga.MangaNumber }}
@@ -676,7 +674,7 @@
                                 <div v-else class="flex flex-col justify-center gap-4">
                                     <div class="flex items-center px-4">
                                         <div class="w-8 flex justify-start">
-                                            <button :disabled="!hasNextManga || selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting'" @click="navigateToNextManga(); resetStatusForEpisodeManga();" class="transition-opacity disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
+                                            <button :disabled="!hasNextManga || selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting' || selectedManga?.status === 'sending'" @click="navigateToNextManga(); resetStatusForEpisodeManga();" class="transition-opacity disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/next.png" alt="التالي" class="h-8 w-8" />
                                             </button>
                                         </div>
@@ -684,7 +682,7 @@
                                             <span class="text-lg font-bold">{{ selectedManga.MangaNumber }}</span>
                                         </div>
                                         <div class="w-8 flex justify-end">
-                                            <button :disabled="!hasPreviousManga || selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting'" @click="navigateToPreviousManga(); resetStatusForEpisodeManga();resetStatusForEpisodeManga();" class="transition-opacity disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
+                                            <button :disabled="!hasPreviousManga || selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending') || selectedManga?.status === 'success' || selectedManga?.status === 'ratelimiting' || selectedManga?.status === 'sending'" @click="navigateToPreviousManga(); resetStatusForEpisodeManga();" class="transition-opacity disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/previous.png" alt="السابق" class="h-8 w-8" />
                                             </button>
                                         </div>
@@ -692,10 +690,9 @@
                                     <div class="relative flex flex-col gap-4">
                                         <div class="relative w-full">    
                                             <button
-                                                :disabled="selectedManga.status === 'success' || selectedManga.status === 'ratelimiting'"
+                                                :disabled="selectedManga.status === 'success' || selectedManga.status === 'ratelimiting' || selectedManga.status === 'sending'"
                                                 @click="sendMangaToBotD(selectedManga.MangaFileID, selectedManga.MangaNumber, 0)"
-                                                class="w-full bg-green-500 text-white px-6 py-2 rounded hover:bg-blue-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed" dir="ltr"
-                                                :class="{ 'opacity-50 cursor-not-allowed': selectedManga.status === 'ratelimiting' }">
+                                                class="w-full bg-green-500 text-white px-6 py-2 rounded hover:bg-blue-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed" dir="ltr">
                                                 <span v-if="selectedManga.status === 'ratelimiting'">{{ formatMangaSize(selectedManga.MangaFileSize) }}</span>
                                                 <span v-else-if="selectedManga.countdown !== undefined">{{ selectedManga.countdown }}</span>
                                                 <span v-else>{{ formatMangaSize(selectedManga.MangaFileSize) }}</span>
@@ -5471,7 +5468,7 @@
                                     <!-- Next Episode Button -->
                                     <button 
                                         v-if="selectedEpisode.EpisodeParts" 
-                                        :disabled="!nextEpisodeExists || selectedEpisode.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting')" 
+                                        :disabled="!nextEpisodeExists || selectedEpisode.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')" 
                                         @click="fetchNextEpisode(); resetStatusForEpisodeManga();" 
                                         class="focus:outline-none ml-12 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90"
                                     >
@@ -5481,7 +5478,7 @@
                                     <!-- Previous Episode Button -->
                                     <button 
                                         v-if="selectedEpisode.EpisodeParts" 
-                                        :disabled="!previousEpisodeExists || selectedEpisode.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting') || selectedEpisode.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting')" 
+                                        :disabled="!previousEpisodeExists || selectedEpisode.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')" 
                                         @click="fetchPreviousEpisode(); resetStatusForEpisodeManga();" 
                                         class="focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90"
                                     >
@@ -5601,11 +5598,10 @@
                                         class="relative flex flex-col gap-4"
                                         >
                                         <button
-                                            :disabled="manga.status === 'success' || manga.status === 'ratelimiting'"
+                                            :disabled="manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending'"
                                             @click="() => { sendMangaToBot(manga.MangaFileID, manga.MangaNumber, index); }"
                                             class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed"
                                             dir="ltr"
-                                            :class="{ 'opacity-50 cursor-not-allowed': manga.status === 'ratelimiting' }"
                                         >
                                             <span v-if="manga.status === 'ratelimiting'">{{ manga.MangaNumber }} ({{ formatMangaSize(manga.MangaFileSize) }})</span>
                                             <span v-else-if="manga.countdown !== undefined">{{ manga.countdown }}</span>
@@ -5822,10 +5818,9 @@
                                             :key="video.VideoID" 
                                             class="relative flex flex-col gap-4">
                                             <button
-                                                :disabled="video.status === 'success' || video.status === 'ratelimiting'"
+                                                :disabled="video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending'"
                                                 @click="() => { sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime); }"
-                                                class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed"
-                                                :class="{ 'opacity-50 cursor-not-allowed': video.status === 'ratelimiting' }">
+                                                class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed">
                                                 <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ video.Size }} MB)</span>
                                                 <span v-else-if="video.countdown !== undefined">{{ video.countdown }}</span>
                                             <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
