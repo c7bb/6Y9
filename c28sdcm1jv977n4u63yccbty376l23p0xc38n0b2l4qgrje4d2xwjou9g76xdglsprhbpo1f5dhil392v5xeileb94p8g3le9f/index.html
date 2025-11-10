@@ -6724,7 +6724,7 @@
                         const episodeNum = parseInt(ep.EpisodeNumber);
                         if (!isNaN(episodeNum)) {
                             const rangeStart = Math.floor((episodeNum - 1) / 100) * 100 + 1;
-                            const rangeEnd = rangeStart + 98;
+                            const rangeEnd = rangeStart + 99;
                             const rangeKey = `${rangeStart}-${rangeEnd}`;
                             
                             if (!ranges[rangeKey]) {
