@@ -413,64 +413,51 @@
     }
 </style>
 <style>
-/* Apple Notch Style */
-.search-notch {
-    position: absolute;
-    top: -2px; /* تم تعديل هذا -2px */
-    left: 50%;
-    width: 80px;
-    height: 35px;
-    background-color: #1f2937;
-    border-radius: 28px 28px 0 0;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ef4444;
-    font-size: 1.125rem;
-    font-weight: bold;
-    border: 2px solid #10b981;
-    border-bottom: none;
-    /* إضافة border-top-left-radius و border-top-right-radius لنقطتي الالتقاء */
-    border-top-left-radius: 10px; /* لتقريب الزاوية العلوية اليسرى قليلاً */
-    border-top-right-radius: 10px; /* لتقريب الزاوية العلوية اليمنى قليلاً */
-}
+    /* Apple Notch Style */
+    .search-notch {
+        position: absolute;
+        top: -35px;
+        left: 50%;
+        width: 80px;
+        height: 35px;
+        background-color: #1f2937;
+        border-radius: 28px 28px 0 0;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ef4444;
+        font-size: 1.125rem;
+        font-weight: bold;
+        border: 2px solid #10b981;
+        border-bottom: none;
+    }
 
-.search-notch::before,
-.search-notch::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    width: 14px;
-    height: 7px;
-    background-size: 50% 100%;
-    background-repeat: no-repeat;
-    /* إزالة background-image ليكون شفافًا في هذه النقطة */
-    background-image: none; 
-    z-index: 1; /* التأكد من ظهوره فوق الإطار */
-}
+    .search-notch::before,
+    .search-notch::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: -14px;
+        width: 14px;
+        height: 7px;
+        background-size: 50% 100%;
+        background-repeat: no-repeat;
+        background-image: radial-gradient(
+            circle at 0 0,
+            transparent 6px,
+            #1f2937 7px
+        );
+    }
 
-.search-notch::before {
-    left: -14px;
-    /* إعادة تشكيل الزاوية العلوية اليسرى */
-    background-image: radial-gradient(circle at 0 0, transparent 6px, #1f2937 7px);
-}
-
-.search-notch::after {
-    left: 100%;
-    /* إعادة تشكيل الزاوية العلوية اليمنى */
-    background-image: radial-gradient(circle at 100% 0, transparent 6px, #1f2937 7px);
-}
-
-/* تحديث: تعديل خاص بنافذة البحث لإزالة الإطار العلوي وملاءمة الـ notch */
-.absolute.left-0.bg-gray-800.border-2.border-green-600.rounded-xl.shadow-2xl.p-4.w-80.sm\:w-96.text-gray-100 {
-    top: calc(35px - 2px); /* ارتفاع النوتش - عرض الإطار (35px - 2px) */
-    border-top: none; /* إزالة الإطار العلوي */
-    /* قم بتعديل rounded-xl إلى rounded-b-xl للحفاظ على الزوايا السفلية فقط إذا لزم الأمر */
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    position: absolute; /* التأكد من تحديد الموضع المطلق */
-}
+    .search-notch::after {
+        left: 100%;
+        background-image: radial-gradient(
+            circle at 100% 0,
+            transparent 6px,
+            #1f2937 7px
+        );
+    }
 </style>
 <meta name='probely-verification' content='d1a5235e-0470-4602-aae0-84688966eb19' />
 </head>
@@ -511,7 +498,7 @@
                     class="relative"
                     >
                         <div
-                        class="absolute left-0 bg-gray-800 border-2 border-green-600 rounded-xl shadow-2xl p-4 w-80 sm:w-96 text-gray-100"
+                        class="absolute top-2 left-0 bg-gray-800 border-2 border-green-600 rounded-xl shadow-2xl p-4 w-80 sm:w-96 text-gray-100"
                         @click.stop
                         >
                             <div class="search-notch">
