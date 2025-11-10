@@ -412,6 +412,53 @@
         animation: ticker 15s linear infinite;
     }
 </style>
+<style>
+    /* Apple Notch Style */
+    .search-notch {
+        position: absolute;
+        top: -35px;
+        left: 50%;
+        width: 80px;
+        height: 35px;
+        background-color: #1f2937;
+        border-radius: 28px 28px 0 0;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ef4444;
+        font-size: 1.125rem;
+        font-weight: bold;
+        border: 2px solid #10b981;
+        border-bottom: none;
+    }
+
+    .search-notch::before,
+    .search-notch::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: -14px;
+        width: 14px;
+        height: 7px;
+        background-size: 50% 100%;
+        background-repeat: no-repeat;
+        background-image: radial-gradient(
+            circle at 0 0,
+            transparent 6px,
+            #1f2937 7px
+        );
+    }
+
+    .search-notch::after {
+        left: 100%;
+        background-image: radial-gradient(
+            circle at 100% 0,
+            transparent 6px,
+            #1f2937 7px
+        );
+    }
+</style>
 <meta name='probely-verification' content='d1a5235e-0470-4602-aae0-84688966eb19' />
 </head>
 <body class="bg-gray-800 p-4 relative">
@@ -450,9 +497,17 @@
                 <transition name="fade-slide">
                     <div
                     v-if="searchOpen"
-                    class="absolute top-12 left-0 bg-gray-800 border-2 border-green-600 rounded-xl shadow-2xl p-4 w-80 sm:w-96 text-gray-100"
-                    @click.stop
+                    class="relative"
                     >
+                        <!-- Apple Notch -->
+                        <div class="search-notch">
+                            {{ totalEpisodes }}
+                        </div>
+                        <!-- Search Window -->
+                        <div
+                        class="absolute top-12 left-0 bg-gray-800 border-2 border-green-600 rounded-xl shadow-2xl p-4 w-80 sm:w-96 text-gray-100"
+                        @click.stop
+                        >
                         <!-- 🔤 Search Input -->
                         <div class="relative">
                             <input
@@ -536,6 +591,7 @@
                                 </div>
                             </div>
                         </fieldset>
+                        </div>
                     </div>
                 </transition>
             </div>
