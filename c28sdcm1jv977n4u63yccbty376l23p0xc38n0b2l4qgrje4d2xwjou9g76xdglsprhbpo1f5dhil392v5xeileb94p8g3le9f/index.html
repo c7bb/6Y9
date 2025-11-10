@@ -431,6 +431,7 @@
         font-weight: bold;
         border: 2px solid #10b981;
         border-bottom: none;
+        padding-top: 8px;
     }
 
     .search-notch::before,
@@ -444,6 +445,15 @@
         background-repeat: no-repeat;
         background-image: radial-gradient(
             circle at 0 0,
+            transparent 6px,
+            #1f2937 7px
+        );
+    }
+
+    .search-notch::after {
+        left: 100%;
+        background-image: radial-gradient(
+            circle at 100% 0,
             transparent 6px,
             #1f2937 7px
         );
