@@ -433,13 +433,7 @@
             </div>
 
             <!-- 🔍 Search Button + Popup -->
-            <div class="fixed top-4 left-4 z-50 relative">
-
-                <!-- 🔢 Notch -->
-                <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gray-800 border-2 border-red-600 rounded-b-full px-3 py-0.5 text-red-600 font-bold text-sm text-center shadow-md">
-                    ({{ totalEpisodes }})
-                </div>
-
+            <div class="fixed top-4 left-4 z-50">
                 <!-- 🔍 Icon -->
                 <button
                     @click.stop="toggleSearch" :disabled="loading"
@@ -477,6 +471,27 @@
 
                         <!-- 🧩 Search Filters -->
                         <fieldset class="mt-4">
+                            <!-- Radio Buttons (تظهر فقط لو 'number' مفعّل) -->
+                            <!-- <div v-if="searchFilters.number" class="flex flex-col space-y-2 mt-2">
+                                <label class="flex items-center transition-all duration-100 active:scale-90">
+                                    <input
+                                    type="radio"
+                                    v-model="textNumberMatchMode"
+                                    value="enabled"
+                                    class="scale-150"
+                                    />
+                                    <span class="px-2 font-bold">تفعيل</span>
+                                </label>
+                                <label class="flex items-center transition-all duration-100 active:scale-90">
+                                    <input
+                                    type="radio"
+                                    v-model="textNumberMatchMode"
+                                    value="disabled"
+                                    class="scale-150"
+                                    />
+                                    <span class="px-2 font-bold">تعطيل</span>
+                                </label>
+                            </div> -->
                             <div class="flex justify-center mt-2 text-lg">
                                 <div class="grid grid-cols-2 gap-y-4 gap-x-4">
                                     <label class="flex items-center transition-all duration-100 active:scale-90">
