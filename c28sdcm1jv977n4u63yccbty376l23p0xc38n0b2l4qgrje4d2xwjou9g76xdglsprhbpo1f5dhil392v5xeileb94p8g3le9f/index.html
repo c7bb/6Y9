@@ -6722,20 +6722,33 @@
                         )
                         .sort((a, b) => parseInt(a.EpisodeNumber) - parseInt(b.EpisodeNumber));
 
-                    // Group episodes in chunks of 99 (1-99, 100-199, etc.)
+                    // Group episodes in fixed ranges of 99 (1-99, 100-199, 200-299, etc.)
                     const chunkSize = 99;
-                    return validEpisodes.reduce((acc, _, i, arr) => {
-                        if (i % chunkSize === 0) {
-                            return [
-                                ...acc,
-                                {
-                                    range: `Episodes ${arr[i].EpisodeNumber}–${arr[Math.min(i + chunkSize - 1, arr.length - 1)].EpisodeNumber}`,
-                                    items: arr.slice(i, i + chunkSize)
-                                }
-                            ];
+                    const groups = [];
+                    
+                    // Create groups based on fixed ranges
+                    if (validEpisodes.length > 0) {
+                        const maxEpisode = parseInt(validEpisodes[validEpisodes.length - 1].EpisodeNumber);
+                        const numGroups = Math.ceil(maxEpisode / chunkSize);
+                        
+                        for (let i = 0; i < numGroups; i++) {
+                            const startRange = i * chunkSize + 1;
+                            const endRange = (i + 1) * chunkSize;
+                            const groupEpisodes = validEpisodes.filter(ep => {
+                                const epNum = parseInt(ep.EpisodeNumber);
+                                return epNum >= startRange && epNum <= endRange;
+                            });
+                            
+                            if (groupEpisodes.length > 0) {
+                                groups.push({
+                                    range: `${startRange}–${endRange}`,
+                                    items: groupEpisodes
+                                });
+                            }
                         }
-                        return acc;
-                    }, []);
+                    }
+                    
+                    return groups;
                 },
 
                 groupedMovies() {
