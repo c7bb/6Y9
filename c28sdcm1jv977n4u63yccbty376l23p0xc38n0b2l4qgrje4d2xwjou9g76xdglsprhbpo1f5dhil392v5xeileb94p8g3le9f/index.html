@@ -6705,8 +6705,8 @@
                 },
 
                 groupedEpisodes() {
-                    // Sort episodes by EpisodeNumber numerically
-                    const validEpisodes = this.episodes
+                    const seasons = {};
+                    this.episodes
                         .filter(e => 
                             e.EpisodeVideosIDs && e.EpisodeVideosIDs.length > 0 &&
                             !e.EpisodeNumber.includes('الفيلم') &&
@@ -6716,39 +6716,18 @@
                             !e.EpisodeNumber.includes('ماجيك كايتو') &&
                             !e.EpisodeNumber.includes('فيلم تعاوني') &&
                             !e.EpisodeNumber.includes('يوميات زيرو') &&
-                            !e.EpisodeNumber.includes('المجرم هانزاوا') &&
-                            // Ensure EpisodeNumber is a valid number (including decimals)
-                            !isNaN(parseFloat(e.EpisodeNumber)) && isFinite(parseFloat(e.EpisodeNumber))
+                            !e.EpisodeNumber.includes('المجرم هانزاوا')
                         )
-                        .sort((a, b) => parseFloat(a.EpisodeNumber) - parseFloat(b.EpisodeNumber));
-
-                    // Group episodes in fixed ranges of 99 (1-99, 100-199, 200-299, etc.)
-                    const chunkSize = 99;
-                    const groups = [];
+                        .forEach(ep => {
+                            const season = ep.EpisodeSeason || 'default';
+                            if (!seasons[season]) seasons[season] = [];
+                            seasons[season].push(ep);
+                        });
                     
-                    // Create groups based on fixed ranges
-                    if (validEpisodes.length > 0) {
-                        const maxEpisode = parseFloat(validEpisodes[validEpisodes.length - 1].EpisodeNumber);
-                        const numGroups = Math.ceil(maxEpisode / chunkSize);
-                        
-                        for (let i = 0; i < numGroups; i++) {
-                            const startRange = i * chunkSize + 1;
-                            const endRange = (i + 1) * chunkSize;
-                            const groupEpisodes = validEpisodes.filter(ep => {
-                                const epNum = parseFloat(ep.EpisodeNumber);
-                                return epNum >= startRange && epNum <= endRange;
-                            });
-                            
-                            if (groupEpisodes.length > 0) {
-                                groups.push({
-                                    range: `${startRange}–${endRange}`,
-                                    items: groupEpisodes
-                                });
-                            }
-                        }
-                    }
-                    
-                    return groups;
+                    return Object.values(seasons).map(group => ({
+                        range: `${group[0].EpisodeNumber}-${group[group.length - 1].EpisodeNumber}`,
+                        items: group
+                    }));
                 },
 
                 groupedMovies() {
