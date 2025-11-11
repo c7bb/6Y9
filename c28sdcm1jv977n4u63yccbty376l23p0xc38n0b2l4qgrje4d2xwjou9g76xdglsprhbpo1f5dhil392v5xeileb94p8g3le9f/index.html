@@ -13794,6 +13794,7 @@
                 openModal(episode) { 
                     this.selectedEpisode = episode;
                     this.showModal = true;
+                    document.body.style.overflow = 'hidden'; // Block background scrolling
 
                     // Check if there are more episodes with the same EpisodeParts
                     if (episode.EpisodeParts) {
@@ -13821,6 +13822,7 @@
                 },
                 closeModal() {
                     this.showModal = false;
+                    document.body.style.overflow = ''; // Restore background scrolling
                     // Reset status for all videos and mangas when closing modal
                     if (this.selectedEpisode) {
                         if (this.selectedEpisode.EpisodeVideosIDs) {
