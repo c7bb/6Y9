@@ -125,75 +125,9 @@
                 //     event.preventDefault();
                 // }
         </script>    
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vuetify@3.10.9/dist/vuetify.min.css">
         <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vuetify@3.10.9/dist/vuetify.min.js"></script>
         <script src="episodes.json" type="application/json"></script>
         <script src="https://cdn.tailwindcss.com"></script>
-        <style>
-            /* Override Vuetify CSS conflicts with Tailwind */
-            fieldset {
-                border-width: 1px !important;
-                border-style: solid !important;
-                border-radius: 0.375rem !important; /* Tailwind rounded */
-                padding: 1rem !important;
-            }
-            
-            legend {
-                padding-left: 0.5rem !important;
-                padding-right: 0.5rem !important;
-            }
-            
-            /* Ensure Tailwind border utilities work */
-            .border {
-                border-width: 1px !important;
-            }
-            
-            .rounded {
-                border-radius: 0.25rem !important;
-            }
-            
-            .rounded-lg {
-                border-radius: 0.5rem !important;
-            }
-            
-            .rounded-xl {
-                border-radius: 0.75rem !important;
-            }
-            
-            /* Preserve Tailwind border colors */
-            .border-yellow-500 {
-                border-color: rgb(234 179 8) !important;
-            }
-            
-            .border-yellow-400 {
-                border-color: rgb(250 204 21) !important;
-            }
-            
-            .border-orange-400 {
-                border-color: rgb(251 146 60) !important;
-            }
-            
-            .border-orange-500 {
-                border-color: rgb(249 115 22) !important;
-            }
-            
-            .border-green-600 {
-                border-color: rgb(22 163 74) !important;
-            }
-            
-            .border-red-500 {
-                border-color: rgb(239 68 68) !important;
-            }
-            
-            .border-gray-300 {
-                border-color: rgb(209 213 219) !important;
-            }
-            
-            .border-gray-500 {
-                border-color: rgb(107 114 128) !important;
-            }
-        </style>
         <style>
             /* Disable text selection */
 
@@ -5425,136 +5359,106 @@
                             <div class="flex flex-wrap gap-4 justify-center">
                         
                                 <!-- Tooltip for Manga -->
-                                <v-tooltip location="top center" origin="auto">
-                                    <template v-slot:activator="{ props }">
-                                        <div v-bind="props" class="flex items-center gap-2">
-                                            <span class="w-6 h-6 bg-teal-900 rounded-full"></span>
-                                            <span>مانغا</span>
-                                        </div>
-                                    </template>
-                                    <span>حلقات مأخوذة من المانغا الأصلية</span>
-                                </v-tooltip>
+                                <div class="tooltip-container flex items-center gap-2">
+                                    <span class="w-6 h-6 bg-teal-900 rounded-full"></span>
+                                    <span>مانغا</span>
+                                    <span class="tooltip-text">حلقات مأخوذة من المانغا الأصلية</span>
+                                </div>
                         
                                 <!-- Tooltip for Filler -->
-                                <v-tooltip location="top center" origin="auto">
-                                    <template v-slot:activator="{ props }">
-                                        <div v-bind="props" class="flex items-center gap-2">
-                                            <span class="w-6 h-6 bg-red-900 rounded-full"></span>
-                                            <span>فِلر</span>
-                                        </div>
-                                    </template>
-                                    <span>حلقات لا تنتمي إلى القصة الأصلية ولا ترتبط بسير الأحداث</span>
-                                </v-tooltip>
+                                <div class="tooltip-container flex items-center gap-2">
+                                    <span class="w-6 h-6 bg-red-900 rounded-full"></span>
+                                    <span>فِلر</span>
+                                    <span class="tooltip-text">حلقات لا تنتمي إلى القصة الأصلية ولا ترتبط بسير الأحداث</span>
+                                </div>
                         
                                 <!-- Tooltip for Movies -->
-                                <v-tooltip location="top center" origin="auto">
-                                    <template v-slot:activator="{ props }">
-                                        <div v-bind="props" class="flex items-center gap-2">
-                                            <span class="w-6 h-6 bg-amber-800 rounded-full"></span>
-                                            <span>فلم</span>
-                                        </div>
-                                    </template>
-                                    <span>أفلام لا علاقة لها بالقصة الأساسية وعالمها منفصل</span>
-                                </v-tooltip>
+                                <div class="tooltip-container flex items-center gap-2">
+                                    <span class="w-6 h-6 bg-amber-800 rounded-full"></span>
+                                    <span>فلم</span>
+                                    <span class="tooltip-text">أفلام لا علاقة لها بالقصة الأساسية وعالمها منفصل</span>
+                                </div>
                         
                                 <!-- Tooltip for Hourly Special -->
-                                <v-tooltip location="top center" origin="auto">
-                                    <template v-slot:activator="{ props }">
-                                        <div v-bind="props" class="flex items-center gap-2">
-                                            <span class="w-6 h-6 bg-sky-800 rounded-full"></span>
-                                            <span>خاصة (ساعة)</span>
-                                        </div>
-                                    </template>
-                                    <span>حلقات تمتد لفترة أطول من الحلقة العادية التي مدتها 24 دقيقة، حيث يصل بعضها إلى ساعة ونصف</span>
-                                </v-tooltip>
+                                <div class="tooltip-container flex items-center gap-2">
+                                    <span class="w-6 h-6 bg-sky-800 rounded-full"></span>
+                                    <span>خاصة (ساعة)</span>
+                                    <span class="tooltip-text">
+                                        حلقات تمتد لفترة أطول من الحلقة العادية التي مدتها 24 دقيقة، حيث يصل بعضها إلى ساعة ونصف
+                                    </span>
+                                </div>
                         
                                 <!-- Tooltip for Two-Hour Special -->
-                                <v-tooltip location="top center" origin="auto">
-                                    <template v-slot:activator="{ props }">
-                                        <div v-bind="props" class="flex items-center gap-2">
-                                            <span class="w-6 h-6 bg-orange-600 rounded-full"></span>
-                                            <span>خاصة (ساعتين)</span>
-                                        </div>
-                                    </template>
-                                    <span>حلقات تمتد لفترة أطول من الحلقة العادية التي مدتها 24 دقيقة، حيث يصل بعضها إلى ساعتين ونصف</span>
-                                </v-tooltip>
+                                <div class="tooltip-container flex items-center gap-2">
+                                    <span class="w-6 h-6 bg-orange-600 rounded-full"></span>
+                                    <span>خاصة (ساعتين)</span>
+                                    <span class="tooltip-text">
+                                        حلقات تمتد لفترة أطول من الحلقة العادية التي مدتها 24 دقيقة، حيث يصل بعضها إلى ساعتين ونصف
+                                    </span>
+                                </div>
 
                                 <!-- Tooltip for Stort Stories -->
-                                <v-tooltip location="top center" origin="auto">
-                                    <template v-slot:activator="{ props }">
-                                        <div v-bind="props" class="flex items-center gap-2">
-                                            <span class="w-6 h-6 bg-green-600 rounded-full"></span>
-                                            <span>قصة قصيرة</span>
-                                        </div>
-                                    </template>
-                                    <span>قصص قصيرة تُبرز أسلوب غوشو أوياما الإبداعي وتكشف جذور وتطور عالم "المحقق كونان" دون ارتباط بالسرد الرئيسي.</span>
-                                </v-tooltip>
+                                <div class="tooltip-container flex items-center gap-2">
+                                    <span class="w-6 h-6 bg-green-600 rounded-full"></span>
+                                    <span>قصة قصيرة</span>
+                                    <span class="tooltip-text">
+                                        قصص قصيرة تُبرز أسلوب غوشو أوياما الإبداعي وتكشف جذور وتطور عالم "المحقق كونان" دون ارتباط بالسرد الرئيسي.
+                                    </span>
+                                </div>
                                 
                                 <!-- Tooltip for OVA -->
-                                <v-tooltip location="top center" origin="auto">
-                                    <template v-slot:activator="{ props }">
-                                        <div v-bind="props" class="flex items-center gap-2">
-                                            <span class="w-6 h-6 bg-yellow-600 rounded-full"></span>
-                                            <span>أوفا</span>
-                                        </div>
-                                    </template>
-                                    <span>حلقات خاصة تقدم قصصاً أو مغامرات إضافية تكشف تفاصيل جديدة عن عالم كونان دون التأثير على الحبكة الأساسية.</span>
-                                </v-tooltip>
+                                <div class="tooltip-container flex items-center gap-2">
+                                    <span class="w-6 h-6 bg-yellow-600 rounded-full"></span>
+                                    <span>أوفا</span>
+                                    <span class="tooltip-text">
+                                        حلقات خاصة تقدم قصصاً أو مغامرات إضافية تكشف تفاصيل جديدة عن عالم كونان دون التأثير على الحبكة الأساسية.
+                                    </span>
+                                </div>
 
                                 <!-- Tooltip for Movies Special -->
-                                <v-tooltip location="top center" origin="auto">
-                                    <template v-slot:activator="{ props }">
-                                        <div v-bind="props" class="flex items-center gap-2">
-                                            <span class="w-6 h-6 bg-cyan-500 rounded-full"></span>
-                                            <span>خاصة بالفيلم</span>
-                                        </div>
-                                    </template>
-                                    <span>حلقات قصيرة تُعرف باسم «حلقات الأفلام الخاصة» أو «الملف السحري»، وتصل مدة عرضها إلى نحو 25 دقيقة.</span>
-                                </v-tooltip>
+                                <div class="tooltip-container flex items-center gap-2">
+                                    <span class="w-6 h-6 bg-cyan-500 rounded-full"></span>
+                                    <span>خاصة بالفيلم</span>
+                                    <span class="tooltip-text">
+                                        حلقات قصيرة تُعرف باسم «حلقات الأفلام الخاصة» أو «الملف السحري»، وتصل مدة عرضها إلى نحو 25 دقيقة.
+                                    </span>
+                                </div>
 
                                 <!-- Tooltip for Special Edition -->
-                                <v-tooltip location="top center" origin="auto">
-                                    <template v-slot:activator="{ props }">
-                                        <div v-bind="props" class="flex items-center gap-2">
-                                            <span class="w-6 h-6 bg-purple-500 rounded-full"></span>
-                                            <span>إصدار خاص</span>
-                                        </div>
-                                    </template>
-                                    <span>حلقات فريدة من نوعها تقع خارج السياق أو التدفق المعتاد للمسلسل. وغالباً ما تقدم منظوراً مختلفاً أو نظرة ثاقبة لقصة معينة.</span>
-                                </v-tooltip>
+                                <div class="tooltip-container flex items-center gap-2">
+                                    <span class="w-6 h-6 bg-purple-500 rounded-full"></span>
+                                    <span>إصدار خاص</span>
+                                    <span class="tooltip-text">
+                                        حلقات فريدة من نوعها تقع خارج السياق أو التدفق المعتاد للمسلسل. وغالباً ما تقدم منظوراً مختلفاً أو نظرة ثاقبة لقصة معينة.
+                                    </span>
+                                </div>
 
                                 <!-- Tooltip for Special Edition -->
-                                <v-tooltip location="top center" origin="auto">
-                                    <template v-slot:activator="{ props }">
-                                        <div v-bind="props" class="flex items-center gap-2">
-                                            <span class="w-6 h-6 bg-indigo-600 rounded-full"></span>
-                                            <span>ماجيك كايتو</span>
-                                        </div>
-                                    </template>
-                                    <span>مسلسل يروي مغامرات كايتو كوروبا، فتى يتقمص هوية اللص كايتو كيد مستخدمًا الخدع السحرية لكشف لغز مقتل والده والتصدي لمنظمة غامضة.</span>
-                                </v-tooltip>
+                                <div class="tooltip-container flex items-center gap-2">
+                                    <span class="w-6 h-6 bg-indigo-600 rounded-full"></span>
+                                    <span>ماجيك كايتو</span>
+                                    <span class="tooltip-text">
+                                        مسلسل يروي مغامرات كايتو كوروبا، فتى يتقمص هوية اللص كايتو كيد مستخدمًا الخدع السحرية لكشف لغز مقتل والده والتصدي لمنظمة غامضة.
+                                    </span>
+                                </div>
                                 
                                 <!-- Tooltip for Special Edition -->
-                                <v-tooltip location="top center" origin="auto">
-                                    <template v-slot:activator="{ props }">
-                                        <div v-bind="props" class="flex items-center gap-2">
-                                            <span class="w-6 h-6 bg-pink-600 rounded-full"></span>
-                                            <span>يوميات زيرو</span>
-                                        </div>
-                                    </template>
-                                    <span>مسلسل فرعي يسلط الضوء على الحياة المزدوجة لتورو أمورو، مقدمًا منظورًا جديدًا لشخصيته خارج إطار التحقيقات المعتادة.</span>
-                                </v-tooltip>
+                                <div class="tooltip-container flex items-center gap-2">
+                                    <span class="w-6 h-6 bg-pink-600 rounded-full"></span>
+                                    <span>يوميات زيرو</span>
+                                    <span class="tooltip-text">
+                                        مسلسل فرعي يسلط الضوء على الحياة المزدوجة لتورو أمورو، مقدمًا منظورًا جديدًا لشخصيته خارج إطار التحقيقات المعتادة.
+                                    </span>
+                                </div>
                                 
                                 <!-- Tooltip for Special Edition -->
-                                <v-tooltip location="top center" origin="auto">
-                                    <template v-slot:activator="{ props }">
-                                        <div v-bind="props" class="flex items-center gap-2">
-                                            <span class="w-6 h-6 bg-stone-600 rounded-full"></span>
-                                            <span>المجرم هانزاوا</span>
-                                        </div>
-                                    </template>
-                                    <span>مسلسل كوميدي فرعي يعرض مغامرات المجرم هانزاوا من منظور ساخر، حيث يواجه مواقف طريفة أثناء سعيه لتحقيق أهدافه في مدينة تعجّ بالجرائم.</span>
-                                </v-tooltip>                                
+                                <div class="tooltip-container flex items-center gap-2">
+                                    <span class="w-6 h-6 bg-stone-600 rounded-full"></span>
+                                    <span>المجرم هانزاوا</span>
+                                    <span class="tooltip-text">
+                                        مسلسل كوميدي فرعي يعرض مغامرات المجرم هانزاوا من منظور ساخر، حيث يواجه مواقف طريفة أثناء سعيه لتحقيق أهدافه في مدينة تعجّ بالجرائم.
+                                    </span>
+                                </div>                                
 
                             </div>
                         </fieldset>
@@ -6172,9 +6076,6 @@
 
     <script>
         const { createApp } = Vue;
-        const { createVuetify } = Vuetify;
-
-        const vuetify = createVuetify();
     
         createApp({
             data() {
@@ -16238,7 +16139,7 @@
                 window.removeEventListener('resize', this.updateFontSize);
             }
 
-        }).use(vuetify).mount('#app');
+        }).mount('#app');
     </script>
     <style scoped>
         @keyframes borderMove {
