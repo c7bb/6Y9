@@ -5322,81 +5322,56 @@
                         <fieldset class="my-4 w-full font-bold p-4 rounded border relative">
                             <legend class="px-2 font-bold text-white-600">معاني الألوان</legend>
                             <div class="flex flex-wrap gap-4 justify-center">
-                        
-                                <!-- Tooltip for Manga -->
-                                <div class="flex items-center gap-2" data-tippy-content="حلقات مأخوذة من المانغا الأصلية">
+                                <div class="flex items-center gap-2" v-tippy="'حلقات مأخوذة من المانغا الأصلية'">
                                     <span class="w-6 h-6 bg-teal-900 rounded-full"></span>
                                     <span>مانغا</span>
                                 </div>
-
-                                <!-- Tooltip for Filler -->
-                                <div class="flex items-center gap-2" data-tippy-content="حلقات لا تنتمي إلى القصة الأصلية ولا ترتبط بسير الأحداث">
+                                <div class="flex items-center gap-2" v-tippy="'حلقات لا تنتمي إلى القصة الأصلية ولا ترتبط بسير الأحداث'">
                                     <span class="w-6 h-6 bg-red-900 rounded-full"></span>
                                     <span>فِلر</span>
                                 </div>
-
-                                <!-- Tooltip for Movies -->
-                                <div class="flex items-center gap-2" data-tippy-content="أفلام لا علاقة لها بالقصة الأساسية وعالمها منفصل">
+                                <div class="flex items-center gap-2" v-tippy="'أفلام لا علاقة لها بالقصة الأساسية وعالمها منفصل'">
                                     <span class="w-6 h-6 bg-amber-800 rounded-full"></span>
                                     <span>فلم</span>
                                 </div>
-
-                                <!-- Tooltip for Hourly Special -->
-                                <div class="flex items-center gap-2" data-tippy-content="حلقات تمتد لفترة أطول من الحلقة العادية التي مدتها 24 دقيقة، حيث يصل بعضها إلى ساعة ونصف">
+                                <div class="flex items-center gap-2" v-tippy="'حلقات تمتد لفترة أطول من الحلقة العادية التي مدتها 24 دقيقة، حيث يصل بعضها إلى ساعة ونصف'">
                                     <span class="w-6 h-6 bg-sky-800 rounded-full"></span>
                                     <span>خاصة (ساعة)</span>
                                 </div>
-
-                                <!-- Tooltip for Two-Hour Special -->
-                                <div class="flex items-center gap-2" data-tippy-content="حلقات تمتد لفترة أطول من الحلقة العادية التي مدتها 24 دقيقة، حيث يصل بعضها إلى ساعتين ونصف">
+                                <div class="flex items-center gap-2" v-tippy="'حلقات تمتد لفترة أطول من الحلقة العادية التي مدتها 24 دقيقة، حيث يصل بعضها إلى ساعتين ونصف'">
                                     <span class="w-6 h-6 bg-orange-600 rounded-full"></span>
                                     <span>خاصة (ساعتين)</span>
                                 </div>
-
-                                <!-- Tooltip for Short Stories -->
-                                <div class="flex items-center gap-2" data-tippy-content="قصص قصيرة تُبرز أسلوب غوشو أوياما الإبداعي وتكشف جذور وتطور عالم 'المحقق كونان' دون ارتباط بالسرد الرئيسي.">
+                                <div class="flex items-center gap-2" v-tippy="'قصص قصيرة تُبرز أسلوب غوشو أوياما الإبداعي وتكشف جذور وتطور عالم المحقق كونان دون ارتباط بالسرد الرئيسي.'">
                                     <span class="w-6 h-6 bg-green-600 rounded-full"></span>
                                     <span>قصة قصيرة</span>
                                 </div>
-
-                                <!-- Tooltip for OVA -->
-                                <div class="flex items-center gap-2" data-tippy-content="حلقات خاصة تقدم قصصاً أو مغامرات إضافية تكشف تفاصيل جديدة عن عالم كونان دون التأثير على الحبكة الأساسية.">
+                                <div class="flex items-center gap-2" v-tippy="'حلقات خاصة تقدم قصصاً أو مغامرات إضافية تكشف تفاصيل جديدة عن عالم كونان دون التأثير على الحبكة الأساسية.'">
                                     <span class="w-6 h-6 bg-yellow-600 rounded-full"></span>
                                     <span>أوفا</span>
                                 </div>
-
-                                <!-- Tooltip for Movies Special -->
-                                <div class="flex items-center gap-2" data-tippy-content="حلقات قصيرة تُعرف باسم «حلقات الأفلام الخاصة» أو «الملف السحري»، وتصل مدة عرضها إلى نحو 25 دقيقة.">
+                                <div class="flex items-center gap-2" v-tippy="'حلقات قصيرة تُعرف باسم «حلقات الأفلام الخاصة» أو «الملف السحري»، وتصل مدة عرضها إلى نحو 25 دقيقة.'">
                                     <span class="w-6 h-6 bg-cyan-500 rounded-full"></span>
                                     <span>خاصة بالفيلم</span>
                                 </div>
-
-                                <!-- Tooltip for Special Edition -->
-                                <div class="flex items-center gap-2" data-tippy-content="حلقات فريدة من نوعها تقع خارج السياق أو التدفق المعتاد للمسلسل. وغالباً ما تقدم منظوراً مختلفاً أو نظرة ثاقبة لقصة معينة.">
+                                <div class="flex items-center gap-2" v-tippy="'حلقات فريدة من نوعها تقع خارج السياق أو التدفق المعتاد للمسلسل، تقدم منظوراً مختلفاً أو نظرة ثاقبة لقصة معينة.'">
                                     <span class="w-6 h-6 bg-purple-500 rounded-full"></span>
                                     <span>إصدار خاص</span>
                                 </div>
-
-                                <!-- Tooltip for Magic Kaito -->
-                                <div class="flex items-center gap-2" data-tippy-content="مسلسل يروي مغامرات كايتو كوروبا، فتى يتقمص هوية اللص كايتو كيد مستخدمًا الخدع السحرية لكشف لغز مقتل والده والتصدي لمنظمة غامضة.">
+                                <div class="flex items-center gap-2" v-tippy="'مسلسل يروي مغامرات كايتو كوروبا، فتى يتقمص هوية اللص كايتو كيد مستخدمًا الخدع السحرية لكشف لغز مقتل والده والتصدي لمنظمة غامضة.'">
                                     <span class="w-6 h-6 bg-indigo-600 rounded-full"></span>
                                     <span>ماجيك كايتو</span>
                                 </div>
-
-                                <!-- Tooltip for Zero’s Diary -->
-                                <div class="flex items-center gap-2" data-tippy-content="مسلسل فرعي يسلط الضوء على الحياة المزدوجة لتورو أمورو، مقدمًا منظورًا جديدًا لشخصيته خارج إطار التحقيقات المعتادة.">
+                                <div class="flex items-center gap-2" v-tippy="'مسلسل فرعي يسلط الضوء على الحياة المزدوجة لتورو أمورو، مقدمًا منظورًا جديدًا لشخصيته خارج إطار التحقيقات المعتادة.'">
                                     <span class="w-6 h-6 bg-pink-600 rounded-full"></span>
                                     <span>يوميات زيرو</span>
                                 </div>
-
-                                <!-- Tooltip for Hanzawa the Criminal -->
-                                <div class="flex items-center gap-2" data-tippy-content="مسلسل كوميدي فرعي يعرض مغامرات المجرم هانزاوا من منظور ساخر، حيث يواجه مواقف طريفة أثناء سعيه لتحقيق أهدافه في مدينة تعجّ بالجرائم.">
+                                <div class="flex items-center gap-2" v-tippy="'مسلسل كوميدي فرعي يعرض مغامرات المجرم هانزاوا من منظور ساخر، حيث يواجه مواقف طريفة أثناء سعيه لتحقيق أهدافه في مدينة تعجّ بالجرائم.'">
                                     <span class="w-6 h-6 bg-stone-600 rounded-full"></span>
                                     <span>المجرم هانزاوا</span>
-                                </div>                                
+                                </div>
                             </div>
                         </fieldset>
-
 
                         <!-- Pagination Controls -->
                         <div class="flex flex-wrap justify-between items-center" id="pagination-buttons">
@@ -5467,11 +5442,11 @@
                         <th class="border border-gray-300 text-xl px-2 py-2 text-center w-1/6">
                             {{ episodeNumberHeader }}
                             <div class="relative">
-                                <div class="text-lg text-red-600 mt-1" :data-tippy-content="tooltipText">
+                                <div class="text-lg text-red-600 mt-1" v-tippy="tooltipText">
                                     ({{ totalEpisodes }})
                                 </div>
                             </div>
-                        </th>                
+                        </th>               
                         <th :class="['border border-gray-300 text-xl px-4 py-2 text-center w-5/6', (isAnyFilterActive || searchQuery) ? 'bg-orange-500' : '']">
                             {{ episodeTitleHeader }}
                             <br />
@@ -5740,7 +5715,7 @@
                                     <template v-for="(char, index) in selectedEpisode.EpisodeEvents" :key="index">
                                         <template v-if="char === 'س'">
                                             <div class="inline-block h-6 w-6 mr-1 transition-all duration-100 active:scale-90"
-                                                :data-tippy-content="'المنظمة السوداء'">
+                                                v-tippy="'المنظمة السوداء'">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/Plot-BO.png" 
                                                     alt="المنظمة السوداء" 
                                                     class="inline-block h-6 w-6">
@@ -5748,7 +5723,7 @@
                                         </template>
                                         <template v-else-if="char === 'ج'">
                                             <div class="inline-block h-6 w-6 mr-1 transition-all duration-100 active:scale-90"
-                                                :data-tippy-content="'شخصية جديدة'">
+                                                v-tippy="'شخصية جديدة'">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/Plot-New.png" 
                                                     alt="شخصية جديدة" 
                                                     class="inline-block h-6 w-6">
@@ -5756,7 +5731,7 @@
                                         </template>
                                         <template v-else-if="char === 'ر'">
                                             <div class="inline-block h-6 w-6 mr-1 transition-all duration-100 active:scale-90"
-                                                :data-tippy-content="'قصة رومانسية'">
+                                                v-tippy="'قصة رومانسية'">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/Plot-Romance.png" 
                                                     alt="قصة رومانسية" 
                                                     class="inline-block h-6 w-6">
@@ -5764,7 +5739,7 @@
                                         </template>
                                         <template v-else-if="char === 'ت'">
                                             <div class="inline-block h-6 w-6 mr-1 transition-all duration-100 active:scale-90"
-                                                :data-tippy-content="'تطور شخصية'">
+                                                v-tippy="'تطور شخصية'">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/Plot-Char.png" 
                                                     alt="تطور شخصية" 
                                                     class="inline-block h-6 w-6">
@@ -5772,7 +5747,7 @@
                                         </template>
                                         <template v-else-if="char === 'ط'">
                                             <div class="inline-block h-6 w-6 mr-1 transition-all duration-100 active:scale-90"
-                                                :data-tippy-content="'فريق المتحرين الصغار'">
+                                                v-tippy="'فريق المتحرين الصغار'">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/Plot-DB.png" 
                                                     alt="فريق المتحرين الصغار" 
                                                     class="inline-block h-6 w-6">
@@ -5780,7 +5755,7 @@
                                         </template>
                                         <template v-else-if="char === 'م'">
                                             <div class="inline-block h-6 w-6 mr-1 transition-all duration-100 active:scale-90"
-                                                :data-tippy-content="'ذكريات من الماضي'">
+                                                v-tippy="'ذكريات من الماضي'">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/Plot-Past.png" 
                                                     alt="ذكريات من الماضي" 
                                                     class="inline-block h-6 w-6">
@@ -5788,7 +5763,7 @@
                                         </template>
                                         <template v-else-if="char === 'ه'">
                                             <div class="inline-block h-6 w-6 mr-1 transition-all duration-100 active:scale-90"
-                                                :data-tippy-content="'هيجي هاتوري'">
+                                                v-tippy="'هيجي هاتوري'">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/PlotHH.png" 
                                                     alt="هيجي هاتوري" 
                                                     class="inline-block h-6 w-6">
@@ -5796,7 +5771,7 @@
                                         </template>
                                         <template v-else-if="char === 'ك'">
                                             <div class="inline-block h-6 w-6 mr-1 transition-all duration-100 active:scale-90"
-                                                :data-tippy-content="'كايتو كيد'">
+                                                v-tippy="'كايتو كيد'">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/Plot-MK.png" 
                                                     alt="كايتو كيد" 
                                                     class="inline-block h-6 w-6">
@@ -5804,7 +5779,7 @@
                                         </template>
                                         <template v-else-if="char === 'ف'">
                                             <div class="inline-block h-6 w-6 mr-1 transition-all duration-100 active:scale-90"
-                                                :data-tippy-content="'مكتب التحقيقات الفيدرالي (FBI)'">
+                                                v-tippy="'مكتب التحقيقات الفيدرالي (FBI)'">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/Plot-FBI.png" 
                                                     alt="مكتب التحقيقات الفيدرالي (FBI)" 
                                                     class="inline-block h-6 w-6">
@@ -5812,14 +5787,14 @@
                                         </template>
                                         <template v-else-if="char === 'ع'">
                                             <div class="inline-block h-6 w-6 mr-1 transition-all duration-100 active:scale-90"
-                                                :data-tippy-content="'مكتب الأمن العام (PSB)'">
+                                                v-tippy="'مكتب الأمن العام (PSB)'">
                                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/Plot-PSB.png" 
                                                     alt="مكتب الأمن العام (PSB)" 
                                                     class="inline-block h-6 w-6">
                                             </div>
                                         </template>
                                         <template v-else>
-                                        {{ char }}
+                                            {{ char }}
                                         </template>
                                     </template>
                                 </p>
@@ -5955,7 +5930,7 @@
     <script>
         const { createApp } = Vue;
     
-        createApp({
+       const app = createApp({
             data() {
                 return {
                     fontSize: 16,
@@ -16032,7 +16007,30 @@
                 window.removeEventListener('resize', this.updateFontSize);
             }
 
-        }).mount('#app');
+        });
+        
+        // تعريف directive مخصص لـ Tippy.js
+		app.directive('tippy', {
+			mounted(el, binding) {
+				if (typeof tippy !== 'undefined') {
+					tippy(el, {
+						content: binding.value,
+						followCursor: true,
+						theme: 'retro',
+						placement: 'top',
+						allowHTML: true
+					});
+				}
+			},
+			updated(el, binding) {
+				if (el._tippy) el._tippy.setContent(binding.value);
+			},
+			unmounted(el) {
+				if (el._tippy) el._tippy.destroy();
+			}
+		});
+
+		app.mount('#app');
     </script>
     <style scoped>
         @keyframes borderMove {
@@ -16064,14 +16062,5 @@
           animation: bounce 1.5s infinite;
         }
     </style>
-    <script>
-        // Initialize Tippy.js tooltips
-        tippy('[data-tippy-content]', {
-            followCursor: true,
-            theme: 'retro',
-            placement: 'top',
-            allowHTML: true
-        });
-    </script>
 </body>
 </html>
