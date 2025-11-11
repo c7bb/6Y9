@@ -100,16 +100,12 @@
         </style>
         <style>
             .zikr-box {
-                position: relative;
-                max-width: 80%;
-                height: 10%;
-                line-height: 10%;
+                display: block;
                 text-align: center;
-                font-size: 2%;
+                font-size: 2vw;
                 font-weight: bold;
                 color: #fff;
-                margin: 5% auto;
-                overflow: hidden;
+                margin: 5vh auto;
                 transition: opacity 0.8s ease-in-out;
             }
             .fade-enter-active,
@@ -1014,7 +1010,7 @@
         <!-- Search and Filters -->
         <div v-if="loading">
             <transition name="fade">
-                <div key="zikr" class="zikr-box">{{ currentZikr }}</div>
+                <span key="zikr" class="zikr-box">{{ currentZikr }}</span>
             </transition>
         </div>
         <div v-else class="flex flex-col gap-4 items-center">
