@@ -65,7 +65,7 @@
         </style>
         <style>
             .tippy-box[data-theme~='retro'] {
-                background: linear-gradient(135deg, #505047 0%, #3d3d2f 100%);
+                background-color: #000000;
                 color: #ffffff;
                 border: 2px solid #FF6448;
                 border-radius: 8px;
@@ -16021,30 +16021,31 @@
         });
 
             app.directive('tippy', {
-            mounted(el, binding) {
-                if (typeof tippy !== 'undefined') {
-                tippy(el, {
-                    content: binding.value,
-                    theme: 'retro',
-                    placement: 'top',
-                    allowHTML: true,
-                    onMount(instance) {
-                    const popper = instance.popper;
-                    popper.style.display = 'flex';
-                    popper.style.alignItems = 'center';
-                    popper.style.justifyContent = 'center';
-                    popper.style.textAlign = 'center';
-                    popper.style.direction = 'rtl';
+                mounted(el, binding) {
+                    if (typeof tippy !== 'undefined') {
+                    tippy(el, {
+                        content: binding.value,
+                        theme: 'retro',
+                        placement: 'top',
+                        followCursor: 'horizontal',
+                        allowHTML: true,
+                        onMount(instance) {
+                        const popper = instance.popper;
+                        popper.style.display = 'flex';
+                        popper.style.alignItems = 'center';
+                        popper.style.justifyContent = 'center';
+                        popper.style.textAlign = 'center';
+                        popper.style.direction = 'rtl';
+                        }
+                    });
                     }
-                });
+                },
+                updated(el, binding) {
+                    if (el._tippy) el._tippy.setContent(binding.value);
+                },
+                unmounted(el) {
+                    if (el._tippy) el._tippy.destroy();
                 }
-            },
-            updated(el, binding) {
-                if (el._tippy) el._tippy.setContent(binding.value);
-            },
-            unmounted(el) {
-                if (el._tippy) el._tippy.destroy();
-            }
             });
 
 		app.mount('#app');
