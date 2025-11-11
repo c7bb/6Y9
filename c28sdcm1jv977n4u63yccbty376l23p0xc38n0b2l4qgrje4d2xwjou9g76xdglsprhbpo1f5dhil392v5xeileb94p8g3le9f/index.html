@@ -102,12 +102,96 @@
             .zikr-box {
                 display: block;
                 text-align: center;
-                font-size: 4vw;
                 font-weight: bold;
                 color: #fff;
                 margin: 4vh auto;
                 transition: opacity 0.8s ease-in-out;
             }
+            
+            @media (min-width: 320px) {
+                .zikr-box {
+                    font-size: 8px;
+                }
+            }
+            
+            @media (min-width: 360px) {
+                .zikr-box {
+                    font-size: 8px;
+                }
+            }
+            
+            @media (min-width: 400px) {
+                .zikr-box {
+                    font-size: 8px;
+                }
+            }
+            
+            @media (min-width: 440px) {
+                .zikr-box {
+                    font-size: 9px;
+                }
+            }
+            
+            @media (min-width: 480px) {
+                .zikr-box {
+                    font-size: 9px;
+                }
+            }
+            
+            @media (min-width: 520px) {
+                .zikr-box {
+                    font-size: 9px;
+                }
+            }
+            
+            @media (min-width: 560px) {
+                .zikr-box {
+                    font-size: 10px;
+                }
+            }
+            
+            @media (min-width: 600px) {
+                .zikr-box {
+                    font-size: 10px;
+                }
+            }
+            
+            @media (min-width: 640px) {
+                .zikr-box {
+                    font-size: 10px;
+                }
+            }
+            
+            @media (min-width: 680px) {
+                .zikr-box {
+                    font-size: 11px;
+                }
+            }
+            
+            @media (min-width: 720px) {
+                .zikr-box {
+                    font-size: 11px;
+                }
+            }
+            
+            @media (min-width: 760px) {
+                .zikr-box {
+                    font-size: 11px;
+                }
+            }
+            
+            @media (min-width: 768px) {
+                .zikr-box {
+                    font-size: 12px;
+                }
+            }
+            
+            @media (min-width: 1024px) {
+                .zikr-box {
+                    font-size: 14px;
+                }
+            }
+            
             .fade-enter-active,
             .fade-leave-active {
                 transition: opacity 0.8s;
@@ -6703,6 +6787,7 @@
                         "الله أكبر",
                         "أستغفر الله العظيم وأتوب إليه"
                     ],
+                    remainingAdhkar: [],
                     intervalZikrId: null
                 };
             },
@@ -13167,8 +13252,17 @@
             },
             methods: {
                 shuffleZikr() {
-                    const random = Math.floor(Math.random() * this.adhkar.length);
-                    this.currentZikr = this.adhkar[random];
+                    // If all zikrs have been shown, refill the pool
+                    if (this.remainingAdhkar.length === 0) {
+                        this.remainingAdhkar = [...this.adhkar];
+                    }
+                    
+                    // Pick a random zikr from the remaining ones
+                    const randomIndex = Math.floor(Math.random() * this.remainingAdhkar.length);
+                    this.currentZikr = this.remainingAdhkar[randomIndex];
+                    
+                    // Remove the shown zikr from the pool
+                    this.remainingAdhkar.splice(randomIndex, 1);
                 },
                 updateEpisodeTimeAgo() {
                     console.log('updateEpisodeTimeAgo called - episodeOfWeek:', this.episodeOfWeek);
