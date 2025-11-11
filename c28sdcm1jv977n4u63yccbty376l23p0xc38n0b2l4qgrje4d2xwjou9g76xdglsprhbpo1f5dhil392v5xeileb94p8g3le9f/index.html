@@ -224,12 +224,6 @@
                 color: #ffffff; /* White text for cells */
             }
 
-            .tooltip {
-                background-color: #333333; /* Dark tooltip background */
-                color: #ffffff; /* White text in tooltip */
-                border: 1px solid #555555; /* Subtle border for tooltip */
-            }
-
             .modal {
                 display: none; /* Hidden by default */
                 position: fixed; /* Stay in place */
@@ -5463,7 +5457,7 @@
                                 (التصفية قيد التشغيل حالياً)
                             </span>
                             <br v-if="isAnyFilterActive" />
-                            <span v-if="searchQuery" @click="searchOpen = !searchOpen" class="inline-block text-base text-black cursor-pointer transition-all duration-100 active:scale-90">
+                            <span v-if="searchQuery" @click="toggleSearch" class="inline-block text-base text-black cursor-pointer transition-all duration-100 active:scale-90">
                                 (البحث قيد التشغيل حالياً)
                             </span>
                             <br v-if="searchQuery" />
@@ -15853,16 +15847,24 @@
                     }
                 },
                 closeSearchOutside(e) {
-                    const popup = document.querySelector(".absolute.bg-gray-800");
-                    if (popup && !popup.contains(e.target)) {
-                    this.searchOpen = false;
-                    document.removeEventListener("click", this.closeSearchOutside);
+                    // Check if click is outside the search popup
+                    const popup = document.querySelector("[class*='absolute'][class*='bg-gray-800']");
+                    
+                    // Check if click is on the search indicator text
+                    const searchIndicator = e.target.closest('span.inline-block.text-base.text-black.cursor-pointer');
+                    
+                    // Check if click is on the search button
+                    const searchButton = e.target.closest('button[class*="bg-gray-700"][class*="rounded-full"]');
+                    
+                    // If popup exists and click is outside both popup, search indicator, and search button
+                    if (popup && !popup.contains(e.target) && !searchIndicator && !searchButton) {
+                        this.searchOpen = false;
+                        document.removeEventListener("click", this.closeSearchOutside);
                     }
                 },
 
                 updateFontSize() {
                     const screenWidth = window.innerWidth;
-
                     const minSize = 12;
                     const maxSize = 24;
                     const calculated = screenWidth / 50;
