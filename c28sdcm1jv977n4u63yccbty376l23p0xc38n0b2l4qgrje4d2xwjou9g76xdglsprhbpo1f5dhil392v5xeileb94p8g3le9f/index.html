@@ -125,12 +125,6 @@
                 //     event.preventDefault();
                 // }
         </script>    
-        <!-- Tippy.js for tooltips -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/dist/tippy.min.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/themes/retro.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/animations/scale-extreme.css">
-        <script src="https://unpkg.com/@popperjs/core@2"></script>
-        <script src="https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/dist/tippy.umd.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
         <script src="episodes.json" type="application/json"></script>
         <script src="https://cdn.tailwindcss.com"></script>
@@ -363,6 +357,41 @@
                 th, td {
                     padding: 10px;
                 }
+            }
+        </style>
+
+        <style>
+            .tooltip-container {
+                position: relative;
+                display: inline-block;
+                align-items: center;
+                cursor: pointer; /* Optional for hover-friendly styling */
+            }
+            
+            .tooltip-container .tooltip-text {
+                visibility: hidden;
+                background-color: #555;
+                color: #fff;
+                text-align: center;
+                border-radius: 5px;
+                padding: 5px;
+                position: absolute;
+                z-index: 10;
+                /* white-space: nowrap; */
+                bottom: 125%; /* Adjust positioning based on preference */
+                left: 50%;
+                transform: translateX(-50%);
+                opacity: 0;
+                transition: opacity 0.3s;
+                font-size: 0.875rem; /* Tailwind's "text-sm" equivalent */
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow */
+                border-width: 2px; /* Equivalent to border-2 in Tailwind */
+                border-color: #fbbf24; /* Equivalent to border-yellow-400 in Tailwind */
+            }
+            
+            .tooltip-container:hover .tooltip-text {
+                visibility: visible;
+                opacity: 1;
             }
         </style>
     <style>
@@ -16111,39 +16140,6 @@
             }
 
         }).mount('#app');
-
-        // Initialize Tippy.js tooltips
-        setTimeout(() => {
-            const tooltipContainers = document.querySelectorAll('.tooltip-container');
-            
-            tooltipContainers.forEach(container => {
-                const tooltipText = container.querySelector('.tooltip-text');
-                if (tooltipText) {
-                    const content = tooltipText.textContent.trim();
-                    tooltipText.style.display = 'none'; // Hide the original tooltip text
-                    
-                    tippy(container, {
-                        content: content,
-                        followCursor: true,
-                        theme: 'retro',
-                        animation: 'scale-extreme',
-                        placement: 'top',
-                        arrow: true,
-                        popperOptions: {
-                            strategy: 'fixed',
-                            modifiers: [
-                                {
-                                    name: 'flip',
-                                    options: {
-                                        fallbackPlacements: ['bottom', 'right', 'left'],
-                                    },
-                                },
-                            ],
-                        },
-                    });
-                }
-            });
-        }, 500);
     </script>
     <style scoped>
         @keyframes borderMove {
