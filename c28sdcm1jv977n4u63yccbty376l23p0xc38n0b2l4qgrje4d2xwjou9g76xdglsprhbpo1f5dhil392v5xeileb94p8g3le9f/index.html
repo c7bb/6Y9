@@ -64,16 +64,13 @@
             }
         </style>
         <style>
-            [data-tippy-content] {
-                direction: rtl;
-                text-align: center;
-            }
             .tippy-box[data-theme~='retro'] {
                 background: linear-gradient(135deg, #F5F5DC 0%, #F9F9E5 100%);
                 color: #FF6448;
                 border: 2px solid #FF6448;
                 border-radius: 8px;
                 font-weight: bold;
+                font-size: 14px;
                 padding: 6px 10px;
                 box-shadow: 0 2px 4px rgba(0,0,0,0.15);
             }
@@ -131,7 +128,7 @@
                 //     event.preventDefault();
                 // }
         </script>    
-        <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
         <script src="episodes.json" type="application/json"></script>
         <script src="https://cdn.tailwindcss.com"></script>
         <style>
@@ -16018,24 +16015,33 @@
             }
 
         });
-		app.directive('tippy', {
-			mounted(el, binding) {
-				if (typeof tippy !== 'undefined') {
-					tippy(el, {
-						content: binding.value,
-						theme: 'retro',
-						placement: 'top',
-						allowHTML: true
-					});
-				}
-			},
-			updated(el, binding) {
-				if (el._tippy) el._tippy.setContent(binding.value);
-			},
-			unmounted(el) {
-				if (el._tippy) el._tippy.destroy();
-			}
-		});
+
+            app.directive('tippy', {
+            mounted(el, binding) {
+                if (typeof tippy !== 'undefined') {
+                tippy(el, {
+                    content: binding.value,
+                    theme: 'retro',
+                    placement: 'top',
+                    allowHTML: true,
+                    onMount(instance) {
+                    const popper = instance.popper;
+                    popper.style.display = 'flex';
+                    popper.style.alignItems = 'center';
+                    popper.style.justifyContent = 'center';
+                    popper.style.textAlign = 'center';
+                    popper.style.direction = 'rtl';
+                    }
+                });
+                }
+            },
+            updated(el, binding) {
+                if (el._tippy) el._tippy.setContent(binding.value);
+            },
+            unmounted(el) {
+                if (el._tippy) el._tippy.destroy();
+            }
+            });
 
 		app.mount('#app');
     </script>
