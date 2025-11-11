@@ -99,6 +99,31 @@
             }
         </style>
         <style>
+            .zikr-box {
+                position: relative;
+                max-width: 80vw;
+                height: 10vh;
+                line-height: 10vh;
+                text-align: center;
+                font-size: 2vw;
+                font-weight: bold;
+                color: #fff;
+                background: #008080;
+                border-radius: 8px;
+                margin: 5vh auto;
+                overflow: hidden;
+                transition: opacity 0.8s ease-in-out;
+            }
+            .fade-enter-active,
+            .fade-leave-active {
+                transition: opacity 0.8s;
+            }
+            .fade-enter-from,
+            .fade-leave-to {
+                opacity: 0;
+            }
+        </style>
+        <style>
             /* Custom responsive positioning for modal navigation buttons */
             .modal-nav-btn {
                 right: -40px;
@@ -989,7 +1014,11 @@
 
         <br>
         <!-- Search and Filters -->
-         <div v-if="loading"></div>
+        <div v-if="loading">
+            <transition name="fade">
+                <div key="zikr" class="zikr-box">{{ currentZikr }}</div>
+            </transition>
+        </div>
         <div v-else class="flex flex-col gap-4 items-center">
             <div class="flex gap-4 w-full justify-center">
                 <select v-model="selectedFilter" class="border px-4 font-bold py-2 rounded">
@@ -1041,7 +1070,7 @@
                             <!-- Close Button in the Top Left of the Title -->
                             <button 
                                 @click="closeEmptyPopup" 
-                                class="absolute top-0 left-0 text-yellow-300 hover:text-yellow-600 font-bold focus:outline-none transition-all duration-100 active:scale-90">
+                                class="absolute top-0 left-0 text-yellow-300 hover:text-yellow-600 font-bold transition-all duration-100 active:scale-90">
                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png" alt="Close" class="h-8 w-8"/>
                             </button>
                             تصفية موسعة 
@@ -1050,7 +1079,7 @@
                             <!-- Reset Button (Refresh Icon with Image) -->
                             <button 
                             @click="resetFilters" 
-                            class="absolute top-0 left-14 text-yellow-300 hover:text-yellow-600 font-bold focus:outline-none transition-all duration-100 active:scale-90">
+                            class="absolute top-0 left-14 text-yellow-300 hover:text-yellow-600 font-bold transition-all duration-100 active:scale-90">
                             <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/redo.png" alt="Reset" class="h-8 w-8"/>
                         </button>
                         </h2>
@@ -6671,6 +6700,16 @@
                     mangaOfWeekTimeAgoEnglish: '',
                     showEnglishTimeFormatManga: false,
                     mangaUpdateDate: '',
+                    currentZikr: '',
+                    adhkar: [
+                        "اللهم صلِّ وسلم على نبينا محمد",
+                        "سبحان الله وبحمده، سبحان الله العظيم",
+                        "الحمد لله",
+                        "لا إله إلا الله",
+                        "الله أكبر",
+                        "أستغفر الله العظيم وأتوب إليه"
+                    ],
+                    intervalZikrId: null
                 };
             },
             computed: {
@@ -11008,6 +11047,13 @@
                     },
             },
             watch: {
+                loading(newValue) {
+                    // Stop zikr rotation when loading finishes
+                    if (!newValue && this.intervalZikrId) {
+                        clearInterval(this.intervalZikrId);
+                        this.intervalZikrId = null;
+                    }
+                },
                 searchQuery(newQuery) {
                     if (newQuery.trim() === '') {
                         this.currentPage = Math.min(this.lastPage, this.totalPages) || 1;
@@ -13126,6 +13172,10 @@
                 },
             },
             methods: {
+                shuffleZikr() {
+                    const random = Math.floor(Math.random() * this.adhkar.length);
+                    this.currentZikr = this.adhkar[random];
+                },
                 updateEpisodeTimeAgo() {
                     console.log('updateEpisodeTimeAgo called - episodeOfWeek:', this.episodeOfWeek);
                     
@@ -16096,6 +16146,10 @@
             },
 
             mounted() {
+                // Initialize zikr rotation
+                this.shuffleZikr();
+                this.intervalZikrId = setInterval(this.shuffleZikr, 3000);
+                
                 this.closeEmptyPopup();
                 document.addEventListener("click", this.closeMenu);
                 // Ensure data is loaded before calling openSpecificEpisode
@@ -16155,6 +16209,7 @@
 
                 // Clear any app-specific intervals/timeouts
                 if (this.intervalId) clearInterval(this.intervalId);
+                if (this.intervalZikrId) clearInterval(this.intervalZikrId);
                 if (this.episodeTimeInterval) clearInterval(this.episodeTimeInterval);
                 if (this.mangaTimeInterval) clearInterval(this.mangaTimeInterval);
                 if (this.timeoutId) clearTimeout(this.timeoutId);
