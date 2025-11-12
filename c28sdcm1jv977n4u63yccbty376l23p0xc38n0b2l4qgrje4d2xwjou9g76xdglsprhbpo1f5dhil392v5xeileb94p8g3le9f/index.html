@@ -15605,8 +15605,20 @@
                         episodeNumber = episodeNumber.replace("المجرم هانزاوا", "").trim();
                     }
 
-                    const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
-                    console.log(chatId);
+                    console.log('getting chatId from localStorage');
+                    let chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
+                    console.log('Retrieved chatId from localStorage:', chatId);
+                    
+                    if (!chatId || chatId === 'null' || chatId === 'undefined' || chatId === '') {
+                        console.log('chatId is empty or null, now we will getting from webApp.initDataUnsafe.user.id');
+                        const webApp = window.Telegram.WebApp;
+                        chatId = webApp.initDataUnsafe.user.id;
+                        console.log('chatId from webApp:', chatId);
+                        localStorage.setItem('AreTheUserJoinToTheChannel', chatId);
+                        console.log('Stored new chatId in localStorage');
+                    }
+                    
+                    console.log('Final chatId being used:', chatId);
 
                     function escapeMarkdown(text) {
                         return text
@@ -15777,7 +15789,20 @@
                         });
                     }
 
-                    const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
+                    console.log('getting chatId from localStorage for manga');
+                    let chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
+                    console.log('Retrieved chatId from localStorage for manga:', chatId);
+                    
+                    if (!chatId || chatId === 'null' || chatId === 'undefined' || chatId === '') {
+                        console.log('chatId for manga is empty or null, now we will getting from webApp.initDataUnsafe.user.id');
+                        const webApp = window.Telegram.WebApp;
+                        chatId = webApp.initDataUnsafe.user.id;
+                        console.log('getting chatId from webApp for manga:', chatId);
+                        localStorage.setItem('AreTheUserJoinToTheChannel', chatId);
+                        console.log('Stored new chatId in localStorage for manga');
+                    }
+                    
+                    console.log('Final chatId being used for manga:', chatId);
                     const caption = `*الفصل: ${mangaNumber}*`;
 
                     this.selectedEpisode.EpisodeMangasIDs[index].status = 'sending';
@@ -15853,7 +15878,20 @@
                         });
                     }
 
-                    const chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
+                    console.log('getting chatId from localStorage for mangaD');
+                    let chatId = localStorage.getItem('AreTheUserJoinToTheChannel');
+                    console.log('Retrieved chatId from localStorage for mangaD:', chatId);
+                    
+                    if (!chatId || chatId === 'null' || chatId === 'undefined' || chatId === '') {
+                        console.log('chatId for mangaD is empty or null, now we will getting from webApp.initDataUnsafe.user.id');
+                        const webApp = window.Telegram.WebApp;
+                        chatId = webApp.initDataUnsafe.user.id;
+                        console.log('chatId from webApp for mangaD:', chatId);
+                        localStorage.setItem('AreTheUserJoinToTheChannel', chatId);
+                        console.log('Stored new chatId in localStorage for mangaD');
+                    }
+                    
+                    console.log('Final chatId being used for mangaD:', chatId);
                     const caption = `*الفصل: ${mangaNumber}*`;
 
                     this.selectedManga.status = 'sending';
