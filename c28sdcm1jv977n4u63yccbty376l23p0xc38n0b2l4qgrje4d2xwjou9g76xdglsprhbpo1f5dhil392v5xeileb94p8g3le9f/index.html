@@ -16549,7 +16549,7 @@
                 
                 // Initialize countdown timer for episode broadcast date
                 this.calculateCountdown();
-                this.countdownInterval = setInterval(() => {
+                this.episodeBroadcastCountdownInterval = setInterval(() => {
                     console.log('Timer tick - updating countdown');
                     this.calculateCountdown();
                 }, 60000); // Update every minute
@@ -16564,6 +16564,7 @@
                 if (this.episodeTimeInterval) clearInterval(this.episodeTimeInterval);
                 if (this.mangaTimeInterval) clearInterval(this.mangaTimeInterval);
                 if (this.countdownInterval) clearInterval(this.countdownInterval);
+                if (this.episodeBroadcastCountdownInterval) clearInterval(this.episodeBroadcastCountdownInterval);
                 if (this.timeoutId) clearTimeout(this.timeoutId);
 
                 // Clean up event listener to prevent memory leaks
