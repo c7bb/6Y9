@@ -5873,7 +5873,7 @@
                                 </p>
 
                                 <p v-if="selectedEpisode && selectedEpisode.EpisodeBCDate !== ''" class="mb-2 text-lg">
-                                    <span dir="ltr">:تاريخ العرض</span> {{ selectedEpisode.EpisodeBCDate }}
+                                    <span dir="ltr">:تاريخ العرض</span> {{ selectedEpisode.EpisodeBCDate }} <span v-if="isLastEpisode && hasCountdown" @click="toggleCountdownLanguage" class="text-orange-300 text-xs cursor-pointer transition-all duration-100 active:scale-90">({{ showEnglishCountdown ? countdownEnglish : countdownArabic }})</span>
                                 </p>
 
                                 <p v-if="selectedEpisode && selectedEpisode.EpisodeRRDate !== ''" class="mb-2 text-lg">
@@ -6197,6 +6197,13 @@
                     filterLogicMitsuhikoTsuburaya: 'All',
 
                     filterGentaKojimaEpisodes: false,
+                    
+                    // Countdown properties
+                    countdownInterval: null,
+                    countdownArabic: '',
+                    countdownEnglish: '',
+                    showEnglishCountdown: false,
+                    hasCountdown: false,
                     filterGentaKojimaSceneEpisodes: false,
                     filterGentaKojimaBackgroundEpisodes: false,
                     filterGentaKojimaFlashbackEpisodes: false,
@@ -6943,6 +6950,42 @@
                     const currentGroup = this.groupedMovies[this.activeTab.movies].items;
                     const currentIndex = currentGroup.findIndex(movie => movie.EpisodeNumber === this.selectedEpisode.EpisodeNumber);
                     return currentIndex !== -1 && currentIndex === 0;
+                },
+                
+                // Countdown computed properties
+                isLastEpisode() {
+                    if (!this.selectedEpisode || !this.episodes || this.episodes.length === 0) return false;
+                    
+                    // Filter episode numbers that don't contain special patterns
+                    const episodeNumber = this.selectedEpisode.EpisodeNumber;
+                    const filterPatterns = ['خاصة بالفيلم', 'الفيلم', 'قصة قصيرة', 'أوفا2', 'أوفا3', 'أوفا', 'إصدار خاص', 'ماجيك كايتو1', 'ماجيك كايتو2', 'يوميات زيرو', 'المجرم هانزاوا'];
+                    
+                    // Check if current episode is the last regular episode
+                    const regularEpisodes = this.episodes.filter(ep => {
+                        return !filterPatterns.some(pattern => ep.EpisodeNumber.includes(pattern));
+                    });
+                    
+                    if (regularEpisodes.length === 0) return false;
+                    
+                    // Get the highest episode number
+                    const highestEpisode = regularEpisodes.reduce((highest, current) => {
+                        const currentNum = parseInt(current.EpisodeNumber);
+                        const highestNum = parseInt(highest.EpisodeNumber);
+                        return !isNaN(currentNum) && !isNaN(highestNum) && currentNum > highestNum ? current : highest;
+                    }, regularEpisodes[0]);
+                    
+                    return this.selectedEpisode.EpisodeNumber === highestEpisode.EpisodeNumber;
+                },
+                
+                // Calculate the countdown date difference between the current date and the broadcast date
+                hasCountdown() {
+                    if (!this.selectedEpisode || !this.selectedEpisode.EpisodeBCDate) return false;
+                    
+                    const bcDate = new Date(this.selectedEpisode.EpisodeBCDate);
+                    const currentDate = new Date();
+                    
+                    // If the broadcast date is in the future, show countdown
+                    return !isNaN(bcDate) && bcDate > currentDate;
                 },
 
                 hasNextMovieGroup() {
@@ -11210,6 +11253,12 @@
                     },
             },
             watch: {
+                selectedEpisode() {
+                    // When episode changes, recalculate the countdown
+                    this.$nextTick(() => {
+                        this.calculateCountdown();
+                    });
+                },
                 loading(newValue) {
                     // Stop zikr rotation when loading finishes
                     if (!newValue && this.intervalZikrId) {
@@ -13335,6 +13384,76 @@
                 },
             },
             methods: {
+                // Countdown methods
+                calculateCountdown() {
+                    if (!this.selectedEpisode || !this.selectedEpisode.EpisodeBCDate || !this.isLastEpisode) {
+                        this.hasCountdown = false;
+                        return;
+                    }
+                    
+                    try {
+                        const bcDate = new Date(this.selectedEpisode.EpisodeBCDate);
+                        const now = new Date();
+                        
+                        // If date is invalid or in the past, don't show countdown
+                        if (isNaN(bcDate) || bcDate <= now) {
+                            this.hasCountdown = false;
+                            console.log('Countdown: Date invalid or in the past', bcDate);
+                            return;
+                        }
+                        
+                        this.hasCountdown = true;
+                        
+                        const diff = bcDate.getTime() - now.getTime();
+                        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                        
+                        // English format
+                        const parts = [];
+                        if (days > 0) parts.push(`${days}d`);
+                        if (hours > 0) parts.push(`${hours}h`);
+                        if (minutes > 0) parts.push(`${minutes}min`);
+                        this.countdownEnglish = parts.join(' ');
+                        
+                        // Arabic format
+                        if (days === 0 && hours < 24) {
+                            this.countdownArabic = 'متبقٍّ أقل من يوم';
+                        } else if (days === 1) {
+                            this.countdownArabic = 'متبقٍّ يوم واحد';
+                        } else if (days < 2) {
+                            this.countdownArabic = 'متبقٍّ أقل من يومين';
+                        } else if (days === 2) {
+                            this.countdownArabic = 'متبقٍّ يومان';
+                        } else if (days < 3) {
+                            this.countdownArabic = 'متبقٍّ أقل من 3 أيام';
+                        } else if (days === 3) {
+                            this.countdownArabic = 'متبقٍّ 3 أيام';
+                        } else if (days < 4) {
+                            this.countdownArabic = 'متبقٍّ أقل من 4 أيام';
+                        } else if (days === 4) {
+                            this.countdownArabic = 'متبقٍّ 4 أيام';
+                        } else if (days < 5) {
+                            this.countdownArabic = 'متبقٍّ أقل من 5 أيام';
+                        } else if (days === 5) {
+                            this.countdownArabic = 'متبقٍّ 5 أيام';
+                        } else if (days < 10) {
+                            this.countdownArabic = `متبقٍّ ${days} أيام`;
+                        } else {
+                            this.countdownArabic = `متبقٍّ ${days} يومًا`;
+                        }
+                        
+                        console.log('Countdown updated:', this.countdownArabic, this.countdownEnglish);
+                    } catch (error) {
+                        console.error('Error calculating countdown:', error);
+                        this.hasCountdown = false;
+                    }
+                },
+                
+                toggleCountdownLanguage() {
+                    this.showEnglishCountdown = !this.showEnglishCountdown;
+                },
+                
                 shuffleZikr() {
                     // If all zikrs have been shown, refill the pool
                     if (this.remainingAdhkar.length === 0) {
@@ -16429,6 +16548,14 @@
                     this.updateMangaTimeAgo();
                 }, 60000); // Update every minute
                 console.log('mounted - Manga timer set up complete');
+                
+                // Initialize countdown timer for episode broadcast date
+                this.calculateCountdown();
+                this.countdownInterval = setInterval(() => {
+                    console.log('Timer tick - updating countdown');
+                    this.calculateCountdown();
+                }, 60000); // Update every minute
+                console.log('mounted - Countdown timer set up complete');
             },
 
             unmounted() {
@@ -16438,6 +16565,7 @@
                 if (this.intervalZikrId) clearInterval(this.intervalZikrId);
                 if (this.episodeTimeInterval) clearInterval(this.episodeTimeInterval);
                 if (this.mangaTimeInterval) clearInterval(this.mangaTimeInterval);
+                if (this.countdownInterval) clearInterval(this.countdownInterval);
                 if (this.timeoutId) clearTimeout(this.timeoutId);
 
                 // Clean up event listener to prevent memory leaks
