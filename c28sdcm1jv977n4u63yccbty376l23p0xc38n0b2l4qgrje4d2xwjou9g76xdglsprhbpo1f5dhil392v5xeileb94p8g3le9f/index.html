@@ -16023,18 +16023,11 @@
 
                         // 🔹 تابع التحقق من العضوية في القناة
                         const telegramUserId = webApp.initDataUnsafe.user?.id;
-
-                        if (!telegramUserId) {
-                            console.warn("⚠️ لم يتم العثور على User ID في بيانات Telegram.");
-                            throw new Error("Missing Telegram User ID");
-                        }
-
                         const response = await fetch('https://ccuid.mdccxxixix.workers.dev', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ token: telegramUserId })
                         });
-
                         const result = await response.json();
 
                         if (result.valid) {
