@@ -16480,12 +16480,6 @@
                 },
 
                 startCountdown(index) {
-                    // Safety check - ensure selectedEpisode and EpisodeVideosIDs exist
-                    if (!this.selectedEpisode || !this.selectedEpisode.EpisodeVideosIDs || !this.selectedEpisode.EpisodeVideosIDs[index]) {
-                        console.warn('Cannot start countdown: selectedEpisode or EpisodeVideosIDs is null/undefined');
-                        return;
-                    }
-                    
                     // Initialize countdown value from statusClearTimeout (converted to seconds)
                     const countdownSeconds = Math.ceil(this.statusClearTimeout / 1000);
                     this.selectedEpisode.EpisodeVideosIDs[index].countdown = countdownSeconds;
@@ -16495,35 +16489,19 @@
                         clearInterval(this.selectedEpisode.EpisodeVideosIDs[index].countdownInterval);
                     }
                     
-                    // Store a reference to selectedEpisode for use in the interval closure
-                    const episodeRef = this.selectedEpisode;
-                    
                     // Start the countdown interval
                     this.selectedEpisode.EpisodeVideosIDs[index].countdownInterval = setInterval(() => {
-                        // Check if selectedEpisode and its properties still exist
-                        if (!episodeRef || !episodeRef.EpisodeVideosIDs || !episodeRef.EpisodeVideosIDs[index]) {
-                            clearInterval(this.selectedEpisode?.EpisodeVideosIDs?.[index]?.countdownInterval);
-                            console.warn('Cleared interval because selectedEpisode or EpisodeVideosIDs no longer exists');
-                            return;
-                        }
-                        
-                        if (episodeRef.EpisodeVideosIDs[index].countdown > 0) {
-                            episodeRef.EpisodeVideosIDs[index].countdown--;
+                        if (this.selectedEpisode.EpisodeVideosIDs[index].countdown > 0) {
+                            this.selectedEpisode.EpisodeVideosIDs[index].countdown--;
                         } else {
                             // Clear the interval when countdown reaches 0
-                            clearInterval(episodeRef.EpisodeVideosIDs[index].countdownInterval);
-                            episodeRef.EpisodeVideosIDs[index].countdownInterval = null;
+                            clearInterval(this.selectedEpisode.EpisodeVideosIDs[index].countdownInterval);
+                            this.selectedEpisode.EpisodeVideosIDs[index].countdownInterval = null;
                         }
                     }, 1000);
                 },
 
                 startCountdownForManga(index) {
-                    // Safety check - ensure selectedEpisode and EpisodeMangasIDs exist
-                    if (!this.selectedEpisode || !this.selectedEpisode.EpisodeMangasIDs || !this.selectedEpisode.EpisodeMangasIDs[index]) {
-                        console.warn('Cannot start countdown for manga: selectedEpisode or EpisodeMangasIDs is null/undefined');
-                        return;
-                    }
-                    
                     // Initialize countdown value from statusClearTimeout (converted to seconds)
                     const countdownSeconds = Math.ceil(this.statusClearTimeout / 1000);
                     this.selectedEpisode.EpisodeMangasIDs[index].countdown = countdownSeconds;
@@ -16533,35 +16511,19 @@
                         clearInterval(this.selectedEpisode.EpisodeMangasIDs[index].countdownInterval);
                     }
                     
-                    // Store a reference to selectedEpisode for use in the interval closure
-                    const episodeRef = this.selectedEpisode;
-                    
                     // Start the countdown interval
                     this.selectedEpisode.EpisodeMangasIDs[index].countdownInterval = setInterval(() => {
-                        // Check if selectedEpisode and its properties still exist
-                        if (!episodeRef || !episodeRef.EpisodeMangasIDs || !episodeRef.EpisodeMangasIDs[index]) {
-                            clearInterval(this.selectedEpisode?.EpisodeMangasIDs?.[index]?.countdownInterval);
-                            console.warn('Cleared interval because selectedEpisode or EpisodeMangasIDs no longer exists');
-                            return;
-                        }
-                        
-                        if (episodeRef.EpisodeMangasIDs[index].countdown > 0) {
-                            episodeRef.EpisodeMangasIDs[index].countdown--;
+                        if (this.selectedEpisode.EpisodeMangasIDs[index].countdown > 0) {
+                            this.selectedEpisode.EpisodeMangasIDs[index].countdown--;
                         } else {
                             // Clear the interval when countdown reaches 0
-                            clearInterval(episodeRef.EpisodeMangasIDs[index].countdownInterval);
-                            episodeRef.EpisodeMangasIDs[index].countdownInterval = null;
+                            clearInterval(this.selectedEpisode.EpisodeMangasIDs[index].countdownInterval);
+                            this.selectedEpisode.EpisodeMangasIDs[index].countdownInterval = null;
                         }
                     }, 1000);
                 },
 
                 startCountdownForMangaD() {
-                    // Safety check - ensure selectedManga exists
-                    if (!this.selectedManga) {
-                        console.warn('Cannot start countdown for mangaD: selectedManga is null/undefined');
-                        return;
-                    }
-                    
                     // Initialize countdown value from statusClearTimeout (converted to seconds)
                     const countdownSeconds = Math.ceil(this.statusClearTimeout / 1000);
                     this.selectedManga.countdown = countdownSeconds;
@@ -16571,24 +16533,14 @@
                         clearInterval(this.selectedManga.countdownInterval);
                     }
                     
-                    // Store a reference to selectedManga for use in the interval closure
-                    const mangaRef = this.selectedManga;
-                    
                     // Start the countdown interval
                     this.selectedManga.countdownInterval = setInterval(() => {
-                        // Check if selectedManga still exists
-                        if (!mangaRef) {
-                            clearInterval(this.selectedManga?.countdownInterval);
-                            console.warn('Cleared interval because selectedManga no longer exists');
-                            return;
-                        }
-                        
-                        if (mangaRef.countdown > 0) {
-                            mangaRef.countdown--;
+                        if (this.selectedManga.countdown > 0) {
+                            this.selectedManga.countdown--;
                         } else {
                             // Clear the interval when countdown reaches 0
-                            clearInterval(mangaRef.countdownInterval);
-                            mangaRef.countdownInterval = null;
+                            clearInterval(this.selectedManga.countdownInterval);
+                            this.selectedManga.countdownInterval = null;
                         }
                     }, 1000);
                 },
