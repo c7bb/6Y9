@@ -15697,7 +15697,8 @@
 
                         if (!response.ok) {
                             const status = data?.status || response.status;
-                            throw new Error(`Telegram Error: (${status})\n` + (data.description || text) + chatId);
+                            const chatIdLn = chatId;
+                            throw new Error(`Telegram Error: (${status})\n\n` + (data.description || text) + `\n\n(${chatIdLn})`);
                         }
 
                     } catch (error) {
@@ -15731,7 +15732,8 @@
 
                         if (!response.ok) {
                             const status = data?.status || response.status;
-                            throw new Error(`Telegram Error: (${status})\n` + (data.description || text) + chatId);
+                            const chatIdLn = chatId;
+                            throw new Error(`Telegram Error: (${status})\n\n` + (data.description || text) + `\n\n(${chatIdLn})`);
                         }
 
                     } catch (error) {
