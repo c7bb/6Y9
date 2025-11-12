@@ -9,6 +9,19 @@
             y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
         })(window, document, "clarity", "script", "tzsxusebyo");
     </script>
+    <script src="https://cdn.lgrckt-in.com/LogRocket.min.js" crossorigin="anonymous"></script>
+    <script>
+       window.LogRocket && window.LogRocket.init('hitfhq/dcref-emt');
+    </script>
+    <script src="//d2wy8f7a9ursnm.cloudfront.net/v8/bugsnag.min.js"></script>
+    <script type="module">
+        import BugsnagPerformance from '//d2wy8f7a9ursnm.cloudfront.net/v1/bugsnag-performance.min.js'
+        Bugsnag.start({ 
+            apiKey: '822c4488c7fb413e49f9510f7a3ceec5',
+            enabledBreadcrumbTypes: ['log', 'error', 'warn', 'info', 'debug']
+        })
+        BugsnagPerformance.start({ apiKey: '822c4488c7fb413e49f9510f7a3ceec5' })
+    </script>
     <script>
         // Immediate cleanup function
         (function() {
@@ -7033,8 +7046,9 @@
                 },
 
                 episodeOfWeek() {
+                    const enableEpisodeDebug = false; // Set to true to enable debug logging
                     const episode = this.episodes.find(e => e.EpisodeNumber === String(this.ep));
-                    console.log('episodeOfWeek - ep:', this.ep, 'found episode:', episode);
+                    if (enableEpisodeDebug) console.log('episodeOfWeek - ep:', this.ep, 'found episode:', episode);
                     return episode;
                 },
 
@@ -13350,6 +13364,8 @@
             methods: {
                 // Countdown methods
                 calculateCountdown() {
+                    const enableCountdownDebug = false; // Set to true to enable debug logging
+                    
                     if (!this.selectedEpisode || !this.selectedEpisode.EpisodeBCDate) {
                         this.hasCountdown = false;
                         return;
@@ -13362,7 +13378,7 @@
                         // If date is invalid or in the past, don't show countdown
                         if (isNaN(bcDate) || bcDate <= now) {
                             this.hasCountdown = false;
-                            console.log('Countdown: Date invalid or in the past', bcDate);
+                            if (enableCountdownDebug) console.log('Countdown: Date invalid or in the past', bcDate);
                             return;
                         }
                         
@@ -13405,9 +13421,9 @@
                         }
 
                         this.countdownArabic = countdownArabic;
-                        console.log('Countdown updated:', this.countdownArabic, this.countdownEnglish);
+                        if (enableCountdownDebug) console.log('Countdown updated:', this.countdownArabic, this.countdownEnglish);
                     } catch (error) {
-                        console.error('Error calculating countdown:', error);
+                        if (enableCountdownDebug) console.error('Error calculating countdown:', error);
                         this.hasCountdown = false;
                     }
                 },
@@ -13430,22 +13446,24 @@
                     this.remainingAdhkar.splice(randomIndex, 1);
                 },
                 updateEpisodeTimeAgo() {
-                    console.log('updateEpisodeTimeAgo called - episodeOfWeek:', this.episodeOfWeek);
+                    const enableTimeAgoDebug = false; // Set to true to enable debug logging
+                    
+                    if (enableTimeAgoDebug) console.log('updateEpisodeTimeAgo called - episodeOfWeek:', this.episodeOfWeek);
                     
                     if (!this.episodeOfWeek) {
-                        console.log('No episodeOfWeek found');
+                        if (enableTimeAgoDebug) console.log('No episodeOfWeek found');
                         this.episodeOfWeekTimeAgo = '';
                         return;
                     }
                     
                     if (!this.episodeOfWeek.EpisodeBCDate) {
-                        console.log('No EpisodeBCDate in episode:', this.episodeOfWeek);
+                        if (enableTimeAgoDebug) console.log('No EpisodeBCDate in episode:', this.episodeOfWeek);
                         this.episodeOfWeekTimeAgo = '';
                         return;
                     }
 
                     const bcDate = this.episodeOfWeek.EpisodeBCDate;
-                    console.log('Processing EpisodeBCDate:', bcDate);
+                    if (enableTimeAgoDebug) console.log('Processing EpisodeBCDate:', bcDate);
                     
                     let episodeDate;
                     
@@ -13453,28 +13471,28 @@
                     if (bcDate.includes('-')) {
                         const dateParts = bcDate.split('-');
                         if (dateParts.length !== 3) {
-                            console.log('Invalid date format with dashes:', bcDate);
+                            if (enableTimeAgoDebug) console.log('Invalid date format with dashes:', bcDate);
                             this.episodeOfWeekTimeAgo = '';
                             return;
                         }
                         const [year, month, day] = dateParts.map(Number);
                         episodeDate = new Date(year, month - 1, day);
-                        console.log('Parsed date (YYYY-MM-DD):', episodeDate);
+                        if (enableTimeAgoDebug) console.log('Parsed date (YYYY-MM-DD):', episodeDate);
                     } 
                     // Check if date format is DD/MM/YYYY (with slashes)
                     else if (bcDate.includes('/')) {
                         const dateParts = bcDate.split('/');
                         if (dateParts.length !== 3) {
-                            console.log('Invalid date format with slashes:', bcDate);
+                            if (enableTimeAgoDebug) console.log('Invalid date format with slashes:', bcDate);
                             this.episodeOfWeekTimeAgo = '';
                             return;
                         }
                         const [day, month, year] = dateParts.map(Number);
                         episodeDate = new Date(year, month - 1, day);
-                        console.log('Parsed date (DD/MM/YYYY):', episodeDate);
+                        if (enableTimeAgoDebug) console.log('Parsed date (DD/MM/YYYY):', episodeDate);
                     } 
                     else {
-                        console.log('Unknown date format:', bcDate);
+                        if (enableTimeAgoDebug) console.log('Unknown date format:', bcDate);
                         this.episodeOfWeekTimeAgo = '';
                         return;
                     }
@@ -13562,13 +13580,14 @@
                     }
 
                     this.episodeOfWeekTimeAgo = timeAgoText;
-                    console.log('Final timeAgoText:', timeAgoText, 'episodeOfWeekTimeAgo:', this.episodeOfWeekTimeAgo);
+                    if (enableTimeAgoDebug) console.log('Final timeAgoText:', timeAgoText, 'episodeOfWeekTimeAgo:', this.episodeOfWeekTimeAgo);
                     
                     // Also calculate English format
                     this.updateEpisodeTimeAgoEnglish(episodeDate);
                 },
 
                 updateEpisodeTimeAgoEnglish(episodeDate) {
+                    const enableTimeAgoDebug = false; // Set to true to enable debug logging
                     const now = new Date();
                     const diffMs = now - episodeDate;
                     
@@ -13603,25 +13622,28 @@
                         parts.push(`${seconds}s`);
                     }
                     this.episodeOfWeekTimeAgoEnglish = parts.join('');
-                    console.log('English format:', this.episodeOfWeekTimeAgoEnglish);
+                    if (enableTimeAgoDebug) console.log('English format:', this.episodeOfWeekTimeAgoEnglish);
                 },
 
                 toggleTimeFormat() {
+                    const enableTimeAgoDebug = false; // Set to true to enable debug logging
                     this.showEnglishTimeFormat = !this.showEnglishTimeFormat;
-                    console.log('Toggled time format, showEnglish:', this.showEnglishTimeFormat);
+                    if (enableTimeAgoDebug) console.log('Toggled time format, showEnglish:', this.showEnglishTimeFormat);
                 },
                 
                 toggleTimeFormatManga() {
+                    const enableTimeAgoDebug = false; // Set to true to enable debug logging
                     this.showEnglishTimeFormatManga = !this.showEnglishTimeFormatManga;
-                    console.log('Toggled manga time format, showEnglish:', this.showEnglishTimeFormatManga);
+                    if (enableTimeAgoDebug) console.log('Toggled manga time format, showEnglish:', this.showEnglishTimeFormatManga);
                 },
 
                 async loadMangaUpdateDate() {
+                    const enableTimeAgoDebug = false; // Set to true to enable debug logging
                     try {
                         const response = await fetch('./lmcud.txt');
                         const text = await response.text();
                         this.mangaUpdateDate = text.trim();
-                        console.log('Loaded manga update date:', this.mangaUpdateDate);
+                        if (enableTimeAgoDebug) console.log('Loaded manga update date:', this.mangaUpdateDate);
                         this.updateMangaTimeAgo();
                     } catch (error) {
                         console.error('Error loading manga update date:', error);
@@ -13629,16 +13651,18 @@
                 },
 
                 updateMangaTimeAgo() {
-                    console.log('updateMangaTimeAgo called - mangaUpdateDate:', this.mangaUpdateDate);
+                    const enableTimeAgoDebug = false; // Set to true to enable debug logging
+                    
+                    if (enableTimeAgoDebug) console.log('updateMangaTimeAgo called - mangaUpdateDate:', this.mangaUpdateDate);
                     
                     if (!this.mangaUpdateDate) {
-                        console.log('No mangaUpdateDate found');
+                        if (enableTimeAgoDebug) console.log('No mangaUpdateDate found');
                         this.mangaOfWeekTimeAgo = '';
                         return;
                     }
 
                     const dateText = this.mangaUpdateDate;
-                    console.log('Processing manga date:', dateText);
+                    if (enableTimeAgoDebug) console.log('Processing manga date:', dateText);
                     
                     let mangaDate;
                     
@@ -13646,28 +13670,28 @@
                     if (dateText.includes('-')) {
                         const dateParts = dateText.split('-');
                         if (dateParts.length !== 3) {
-                            console.log('Invalid date format with dashes:', dateText);
+                            if (enableTimeAgoDebug) console.log('Invalid date format with dashes:', dateText);
                             this.mangaOfWeekTimeAgo = '';
                             return;
                         }
                         const [year, month, day] = dateParts.map(Number);
                         mangaDate = new Date(year, month - 1, day);
-                        console.log('Parsed manga date (YYYY-MM-DD):', mangaDate);
+                        if (enableTimeAgoDebug) console.log('Parsed manga date (YYYY-MM-DD):', mangaDate);
                     } 
                     // Check if date format is DD/MM/YYYY (with slashes)
                     else if (dateText.includes('/')) {
                         const dateParts = dateText.split('/');
                         if (dateParts.length !== 3) {
-                            console.log('Invalid date format with slashes:', dateText);
+                            if (enableTimeAgoDebug) console.log('Invalid date format with slashes:', dateText);
                             this.mangaOfWeekTimeAgo = '';
                             return;
                         }
                         const [day, month, year] = dateParts.map(Number);
                         mangaDate = new Date(year, month - 1, day);
-                        console.log('Parsed manga date (DD/MM/YYYY):', mangaDate);
+                        if (enableTimeAgoDebug) console.log('Parsed manga date (DD/MM/YYYY):', mangaDate);
                     } 
                     else {
-                        console.log('Unknown date format:', dateText);
+                        if (enableTimeAgoDebug) console.log('Unknown date format:', dateText);
                         this.mangaOfWeekTimeAgo = '';
                         return;
                     }
@@ -13756,13 +13780,14 @@
                     }
 
                     this.mangaOfWeekTimeAgo = timeAgoText;
-                    console.log('Final manga timeAgoText:', timeAgoText, 'mangaOfWeekTimeAgo:', this.mangaOfWeekTimeAgo);
+                    if (enableTimeAgoDebug) console.log('Final manga timeAgoText:', timeAgoText, 'mangaOfWeekTimeAgo:', this.mangaOfWeekTimeAgo);
                     
                     // Also calculate English format
                     this.updateMangaTimeAgoEnglish(mangaDate);
                 },
 
                 updateMangaTimeAgoEnglish(mangaDate) {
+                    const enableTimeAgoDebug = false; // Set to true to enable debug logging
                     const now = new Date();
                     const diffMs = now - mangaDate;
                     
@@ -13798,7 +13823,7 @@
                     }
                     
                     this.mangaOfWeekTimeAgoEnglish = parts.join('');
-                    console.log('Manga English format:', this.mangaOfWeekTimeAgoEnglish);
+                    if (enableTimeAgoDebug) console.log('Manga English format:', this.mangaOfWeekTimeAgoEnglish);
                 },
 
                 nextPage() {
@@ -13965,7 +13990,6 @@
                                             localStorage.removeItem('waitTime');
                                             
                                             // Update episode time ago after data loads
-                                            console.log('Data loaded, calling updateEpisodeTimeAgo');
                                             this.updateEpisodeTimeAgo();
                                             
                                             resolve();
@@ -15960,58 +15984,95 @@
 
                 async checkTelegram() {
                     const localStorageKey = 'AreTheUserJoinToTheChannel';
+
                     try {
-                    const webApp = window.Telegram.WebApp;
-                    const telegramUserId = webApp.initDataUnsafe.user.id;
-                    const response = await fetch('https://ccuid.mdccxxixix.workers.dev', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ token: telegramUserId })
-                    });
-                    const result = await response.json();
-            
-                    if (result.valid) {
-                        localStorage.setItem(localStorageKey, telegramUserId);
-                        // Set the reactive flag.
-                        this.userJoined = true;
-                    } else {
+                        const webApp = window.Telegram.WebApp;
+
+                        // 🔹 اطبع جميع بيانات تيليجرام في الكونسول للتحقق
+                        console.log("=== Telegram WebApp Raw Data ===");
+                        console.log("initData:", webApp.initData);
+                        console.log("initDataUnsafe:", webApp.initDataUnsafe);
+                        console.log("version:", webApp.version);
+                        console.log("platform:", webApp.platform);
+                        console.log("===============================");
+
+                        // 🔹 إذا كان يوجد مستخدم، اطبع بياناته
+                        if (webApp.initDataUnsafe.user) {
+                            console.log("User Data:", webApp.initDataUnsafe.user);
+                            console.log("User ID:", webApp.initDataUnsafe.user.id);
+                            console.log("Username:", webApp.initDataUnsafe.user.username);
+                            console.log("First name:", webApp.initDataUnsafe.user.first_name);
+                            console.log("Language code:", webApp.initDataUnsafe.user.language_code);
+                            console.log("Is Premium:", webApp.initDataUnsafe.user.is_premium);
+                            console.log("Photo URL:", webApp.initDataUnsafe.user.photo_url);
+                        } else {
+                            console.warn("⚠️ لا توجد بيانات مستخدم (user object غير موجود).");
+                        }
+
+                        // 🔹 إذا كان يوجد بيانات محادثة (عند التشغيل من القنوات/المجموعات)
+                        if (webApp.initDataUnsafe.chat) {
+                            console.log("Chat Data:", webApp.initDataUnsafe.chat);
+                            console.log("Chat ID:", webApp.initDataUnsafe.chat.id);
+                            console.log("Chat Type:", webApp.initDataUnsafe.chat.type);
+                            console.log("Chat Title:", webApp.initDataUnsafe.chat.title);
+                        }
+
+                        // 🔹 الآن تابع التحقق من العضوية في القناة
+                        const telegramUserId = webApp.initDataUnsafe.user?.id;
+
+                        if (!telegramUserId) {
+                            console.warn("⚠️ لم يتم العثور على User ID في بيانات Telegram.");
+                            throw new Error("Missing Telegram User ID");
+                        }
+
+                        const response = await fetch('https://ccuid.mdccxxixix.workers.dev', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ token: telegramUserId })
+                        });
+
+                        const result = await response.json();
+
+                        if (result.valid) {
+                            localStorage.setItem(localStorageKey, telegramUserId);
+                            this.userJoined = true;
+                        } else {
+                            this.userJoined = false;
+                            document.body.innerHTML = `
+                                <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #1e3c72, #2a5298); animation: fadeIn 1s;">
+                                    <div style="text-align: center; padding: 20px; border: 2px solid #fff; border-radius: 15px; background-color: rgba(0, 0, 0, 0.7); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); animation: slideDown 1s;">
+                                        <h1 style="font-size: 26px; font-weight: bold; color: #ff4f4f; margin-bottom: 10px;">
+                                            لست منضماً إلى القناة.<br>
+                                            <span style="font-size: 26px; font-weight: bold; color: #ffffff;">يرجى الانضمام إلى القناة لفتح الدليل، ثم أعد المحاولة.</span><br><br>
+                                            <a href="https://t.me/CodeSubs" target="_blank" rel="noopener noreferrer" style="color: #00ff00; text-decoration: none; font-size: 22px; font-weight: bold;">اضغط هنا للانتقال إلى القناة</a>
+                                        </h1><br>
+                                        <button id="retryButton" style="padding: 15px 30px; background: linear-gradient(135deg, #007BFF, #0056b3); color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold; margin-top: 20px; transition: transform 0.3s, box-shadow 0.3s;">
+                                            أعد المحاولة
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                            document.getElementById('retryButton').addEventListener('click', () => {
+                                window.location.reload();
+                            });
+                        }
+                    } catch (error) {
+                        console.error("Error during validation:", error);
                         this.userJoined = false;
-                        // Replace the page with the "not joined" screen.
+
                         document.body.innerHTML = `
-                        <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #1e3c72, #2a5298); animation: fadeIn 1s;">
-                            <div style="text-align: center; padding: 20px; border: 2px solid #fff; border-radius: 15px; background-color: rgba(0, 0, 0, 0.7); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); animation: slideDown 1s;">
-                            <h1 style="font-size: 26px; font-weight: bold; color: #ff4f4f; margin-bottom: 10px;">
-                                لست منضماً إلى القناة.<br>
-                                <span style="font-size: 26px; font-weight: bold; color: #ffffff;">يرجى الانضمام إلى القناة لفتح الدليل، ثم أعد المحاولة.</span><br><br>
-                                <a href="https://t.me/CodeSubs" target="_blank" rel="noopener noreferrer" style="color: #00ff00; text-decoration: none; font-size: 22px; font-weight: bold;">اضغط هنا للانتقال إلى القناة</a>
-                            </h1><br>
-                            <button id="retryButton" style="padding: 15px 30px; background: linear-gradient(135deg, #007BFF, #0056b3); color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold; margin-top: 20px; transition: transform 0.3s, box-shadow 0.3s;">
-                                أعد المحاولة
-                            </button>
+                            <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #ff4f4f, #ff7575); animation: fadeIn 1s;">
+                                <div style="text-align: center; padding: 20px; border: 2px solid #fff; border-radius: 15px; background-color: rgba(0, 0, 0, 0.7); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); animation: slideDown 1s;">
+                                    <h1 style="color: #fff; font-size: 20px; font-weight: bold; margin-bottom: 10px;">حدث خطأ في فتح الدليل.</h1>
+                                    <button id="retryButton" style="padding: 15px 30px; background: linear-gradient(135deg, #007BFF, #0056b3); color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold; transition: transform 0.3s, box-shadow 0.3s;">
+                                        أعد المحاولة
+                                    </button>
+                                </div>
                             </div>
-                        </div>
                         `;
                         document.getElementById('retryButton').addEventListener('click', () => {
-                        window.location.reload();
+                            window.location.reload();
                         });
-                    }
-                    } catch (error) {
-                    console.error("Error during validation:", error);
-                    this.userJoined = false;
-                    // Display an error screen with a retry button.
-                    document.body.innerHTML = `
-                        <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #ff4f4f, #ff7575); animation: fadeIn 1s;">
-                        <div style="text-align: center; padding: 20px; border: 2px solid #fff; border-radius: 15px; background-color: rgba(0, 0, 0, 0.7); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); animation: slideDown 1s;">
-                            <h1 style="color: #fff; font-size: 20px; font-weight: bold; margin-bottom: 10px;">حدث خطأ في فتح الدليل.</h1>
-                            <button id="retryButton" style="padding: 15px 30px; background: linear-gradient(135deg, #007BFF, #0056b3); color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold; transition: transform 0.3s, box-shadow 0.3s;">
-                            أعد المحاولة
-                            </button>
-                        </div>
-                        </div>
-                    `;
-                    document.getElementById('retryButton').addEventListener('click', () => {
-                        window.location.reload();
-                    });
                     }
                 },
 
@@ -16321,7 +16382,8 @@
                             this.activeTab.mangas = groupIndex;
                         }
                     } else {
-                        console.log("Manga chapter not found");
+                        const enableDebug = false; // Set to true to enable debug logging
+                        if (enableDebug) console.log("Manga chapter not found");
                     }
                 },
 
@@ -16455,6 +16517,8 @@
             },
 
             mounted() {
+                const enableDebug = false; // Set to true to enable debug logging
+                
                 // Initialize zikr rotation
                 this.shuffleZikr();
                 this.intervalZikrId = setInterval(this.shuffleZikr, 3000);
@@ -16480,9 +16544,11 @@
                 window.addEventListener('resize', this.updateFontSize);
 
                 // Initialize episode time ago and set up interval to update it
-                console.log('mounted - Setting up episode time ago timer');
-                console.log('mounted - ep value:', this.ep);
-                console.log('mounted - episodes length:', this.episodes.length);
+                if (enableDebug) {
+                    console.log('mounted - Setting up episode time ago timer');
+                    console.log('mounted - ep value:', this.ep);
+                    console.log('mounted - episodes length:', this.episodes.length);
+                }
                 
                 // Only call if episodes are already loaded
                 if (this.episodes && this.episodes.length > 0) {
@@ -16491,35 +16557,35 @@
                     // If episodes aren't loaded yet, watch for changes
                     this.$watch('episodes', (newEpisodes) => {
                         if (newEpisodes && newEpisodes.length > 0) {
-                            console.log('Episodes loaded, updating time ago');
+                            if (enableDebug) console.log('Episodes loaded, updating time ago');
                             this.updateEpisodeTimeAgo();
                         }
                     });
                 }
                 
                 this.episodeTimeInterval = setInterval(() => {
-                    console.log('Timer tick - updating episode time ago');
+                    if (enableDebug) console.log('Timer tick - updating episode time ago');
                     this.updateEpisodeTimeAgo();
                 }, 60000); // Update every minute
-                console.log('mounted - Timer set up complete');
+                if (enableDebug) console.log('mounted - Timer set up complete');
                 
                 // Load manga update date and set up interval
-                console.log('mounted - Loading manga update date');
+                if (enableDebug) console.log('mounted - Loading manga update date');
                 this.loadMangaUpdateDate();
                 
                 this.mangaTimeInterval = setInterval(() => {
-                    console.log('Timer tick - updating manga time ago');
+                    if (enableDebug) console.log('Timer tick - updating manga time ago');
                     this.updateMangaTimeAgo();
                 }, 60000); // Update every minute
-                console.log('mounted - Manga timer set up complete');
+                if (enableDebug) console.log('mounted - Manga timer set up complete');
                 
                 // Initialize countdown timer for episode broadcast date
                 this.calculateCountdown();
                 this.episodeBroadcastCountdownInterval = setInterval(() => {
-                    console.log('Timer tick - updating countdown');
+                    if (enableDebug) console.log('Timer tick - updating countdown');
                     this.calculateCountdown();
                 }, 60000); // Update every minute
-                console.log('mounted - Countdown timer set up complete');
+                if (enableDebug) console.log('mounted - Countdown timer set up complete');
             },
 
             unmounted() {
