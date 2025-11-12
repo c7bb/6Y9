@@ -5873,7 +5873,7 @@
                                 </p>
 
                                 <p v-if="selectedEpisode && selectedEpisode.EpisodeBCDate !== ''" class="mb-2 text-lg">
-                                    <span dir="ltr">:تاريخ العرض</span> {{ selectedEpisode.EpisodeBCDate }} <span v-if="isLastEpisode && hasCountdown" @click="toggleCountdownLanguage" class="text-orange-300 text-sm cursor-pointer transition-all duration-100 active:scale-90">({{ showEnglishCountdown ? countdownEnglish : countdownArabic }})</span>
+                                    <span dir="ltr">:تاريخ العرض</span> {{ selectedEpisode.EpisodeBCDate }} <span v-if="hasFutureBroadcast && hasCountdown" @click="toggleCountdownLanguage" class="text-orange-300 text-sm cursor-pointer transition-all duration-100 active:scale-90">({{ showEnglishCountdown ? countdownEnglish : countdownArabic }})</span>
                                 </p>
 
                                 <p v-if="selectedEpisode && selectedEpisode.EpisodeRRDate !== ''" class="mb-2 text-lg">
@@ -6953,39 +6953,29 @@
                 },
                 
                 // Countdown computed properties
-                isLastEpisode() {
-                    if (!this.selectedEpisode || !this.episodes || this.episodes.length === 0) return false;
-                    
-                    // Filter episode numbers that don't contain special patterns
-                    const episodeNumber = this.selectedEpisode.EpisodeNumber;
-                    const filterPatterns = ['خاصة بالفيلم', 'الفيلم', 'قصة قصيرة', 'أوفا2', 'أوفا3', 'أوفا', 'إصدار خاص', 'ماجيك كايتو1', 'ماجيك كايتو2', 'يوميات زيرو', 'المجرم هانزاوا'];
-                    
-                    // Check if current episode is the last regular episode
-                    const regularEpisodes = this.episodes.filter(ep => {
-                        return !filterPatterns.some(pattern => ep.EpisodeNumber.includes(pattern));
-                    });
-                    
-                    if (regularEpisodes.length === 0) return false;
-                    
-                    // Get the highest episode number
-                    const highestEpisode = regularEpisodes.reduce((highest, current) => {
-                        const currentNum = parseInt(current.EpisodeNumber);
-                        const highestNum = parseInt(highest.EpisodeNumber);
-                        return !isNaN(currentNum) && !isNaN(highestNum) && currentNum > highestNum ? current : highest;
-                    }, regularEpisodes[0]);
-                    
-                    return this.selectedEpisode.EpisodeNumber === highestEpisode.EpisodeNumber;
-                },
-                
-                // Calculate the countdown date difference between the current date and the broadcast date
-                hasCountdown() {
+                hasFutureBroadcast() {
+                    // Check if the selected episode has a valid broadcast date in the future
                     if (!this.selectedEpisode || !this.selectedEpisode.EpisodeBCDate) return false;
                     
-                    const bcDate = new Date(this.selectedEpisode.EpisodeBCDate);
-                    const currentDate = new Date();
+                    try {
+                        const bcDate = new Date(this.selectedEpisode.EpisodeBCDate);
+                        const now = new Date();
+                        
+                        // If the broadcast date is in the future, allow countdown
+                        if (!isNaN(bcDate) && bcDate > now) {
+                            return true;
+                        }
+                    } catch (error) {
+                        console.error('Error checking episode date:', error);
+                    }
                     
-                    // If the broadcast date is in the future, show countdown
-                    return !isNaN(bcDate) && bcDate > currentDate;
+                    return false;
+                },
+                
+                // Check if countdown should be displayed - now handled by hasFutureBroadcast
+                hasCountdown() {
+                    // Simply use our hasFutureBroadcast property that checks date validity
+                    return this.hasFutureBroadcast;
                 },
 
                 hasNextMovieGroup() {
