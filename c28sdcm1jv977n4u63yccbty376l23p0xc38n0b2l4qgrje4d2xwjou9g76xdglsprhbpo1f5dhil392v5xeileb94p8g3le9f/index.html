@@ -14147,21 +14147,67 @@
                 closeModal() {
                     this.showModal = false;
                     document.body.style.overflow = ''; // Restore background scrolling
-                    // Reset status for all videos and mangas when closing modal
+                    
+                    // Reset status and clean up timers for all videos and mangas when closing modal
                     if (this.selectedEpisode) {
+                        // Handle videos
                         if (this.selectedEpisode.EpisodeVideosIDs) {
                             this.selectedEpisode.EpisodeVideosIDs.forEach((video, index) => {
+                                // Clear any running countdown intervals
+                                if (video.countdownInterval) {
+                                    clearInterval(video.countdownInterval);
+                                    video.countdownInterval = null;
+                                }
+                                video.countdown = undefined;
                                 this.selectedEpisode.EpisodeVideosIDs[index].status = null;
                             });
                         }
+                        
+                        // Handle mangas
                         if (this.selectedEpisode.EpisodeMangasIDs) {
                             this.selectedEpisode.EpisodeMangasIDs.forEach((manga, index) => {
+                                // Clear any running countdown intervals
+                                if (manga.countdownInterval) {
+                                    clearInterval(manga.countdownInterval);
+                                    manga.countdownInterval = null;
+                                }
+                                manga.countdown = undefined;
                                 this.selectedEpisode.EpisodeMangasIDs[index].status = null;
                             });
                         }
                     }
+                    
+                    // Clear the ratelimiting flag
+                    this.ratelimiting = false;
+                    this.errorMessage = "";
+                    
+                    // Store a temporary reference to the episode before nullifying it
+                    const tempEpisode = this.selectedEpisode;
                     this.selectedEpisode = null;
                     this.spoilerVisible = false;
+                    
+                    // Additional cleanup with setTimeout to ensure the component updates first
+                    setTimeout(() => {
+                        // Extra cleanup for any lingering intervals
+                        if (tempEpisode) {
+                            if (tempEpisode.EpisodeVideosIDs) {
+                                tempEpisode.EpisodeVideosIDs.forEach(video => {
+                                    if (video.countdownInterval) {
+                                        clearInterval(video.countdownInterval);
+                                        video.countdownInterval = null;
+                                    }
+                                });
+                            }
+                            if (tempEpisode.EpisodeMangasIDs) {
+                                tempEpisode.EpisodeMangasIDs.forEach(manga => {
+                                    if (manga.countdownInterval) {
+                                        clearInterval(manga.countdownInterval);
+                                        manga.countdownInterval = null;
+                                    }
+                                });
+                            }
+                        }
+                    }, 0);
                 },
 
                 openEmptyPopup() {
@@ -16093,42 +16139,54 @@
                 },
 
                 closeDirectWindow() {
+                    // Store references to the current objects before clearing them
+                    const tempEpisode = this.selectedEpisode;
+                    const tempManga = this.selectedManga;
+                    
                     // Reset status for all videos and episode mangas when closing modal 
-                    if (this.selectedEpisode) {
-                        if (this.selectedEpisode.EpisodeVideosIDs) {
-                        this.selectedEpisode.EpisodeVideosIDs.forEach((video, index) => {
-                            // Clear countdown interval if it exists
-                            if (video.countdownInterval) {
-                                clearInterval(video.countdownInterval);
-                                video.countdownInterval = null;
-                            }
-                            video.countdown = undefined;
-                            this.selectedEpisode.EpisodeVideosIDs[index].status = null;
-                        });
+                    if (tempEpisode) {
+                        if (tempEpisode.EpisodeVideosIDs) {
+                            tempEpisode.EpisodeVideosIDs.forEach((video, index) => {
+                                // Clear countdown interval if it exists
+                                if (video.countdownInterval) {
+                                    clearInterval(video.countdownInterval);
+                                    video.countdownInterval = null;
+                                }
+                                video.countdown = undefined;
+                                if (tempEpisode.EpisodeVideosIDs && index < tempEpisode.EpisodeVideosIDs.length) {
+                                    tempEpisode.EpisodeVideosIDs[index].status = null;
+                                }
+                            });
                         }
-                        if (this.selectedEpisode.EpisodeMangasIDs) {
-                        this.selectedEpisode.EpisodeMangasIDs.forEach((manga, index) => {
-                            // Clear countdown interval if it exists
-                            if (manga.countdownInterval) {
-                                clearInterval(manga.countdownInterval);
-                                manga.countdownInterval = null;
-                            }
-                            manga.countdown = undefined;
-                            this.selectedEpisode.EpisodeMangasIDs[index].status = null;
-                        });
+                        if (tempEpisode.EpisodeMangasIDs) {
+                            tempEpisode.EpisodeMangasIDs.forEach((manga, index) => {
+                                // Clear countdown interval if it exists
+                                if (manga.countdownInterval) {
+                                    clearInterval(manga.countdownInterval);
+                                    manga.countdownInterval = null;
+                                }
+                                manga.countdown = undefined;
+                                if (tempEpisode.EpisodeMangasIDs && index < tempEpisode.EpisodeMangasIDs.length) {
+                                    tempEpisode.EpisodeMangasIDs[index].status = null;
+                                }
+                            });
                         }
                     }
                     
                     // Additionally, reset the manga status if a manga is selected
-                    if (this.selectedManga) {
+                    if (tempManga) {
                         // Clear countdown interval if it exists
-                        if (this.selectedManga.countdownInterval) {
-                            clearInterval(this.selectedManga.countdownInterval);
-                            this.selectedManga.countdownInterval = null;
+                        if (tempManga.countdownInterval) {
+                            clearInterval(tempManga.countdownInterval);
+                            tempManga.countdownInterval = null;
                         }
-                        this.selectedManga.countdown = undefined;
-                        this.selectedManga.status = null;
+                        tempManga.countdown = undefined;
+                        tempManga.status = null;
                     }
+
+                    // Clear the ratelimiting flag
+                    this.ratelimiting = false;
+                    this.errorMessage = "";
 
                     // Close the modal
                     this.showDirectWindow = false;
@@ -16142,7 +16200,7 @@
                         this.resetMangasView();
                     }
 
-                    // Clear other selections
+                    // Clear selections
                     this.selectedEpisode = null;
                     this.selectedManga = null;
 
@@ -16152,6 +16210,33 @@
                         movies: 0,
                         mangas: 0
                     };
+                    
+                    // Additional cleanup with setTimeout to ensure proper timing
+                    setTimeout(() => {
+                        // Double-check any lingering intervals on the temporary references
+                        if (tempEpisode) {
+                            if (tempEpisode.EpisodeVideosIDs) {
+                                tempEpisode.EpisodeVideosIDs.forEach(video => {
+                                    if (video.countdownInterval) {
+                                        clearInterval(video.countdownInterval);
+                                        video.countdownInterval = null;
+                                    }
+                                });
+                            }
+                            if (tempEpisode.EpisodeMangasIDs) {
+                                tempEpisode.EpisodeMangasIDs.forEach(manga => {
+                                    if (manga.countdownInterval) {
+                                        clearInterval(manga.countdownInterval);
+                                        manga.countdownInterval = null;
+                                    }
+                                });
+                            }
+                        }
+                        if (tempManga && tempManga.countdownInterval) {
+                            clearInterval(tempManga.countdownInterval);
+                            tempManga.countdownInterval = null;
+                        }
+                    }, 0);
                 },
 
                 resetStatusForEpisodeManga() {
