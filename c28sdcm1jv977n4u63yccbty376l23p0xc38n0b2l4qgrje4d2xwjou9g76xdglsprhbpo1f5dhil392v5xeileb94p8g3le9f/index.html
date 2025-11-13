@@ -15601,7 +15601,7 @@
                 },
 
                 async sendEpisodeToBot(videoID, resolution, size, index, introductionTime, startStoryTime, episodeSuspenseTime, startSongTime, chapterOneTime, chapterTwoTime, endSongTime, chapterThreeTime, nextEpisodeTeaserTime, nextEpisodeHintTime) {
-                    if (!this.selectedEpisode.EpisodeNumber) {
+                    if (!this.selectedEpisode?.EpisodeNumber) {
                         return;
                     }
 
@@ -15689,21 +15689,27 @@
                         }
                     }
 
+                    // Store a reference to selectedEpisode before the timeout to prevent null reference errors
+                    const episodeRef = this.selectedEpisode;
+                    
                     // Clear status after 2 seconds
                     setTimeout(() => {
-                        // Clear countdown and interval for the clicked button
-                        if (this.selectedEpisode.EpisodeVideosIDs[index].countdownInterval) {
-                            clearInterval(this.selectedEpisode.EpisodeVideosIDs[index].countdownInterval);
-                            this.selectedEpisode.EpisodeVideosIDs[index].countdownInterval = null;
+                        // Check if references still exist before accessing them
+                        if (episodeRef?.EpisodeVideosIDs?.[index]) {
+                            // Clear countdown and interval for the clicked button
+                            if (episodeRef.EpisodeVideosIDs[index].countdownInterval) {
+                                clearInterval(episodeRef.EpisodeVideosIDs[index].countdownInterval);
+                                episodeRef.EpisodeVideosIDs[index].countdownInterval = null;
+                            }
+                            episodeRef.EpisodeVideosIDs[index].countdown = undefined;
+                            episodeRef.EpisodeVideosIDs[index].status = null;
                         }
-                        this.selectedEpisode.EpisodeVideosIDs[index].countdown = undefined;
                         
-                        this.selectedEpisode.EpisodeVideosIDs[index].status = null;
                         this.ratelimiting = false;
                         
                         // Clear ratelimiting status from all other buttons
-                        if (this.selectedEpisode.EpisodeVideosIDs) {
-                            this.selectedEpisode.EpisodeVideosIDs.forEach((video) => {
+                        if (episodeRef?.EpisodeVideosIDs) {
+                            episodeRef.EpisodeVideosIDs.forEach((video) => {
                                 if (video.status === 'ratelimiting') {
                                     video.status = null;
                                 }
@@ -15715,8 +15721,8 @@
                                 video.countdown = undefined;
                             });
                         }
-                        if (this.selectedEpisode.EpisodeMangasIDs) {
-                            this.selectedEpisode.EpisodeMangasIDs.forEach((manga) => {
+                        if (episodeRef?.EpisodeMangasIDs) {
+                            episodeRef.EpisodeMangasIDs.forEach((manga) => {
                                 if (manga.status === 'ratelimiting') {
                                     manga.status = null;
                                 }
@@ -15801,7 +15807,7 @@
                 },
 
                 async sendMangaToBot(fileId, mangaNumber, index) {
-                    if (!this.selectedEpisode.EpisodeNumber) {
+                    if (!this.selectedEpisode?.EpisodeNumber) {
                         return;
                     }
 
@@ -15837,21 +15843,27 @@
                         }
                     }
 
+                    // Store a reference to selectedEpisode before the timeout to prevent null reference errors
+                    const episodeRef = this.selectedEpisode;
+                    
                     // Clear status after 2 seconds
                     setTimeout(() => {
-                        // Clear countdown and interval for the clicked button
-                        if (this.selectedEpisode.EpisodeMangasIDs[index].countdownInterval) {
-                            clearInterval(this.selectedEpisode.EpisodeMangasIDs[index].countdownInterval);
-                            this.selectedEpisode.EpisodeMangasIDs[index].countdownInterval = null;
+                        // Check if references still exist before accessing them
+                        if (episodeRef?.EpisodeMangasIDs?.[index]) {
+                            // Clear countdown and interval for the clicked button
+                            if (episodeRef.EpisodeMangasIDs[index].countdownInterval) {
+                                clearInterval(episodeRef.EpisodeMangasIDs[index].countdownInterval);
+                                episodeRef.EpisodeMangasIDs[index].countdownInterval = null;
+                            }
+                            episodeRef.EpisodeMangasIDs[index].countdown = undefined;
+                            episodeRef.EpisodeMangasIDs[index].status = null;
                         }
-                        this.selectedEpisode.EpisodeMangasIDs[index].countdown = undefined;
                         
-                        this.selectedEpisode.EpisodeMangasIDs[index].status = null;
                         this.ratelimiting = false;
                         
                         // Clear ratelimiting status from all other buttons
-                        if (this.selectedEpisode.EpisodeVideosIDs) {
-                            this.selectedEpisode.EpisodeVideosIDs.forEach((video) => {
+                        if (episodeRef?.EpisodeVideosIDs) {
+                            episodeRef.EpisodeVideosIDs.forEach((video) => {
                                 if (video.status === 'ratelimiting') {
                                     video.status = null;
                                 }
@@ -15863,8 +15875,8 @@
                                 video.countdown = undefined;
                             });
                         }
-                        if (this.selectedEpisode.EpisodeMangasIDs) {
-                            this.selectedEpisode.EpisodeMangasIDs.forEach((manga) => {
+                        if (episodeRef?.EpisodeMangasIDs) {
+                            episodeRef.EpisodeMangasIDs.forEach((manga) => {
                                 if (manga.status === 'ratelimiting') {
                                     manga.status = null;
                                 }
@@ -15910,21 +15922,27 @@
                         if (this.selectedManga.status === "error") return;
                     }
 
+                    // Store references to objects before they might be nullified
+                    const mangaRef = this.selectedManga;
+                    const episodeRef = this.selectedEpisode;
+                    
                     // Clear status after 2 seconds
                     setTimeout(() => {
-                        // Clear countdown and interval for the clicked button
-                        if (this.selectedManga.countdownInterval) {
-                            clearInterval(this.selectedManga.countdownInterval);
-                            this.selectedManga.countdownInterval = null;
+                        // Clear countdown and interval for the clicked button if it still exists
+                        if (mangaRef?.countdownInterval) {
+                            clearInterval(mangaRef.countdownInterval);
+                            mangaRef.countdownInterval = null;
                         }
-                        this.selectedManga.countdown = undefined;
+                        if (mangaRef) {
+                            mangaRef.countdown = undefined;
+                            mangaRef.status = null;
+                        }
                         
-                        this.selectedManga.status = null;
                         this.ratelimiting = false;
                         
                         // Clear ratelimiting status from all other buttons
-                        if (this.selectedEpisode?.EpisodeVideosIDs) {
-                            this.selectedEpisode.EpisodeVideosIDs.forEach((video) => {
+                        if (episodeRef?.EpisodeVideosIDs) {
+                            episodeRef.EpisodeVideosIDs.forEach((video) => {
                                 if (video.status === 'ratelimiting') {
                                     video.status = null;
                                 }
@@ -15936,8 +15954,8 @@
                                 video.countdown = undefined;
                             });
                         }
-                        if (this.selectedEpisode?.EpisodeMangasIDs) {
-                            this.selectedEpisode.EpisodeMangasIDs.forEach((manga) => {
+                        if (episodeRef?.EpisodeMangasIDs) {
+                            episodeRef.EpisodeMangasIDs.forEach((manga) => {
                                 if (manga.status === 'ratelimiting') {
                                     manga.status = null;
                                 }
