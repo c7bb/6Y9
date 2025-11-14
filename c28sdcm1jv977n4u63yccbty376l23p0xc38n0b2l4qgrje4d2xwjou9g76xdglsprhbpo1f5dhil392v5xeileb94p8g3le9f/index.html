@@ -13743,7 +13743,8 @@
                     const diffSeconds = Math.floor(diffMs / 1000);
                     const diffMinutes = Math.floor(diffMs / (1000 * 60));
                     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-                    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                    const diffDaysDecimal = diffMs / (1000 * 60 * 60 * 24);
+                    const diffDays = Math.floor(diffDaysDecimal);
                     const diffMonths = Math.floor(diffDays / 30);
                     const diffYears = Math.floor(diffDays / 365);
 
