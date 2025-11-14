@@ -13597,18 +13597,18 @@
                         timeAgoText = (hasExtraHours ? moreThan : '') + `${diffDays} أيام مضت`;
                     } else if (diffDays >= 11 && diffDays < 30) {
                         timeAgoText = (hasExtraHours ? moreThan : '') + `${diffDays} يومًا مضت`;
-                    } else if (diffMonths === 1 && !hasExtraDays) {
+                    } else if (diffMonths === 1 && !hasExtraDays && !hasExtraHours && !hasExtraMinutes) {
                         timeAgoText = 'شهر مضى';
-                    } else if (diffMonths === 1 && hasExtraDays) {
+                    } else if (diffMonths === 1 && (hasExtraDays || hasExtraHours || hasExtraMinutes)) {
                         timeAgoText = moreThan + 'شهر مضى';
-                    } else if (diffMonths === 2 && !hasExtraDays) {
+                    } else if (diffMonths === 2 && !hasExtraDays && !hasExtraHours && !hasExtraMinutes) {
                         timeAgoText = 'شهران مضيا';
-                    } else if (diffMonths === 2 && hasExtraDays) {
+                    } else if (diffMonths === 2 && (hasExtraDays || hasExtraHours || hasExtraMinutes)) {
                         timeAgoText = moreThan + 'شهران مضيا';
                     } else if (diffMonths >= 3 && diffMonths <= 10) {
-                        timeAgoText = (hasExtraDays ? moreThan : '') + `${diffMonths} أشهر مضت`;
+                        timeAgoText = ((hasExtraDays || hasExtraHours || hasExtraMinutes) ? moreThan : '') + `${diffMonths} أشهر مضت`;
                     } else if (diffMonths >= 11 && diffMonths < 12) {
-                        timeAgoText = (hasExtraDays ? moreThan : '') + `${diffMonths} شهرًا مضت`;
+                        timeAgoText = ((hasExtraDays || hasExtraHours || hasExtraMinutes) ? moreThan : '') + `${diffMonths} شهرًا مضت`;
                     } else if (diffYears === 1 && !hasExtraMonths) {
                         timeAgoText = 'سنة مضت';
                     } else if (diffYears === 1 && hasExtraMonths) {
@@ -13797,18 +13797,18 @@
                         timeAgoText = (hasExtraHours ? moreThan : '') + `${diffDays} أيام مضت`;
                     } else if (diffDays >= 11 && diffDays < 30) {
                         timeAgoText = (hasExtraHours ? moreThan : '') + `${diffDays} يومًا مضت`;
-                    } else if (diffMonths === 1 && !hasExtraDays) {
+                    } else if (diffMonths === 1 && !hasExtraDays && !hasExtraHours && !hasExtraMinutes) {
                         timeAgoText = 'شهر مضى';
-                    } else if (diffMonths === 1 && hasExtraDays) {
+                    } else if (diffMonths === 1 && (hasExtraDays || hasExtraHours || hasExtraMinutes)) {
                         timeAgoText = moreThan + 'شهر مضى';
-                    } else if (diffMonths === 2 && !hasExtraDays) {
+                    } else if (diffMonths === 2 && !hasExtraDays && !hasExtraHours && !hasExtraMinutes) {
                         timeAgoText = 'شهران مضيا';
-                    } else if (diffMonths === 2 && hasExtraDays) {
+                    } else if (diffMonths === 2 && (hasExtraDays || hasExtraHours || hasExtraMinutes)) {
                         timeAgoText = moreThan + 'شهران مضيا';
                     } else if (diffMonths >= 3 && diffMonths <= 10) {
-                        timeAgoText = (hasExtraDays ? moreThan : '') + `${diffMonths} أشهر مضت`;
+                        timeAgoText = ((hasExtraDays || hasExtraHours || hasExtraMinutes) ? moreThan : '') + `${diffMonths} أشهر مضت`;
                     } else if (diffMonths >= 11 && diffMonths < 12) {
-                        timeAgoText = (hasExtraDays ? moreThan : '') + `${diffMonths} شهرًا مضت`;
+                        timeAgoText = ((hasExtraDays || hasExtraHours || hasExtraMinutes) ? moreThan : '') + `${diffMonths} شهرًا مضت`;
                     } else if (diffYears === 1 && !hasExtraMonths) {
                         timeAgoText = 'سنة مضت';
                     } else if (diffYears === 1 && hasExtraMonths) {
