@@ -5644,7 +5644,7 @@
 
                             <!-- Side Navigation Buttons -->
                             <button
-                                :disabled="!previousEpisodeByNumberExists || selectedEpisode.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')" 
+                                :disabled="!hasPreviousFilteredEpisode || selectedEpisode.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')" 
                                 @click="fetchPreviousEpisodeByNumber(); resetStatusForEpisodeManga();" 
                                 class="modal-nav-btn absolute top-[55%] transform -translate-y-1/2 rounded-full p-2 md:p-3 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90 z-10"
                             >
@@ -5653,7 +5653,7 @@
                             
 
                             <button 
-                                :disabled="!nextEpisodeByNumberExists || selectedEpisode.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')" 
+                                :disabled="!hasNextFilteredEpisode || selectedEpisode.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')" 
                                 @click="fetchNextEpisodeByNumber(); resetStatusForEpisodeManga();" 
                                 class="modal-nav-btn absolute top-[70%] transform -translate-y-1/2 rounded-full p-2 md:p-3 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90 z-10"
                             >
@@ -6918,6 +6918,28 @@
 
                 showPreviousGroupButton() {
                     return this.isFirstEpisodeInGroup && this.hasPreviousEpisodeGroup;
+                },
+
+                hasNextFilteredEpisode() {
+                    if (!this.selectedEpisode) return false;
+                    
+                    const filteredEps = this.filteredEpisodes;
+                    const currentIndex = filteredEps.findIndex(
+                        ep => ep.EpisodeNumber === this.selectedEpisode.EpisodeNumber
+                    );
+                    
+                    return currentIndex !== -1 && currentIndex < filteredEps.length - 1;
+                },
+
+                hasPreviousFilteredEpisode() {
+                    if (!this.selectedEpisode) return false;
+                    
+                    const filteredEps = this.filteredEpisodes;
+                    const currentIndex = filteredEps.findIndex(
+                        ep => ep.EpisodeNumber === this.selectedEpisode.EpisodeNumber
+                    );
+                    
+                    return currentIndex !== -1 && currentIndex > 0;
                 },
 
                 hasNextMovie() {
