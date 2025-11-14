@@ -5493,7 +5493,7 @@
                                 </div>
                                 <div class="flex items-center gap-2" v-tippy="'أفلام لا علاقة لها بالقصة الأساسية وعالمها منفصل'">
                                     <span class="w-6 h-6 bg-amber-800 rounded-full"></span>
-                                    <span>فلم</span>
+                                    <span>فيلم</span>
                                 </div>
                                 <div class="flex items-center gap-2" v-tippy="'حلقات تمتد لفترة أطول من الحلقة العادية التي مدتها 24 دقيقة، حيث يصل بعضها إلى ساعة ونصف'">
                                     <span class="w-6 h-6 bg-sky-800 rounded-full"></span>
@@ -11091,13 +11091,13 @@
                     return this.filteredEpisodes.length; // Calculates based on the filtered episodes
                 },
                 episodeNumberHeader() {
-                    return this.selectedFilter === 'movies' ? 'رقم الفلم' : 'رقم الحلقة';
+                    return this.selectedFilter === 'movies' ? 'رقم الفيلم' : 'رقم الحلقة';
                 },
                 episodeTitleHeader() {
-                    return this.selectedFilter === 'movies' ? 'عنوان الفلم' : 'عنوان الحلقة';
+                    return this.selectedFilter === 'movies' ? 'عنوان الفيلم' : 'عنوان الحلقة';
                 },
                 episodeTypeLegend() {
-                    return this.selectedFilter === 'movies' ? 'نوع الفلم' : 'نوع الحلقة';
+                    return this.selectedFilter === 'movies' ? 'نوع الفيلم' : 'نوع الحلقة';
                 },
 
                 tooltipText() {
@@ -15597,13 +15597,16 @@
 
                 fetchNextEpisodeByNumber() {
                     this.spoilerVisible = false;
-                    // Find the current episode's index
-                    const currentIndex = this.episodes.findIndex(
+                    // Get the filtered episodes based on current filter
+                    const filteredEps = this.filteredEpisodes;
+                    
+                    // Find the current episode's index in the filtered array
+                    const currentIndex = filteredEps.findIndex(
                         (ep) => ep.EpisodeNumber === this.selectedEpisode.EpisodeNumber
                     );
 
-                    // Find the next episode by array order
-                    const nextEpisode = this.episodes[currentIndex + 1];
+                    // Find the next episode by filtered array order
+                    const nextEpisode = filteredEps[currentIndex + 1];
 
                     if (nextEpisode) {
                         this.openModal(nextEpisode); // Open the modal for the next episode
@@ -15614,13 +15617,16 @@
 
                 fetchPreviousEpisodeByNumber() {
                     this.spoilerVisible = false;
-                    // Find the current episode's index
-                    const currentIndex = this.episodes.findIndex(
+                    // Get the filtered episodes based on current filter
+                    const filteredEps = this.filteredEpisodes;
+                    
+                    // Find the current episode's index in the filtered array
+                    const currentIndex = filteredEps.findIndex(
                         (ep) => ep.EpisodeNumber === this.selectedEpisode.EpisodeNumber
                     );
 
-                    // Find the previous episode by array order
-                    const previousEpisode = this.episodes[currentIndex - 1];
+                    // Find the previous episode by filtered array order
+                    const previousEpisode = filteredEps[currentIndex - 1];
 
                     if (previousEpisode) {
                         this.openModal(previousEpisode); // Open the modal for the previous episode
