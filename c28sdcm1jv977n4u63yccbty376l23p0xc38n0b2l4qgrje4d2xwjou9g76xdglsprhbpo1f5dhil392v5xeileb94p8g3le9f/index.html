@@ -792,8 +792,8 @@
                                         <div class="flex-grow text-center">
                                             <button
                                                 :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')"
-                                                @click="resetStatusForEpisodeManga(); openEpisodeModal(selectedEpisode.EpisodeNumber)"
-                                                class="text-lg font-bold underline text-blue-400 hover:text-blue-300 bg-transparent border-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90"
+                                                @click="preserveSelectedEpisodeOnModalClose = true; resetStatusForEpisodeManga(); openEpisodeModal(selectedEpisode.EpisodeNumber)"
+                                                class="text-lg font-bold underline hover:text-blue-300 bg-transparent border-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90"
                                             >
                                                 {{ selectedEpisode.EpisodeNumber }}
                                             </button>
@@ -878,8 +878,8 @@
                                         <div class="flex-grow text-center">
                                             <button
                                                 :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')"
-                                                @click="resetStatusForEpisodeManga(); openEpisodeModal(selectedEpisode.EpisodeNumber)"
-                                                class="text-lg font-bold underline text-blue-400 hover:text-blue-300 bg-transparent border-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90"
+                                                @click="preserveSelectedEpisodeOnModalClose = true; resetStatusForEpisodeManga(); openEpisodeModal(selectedEpisode.EpisodeNumber)"
+                                                class="text-lg font-bold underline hover:text-blue-300 bg-transparent border-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90"
                                             >
                                                 {{ selectedEpisode.EpisodeNumber.replace('الفيلم ', '') }}
                                             </button>
@@ -6174,6 +6174,7 @@
                     pageSize: 15,
                     showModal: false,
                     selectedEpisode: null,
+                    preserveSelectedEpisodeOnModalClose: false,
                     showMangaButtons: false,
                     filterBlackOrganization: false,
                     filterDetectiveBoys: false,
@@ -14245,7 +14246,9 @@
                     
                     // Store a temporary reference to the episode before nullifying it
                     const tempEpisode = this.selectedEpisode;
-                    this.selectedEpisode = null;
+                    if (!this.preserveSelectedEpisodeOnModalClose) {
+                        this.selectedEpisode = null;
+                        }
                     this.spoilerVisible = false;
                     
                     // Additional cleanup with setTimeout to ensure the component updates first
@@ -14270,6 +14273,7 @@
                             }
                         }
                     }, 0);
+                    this.preserveSelectedEpisodeOnModalClose = false;
                 },
 
                 openEmptyPopup() {
