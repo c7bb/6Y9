@@ -5631,6 +5631,13 @@
                                 (البحث قيد التشغيل حالياً)
                             </span>
                             <br v-if="searchQuery" />
+                            <span
+                                v-if="!(selectedFilter.value === 'all' && episodeTypeFilter.value === 'All')"
+                                class="inline-block mt-2 px-3 py-1 text-base font-semibold text-white bg-orange-500 rounded"
+                            >
+                                ({{ selectedFilter.value }}) - ({{ episodeTypeFilter.value }})
+                            </span>
+                            <br v-if="!(selectedFilter.value === 'all' && episodeTypeFilter.value === 'All')" />
                             <span :class="['text-base', (isAnyFilterActive || searchQuery) ? 'text-white' : 'text-red-600']">
                                 انقر على أي عنوان لعرض تفاصيله
                             </span>
