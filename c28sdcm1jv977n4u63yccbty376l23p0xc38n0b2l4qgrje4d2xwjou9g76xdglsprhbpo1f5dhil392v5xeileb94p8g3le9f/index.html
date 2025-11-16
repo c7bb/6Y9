@@ -5656,7 +5656,7 @@
 
                             <!-- Side Navigation Buttons -->
                             <button
-                                :disabled="!hasPreviousFilteredEpisode || selectedEpisode.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')" 
+                                :disabled="!hasPreviousFilteredEpisode || selectedEpisode.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending') || preserveSelectedEpisodeOnModalClose" 
                                 @click="fetchPreviousEpisodeByNumber(); resetStatusForEpisodeManga();" 
                                 class="modal-nav-btn absolute top-[55%] transform -translate-y-1/2 rounded-full p-2 md:p-3 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90 z-10"
                             >
@@ -5665,7 +5665,7 @@
                             
 
                             <button 
-                                :disabled="!hasNextFilteredEpisode || selectedEpisode.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')" 
+                                :disabled="!hasNextFilteredEpisode || selectedEpisode.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending') || preserveSelectedEpisodeOnModalClose" 
                                 @click="fetchNextEpisodeByNumber(); resetStatusForEpisodeManga();" 
                                 class="modal-nav-btn absolute top-[70%] transform -translate-y-1/2 rounded-full p-2 md:p-3 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90 z-10"
                             >
@@ -5680,7 +5680,7 @@
                                         <!-- Next Episode Button -->
                                         <button 
                                             v-if="selectedEpisode.EpisodeParts" 
-                                            :disabled="!nextEpisodeExists || selectedEpisode.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')" 
+                                            :disabled="!nextEpisodeExists || selectedEpisode.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending') || preserveSelectedEpisodeOnModalClose" 
                                             @click="fetchNextEpisode(); resetStatusForEpisodeManga();" 
                                             class="ml-12 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90"
                                         >
@@ -5690,7 +5690,7 @@
                                         <!-- Previous Episode Button -->
                                         <button 
                                             v-if="selectedEpisode.EpisodeParts" 
-                                            :disabled="!previousEpisodeExists || selectedEpisode.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')" 
+                                            :disabled="!previousEpisodeExists || selectedEpisode.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending') || preserveSelectedEpisodeOnModalClose" 
                                             @click="fetchPreviousEpisode(); resetStatusForEpisodeManga();" 
                                             class="disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90"
                                         >
@@ -6052,6 +6052,10 @@
                                         </div>
                                     </div>
                                 </fieldset>
+
+                                <p class="text-xs text-red-400">
+                                    preserveSelectedEpisodeOnModalClose: {{ preserveSelectedEpisodeOnModalClose }}
+                                </p>
 
                             </div>
                         </div>
