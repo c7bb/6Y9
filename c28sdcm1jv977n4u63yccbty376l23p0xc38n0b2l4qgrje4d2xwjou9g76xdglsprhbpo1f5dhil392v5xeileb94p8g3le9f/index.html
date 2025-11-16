@@ -5630,14 +5630,14 @@
                             <span v-if="searchQuery" @click="toggleSearch" class="inline-block text-base text-black cursor-pointer transition-all duration-100 active:scale-90">
                                 (البحث قيد التشغيل حالياً)
                             </span>
+                            <span :class="combinedFilterBadgeClasses">
+                                ({{ selectedFilterLabel }} - {{ episodeTypeFilterLabel }})
+                            </span>
                             <br v-if="searchQuery" />
                             <span :class="['text-base', (isAnyFilterActive || searchQuery) ? 'text-white' : 'text-red-600']">
                                 انقر على أي عنوان لعرض تفاصيله
                             </span>
                             <br />
-                            <span :class="combinedFilterBadgeClasses">
-                                ({{ selectedFilterLabel }}) - ({{ episodeTypeFilterLabel }})
-                            </span>
                         </th>                                                                          
                     </tr>
                 </thead>
@@ -11171,7 +11171,7 @@
                     const isDefaultSelection = this.selectedFilter === 'all' && this.episodeTypeFilter === 'All';
                     return [
                         'inline-block text-base font-bold px-3 py-1 rounded transition-all duration-100',
-                        isDefaultSelection ? 'bg-transparent text-red-600' : 'bg-orange-500 text-white'
+                        isDefaultSelection ? '' : 'bg-orange-500 text-white'
                     ];
                 },
 
