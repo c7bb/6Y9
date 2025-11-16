@@ -5631,15 +5631,12 @@
                                 (البحث قيد التشغيل حالياً)
                             </span>
                             <br v-if="searchQuery" />
-                            <span
-                                v-if="!(selectedFilter.value === 'all' && episodeTypeFilter.value === 'All')"
-                                class="inline-block mt-2 px-3 py-1 text-base font-semibold text-white bg-orange-500 rounded"
-                            >
-                                ({{ selectedFilter.value }}) - ({{ episodeTypeFilter.value }})
-                            </span>
-                            <br v-if="!(selectedFilter.value === 'all' && episodeTypeFilter.value === 'All')" />
                             <span :class="['text-base', (isAnyFilterActive || searchQuery) ? 'text-white' : 'text-red-600']">
                                 انقر على أي عنوان لعرض تفاصيله
+                            </span>
+                            <br />
+                            <span :class="combinedFilterBadgeClasses">
+                                ({{ selectedFilterLabel }}) - ({{ episodeTypeFilterLabel }})
                             </span>
                         </th>                                                                          
                     </tr>
@@ -11141,6 +11138,41 @@
                 },
                 episodeTypeLegend() {
                     return this.selectedFilter === 'movies' ? 'نوع الفيلم' : 'نوع الحلقة';
+                },
+
+                selectedFilterLabel() {
+                    const labels = {
+                        all: 'الكل',
+                        anime: 'الحلقات',
+                        movies: 'أفلام',
+                        hourly_special: 'خاصة (ساعة)',
+                        two_hour_special: 'خاصة (ساعتين)',
+                        short_story: 'قصة قصيرة',
+                        ova: 'أوفا',
+                        movie_special: 'خاصة بالفيلم',
+                        special_release: 'إصدار خاص',
+                        magic_kaito: 'ماجيك كايتو',
+                        zero_diaries: 'يوميات زيرو',
+                        criminal_hanzawa: 'المجرم هانزاوا'
+                    };
+                    return labels[this.selectedFilter] || 'الكل';
+                },
+
+                episodeTypeFilterLabel() {
+                    const labels = {
+                        All: 'الكل',
+                        Manga: 'مانغا',
+                        Filler: 'فِلر'
+                    };
+                    return labels[this.episodeTypeFilter] || 'الكل';
+                },
+
+                combinedFilterBadgeClasses() {
+                    const isDefaultSelection = this.selectedFilter === 'all' && this.episodeTypeFilter === 'All';
+                    return [
+                        'inline-block text-base font-bold px-3 py-1 rounded transition-all duration-100',
+                        isDefaultSelection ? 'bg-transparent text-red-600' : 'bg-orange-500 text-white'
+                    ];
                 },
 
                 tooltipText() {
