@@ -14002,43 +14002,20 @@
                 },
 
                     // Update page size and recalculate total pages
-handlePageSizeChange() {
-    // حماية أولية
-    if (!Array.isArray(this.filteredItems) || this.filteredItems.length === 0) {
-        // reset فقط
-        this.currentPage = 1;
-        this.trackLastPage();
-        return;
-    }
+                    handlePageSizeChange() {
+                        const startIndex = (this.currentPage - 1) * this.oldPageSize;
+                        this.currentPage = Math.floor(startIndex / this.pageSize) + 1;
 
-    const firstItem = this.filteredItems[0];
-    if (!firstItem) {
-        this.currentPage = 1;
-        this.trackLastPage();
-        return;
-    }
-
-    const newSize = this.pageSize;
-
-    // ابحث عن نفس العنصر
-    const newIndex = this.filteredItems.findIndex(x => x.id === firstItem.id);
-
-    if (newIndex === -1) {
-        // العنصر اختفى بعد البحث/التصفية
-        this.currentPage = 1;
-        this.trackLastPage();
-        return;
-    }
-
-    // حساب الصفحة
-    this.currentPage = Math.floor(newIndex / newSize) + 1;
-
-    if (this.currentPage < 1) this.currentPage = 1;
-    if (this.currentPage > this.totalPages) this.currentPage = this.totalPages;
-
-    this.trackLastPage();
-},
-
+                        if (this.currentPage > this.totalPages) {
+                            this.currentPage = this.totalPages;
+                        }
+                        if (this.currentPage < 1) {
+                            this.currentPage = 1;
+                        }
+                        
+                        this.oldPageSize = this.pageSize;
+                        this.trackLastPage();
+                    },
 
                 normalizeText(text) {
                     let normalizedText = text.toLowerCase();
