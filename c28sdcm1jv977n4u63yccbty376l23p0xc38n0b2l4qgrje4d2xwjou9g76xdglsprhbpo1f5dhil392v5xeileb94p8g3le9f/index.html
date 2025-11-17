@@ -15783,7 +15783,7 @@
                     if (nextEpisodeTeaserTime) details += `\n*تشويق الحلقة القادمة:* ${escapeMarkdown(nextEpisodeTeaserTime)}`;
                     if (nextEpisodeHintTime) details += `\n*تلميح الحلقة القادمة:* ${escapeMarkdown(nextEpisodeHintTime)}`;
 
-                    let caption = `*${label} ${episodeNumber}\nالجودة: ${resolution}\nالحجم: ${this.formatFileSize(size)}*`;
+                    let caption = `*${label} ${episodeNumber}\nالجودة: ${resolution}\nالحجم: ${this.formatFileSize(size, true)}*`;
                     if (details) caption += `\n\n*✦✦— محتويات الحلقة —✦✦*${details}`;
 
                     this.selectedEpisode.EpisodeVideosIDs[index].status = 'sending';
@@ -15938,7 +15938,7 @@
                         });
                     }
 
-                    const caption = `*الفصل: ${mangaNumber}\nالحجم: ${this.formatFileSize(this.selectedEpisode.EpisodeMangasIDs[index].MangaFileSize)}*`;
+                    const caption = `*الفصل: ${mangaNumber}\nالحجم: ${this.formatFileSize(this.selectedEpisode.EpisodeMangasIDs[index].MangaFileSize, true)}*`;
 
                     this.selectedEpisode.EpisodeMangasIDs[index].status = 'sending';
 
@@ -16019,7 +16019,7 @@
                         });
                     }
 
-                    const caption = `*الفصل: ${mangaNumber}\nالحجم: ${this.formatFileSize(this.selectedManga.MangaFileSize)}*`;
+                    const caption = `*الفصل: ${mangaNumber}\nالحجم: ${this.formatFileSize(this.selectedManga.MangaFileSize, true)}*`;
 
                     this.selectedManga.status = 'sending';
 
@@ -16230,7 +16230,7 @@
                     }
                 },
 
-                formatFileSize(size) {
+                formatFileSize(size, arabic = false) {
                     const numericSize = parseFloat(size);
 
                     if (isNaN(numericSize)) {
@@ -16239,10 +16239,12 @@
 
                     if (numericSize >= 1024) {
                         const gbSize = numericSize / 1024;
-                        return `${Number.isInteger(gbSize) ? gbSize : gbSize.toFixed(2)} GB`;
+                        const formattedSize = Number.isInteger(gbSize) ? gbSize : gbSize.toFixed(2);
+                        return arabic ? `${formattedSize} جيجا` : `${formattedSize} GB`;
                     }
 
-                    return `${Number.isInteger(numericSize) ? numericSize : numericSize.toFixed(2)} MB`;
+                    const formattedSize = Number.isInteger(numericSize) ? numericSize : numericSize.toFixed(2);
+                    return arabic ? `${formattedSize} ميجا` : `${formattedSize} MB`;
                 },
 
                 toggleMenu() {
