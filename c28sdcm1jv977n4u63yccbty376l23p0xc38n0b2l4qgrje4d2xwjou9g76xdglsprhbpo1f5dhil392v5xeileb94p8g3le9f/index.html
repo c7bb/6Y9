@@ -814,9 +814,9 @@
                                             :disabled="video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending'"
                                             @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
                                             class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed">
-                                            <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ video.Size }} MB)</span>
+                                            <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ formatFileSize(video.Size) }})</span>
                                             <span v-else-if="video.countdown !== undefined">{{ video.countdown }}</span>
-                                            <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
+                                            <span v-else>{{ video.Resolution }} ({{ formatFileSize(video.Size) }})</span>
                                         </button>
                                         <img 
                                             v-if="video.status === 'success'" 
@@ -900,9 +900,9 @@
                                             :disabled="video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending'"
                                             @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
                                             class="bg-amber-700 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed">
-                                            <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ video.Size }} MB)</span>
+                                            <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ formatFileSize(video.Size) }})</span>
                                             <span v-else-if="video.countdown !== undefined">{{ video.countdown }}</span>
-                                            <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
+                                            <span v-else>{{ video.Resolution }} ({{ formatFileSize(video.Size) }})</span>
                                         </button>
                                         <img 
                                             v-if="video.status === 'success'" 
@@ -979,9 +979,9 @@
                                                 :disabled="selectedManga.status === 'success' || selectedManga.status === 'ratelimiting' || selectedManga.status === 'sending'"
                                                 @click="sendMangaToBotD(selectedManga.MangaFileID, selectedManga.MangaNumber, 0)"
                                                 class="w-full bg-green-500 text-white px-6 py-2 rounded hover:bg-blue-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed" dir="ltr">
-                                                <span v-if="selectedManga.status === 'ratelimiting'">{{ formatMangaSize(selectedManga.MangaFileSize) }}</span>
+                                                <span v-if="selectedManga.status === 'ratelimiting'">{{ formatFileSize(selectedManga.MangaFileSize) }}</span>
                                                 <span v-else-if="selectedManga.countdown !== undefined">{{ selectedManga.countdown }}</span>
-                                                <span v-else>{{ formatMangaSize(selectedManga.MangaFileSize) }}</span>
+                                                <span v-else>{{ formatFileSize(selectedManga.MangaFileSize) }}</span>
                                             </button>
                                             <img 
                                                 v-if="selectedManga.status === 'success'" 
@@ -5821,9 +5821,9 @@
                                             class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-700 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed"
                                             dir="ltr"
                                         >
-                                            <span v-if="manga.status === 'ratelimiting'">{{ manga.MangaNumber }} ({{ formatMangaSize(manga.MangaFileSize) }})</span>
+                                            <span v-if="manga.status === 'ratelimiting'">{{ manga.MangaNumber }} ({{ formatFileSize(manga.MangaFileSize) }})</span>
                                             <span v-else-if="manga.countdown !== undefined">{{ manga.countdown }}</span>
-                                            <span v-else>{{ manga.MangaNumber }} ({{ formatMangaSize(manga.MangaFileSize) }})</span>
+                                            <span v-else>{{ manga.MangaNumber }} ({{ formatFileSize(manga.MangaFileSize) }})</span>
                                         </button>
                                         <img 
                                             v-if="manga.status === 'success'" 
@@ -6038,9 +6038,9 @@
                                                 :disabled="video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending'"
                                                 @click="() => { sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime); }"
                                                 class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed">
-                                                <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ video.Size }} MB)</span>
+                                                <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ formatFileSize(video.Size) }})</span>
                                                 <span v-else-if="video.countdown !== undefined">{{ video.countdown }}</span>
-                                            <span v-else>{{ video.Resolution }} ({{ video.Size }} MB)</span>
+                                            <span v-else>{{ video.Resolution }} ({{ formatFileSize(video.Size) }})</span>
                                             </button>
                                             <img 
                                                 v-if="video.status === 'success'" 
@@ -16230,8 +16230,19 @@
                     }
                 },
 
-                formatMangaSize(size) {
-                    return `${size} MB`;
+                formatFileSize(size) {
+                    const numericSize = parseFloat(size);
+
+                    if (isNaN(numericSize)) {
+                        return size;
+                    }
+
+                    if (numericSize >= 1024) {
+                        const gbSize = numericSize / 1024;
+                        return `${Number.isInteger(gbSize) ? gbSize : gbSize.toFixed(2)} GB`;
+                    }
+
+                    return `${Number.isInteger(numericSize) ? numericSize : numericSize.toFixed(2)} MB`;
                 },
 
                 toggleMenu() {
