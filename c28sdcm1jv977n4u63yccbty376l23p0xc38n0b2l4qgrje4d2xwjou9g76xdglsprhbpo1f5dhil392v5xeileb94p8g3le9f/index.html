@@ -5619,7 +5619,6 @@
                                 class="inline-block text-base text-black transition-all duration-100"
                             >
                                 <template v-if="isAnyFilterActive && searchQuery">
-                                    (
                                     <span class="inline-block text-base text-black cursor-pointer transition-all duration-100 active:scale-90" @click="toggleSearch">
                                         البحث
                                     </span>
@@ -5627,16 +5626,16 @@
                                     <span class="inline-block text-base text-black cursor-pointer transition-all duration-100 active:scale-90" @click="openEmptyPopup">
                                         التصفية
                                     </span>
-                                    قيد التشغيل حالياً)
+                                    قيد التشغيل حاليًا.
                                 </template>
                                 <template v-else-if="isAnyFilterActive">
                                     <span class="inline-block text-base text-black cursor-pointer transition-all duration-100 active:scale-90" @click="openEmptyPopup">
-                                        (التصفية قيد التشغيل حالياً)
+                                        التصفية قيد التشغيل حاليًا.
                                     </span>
                                 </template>
                                 <template v-else>
                                     <span class="inline-block text-base text-black cursor-pointer transition-all duration-100 active:scale-90" @click="toggleSearch">
-                                        (البحث قيد التشغيل حالياً)
+                                        البحث قيد التشغيل حاليًا.
                                     </span>
                                 </template>
                             </span>
