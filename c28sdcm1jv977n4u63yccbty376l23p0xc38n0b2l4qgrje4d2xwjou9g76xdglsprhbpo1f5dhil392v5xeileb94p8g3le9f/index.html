@@ -5644,13 +5644,13 @@
                                 {{ selectedFilterLabel }} - {{ episodeTypeFilterLabel }}
                             </span>
                             <div class="relative">
-                                <div
+                                <span
                                     class="text-lg text-red-600"
                                     v-tippy="tooltipText"
                                     :style="(isAnyFilterActive || searchQuery) ? 'color: rgb(0 6 255);' : ''"
                                 >
                                     ({{ totalEpisodes }})
-                                </div>
+                                </span>
                             </div>
                         </th>
                     </tr>
@@ -6205,6 +6205,7 @@
                     currentPage: 1,
                     lastPage: 1,
                     pageSize: 15,
+                    oldPageSize: 15,
                     showModal: false,
                     selectedEpisode: null,
                     preserveSelectedEpisodeOnModalClose: false,
@@ -14002,12 +14003,20 @@
 
                     // Update page size and recalculate total pages
                     handlePageSizeChange() {
-                        const max = this.totalPages;
-                        if (this.currentPage > max) {
-                            this.currentPage = max;
+                        const startIndex = (this.currentPage - 1) * this.oldPageSize;
+                        this.currentPage = Math.floor(startIndex / this.pageSize) + 1;
+
+                        if (this.currentPage > this.totalPages) {
+                            this.currentPage = this.totalPages;
                         }
+                        if (this.currentPage < 1) {
+                            this.currentPage = 1;
+                        }
+                        
+                        this.oldPageSize = this.pageSize;
                         this.trackLastPage();
                     },
+
                 normalizeText(text) {
                     let normalizedText = text.toLowerCase();
                     for (let [key, values] of Object.entries(this.replacementDict)) {
