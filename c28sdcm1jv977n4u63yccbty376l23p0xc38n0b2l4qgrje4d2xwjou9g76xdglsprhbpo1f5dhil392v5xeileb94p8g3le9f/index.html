@@ -16237,8 +16237,8 @@
                         return size;
                     }
 
-                    if (numericSize >= 1024) {
-                        const gbSize = numericSize / 1024;
+                    if (numericSize >= 1000) {
+                        const gbSize = numericSize / 1000;
                         const formattedSize = Number.isInteger(gbSize) ? gbSize : gbSize.toFixed(2);
                         return arabic ? `${formattedSize} جيجا` : `${formattedSize} GB`;
                     }
