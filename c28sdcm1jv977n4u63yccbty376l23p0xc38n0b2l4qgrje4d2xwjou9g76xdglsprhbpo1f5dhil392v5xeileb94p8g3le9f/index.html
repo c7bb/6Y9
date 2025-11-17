@@ -5611,6 +5611,31 @@
         <div v-else>
             <table class="min-w-full border-collapse border border-gray-300">
                 <thead>
+                    <!-- Top full-width row -->
+                    <tr>
+                        <th colspan="2" :class="['border border-gray-300 h-8', (isAnyFilterActive || searchQuery) ? 'bg-orange-500' : '']">
+
+                            <br/>
+                            <span
+                                v-if="isAnyFilterActive || searchQuery"
+                                @click="isAnyFilterActive ? openEmptyPopup() : toggleSearch()"
+                                class="inline-block text-base text-black cursor-pointer transition-all duration-100 active:scale-90"
+                            >
+                                {{ isAnyFilterActive && searchQuery
+                                    ? '(البحث والتصفية قيد التشغيل حالياً)'
+                                    : isAnyFilterActive
+                                        ? '(التصفية قيد التشغيل حالياً)'
+                                        : '(البحث قيد التشغيل حالياً)'
+                                }}
+                            </span>
+                            <br v-if="isAnyFilterActive || searchQuery" />
+                            <span :class="combinedFilterBadgeClasses">
+                                ({{ selectedFilterLabel }} - {{ episodeTypeFilterLabel }})
+                            </span>
+                        </th>
+                    </tr>
+
+                    <!-- Existing header row -->
                     <tr class="">
                         <th class="border border-gray-300 text-xl px-2 py-2 text-center w-1/6">
                             {{ episodeNumberHeader }}
@@ -5620,22 +5645,10 @@
                                 </div>
                             </div>
                         </th>               
-                        <th :class="['border border-gray-300 text-xl px-4 py-2 text-center w-5/6', (isAnyFilterActive || searchQuery) ? 'bg-orange-500' : '']">
+                        <th class="border border-gray-300 text-xl px-4 py-2 text-center w-5/6">
                             {{ episodeTitleHeader }}
                             <br />
-                            <span v-if="isAnyFilterActive" @click="openEmptyPopup" class="inline-block text-base text-black cursor-pointer transition-all duration-100 active:scale-90">
-                                (التصفية قيد التشغيل حالياً)
-                            </span>
-                            <br v-if="isAnyFilterActive" />
-                            <span v-if="searchQuery" @click="toggleSearch" class="inline-block text-base text-black cursor-pointer transition-all duration-100 active:scale-90">
-                                (البحث قيد التشغيل حالياً)
-                            </span>
-                            <br v-if="searchQuery" />
-                            <span :class="combinedFilterBadgeClasses">
-                                ({{ selectedFilterLabel }} - {{ episodeTypeFilterLabel }})
-                            </span>
-                            <br />
-                            <span :class="['text-base', (isAnyFilterActive || searchQuery) ? '' : '']" :style="(isAnyFilterActive || searchQuery) ? 'color: rgb(0 6 255); font-weight: 900;' : 'color: rgb(108 255 0); font-weight: 900;'">
+                            <span class="text-base" style="color: rgb(108 255 0); font-weight: 900;">
                                 انقر على أي عنوان لعرض تفاصيله
                             </span>
                         </th>                                                                          
