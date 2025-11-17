@@ -5616,20 +5616,39 @@
                         <th colspan="2" :class="['border border-gray-300 h-8', (isAnyFilterActive || searchQuery) ? 'bg-orange-500' : '']">
                             <span
                                 v-if="isAnyFilterActive || searchQuery"
-                                @click="isAnyFilterActive ? openEmptyPopup() : toggleSearch()"
-                                class="inline-block text-base text-black cursor-pointer transition-all duration-100 active:scale-90"
+                                class="inline-block text-base text-black transition-all duration-100"
                             >
-                                {{ isAnyFilterActive && searchQuery
-                                    ? '(البحث والتصفية قيد التشغيل حالياً)'
-                                    : isAnyFilterActive
-                                        ? '(التصفية قيد التشغيل حالياً)'
-                                        : '(البحث قيد التشغيل حالياً)'
-                                }}
+                                <template v-if="isAnyFilterActive && searchQuery">
+                                    (
+                                    <span class="cursor-pointer active:scale-90 inline-block" @click="toggleSearch();">
+                                        البحث
+                                    </span>
+                                    و
+                                    <span class="cursor-pointer active:scale-90 inline-block" @click="openEmptyPopup">
+                                        التصفية
+                                    </span>
+                                    قيد التشغيل حالياً)
+                                </template>
+                                <template v-else-if="isAnyFilterActive">
+                                    <span class="cursor-pointer active:scale-90 inline-block" @click="openEmptyPopup">
+                                        (التصفية قيد التشغيل حالياً)
+                                    </span>
+                                </template>
+                                <template v-else>
+                                    <span class="cursor-pointer active:scale-90 inline-block" @click="toggleSearch();">
+                                        (البحث قيد التشغيل حالياً)
+                                    </span>
+                                </template>
                             </span>
                             <br v-if="isAnyFilterActive || searchQuery" />
                             <span :class="combinedFilterBadgeClasses">
                                 ({{ selectedFilterLabel }} - {{ episodeTypeFilterLabel }})
                             </span>
+                            <div class="relative">
+                                <div class="text-lg text-red-600 mt-1" v-tippy="tooltipText">
+                                    ({{ totalEpisodes }})
+                                </div>
+                            </div>
                         </th>
                     </tr>
 
@@ -5637,11 +5656,6 @@
                     <tr class="">
                         <th class="border border-gray-300 text-xl px-2 py-2 text-center w-1/6">
                             {{ episodeNumberHeader }}
-                            <div class="relative">
-                                <div class="text-lg text-red-600 mt-1" v-tippy="tooltipText">
-                                    ({{ totalEpisodes }})
-                                </div>
-                            </div>
                         </th>               
                         <th class="border border-gray-300 text-xl px-4 py-2 text-center w-5/6">
                             {{ episodeTitleHeader }}
