@@ -5626,16 +5626,16 @@
                                     <span class="inline-block text-base text-black cursor-pointer transition-all duration-100 active:scale-90" @click="openEmptyPopup">
                                         التصفية
                                     </span>
-                                    قيد التشغيل حاليًا.
+                                    قيد التشغيل حاليًا
                                 </template>
                                 <template v-else-if="isAnyFilterActive">
                                     <span class="inline-block text-base text-black cursor-pointer transition-all duration-100 active:scale-90" @click="openEmptyPopup">
-                                        التصفية قيد التشغيل حاليًا.
+                                        التصفية قيد التشغيل حاليًا
                                     </span>
                                 </template>
                                 <template v-else>
                                     <span class="inline-block text-base text-black cursor-pointer transition-all duration-100 active:scale-90" @click="toggleSearch">
-                                        البحث قيد التشغيل حاليًا.
+                                        البحث قيد التشغيل حاليًا
                                     </span>
                                 </template>
                             </span>
@@ -14002,18 +14002,12 @@
 
                     // Update page size and recalculate total pages
                     handlePageSizeChange() {
-                    // Recalculate total pages based on page size
-                    this.totalPages = Math.ceil(this.totalItems / this.pageSize);
-
-                    // If currentPage is smaller or equal to totalPages, keep it the same
-                    if (this.currentPage <= this.totalPages) {
-                        this.currentPage = 1;
-                    }
-                    // If currentPage is greater than totalPages, set it to the last page
-                    else {
-                        this.currentPage = 1;
-                    }
-                },
+                        const max = this.totalPages;
+                        if (this.currentPage > max) {
+                            this.currentPage = max;
+                        }
+                        this.trackLastPage();
+                    },
                 normalizeText(text) {
                     let normalizedText = text.toLowerCase();
                     for (let [key, values] of Object.entries(this.replacementDict)) {
