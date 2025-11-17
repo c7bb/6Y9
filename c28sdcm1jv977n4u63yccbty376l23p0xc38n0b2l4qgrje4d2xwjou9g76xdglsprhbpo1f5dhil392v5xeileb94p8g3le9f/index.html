@@ -15783,7 +15783,7 @@
                     if (nextEpisodeTeaserTime) details += `\n*تشويق الحلقة القادمة:* ${escapeMarkdown(nextEpisodeTeaserTime)}`;
                     if (nextEpisodeHintTime) details += `\n*تلميح الحلقة القادمة:* ${escapeMarkdown(nextEpisodeHintTime)}`;
 
-                    let caption = `*${label} ${episodeNumber}\nالجودة: ${resolution}\nالحجم: ${size} ميجا*`;
+                    let caption = `*${label} ${episodeNumber}\nالجودة: ${resolution}\nالحجم: ${this.formatFileSize(size)}*`;
                     if (details) caption += `\n\n*✦✦— محتويات الحلقة —✦✦*${details}`;
 
                     this.selectedEpisode.EpisodeVideosIDs[index].status = 'sending';
@@ -15938,7 +15938,7 @@
                         });
                     }
 
-                    const caption = `*الفصل: ${mangaNumber}*`;
+                    const caption = `*الفصل: ${mangaNumber}\nالحجم: ${this.formatFileSize(this.selectedEpisode.EpisodeMangasIDs[index].MangaFileSize)}*`;
 
                     this.selectedEpisode.EpisodeMangasIDs[index].status = 'sending';
 
@@ -16019,7 +16019,7 @@
                         });
                     }
 
-                    const caption = `*الفصل: ${mangaNumber}*`;
+                    const caption = `*الفصل: ${mangaNumber}\nالحجم: ${this.formatFileSize(this.selectedManga.MangaFileSize)}*`;
 
                     this.selectedManga.status = 'sending';
 
