@@ -5635,7 +5635,7 @@
                                 ({{ selectedFilterLabel }} - {{ episodeTypeFilterLabel }})
                             </span>
                             <br />
-                            <span :class="['text-base', (isAnyFilterActive || searchQuery) ? 'text-white' : 'text-red-600']">
+                            <span :class="['text-base', (isAnyFilterActive || searchQuery) ? 'text-white' : '']" :style="(isAnyFilterActive || searchQuery) ? '' : 'color: rgb(108 255 0);'">
                                 انقر على أي عنوان لعرض تفاصيله
                             </span>
                         </th>                                                                          
