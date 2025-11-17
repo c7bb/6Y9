@@ -6206,8 +6206,6 @@
                     lastPage: 1,
                     pageSize: 15,
                     oldPageSize: 15,
-                    firstVisibleKey: null, // Tracks the first visible item's unique key
-                    lastKnownLength: 0, // Tracks filteredEpisodes.length to detect shrinkage
                     showModal: false,
                     selectedEpisode: null,
                     preserveSelectedEpisodeOnModalClose: false,
@@ -11342,15 +11340,10 @@
                     }
                 },
                 searchQuery(newQuery) {
-                    // When search is cleared, try to restore to the last valid page
                     if (newQuery.trim() === '') {
-                        this.$nextTick(() => {
-                            this.clampCurrentPage();
-                        });
+                        this.currentPage = Math.min(this.lastPage, this.totalPages) || 1;
                     } else {
-                        // When search is active, reset to page 1
                         this.currentPage = 1;
-                        this.trackLastPage();
                     }
                 },
 
@@ -13956,67 +13949,6 @@
                     if (enableTimeAgoDebug) console.log('Manga English format:', this.mangaOfWeekTimeAgoEnglish);
                 },
 
-                // Utility: Get a stable unique key for an episode
-                getEpisodeKey(episode, absoluteIndex) {
-                    if (!episode) return null;
-                    // Prefer EpisodeId if available, fallback to composite key
-                    if (episode.EpisodeId) return episode.EpisodeId;
-                    // Fallback: use EpisodeNumber + EpisodeTitle as composite key
-                    if (episode.EpisodeNumber && episode.EpisodeTitle) {
-                        return `${episode.EpisodeNumber}|${episode.EpisodeTitle}`;
-                    }
-                    // Last resort: use absolute index
-                    return `index_${absoluteIndex}`;
-                },
-
-                // Utility: Find the absolute index of an episode by its key
-                findIndexByKey(key) {
-                    if (!key) return -1;
-                    return this.filteredEpisodes.findIndex((ep, idx) => {
-                        return this.getEpisodeKey(ep, idx) === key;
-                    });
-                },
-
-                // Utility: Clamp currentPage within valid bounds and update lastPage
-                clampCurrentPage() {
-                    const maxPage = Math.max(1, this.totalPages);
-                    if (this.currentPage > maxPage) {
-                        this.currentPage = maxPage;
-                    }
-                    if (this.currentPage < 1) {
-                        this.currentPage = 1;
-                    }
-                    this.trackLastPage();
-                },
-
-                // Capture the first visible item's key before list changes
-                captureFirstVisibleKey() {
-                    if (this.paginatedEpisodes.length > 0) {
-                        const firstItem = this.paginatedEpisodes[0];
-                        const startIndex = (this.currentPage - 1) * this.pageSize;
-                        this.firstVisibleKey = this.getEpisodeKey(firstItem, startIndex);
-                    } else {
-                        this.firstVisibleKey = null;
-                    }
-                },
-
-                // Restore page to show the previously visible item, or snap to highest valid page
-                restorePageByFirstVisibleKey() {
-                    if (!this.firstVisibleKey || this.filteredEpisodes.length === 0) {
-                        this.currentPage = 1;
-                        return;
-                    }
-                    const index = this.findIndexByKey(this.firstVisibleKey);
-                    if (index !== -1) {
-                        // Item still exists; calculate which page contains it
-                        this.currentPage = Math.floor(index / this.pageSize) + 1;
-                    } else {
-                        // Item no longer exists; snap to the highest valid page
-                        this.currentPage = Math.max(1, this.totalPages);
-                    }
-                    this.clampCurrentPage();
-                },
-
                 nextPage() {
                     if (this.currentPage < this.totalPages) {
                         this.currentPage++;
@@ -14070,18 +14002,19 @@
                 },
 
                     // Update page size and recalculate total pages
-                    // Preserves the first visible item's position across page size changes
                     handlePageSizeChange() {
-                        // Capture the first visible item before changing page size
-                        this.captureFirstVisibleKey();
+                        const startIndex = (this.currentPage - 1) * this.oldPageSize;
+                        this.currentPage = Math.floor(startIndex / this.pageSize) + 1;
+
+                        if (this.currentPage > this.totalPages) {
+                            this.currentPage = this.totalPages;
+                        }
+                        if (this.currentPage < 1) {
+                            this.currentPage = 1;
+                        }
                         
-                        // Update oldPageSize to match the new pageSize
                         this.oldPageSize = this.pageSize;
-                        
-                        // Restore the page containing the previously visible item
-                        this.$nextTick(() => {
-                            this.restorePageByFirstVisibleKey();
-                        });
+                        this.trackLastPage();
                     },
 
                 normalizeText(text) {
