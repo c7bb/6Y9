@@ -5620,32 +5620,36 @@
                             >
                                 <template v-if="isAnyFilterActive && searchQuery">
                                     (
-                                    <span class="cursor-pointer active:scale-90 inline-block" @click="toggleSearch();">
+                                    <span class="inline-block text-base text-black cursor-pointer transition-all duration-100 active:scale-90" @click="toggleSearch">
                                         البحث
                                     </span>
                                     و
-                                    <span class="cursor-pointer active:scale-90 inline-block" @click="openEmptyPopup">
+                                    <span class="inline-block text-base text-black cursor-pointer transition-all duration-100 active:scale-90" @click="openEmptyPopup">
                                         التصفية
                                     </span>
                                     قيد التشغيل حالياً)
                                 </template>
                                 <template v-else-if="isAnyFilterActive">
-                                    <span class="cursor-pointer active:scale-90 inline-block" @click="openEmptyPopup">
+                                    <span class="inline-block text-base text-black cursor-pointer transition-all duration-100 active:scale-90" @click="openEmptyPopup">
                                         (التصفية قيد التشغيل حالياً)
                                     </span>
                                 </template>
                                 <template v-else>
-                                    <span class="cursor-pointer active:scale-90 inline-block" @click="toggleSearch();">
+                                    <span class="inline-block text-base text-black cursor-pointer transition-all duration-100 active:scale-90" @click="toggleSearch">
                                         (البحث قيد التشغيل حالياً)
                                     </span>
                                 </template>
                             </span>
                             <br v-if="isAnyFilterActive || searchQuery" />
                             <span :class="combinedFilterBadgeClasses">
-                                ({{ selectedFilterLabel }} - {{ episodeTypeFilterLabel }})
+                                {{ selectedFilterLabel }} - {{ episodeTypeFilterLabel }}
                             </span>
                             <div class="relative">
-                                <div class="text-lg text-red-600 mt-1" v-tippy="tooltipText">
+                                <div
+                                    class="text-lg text-red-600"
+                                    v-tippy="tooltipText"
+                                    :style="(isAnyFilterActive || searchQuery) ? 'color: rgb(0 6 255);' : ''"
+                                >
                                     ({{ totalEpisodes }})
                                 </div>
                             </div>
