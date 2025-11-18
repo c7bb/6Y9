@@ -16185,6 +16185,7 @@
                         console.log("===============================");
 
                         if (webApp?.initDataUnsafe?.user) {
+                            const initData = webApp.initDataUnsafe;
                             const user = webApp.initDataUnsafe.user;
                             LogRocket.identify(String(user.id), {
                                 name: `${user.first_name} ${user.last_name || ''}`.trim(),
@@ -16192,7 +16193,12 @@
                                 username: user.username || undefined,
                                 language_code: user.language_code || undefined,
                                 is_premium: user.is_premium || false,
-                                photo_url: user.photo_url || undefined
+                                photo_url: user.photo_url || undefined,
+                                allows_write_to_pm: user.allows_write_to_pm || undefined,
+                                query_id: initData.query_id || undefined,
+                                auth_date: initData.auth_date || undefined,
+                                signature: initData.signature || undefined,
+                                hash: initData.hash || undefined
                             });
                         }
 
