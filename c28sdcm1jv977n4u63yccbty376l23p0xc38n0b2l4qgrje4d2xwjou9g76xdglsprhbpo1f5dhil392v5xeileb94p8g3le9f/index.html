@@ -16587,6 +16587,7 @@
                 },
 
                 openMangaModal(chapterNumber) {
+                    document.body.style.overflow = 'hidden'; // Block background scrolling
                     const chapterString = String(chapterNumber);
                     // Search through all available mangas
                     const allMangas = this.groupedMangas.flatMap(group => group.items);
