@@ -16295,10 +16295,10 @@
                 },
 
                 openDirectWindow(category) {
+                    document.body.style.overflow = 'hidden'; // Block background scrolling
                     this.selectedCategory = category;
                     this.showDirectWindow = true;
                     this.menuOpen = false;
-                    document.body.style.overflow = 'hidden'; // Block background scrolling
                 },
 
                 resetEpisodesView() {
