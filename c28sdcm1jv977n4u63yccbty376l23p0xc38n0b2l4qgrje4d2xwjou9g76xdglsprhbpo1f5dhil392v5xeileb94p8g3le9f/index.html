@@ -770,6 +770,8 @@
                                         <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/previous.png" alt="رجوع" class="h-6 w-6" />
                                     </button>
                                 </legend>
+                                
+                                <!-- GRID VIEW (Select Episode) -->
                                 <div v-if="!selectedEpisode" class="grid grid-cols-3 gap-2" dir="ltr">
                                     <button 
                                         v-for="episode in groupedEpisodes[activeTab.episodes]?.items" 
@@ -779,7 +781,11 @@
                                         {{ episode.EpisodeNumber }}
                                     </button>                                
                                 </div>
+                                
+                                <!-- LIST VIEW (Videos in Selected Episode) -->
                                 <div v-else class="flex flex-col justify-center gap-4">
+                                    
+                                    <!-- Navigation Controls -->
                                     <div class="flex items-center px-4">
                                         <div class="w-8 flex justify-start">
                                             <button v-if="showNextGroupButton" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')" @click="navigateToNextEpisodeGroup(); resetStatusForEpisodeManga();" class="transition-opacity disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
@@ -807,31 +813,71 @@
                                             </button>
                                         </div>
                                     </div>
+
+                                    <!-- START: UPDATED VIDEO LIST LOOP -->
                                     <div v-for="(video, index) in selectedEpisode.EpisodeVideosIDs" 
                                         :key="video.VideoID" 
-                                        class="relative flex flex-col gap-4">
-                                        <button
-                                            :disabled="video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending'"
-                                            @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
-                                            class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed">
-                                            <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ formatFileSize(video.Size) }})</span>
-                                            <span v-else-if="video.countdown !== undefined">{{ video.countdown }}</span>
-                                            <span v-else>{{ video.Resolution }} ({{ formatFileSize(video.Size) }})</span>
-                                        </button>
-                                        <img 
-                                            v-if="video.status === 'success'" 
-                                            src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/true.png" 
-                                            class="absolute right-0 top-0 w-6 h-6 ml-2"
-                                        />
-                                        <img 
-                                            v-if="video.status === 'error'" 
-                                            src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png" 
-                                            class="absolute right-0 top-0 w-6 h-6 ml-2"
-                                        />
-                                        <div v-if="video.status === 'sending'" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded">
-                                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                                        class="relative flex flex-col">
+                                        
+                                        <div class="relative">
+                                            <!-- Fieldset: Shows border only if legend data exists -->
+                                            <fieldset 
+                                                class="rounded relative"
+                                                :class="{ 'border p-3': video.EpisodeCategory || video.EpisodeTranslator || video.EpisodeRemastered }">
+                                                
+                                                <!-- Legend: Only shows if data exists -->
+                                                <legend 
+                                                    v-if="video.EpisodeCategory || video.EpisodeTranslator || video.EpisodeRemastered"
+                                                    class="px-2 text-sm">
+                                                    <span v-if="video.EpisodeCategory">
+                                                        {{ video.EpisodeCategory === 'S' ? 'مترجم' : (video.EpisodeCategory === 'D' ? 'مدبلج' : video.EpisodeCategory) }}
+                                                    </span>
+                                                    <span v-if="video.EpisodeTranslator">
+                                                        <span v-if="video.EpisodeCategory"> - </span>{{ video.EpisodeTranslator }}
+                                                    </span>
+                                                    <span v-if="video.EpisodeRemastered">
+                                                        <span v-if="video.EpisodeCategory || video.EpisodeTranslator"> - </span>
+                                                        {{ video.EpisodeRemastered === 'T' ? 'محسنة' : (video.EpisodeRemastered === 'F' ? 'غير محسنة' : video.EpisodeRemastered) }}
+                                                    </span>
+                                                </legend>
+                                                
+                                                <!-- Main Button Wrapper -->
+                                                <div class="relative w-full">
+                                                    
+                                                    <!-- Button -->
+                                                    <button
+                                                        :disabled="video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending'"
+                                                        @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
+                                                        class="w-full bg-blue-500 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed relative overflow-hidden">
+                                                        <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ formatFileSize(video.Size) }})</span>
+                                                        <span v-else-if="video.countdown !== undefined">{{ video.countdown }}</span>
+                                                        <span v-else>{{ video.Resolution }} ({{ formatFileSize(video.Size) }})</span>
+                                                    </button>
+
+                                                    <!-- Success Icon (Overlaid Top-Right) -->
+                                                    <img 
+                                                        v-if="video.status === 'success'" 
+                                                        src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/true.png" 
+                                                        class="absolute right-0 top-0 w-6 h-6 ml-2 z-10 pointer-events-none"
+                                                    />
+
+                                                    <!-- Error Icon (Overlaid Top-Right) -->
+                                                    <img 
+                                                        v-if="video.status === 'error'" 
+                                                        src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png" 
+                                                        class="absolute right-0 top-0 w-6 h-6 ml-2 z-10 pointer-events-none"
+                                                    />
+
+                                                    <!-- Loading Overlay (Centered over button) -->
+                                                    <div v-if="video.status === 'sending'" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded z-20">
+                                                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
                                         </div>
                                     </div>
+                                    <!-- END: UPDATED VIDEO LIST LOOP -->
+
                                 </div>
                             </fieldset>
                         </div>
@@ -856,6 +902,8 @@
                                         <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/previous.png" alt="رجوع" class="h-6 w-6" />
                                     </button>
                                 </legend>
+                                
+                                <!-- GRID VIEW: Movie Selection -->
                                 <div v-if="!selectedEpisode" class="grid grid-cols-3 gap-2" dir="ltr">
                                     <button 
                                         v-for="movie in groupedMovies[activeTab.movies]?.items" 
@@ -865,7 +913,11 @@
                                         {{ movie.EpisodeNumber.replace('الفيلم ', '') }}
                                     </button>                                
                                 </div>
+                                
+                                <!-- LIST VIEW: Videos in Selected Movie -->
                                 <div v-else class="flex flex-col justify-center gap-4">
+                                    
+                                    <!-- Navigation Controls -->
                                     <div class="flex items-center px-4">
                                         <div class="w-8 flex justify-start">
                                             <button v-if="showNextMovieGroupButton" :disabled="selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending')" @click="navigateToNextMovieGroup(); resetStatusForEpisodeManga();" class="transition-opacity disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90">
@@ -893,31 +945,71 @@
                                             </button>
                                         </div>
                                     </div>
+                                    
+                                    <!-- START: UPDATED MOVIE LIST LOOP -->
                                     <div v-for="(video, index) in selectedEpisode.EpisodeVideosIDs" 
                                         :key="video.VideoID" 
-                                        class="relative flex flex-col gap-4">
-                                        <button
-                                            :disabled="video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending'"
-                                            @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
-                                            class="bg-amber-700 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed">
-                                            <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ formatFileSize(video.Size) }})</span>
-                                            <span v-else-if="video.countdown !== undefined">{{ video.countdown }}</span>
-                                            <span v-else>{{ video.Resolution }} ({{ formatFileSize(video.Size) }})</span>
-                                        </button>
-                                        <img 
-                                            v-if="video.status === 'success'" 
-                                            src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/true.png" 
-                                            class="absolute right-0 top-0 w-6 h-6 ml-2"
-                                        />
-                                        <img 
-                                            v-if="video.status === 'error'" 
-                                            src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png" 
-                                            class="absolute right-0 top-0 w-6 h-6 ml-2"
-                                        />
-                                        <div v-if="video.status === 'sending'" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded">
-                                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                                        class="relative flex flex-col">
+                                        
+                                        <div class="relative">
+                                            
+                                            <!-- Conditional Fieldset (Movie Version) -->
+                                            <fieldset 
+                                                class="rounded relative"
+                                                :class="{ 'border p-3': video.EpisodeCategory || video.EpisodeTranslator || video.EpisodeRemastered }">
+                                                
+                                                <!-- Conditional Legend -->
+                                                <legend 
+                                                    v-if="video.EpisodeCategory || video.EpisodeTranslator || video.EpisodeRemastered"
+                                                    class="px-2 text-sm">
+                                                    <span v-if="video.EpisodeCategory">
+                                                        {{ video.EpisodeCategory === 'S' ? 'مترجم' : (video.EpisodeCategory === 'D' ? 'مدبلج' : video.EpisodeCategory) }}
+                                                    </span>
+                                                    <span v-if="video.EpisodeTranslator">
+                                                        <span v-if="video.EpisodeCategory"> - </span>{{ video.EpisodeTranslator }}
+                                                    </span>
+                                                    <span v-if="video.EpisodeRemastered">
+                                                        <span v-if="video.EpisodeCategory || video.EpisodeTranslator"> - </span>
+                                                        {{ video.EpisodeRemastered === 'T' ? 'محسنة' : (video.EpisodeRemastered === 'F' ? 'غير محسنة' : video.EpisodeRemastered) }}
+                                                    </span>
+                                                </legend>
+                                                
+                                                <!-- Main Wrapper for Button/Icons -->
+                                                <div class="relative w-full">
+                                                    
+                                                    <!-- Button (Maintains amber-700) -->
+                                                    <button
+                                                        :disabled="video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending'"
+                                                        @click="sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime)"
+                                                        class="w-full bg-amber-700 text-white px-6 py-2 rounded hover:bg-green-500 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed relative overflow-hidden">
+                                                        <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ formatFileSize(video.Size) }})</span>
+                                                        <span v-else-if="video.countdown !== undefined">{{ video.countdown }}</span>
+                                                        <span v-else>{{ video.Resolution }} ({{ formatFileSize(video.Size) }})</span>
+                                                    </button>
+                                                    
+                                                    <!-- Status Images (Overlaid Top-Right) -->
+                                                    <img 
+                                                        v-if="video.status === 'success'" 
+                                                        src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/true.png" 
+                                                        class="absolute right-0 top-0 w-6 h-6 ml-2 z-10 pointer-events-none"
+                                                    />
+                                                    <img 
+                                                        v-if="video.status === 'error'" 
+                                                        src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png" 
+                                                        class="absolute right-0 top-0 w-6 h-6 ml-2 z-10 pointer-events-none"
+                                                    />
+                                                    
+                                                    <!-- Centered Loading Overlay -->
+                                                    <div v-if="video.status === 'sending'" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded z-20">
+                                                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                                                    </div>
+
+                                                </div>
+                                            </fieldset>
                                         </div>
                                     </div>
+                                    <!-- END: UPDATED MOVIE LIST LOOP -->
+                                    
                                 </div>
                             </fieldset>
                         </div>
@@ -5457,8 +5549,10 @@
 
                         <!-- Manga Announcement Box -->
                         <div class="relative w-full max-w-2xl p-4 mt-4 bg-black bg-opacity-85 rounded-lg shadow-lg border border-yellow-500 animate-borderMove">
-                            <div class="grid grid-cols-2 gap-4">
-                                <!-- Episode Column -->
+                            <!-- Set Grid to 3 Columns -->
+                            <div class="grid grid-cols-3 gap-4">
+                                
+                                <!-- 1. Episode Column (Right or Left depending on page direction) -->
                                 <div class="flex flex-col items-center">
                                     <p class="text-white text-lg text-center font-bold mb-4">حلقة الأسبوع</p>
                                     <button 
@@ -5468,27 +5562,143 @@
                                         {{ ep }}
                                     </button>
                                     <p v-if="episodeOfWeekTimeAgo || episodeOfWeekTimeAgoEnglish" 
-                                       @click="toggleTimeFormat" 
-                                       class="text-white text-xs text-center mt-3 cursor-pointer hover:text-gray-300 transition-colors duration-200">
+                                    @click="toggleTimeFormat" 
+                                    class="text-white text-xs text-center mt-3 cursor-pointer hover:text-gray-300 transition-colors duration-200">
                                         {{ showEnglishTimeFormat ? episodeOfWeekTimeAgoEnglish : episodeOfWeekTimeAgo }}
                                     </p>
                                 </div>
-                                <!-- Manga Column -->
+
+                                <!-- 2. Movie Column (MIDDLE POSITION) -->
+                                <div class="flex flex-col items-center">
+                                    <p class="text-white text-lg text-center font-bold mb-4">فيلم السنة</p>
+                                    <button 
+                                        @click="openEpisodeModal('الفيلم 28')"
+                                        class="w-full py-2 bg-red-500 text-white font-bold text-lg rounded transition-all duration-100 hover:scale-105 active:scale-90">
+                                        28
+                                    </button>
+                                    <p v-if="(movieCountdownArabic || movieTimeAgoArabic)"
+                                        @click="toggleMovieTimeFormat"
+                                        class="text-white text-xs text-center mt-3 cursor-pointer hover:text-gray-300 transition-colors duration-200">
+                                        {{ showEnglishMovieTimeFormat 
+                                            ? (movieHasUpcomingRelease ? movieCountdownEnglish : movieTimeAgoEnglish)
+                                            : (movieHasUpcomingRelease ? movieCountdownArabic : movieTimeAgoArabic) }}
+                                    </p>
+                                </div>
+
+                                <!-- 3. Manga Column (Last position) -->
                                 <div class="flex flex-col items-center">
                                     <p class="text-white text-lg text-center font-bold mb-4">فصل المانغا</p>
                                     <button 
                                         v-if="mangas && mangas.length > 0"
                                         @click="openMangaModal(mangaCh)"
-                                        class="w-full py-2 bg-green-600 text-white font-bold text-lg rounded hover:bg-blue-500 transition-all duration-100 hover:scale-105 active:scale-90">
+                                        class="w-full py-2 bg-green-600 text-white font-bold text-lg rounded hover:bg-green-500 transition-all duration-100 hover:scale-105 active:scale-90">
                                         {{ mangaCh }}
                                     </button>
                                     <p v-if="mangaOfWeekTimeAgo || mangaOfWeekTimeAgoEnglish" 
-                                       @click="toggleTimeFormatManga" 
-                                       class="text-white text-xs text-center mt-3 cursor-pointer hover:text-gray-300 transition-colors duration-200">
+                                    @click="toggleTimeFormatManga" 
+                                    class="text-white text-xs text-center mt-3 cursor-pointer hover:text-gray-300 transition-colors duration-200">
                                         {{ showEnglishTimeFormatManga ? mangaOfWeekTimeAgoEnglish : mangaOfWeekTimeAgo }}
                                     </p>
                                 </div>
+
                             </div>
+                            <fieldset class="mt-4 border border-[#62a7ff] rounded-lg pb-4 space-y-2">
+                                <legend class="px-2 text-white text-lg text-center font-bold">
+                                    الأحداث القادمة
+                                </legend>
+
+                                <!-- Upcoming Episode Notice -->
+                                <div
+                                    v-if="nextEpisodeInfo && nextEpisodeInfo.Enable !== false && nextEpisodeStatus"
+                                    class="text-center space-y-1"
+                                >
+                                    <p
+                                        v-if="nextEpisodeStatus === 'countdown' && nextEpisodeCountdownArabicDynamic"
+                                        class="text-white text-base flex flex-wrap justify-center items-center gap-1"
+                                    >
+                                        <span>متبقي</span>
+                                        <span
+                                            class="cursor-pointer hover:text-gray-300"
+                                            @click="toggleNextEpisodeCountdownLanguage"
+                                        >
+                                        {{
+                                            showEnglishNextEpisodeCountdown
+                                            ? nextEpisodeCountdownEnglishValue
+                                            : nextEpisodeCountdownArabicDynamic
+                                        }}
+                                        </span>
+                                        <span>للحلقة</span>
+                                        <span
+                                            v-if="nextEpisodeHasRecord"
+                                            class="text-yellow-300 underline cursor-pointer transition-all duration-100 active:scale-90"
+                                            @click="openEpisodeModal(String(nextEpisodeInfo.number))"
+                                        >
+                                        {{ nextEpisodeInfo.number }}
+                                        </span>
+                                        <span
+                                            v-else
+                                            class="text-yellow-300 transition-all duration-100 active:scale-90"
+                                        >
+                                        {{ nextEpisodeInfo.number }}
+                                        </span>
+                                    </p>
+
+                                    <p
+                                        v-else-if="nextEpisodeStatus === 'translation'"
+                                        class="text-white text-base"
+                                    >
+                                        <span>الحلقة </span>
+                                        <span
+                                            class="text-yellow-300 underline cursor-pointer transition-all duration-100 active:scale-90"
+                                            @click="openEpisodeModal(String(nextEpisodeInfo.number))"
+                                        >
+                                        {{ nextEpisodeInfo.number }}
+                                        </span>
+                                        <span> قيد الترجمة من قبل المترجمين.</span>
+                                    </p>
+                                </div>
+
+                                <!-- Upcoming Manga Notice -->
+                                <div
+                                    v-if="nextMangaInfo && nextMangaInfo.Enable !== false && nextMangaStatus"
+                                    class="text-center space-y-1"
+                                >
+                                    <p
+                                        v-if="nextMangaStatus === 'countdown' && nextMangaCountdownArabicDynamic"
+                                        class="text-white text-base flex flex-wrap justify-center items-center gap-1"
+                                    >
+                                        <span>متبقي</span>
+                                        <span
+                                            class="cursor-pointer hover:text-gray-300"
+                                            @click="toggleNextMangaCountdownLanguage"
+                                        >
+                                        {{
+                                            showEnglishNextMangaCountdown
+                                            ? nextMangaCountdownEnglishValue
+                                            : nextMangaCountdownArabicDynamic
+                                        }}
+                                        </span>
+                                        <span>للفصل</span>
+                                        <span class="text-yellow-300 transition-all duration-100 active:scale-90">
+                                        {{ nextMangaInfo.number }}
+                                        </span>
+                                    </p>
+
+                                    <p
+                                        v-else-if="nextMangaStatus === 'translation'"
+                                        class="text-white text-base"
+                                    >
+                                        <span>الفصل </span>
+                                        <span
+                                            class="text-yellow-300 underline cursor-pointer transition-all duration-100 active:scale-90"
+                                            @click="openMangaModal(String(nextMangaInfo.number))"
+                                        >
+                                        {{ nextMangaInfo.number }}
+                                        </span>
+                                        <span> قيد الترجمة من قبل المترجمين.</span>
+                                    </p>
+                                </div>
+                            </fieldset>
                         </div>
 
                         <!-- Centered Description Box for Colors and Their Names with "معاني الألوان" Legend -->
@@ -6050,38 +6260,85 @@
                                     <p class="text-lg text-center">{{ selectedEpisode.EpisodeNextHint }}</p>
                                 </fieldset>
 
-                                <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeNotes !== ''" class="border border-red-500 p-2 rounded mb-2">
+                                <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeNotes !== ''" class="border border-red-500 p-2 rounded mb-2 episode-notes-container">
                                     <legend class="font-bold text-lg">ملاحظة</legend>
-                                    <p class="text-lg">{{ selectedEpisode.EpisodeNotes }}</p>
+                                    <div class="episode-notes-container">
+                                        <p class="text-lg" v-html="processEpisodeNotes(selectedEpisode.EpisodeNotes)"></p>
+                                    </div>
                                 </fieldset>
 
-                                <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeVideosIDs !== null" class="border p-2 rounded mb-2">
-                                    <legend class="font-bold text-lg">مشاهدة (عبر البوت)</legend>
-                                    <div class="flex flex-col justify-center gap-4">
+                                <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeVideosIDs !== null" class="border p-2 rounded mb-4">
+                                    <legend class="font-bold text-lg px-2">مشاهدة (عبر البوت)</legend>
+                                    <div class="flex flex-col gap-4">
                                         <div 
                                             v-for="(video, index) in selectedEpisode.EpisodeVideosIDs" 
                                             :key="video.VideoID" 
-                                            class="relative flex flex-col gap-4">
-                                            <button
-                                                :disabled="video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending'"
-                                                @click="() => { sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime); }"
-                                                class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed">
-                                                <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ formatFileSize(video.Size) }})</span>
-                                                <span v-else-if="video.countdown !== undefined">{{ video.countdown }}</span>
-                                            <span v-else>{{ video.Resolution }} ({{ formatFileSize(video.Size) }})</span>
-                                            </button>
-                                            <img 
-                                                v-if="video.status === 'success'" 
-                                                src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/true.png" 
-                                                class="absolute right-0 top-0 w-6 h-6 ml-2"
-                                            />
-                                            <img 
-                                                v-if="video.status === 'error'" 
-                                                src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png" 
-                                                class="absolute right-0 top-0 w-6 h-6 ml-2"
-                                            />
-                                            <div v-if="video.status === 'sending'" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded">
-                                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                                            class="relative flex flex-col">
+                                            
+                                            <div class="relative">
+                                                
+                                                <!-- 
+                                                    Updated Fieldset: 
+                                                    1. We moved 'rounded relative' to the static class attribute.
+                                                    2. We bound 'border p-3' to the same condition as the legend. 
+                                                       If no info exists, the border disappears for a cleaner look.
+                                                -->
+                                                <fieldset 
+                                                    class="rounded relative"
+                                                    :class="{ 'border p-3': video.EpisodeCategory || video.EpisodeTranslator || video.EpisodeRemastered }">
+                                                    
+                                                    <!-- 
+                                                        Updated Legend: 
+                                                        Added v-if to check if any of the 3 info variables exist.
+                                                        If all are null/empty, the legend is hidden.
+                                                    -->
+                                                    <legend 
+                                                        v-if="video.EpisodeCategory || video.EpisodeTranslator || video.EpisodeRemastered"
+                                                        class="px-2 text-sm">
+                                                        <span v-if="video.EpisodeCategory">
+                                                            {{ video.EpisodeCategory === 'S' ? 'مترجم' : (video.EpisodeCategory === 'D' ? 'مدبلج' : video.EpisodeCategory) }}
+                                                        </span>
+                                                        <span v-if="video.EpisodeTranslator">
+                                                            <span v-if="video.EpisodeCategory"> - </span>{{ video.EpisodeTranslator }}
+                                                        </span>
+                                                        <span v-if="video.EpisodeRemastered">
+                                                            <span v-if="video.EpisodeCategory || video.EpisodeTranslator"> - </span>
+                                                            {{ video.EpisodeRemastered === 'T' ? 'محسنة' : (video.EpisodeRemastered === 'F' ? 'غير محسنة' : video.EpisodeRemastered) }}
+                                                        </span>
+                                                    </legend>
+                                                    
+                                                    <!-- MAIN WRAPPER: Defines the boundaries for the button, images, and loading overlay -->
+                                                    <div class="relative w-full">
+                                                        
+                                                        <!-- 1. The Button -->
+                                                        <button
+                                                            :disabled="video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending'"
+                                                            @click="() => { sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, index, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime); }"
+                                                            class="w-full bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed relative overflow-hidden">
+                                                            <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ formatFileSize(video.Size) }})</span>
+                                                            <span v-else-if="video.countdown !== undefined">{{ video.countdown }}</span>
+                                                            <span v-else>{{ video.Resolution }} ({{ formatFileSize(video.Size) }})</span>
+                                                        </button>
+
+                                                        <!-- 2. Status Images (Pinned to Top Right of the Button area) -->
+                                                        <img 
+                                                            v-if="video.status === 'success'" 
+                                                            src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/true.png" 
+                                                            class="absolute right-0 top-0 w-6 h-6 z-10 pointer-events-none"
+                                                        />
+                                                        <img 
+                                                            v-else-if="video.status === 'error'" 
+                                                            src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png" 
+                                                            class="absolute right-0 top-0 w-6 h-6 z-10 pointer-events-none"
+                                                        />
+
+                                                        <!-- 3. Sending Overlay (Centered over the Button only) -->
+                                                        <div v-if="video.status === 'sending'" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded z-20">
+                                                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                                                        </div>
+
+                                                    </div>
+                                                </fieldset>
                                             </div>
                                         </div>
                                     </div>
@@ -6188,6 +6445,8 @@
                     "ش": ["س","ش"],
                     },
                     jsonUrl: "https://enc.mdccxxixix.workers.dev",
+                    episodeNotesDebug: false,  // Enable for debugging episode notes processing
+                    episodeLinkClickHandler: null,
                     episodeTypeFilter: 'All',
                     episodes: [],
                     selectedMovie: null, // Track the selected movie for resolution/size view
@@ -6255,6 +6514,34 @@
                     countdownEnglish: '',
                     showEnglishCountdown: false,
                     hasCountdown: false,
+                    movieReleaseDate: '',
+                    movieCountdownArabic: '',
+                    movieCountdownEnglish: '',
+                    movieTimeAgoArabic: '',
+                    movieTimeAgoEnglish: '',
+                    showEnglishMovieTimeFormat: false,
+                    movieHasUpcomingRelease: false,
+                    movieTimingInterval: null,
+
+                    nextEpisodeInfo: null,
+                    nextEpisodeReleaseDate: null,
+                    nextEpisodeStatus: '',
+                    nextEpisodeCountdownArabicSentence: '',
+                    nextEpisodeCountdownEnglishSentence: '',
+                    showEnglishNextEpisodeCountdown: false,
+                    nextEpisodeExistsInEpisodes: false,
+                    nextEpisodeHasRecord: false,
+                    nextEpisodeIntervalId: null,
+
+                    nextMangaInfo: null,
+                    nextMangaReleaseDate: null,
+                    nextMangaStatus: '',
+                    nextMangaCountdownArabicDynamic: '',
+                    nextMangaCountdownEnglishValue: '',
+                    showEnglishNextMangaCountdown: false,
+                    nextMangaExistsInList: false,
+                    nextMangaIntervalId: null,
+
                     filterGentaKojimaSceneEpisodes: false,
                     filterGentaKojimaBackgroundEpisodes: false,
                     filterGentaKojimaFlashbackEpisodes: false,
@@ -6885,10 +7172,18 @@
                 },
 
                 groupedMangas() {
+                    const mangaSources = Array.isArray(this.mangas) ? this.mangas : [];
+                    const episodeSources = Array.isArray(this.episodes) ? this.episodes : [];
+
                     const allMangas = [
-                        ...this.mangas.flatMap(m => m.MangasIDs),
-                        ...this.episodes.flatMap(e => e.EpisodeMangasIDs || [])
-                    ].sort((a, b) => a.MangaNumber - b.MangaNumber);
+                        ...mangaSources.flatMap(m => Array.isArray(m.MangasIDs) ? m.MangasIDs : []),
+                        ...episodeSources.flatMap(e => Array.isArray(e.EpisodeMangasIDs) ? e.EpisodeMangasIDs : [])
+                    ].filter(manga => manga && manga.MangaNumber)
+                     .sort((a, b) => Number(a.MangaNumber) - Number(b.MangaNumber));
+
+                    if (!allMangas.length) {
+                        return [];
+                    }
 
                     // Remove duplicates by MangaNumber
                     const uniqueMangas = Array.from(new Set(allMangas.map(m => m.MangaNumber)))
@@ -6897,13 +7192,13 @@
                     const chunkSize = 100;
                     return uniqueMangas.reduce((acc, _, i, arr) => {
                         if (i % chunkSize === 0) {
-                        return [
-                            ...acc,
-                            {
-                            range: `${arr[i].MangaNumber}-${arr[Math.min(i + chunkSize - 1, arr.length - 1)].MangaNumber}`,
-                            items: arr.slice(i, i + chunkSize)
-                            }
-                        ];
+                            return [
+                                ...acc,
+                                {
+                                    range: `${arr[i].MangaNumber}-${arr[Math.min(i + chunkSize - 1, arr.length - 1)].MangaNumber}`,
+                                    items: arr.slice(i, i + chunkSize)
+                                }
+                            ];
                         }
                         return acc;
                     }, []);
@@ -13457,6 +13752,310 @@
                 },
             },
             methods: {
+
+                async loadNextMangaInfo() {
+                    try {
+                        const response = await fetch(`./UpcomingDates.json?cb=${Date.now()}`);
+                        const payload = await response.json();
+                        this.nextMangaInfo = payload?.nextManga ? { ...payload.nextManga } : null;
+                        this.refreshNextMangaState();
+                    } catch (error) {
+                        console.error('Error loading next manga info:', error);
+                        this.nextMangaInfo = null;
+                    }
+                },
+                parseNextMangaDate(dateStr) {
+                    if (!dateStr) return null;
+                    const parts = String(dateStr).trim().split('-');
+                    if (parts.length < 3) return null;
+
+                    const year = Number(parts[0]);
+                    const month = Number(parts[1]);
+                    const day = Number(parts[2]);
+                    if (![year, month, day].every(Number.isFinite)) return null;
+
+                    let hours = 12;
+                    let minutes = 0;
+
+                    if (parts[3]) {
+                        const [hh, mm] = parts[3].split(':');
+                        if (!Number.isNaN(Number(hh))) hours = Number(hh);
+                        if (!Number.isNaN(Number(mm))) minutes = Number(mm);
+                    }
+
+                    const parsed = new Date(year, month - 1, day, hours, minutes, 0, 0);
+                    return Number.isNaN(parsed.getTime()) ? null : parsed;
+                },
+                refreshNextMangaState() {
+                    if (!this.nextMangaInfo || this.nextMangaInfo.Enable === false) {
+                        this.nextMangaStatus = '';
+                        this.nextMangaCountdownArabicDynamic = '';
+                        this.nextMangaCountdownEnglishValue = '';
+                        this.nextMangaReleaseDate = null;
+                        this.showEnglishNextMangaCountdown = false;
+                        return;
+                    }
+
+                    const releaseDate = this.parseNextMangaDate(this.nextMangaInfo.date);
+                    if (!releaseDate) {
+                        this.nextMangaStatus = '';
+                        this.nextMangaCountdownArabicDynamic = '';
+                        this.nextMangaCountdownEnglishValue = '';
+                        this.nextMangaReleaseDate = null;
+                        this.showEnglishNextMangaCountdown = false;
+                        return;
+                    }
+
+                    this.nextMangaReleaseDate = releaseDate;
+                    const now = new Date();
+
+                    this.nextMangaExistsInList = Array.isArray(this.groupedMangas)
+                        ? this.groupedMangas.some(group =>
+                            group.items?.some(
+                                manga => String(manga.MangaNumber) === String(this.nextMangaInfo.number)
+                            )
+                        )
+                        : false;
+
+                    if (this.nextMangaExistsInList) {
+                        this.nextMangaStatus = 'available';
+                        this.nextMangaCountdownArabicDynamic = '';
+                        this.nextMangaCountdownEnglishValue = '';
+                        this.showEnglishNextMangaCountdown = false;
+                        return;
+                    }
+
+                    const isSameDay =
+                        now.getFullYear() === releaseDate.getFullYear() &&
+                        now.getMonth() === releaseDate.getMonth() &&
+                        now.getDate() === releaseDate.getDate();
+
+                    if (now < releaseDate) {
+                        this.nextMangaStatus = 'countdown';
+                        this.computeNextMangaCountdown(now, releaseDate);
+                    } else if (isSameDay) {
+                        this.nextMangaStatus = 'translation';
+                        this.nextMangaCountdownArabicDynamic = '';
+                        this.nextMangaCountdownEnglishValue = '';
+                        this.showEnglishNextMangaCountdown = false;
+                    } else {
+                        this.nextMangaStatus = '';
+                        this.nextMangaCountdownArabicDynamic = '';
+                        this.nextMangaCountdownEnglishValue = '';
+                        this.showEnglishNextMangaCountdown = false;
+                    }
+                },
+                computeNextMangaCountdown(currentTime, releaseDate) {
+                    const diffMs = releaseDate.getTime() - currentTime.getTime();
+                    if (diffMs <= 0) {
+                        this.nextMangaCountdownArabicDynamic = '';
+                        this.nextMangaCountdownEnglishValue = '';
+                        return;
+                    }
+
+                    const diffDaysDecimal = diffMs / (1000 * 60 * 60 * 24);
+                    const diffDays = Math.floor(diffDaysDecimal);
+                    const remainingHours = Math.floor((diffDaysDecimal - diffDays) * 24);
+                    const remainingMinutes = Math.floor(
+                        ((diffDaysDecimal - diffDays) * 24 - remainingHours) * 60
+                    );
+
+                    const englishParts = [];
+                    if (diffDays > 0) englishParts.push(`${diffDays}d`);
+                    if (remainingHours > 0) englishParts.push(`${remainingHours}h`);
+                    if (remainingMinutes > 0) englishParts.push(`${remainingMinutes}min`);
+                    if (!englishParts.length) englishParts.push('1min');
+                    this.nextMangaCountdownEnglishValue = englishParts.join('');
+
+                    const moreThan = 'أكثر من ';
+                    const lessThan = 'أقل من ';
+                    let arabicDynamic = '';
+
+                    if (diffDaysDecimal < 1) {
+                        arabicDynamic = `${lessThan}يوم`;
+                    } else if (diffDaysDecimal >= 1 && diffDaysDecimal < 2) {
+                        arabicDynamic =
+                            diffDaysDecimal > 1 ? `${moreThan}يوم واحد` : 'يوم واحد';
+                    } else if (diffDaysDecimal >= 2 && diffDaysDecimal < 3) {
+                        arabicDynamic =
+                            diffDaysDecimal > 2 ? `${moreThan}يومان` : 'يومان';
+                    } else if (diffDaysDecimal >= 3 && diffDaysDecimal < 11) {
+                        arabicDynamic =
+                            diffDaysDecimal > diffDays
+                                ? `${moreThan}${diffDays} أيام`
+                                : `${diffDays} أيام`;
+                    } else {
+                        arabicDynamic =
+                            diffDaysDecimal > diffDays
+                                ? `${moreThan}${diffDays} يومًا`
+                                : `${diffDays} يومًا`;
+                    }
+
+                    this.nextMangaCountdownArabicDynamic = arabicDynamic;
+                },
+                toggleNextMangaCountdownLanguage() {
+                    if (
+                        this.nextMangaStatus !== 'countdown' ||
+                        !this.nextMangaCountdownArabicDynamic
+                    ) {
+                        return;
+                    }
+                    this.showEnglishNextMangaCountdown = !this.showEnglishNextMangaCountdown;
+                },
+
+                async loadNextEpisodeInfo() {
+                    try {
+                        const response = await fetch(`./UpcomingDates.json?cb=${Date.now()}`);
+                        const payload = await response.json();
+                        this.nextEpisodeInfo = payload?.nextEpisode ? { ...payload.nextEpisode } : null;
+                        this.refreshNextEpisodeState();
+                    } catch (error) {
+                        console.error('Error loading next episode info:', error);
+                        this.nextEpisodeInfo = null;
+                    }
+                },
+                parseNextEpisodeDate(dateStr) {
+                    if (!dateStr) return null;
+                    const parts = String(dateStr).trim().split('-');
+                    if (parts.length < 3) return null;
+
+                    const year = Number(parts[0]);
+                    const month = Number(parts[1]);
+                    const day = Number(parts[2]);
+                    if (![year, month, day].every(Number.isFinite)) return null;
+
+                    let hours = 12;
+                    let minutes = 0;
+
+                    if (parts[3]) {
+                        const [hh, mm] = parts[3].split(':');
+                        if (!Number.isNaN(Number(hh))) hours = Number(hh);
+                        if (!Number.isNaN(Number(mm))) minutes = Number(mm);
+                    }
+
+                    const parsed = new Date(year, month - 1, day, hours, minutes, 0, 0);
+                    return Number.isNaN(parsed.getTime()) ? null : parsed;
+                },
+                refreshNextEpisodeState() {
+                    if (!this.nextEpisodeInfo || this.nextEpisodeInfo.Enable === false) {
+                        this.nextEpisodeStatus = '';
+                        this.nextEpisodeCountdownArabicDynamic = '';
+                        this.nextEpisodeCountdownEnglishValue = '';
+                        this.nextEpisodeReleaseDate = null;
+                        this.showEnglishNextEpisodeCountdown = false;
+                        return;
+                    }
+
+                    const releaseDate = this.parseNextEpisodeDate(this.nextEpisodeInfo.date);
+                    if (!releaseDate) {
+                        this.nextEpisodeStatus = '';
+                        this.nextEpisodeCountdownArabicDynamic = '';
+                        this.nextEpisodeCountdownEnglishValue = '';
+                        this.nextEpisodeReleaseDate = null;
+                        this.showEnglishNextEpisodeCountdown = false;
+                        return;
+                    }
+
+                    this.nextEpisodeReleaseDate = releaseDate;
+                    const now = new Date();
+
+                    let matchingEpisode = null;
+                    if (Array.isArray(this.episodes) && this.episodes.length > 0) {
+                        matchingEpisode = this.episodes.find(
+                            (episode) =>
+                                String(episode.EpisodeNumber) ===
+                                String(this.nextEpisodeInfo.number)
+                        );
+                    }
+
+                    this.nextEpisodeHasRecord = Boolean(matchingEpisode);
+
+                    const hasReadyVideos = Array.isArray(matchingEpisode?.EpisodeVideosIDs)
+                        ? matchingEpisode.EpisodeVideosIDs.length > 0
+                        : false;
+
+                    this.nextEpisodeExistsInEpisodes = Boolean(matchingEpisode && hasReadyVideos);
+
+                    if (this.nextEpisodeExistsInEpisodes) {
+                        this.nextEpisodeStatus = 'available';
+                        this.nextEpisodeCountdownArabicDynamic = '';
+                        this.nextEpisodeCountdownEnglishValue = '';
+                        this.showEnglishNextEpisodeCountdown = false;
+                        return;
+                    }
+
+                    const isSameDay =
+                        now.getFullYear() === releaseDate.getFullYear() &&
+                        now.getMonth() === releaseDate.getMonth() &&
+                        now.getDate() === releaseDate.getDate();
+
+                    if (now < releaseDate) {
+                        this.nextEpisodeStatus = 'countdown';
+                        this.computeNextEpisodeCountdown(now, releaseDate);
+                    } else {
+                        this.nextEpisodeStatus = 'translation';
+                        this.nextEpisodeCountdownArabicDynamic = '';
+                        this.nextEpisodeCountdownEnglishValue = '';
+                        this.showEnglishNextEpisodeCountdown = false;
+                    }
+                },
+                computeNextEpisodeCountdown(currentTime, releaseDate) {
+                    const diffMs = releaseDate.getTime() - currentTime.getTime();
+                    if (diffMs <= 0) {
+                        this.nextEpisodeCountdownArabicDynamic = '';
+                        this.nextEpisodeCountdownEnglishValue = '';
+                        return;
+                    }
+
+                    const diffDaysDecimal = diffMs / (1000 * 60 * 60 * 24);
+                    const diffDays = Math.floor(diffDaysDecimal);
+                    const remainingHours = Math.floor((diffDaysDecimal - diffDays) * 24);
+                    const remainingMinutes = Math.floor(
+                        ((diffDaysDecimal - diffDays) * 24 - remainingHours) * 60
+                    );
+
+                    const englishParts = [];
+                    if (diffDays > 0) englishParts.push(`${diffDays}d`);
+                    if (remainingHours > 0) englishParts.push(`${remainingHours}h`);
+                    if (remainingMinutes > 0) englishParts.push(`${remainingMinutes}min`);
+                    if (!englishParts.length) englishParts.push('1min');
+                    this.nextEpisodeCountdownEnglishValue = englishParts.join('');
+
+                    const moreThan = 'أكثر من ';
+                    const lessThan = 'أقل من ';
+                    let arabicDynamic = '';
+
+                    if (diffDaysDecimal < 1) {
+                        arabicDynamic = `${lessThan}يوم`;
+                    } else if (diffDaysDecimal >= 1 && diffDaysDecimal < 2) {
+                        arabicDynamic =
+                            diffDaysDecimal > 1 ? `${moreThan}يوم واحد` : 'يوم واحد';
+                    } else if (diffDaysDecimal >= 2 && diffDaysDecimal < 3) {
+                        arabicDynamic =
+                            diffDaysDecimal > 2 ? `${moreThan}يومان` : 'يومان';
+                    } else if (diffDaysDecimal >= 3 && diffDaysDecimal < 11) {
+                        arabicDynamic =
+                            diffDaysDecimal > diffDays
+                                ? `${moreThan}${diffDays} أيام`
+                                : `${diffDays} أيام`;
+                    } else {
+                        arabicDynamic =
+                            diffDaysDecimal > diffDays
+                                ? `${moreThan}${diffDays} يومًا`
+                                : `${diffDays} يومًا`;
+                    }
+
+                    this.nextEpisodeCountdownArabicDynamic = arabicDynamic;
+                },
+                toggleNextEpisodeCountdownLanguage() {
+                    if (
+                        this.nextEpisodeStatus !== 'countdown' ||
+                        !this.nextEpisodeCountdownArabicDynamic
+                    ) {
+                        return;
+                    }
+                    this.showEnglishNextEpisodeCountdown = !this.showEnglishNextEpisodeCountdown;
+                },
                 // Get episode type tooltip based on episode properties
                 getEpisodeTypeTooltip(episode) {
                     if (episode.EpisodeNumber.includes("خاصة بالفيلم")) {
@@ -13556,6 +14155,243 @@
                 
                 toggleCountdownLanguage() {
                     this.showEnglishCountdown = !this.showEnglishCountdown;
+                },
+                
+                async loadMovieReleaseDate() {
+                    const enableMovieDebug = false;
+                    try {
+                        const response = await fetch('./RDm28.txt');
+                        const text = await response.text();
+                        this.movieReleaseDate = text.trim();
+                        if (enableMovieDebug) console.log('Loaded movie release date:', this.movieReleaseDate);
+                        this.updateMovieTiming();
+                    } catch (error) {
+                        console.error('Error loading movie release date:', error);
+                    }
+                },
+
+                parseMovieReleaseDate(dateText) {
+                    if (!dateText) return null;
+                    let releaseDate = null;
+                    const trimmed = dateText.trim();
+                    if (trimmed.includes('-')) {
+                        const parts = trimmed.split('-');
+                        if (parts.length !== 3) return null;
+                        const [year, month, day] = parts.map(Number);
+                        releaseDate = new Date(year, month - 1, day);
+                    } else if (trimmed.includes('/')) {
+                        const parts = trimmed.split('/');
+                        if (parts.length !== 3) return null;
+                        const [day, month, year] = parts.map(Number);
+                        releaseDate = new Date(year, month - 1, day);
+                    }
+                    return releaseDate;
+                },
+
+                updateMovieTiming() {
+                    const enableMovieDebug = false;
+
+                    if (!this.movieReleaseDate) {
+                        this.movieCountdownArabic = '';
+                        this.movieCountdownEnglish = '';
+                        this.movieTimeAgoArabic = '';
+                        this.movieTimeAgoEnglish = '';
+                        this.movieHasUpcomingRelease = false;
+                        return;
+                    }
+
+                    const releaseDate = this.parseMovieReleaseDate(this.movieReleaseDate);
+                    if (!releaseDate || isNaN(releaseDate)) {
+                        if (enableMovieDebug) console.log('Invalid movie release date:', this.movieReleaseDate);
+                        this.movieCountdownArabic = '';
+                        this.movieCountdownEnglish = '';
+                        this.movieTimeAgoArabic = '';
+                        this.movieTimeAgoEnglish = '';
+                        this.movieHasUpcomingRelease = false;
+                        return;
+                    }
+
+                    const now = new Date();
+
+                    if (now < releaseDate) {
+                        this.movieHasUpcomingRelease = true;
+                        const diff = releaseDate.getTime() - now.getTime();
+                        const diffDaysDecimal = diff / (1000 * 60 * 60 * 24);
+                        const diffDays = Math.floor(diffDaysDecimal);
+                        const remainingHours = Math.floor((diffDaysDecimal - diffDays) * 24);
+                        const remainingMinutes = Math.floor(((diffDaysDecimal - diffDays) * 24 - remainingHours) * 60);
+
+                        const englishParts = [];
+                        if (diffDays > 0) englishParts.push(`${diffDays}d`);
+                        if (remainingHours > 0) englishParts.push(`${remainingHours}h`);
+                        if (remainingMinutes > 0) englishParts.push(`${remainingMinutes}min`);
+                        this.movieCountdownEnglish = englishParts.join('') || '0min';
+
+                        let countdownArabic = '';
+                        const moreThan = 'متبقي أكثر من ';
+
+                        if (diffDaysDecimal < 1) {
+                            countdownArabic = 'متبقي أقل من يوم';
+                        } else if (diffDaysDecimal >= 1 && diffDaysDecimal < 2) {
+                            countdownArabic = (diffDaysDecimal > 1) ? `${moreThan}يوم واحد` : 'متبقي يوم واحد';
+                        } else if (diffDaysDecimal >= 2 && diffDaysDecimal < 3) {
+                            countdownArabic = (diffDaysDecimal > 2) ? `${moreThan}يومان` : 'متبقي يومان';
+                        } else if (diffDaysDecimal >= 3 && diffDaysDecimal < 11) {
+                            countdownArabic = (diffDaysDecimal > diffDays) ? `${moreThan}${diffDays} أيام` : `متبقي ${diffDays} أيام`;
+                        } else if (diffDaysDecimal >= 11) {
+                            countdownArabic = (diffDaysDecimal > diffDays) ? `${moreThan}${diffDays} يومًا` : `متبقي ${diffDays} يومًا`;
+                        }
+
+                        this.movieCountdownArabic = countdownArabic;
+                        this.movieTimeAgoArabic = '';
+                        this.movieTimeAgoEnglish = '';
+                    } else {
+                        this.movieHasUpcomingRelease = false;
+                        this.calculateMovieTimeAgo(releaseDate);
+                        this.movieCountdownArabic = '';
+                        this.movieCountdownEnglish = '';
+                    }
+
+                    if (enableMovieDebug) {
+                        console.log('Movie timing updated:', {
+                            releaseDate,
+                            movieHasUpcomingRelease: this.movieHasUpcomingRelease,
+                            movieCountdownArabic: this.movieCountdownArabic,
+                            movieCountdownEnglish: this.movieCountdownEnglish,
+                            movieTimeAgoArabic: this.movieTimeAgoArabic,
+                            movieTimeAgoEnglish: this.movieTimeAgoEnglish
+                        });
+                    }
+                },
+
+                calculateMovieTimeAgo(releaseDate) {
+                    const now = new Date();
+                    const diffMs = now - releaseDate;
+                    const diffSeconds = Math.floor(diffMs / 1000);
+                    const diffMinutes = Math.floor(diffSeconds / 60);
+                    const diffHours = Math.floor(diffMinutes / 60);
+                    const diffDays = Math.floor(diffHours / 24);
+                    const diffMonths = Math.floor(diffDays / 30);
+                    const diffYears = Math.floor(diffDays / 365);
+
+                    const hasExtraSeconds = diffSeconds % 60 > 0;
+                    const hasExtraMinutes = diffMinutes % 60 > 0;
+                    const hasExtraHours = diffHours % 24 > 0;
+                    const hasExtraDays = diffDays % 30 > 0;
+                    const hasExtraMonths = (diffDays % 365) >= 30;
+
+                    let timeAgoText = '';
+                    const moreThan = 'أكثر من ';
+
+                    if (diffMinutes < 1) {
+                        timeAgoText = 'الآن';
+                    } else if (diffMinutes === 1 && !hasExtraSeconds) {
+                        timeAgoText = 'دقيقة مضت';
+                    } else if (diffMinutes === 1 && hasExtraSeconds) {
+                        timeAgoText = moreThan + 'دقيقة مضت';
+                    } else if (diffMinutes === 2 && !hasExtraSeconds) {
+                        timeAgoText = 'دقيقتان مضتا';
+                    } else if (diffMinutes === 2 && hasExtraSeconds) {
+                        timeAgoText = moreThan + 'دقيقتان مضتا';
+                    } else if (diffMinutes >= 3 && diffMinutes <= 10) {
+                        timeAgoText = (hasExtraSeconds ? moreThan : '') + `${diffMinutes} دقائق مضت`;
+                    } else if (diffMinutes >= 11 && diffMinutes <= 59) {
+                        timeAgoText = (hasExtraSeconds ? moreThan : '') + `${diffMinutes} دقيقة مضت`;
+                    } else if (diffHours === 1 && !hasExtraMinutes) {
+                        timeAgoText = 'ساعة مضت';
+                    } else if (diffHours === 1 && hasExtraMinutes) {
+                        timeAgoText = moreThan + 'ساعة مضت';
+                    } else if (diffHours === 2 && !hasExtraMinutes) {
+                        timeAgoText = 'ساعتان مضتا';
+                    } else if (diffHours === 2 && hasExtraMinutes) {
+                        timeAgoText = moreThan + 'ساعتان مضتا';
+                    } else if (diffHours >= 3 && diffHours <= 10) {
+                        timeAgoText = (hasExtraMinutes ? moreThan : '') + `${diffHours} ساعات مضت`;
+                    } else if (diffHours >= 11 && diffHours <= 23) {
+                        timeAgoText = (hasExtraMinutes ? moreThan : '') + `${diffHours} ساعة مضت`;
+                    } else if (diffDays === 1 && !hasExtraHours) {
+                        timeAgoText = 'يوم مضى';
+                    } else if (diffDays === 1 && hasExtraHours) {
+                        timeAgoText = moreThan + 'يوم مضى';
+                    } else if (diffDays === 2 && !hasExtraHours) {
+                        timeAgoText = 'يومان مضيا';
+                    } else if (diffDays === 2 && hasExtraHours) {
+                        timeAgoText = moreThan + 'يومان مضيا';
+                    } else if (diffDays >= 3 && diffDays <= 10) {
+                        timeAgoText = (hasExtraHours ? moreThan : '') + `${diffDays} أيام مضت`;
+                    } else if (diffDays >= 11 && diffDays < 30) {
+                        timeAgoText = (hasExtraHours ? moreThan : '') + `${diffDays} يومًا مضت`;
+                    } else if (diffMonths === 1 && !hasExtraDays && !hasExtraHours && !hasExtraMinutes) {
+                        timeAgoText = 'شهر مضى';
+                    } else if (diffMonths === 1 && (hasExtraDays || hasExtraHours || hasExtraMinutes)) {
+                        timeAgoText = moreThan + 'شهر مضى';
+                    } else if (diffMonths === 2 && !hasExtraDays && !hasExtraHours && !hasExtraMinutes) {
+                        timeAgoText = 'شهران مضيا';
+                    } else if (diffMonths === 2 && (hasExtraDays || hasExtraHours || hasExtraMinutes)) {
+                        timeAgoText = moreThan + 'شهران مضيا';
+                    } else if (diffMonths >= 3 && diffMonths <= 10) {
+                        timeAgoText = ((hasExtraDays || hasExtraHours || hasExtraMinutes) ? moreThan : '') + `${diffMonths} أشهر مضت`;
+                    } else if (diffMonths >= 11 && diffMonths < 12) {
+                        timeAgoText = ((hasExtraDays || hasExtraHours || hasExtraMinutes) ? moreThan : '') + `${diffMonths} شهرًا مضت`;
+                    } else if (diffYears === 1 && !hasExtraMonths) {
+                        timeAgoText = 'سنة مضت';
+                    } else if (diffYears === 1 && hasExtraMonths) {
+                        timeAgoText = moreThan + 'سنة مضت';
+                    } else if (diffYears === 2 && !hasExtraMonths) {
+                        timeAgoText = 'سنتان مضتا';
+                    } else if (diffYears === 2 && hasExtraMonths) {
+                        timeAgoText = moreThan + 'سنتان مضتا';
+                    } else if (diffYears >= 3 && diffYears <= 10) {
+                        timeAgoText = (hasExtraMonths ? moreThan : '') + `${diffYears} سنوات مضت`;
+                    } else {
+                        timeAgoText = (hasExtraMonths ? moreThan : '') + `${diffYears} سنة مضت`;
+                    }
+
+                    this.movieTimeAgoArabic = timeAgoText;
+                    this.updateMovieTimeAgoEnglish(releaseDate);
+                },
+
+                updateMovieTimeAgoEnglish(releaseDate) {
+                    const now = new Date();
+                    const diffMs = now - releaseDate;
+
+                    const totalSeconds = Math.floor(diffMs / 1000);
+                    const totalMinutes = Math.floor(totalSeconds / 60);
+                    const totalHours = Math.floor(totalMinutes / 60);
+                    const totalDays = Math.floor(totalHours / 24);
+                    const totalMonths = Math.floor(totalDays / 30);
+                    const totalYears = Math.floor(totalDays / 365);
+
+                    const years = totalYears;
+                    const months = totalMonths - (years * 12);
+                    const weeks = Math.floor((totalDays - (years * 365) - (months * 30)) / 7);
+                    const days = totalDays - (years * 365) - (months * 30) - (weeks * 7);
+                    const hours = totalHours - (totalDays * 24);
+                    const minutes = totalMinutes - (totalHours * 60);
+
+                    let parts = [];
+                    if (years > 0) parts.push(`${years}y`);
+                    if (months > 0) parts.push(`${months}m`);
+                    if (weeks > 0) parts.push(`${weeks}w`);
+                    if (days > 0) parts.push(`${days}d`);
+                    if (hours > 0) parts.push(`${hours}h`);
+                    if (minutes > 0) parts.push(`${minutes}min`);
+
+                    if (parts.length === 0) {
+                        const seconds = totalSeconds;
+                        parts.push(`${seconds}s`);
+                    }
+
+                    this.movieTimeAgoEnglish = parts.join('');
+                },
+
+                toggleMovieTimeFormat() {
+                    const enableMovieDebug = false;
+                    if (!(this.movieCountdownArabic || this.movieTimeAgoArabic)) {
+                        return;
+                    }
+                    this.showEnglishMovieTimeFormat = !this.showEnglishMovieTimeFormat;
+                    if (enableMovieDebug) console.log('Toggled movie time format:', this.showEnglishMovieTimeFormat);
                 },
                 
                 shuffleZikr() {
@@ -16251,6 +17087,98 @@
                     }
                 },
 
+                processEpisodeNotes(notes) {
+                    if (this.episodeNotesDebug) console.log('processEpisodeNotes called with notes:', notes);
+                    
+                    // Skip processing for 'ماجيك كايتو2'
+                    if (notes && notes.includes('ماجيك كايتو2')) {
+                        if (this.episodeNotesDebug) console.log('Skipping processing for ماجيك كايتو2');
+                        return notes;
+                    }
+                    
+                    if (!notes) {
+                        if (this.episodeNotesDebug) console.log('No notes provided, returning empty string');
+                        return '';
+                    }
+                    
+                    // First, handle 'بالفيلم n' patterns (with ب prefix)
+                    let processed = notes.replace(/(ب)?(الفيلم\s+\d+(?:\.\d+)?)/g, (match, hasBa, filmPart) => {
+                        if (this.episodeNotesDebug) console.log('Processing film pattern:', { match, hasBa, filmPart });
+                        const number = filmPart.match(/\d+(?:\.\d+)?/)[0];
+                        const isDisabled = (this.selectedEpisode?.EpisodeVideosIDs?.some(video => 
+                            video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || 
+                            this.selectedEpisode?.EpisodeMangasIDs?.some(manga => 
+                                manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending'));
+                        
+                        if (this.episodeNotesDebug) console.log('Generated film link:', { number, isDisabled });
+                        return `<span 
+                            data-episode-type="film"
+                            data-episode-number="${number}"
+                            ${isDisabled ? 'disabled' : ''}
+                            class="episode-link text-lg font-bold underline text-yellow-300 bg-transparent border-0 ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer active:scale-90'} transition-all duration-100"
+                            style="pointer-events: ${isDisabled ? 'none' : 'auto'}"
+                        >${match}</span>`;
+                    });
+                    
+                    // Then handle standalone numbers that weren't part of 'الفيلم n' or 'بالفيلم n'
+                    processed = processed.replace(/(?<!<[^>]*)(?<!الفيلم\s)(?<!ب?الفيلم\s)(?<![\d\w])(\d+(?:\.\d+)?)(?![\d\w])/g, (match) => {
+                        if (this.episodeNotesDebug) console.log('Processing standalone number:', match);
+                        const isDisabled = (this.selectedEpisode?.EpisodeVideosIDs?.some(video => 
+                            video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending') || 
+                            this.selectedEpisode?.EpisodeMangasIDs?.some(manga => 
+                                manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending'));
+                        
+                        if (this.episodeNotesDebug) console.log('Generated number link:', { number: match, isDisabled });
+                        return `<span 
+                            data-episode-type="number"
+                            data-episode-number="${match}"
+                            ${isDisabled ? 'disabled' : ''}
+                            class="episode-link text-lg font-bold underline text-yellow-300 bg-transparent border-0 ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer active:scale-90'} transition-all duration-100"
+                            style="pointer-events: ${isDisabled ? 'none' : 'auto'}"
+                        >${match}</span>`;
+                    });
+                    
+                    // Add event delegation in the next tick after the DOM is updated
+                    this.$nextTick(() => {
+                        if (this.episodeNotesDebug) console.log('Setting up event delegation for episode links');
+                        
+                        // Clean up any existing event listeners
+                        if (this.episodeLinkClickHandler) {
+                            document.removeEventListener('click', this.episodeLinkClickHandler);
+                        }
+                        
+                        // Create new handler
+                        this.episodeLinkClickHandler = (e) => {
+                            // Only handle clicks on episode links
+                            const link = e.target.closest('.episode-link:not([disabled])');
+                            if (!link) return;
+                            
+                            e.preventDefault();
+                            e.stopPropagation();
+                            
+                            const type = link.dataset.episodeType;
+                            const number = link.dataset.episodeNumber;
+                            if (this.episodeNotesDebug) {
+                                if (this.episodeNotesDebug) console.log('Episode link clicked:', { type, number });
+                                if (this.episodeNotesDebug) console.log('Calling resetStatusForEpisodeManga and openEpisodeModal with:', 
+                                    type === 'film' ? `الفيلم ${number}` : number);
+                            }
+                            
+                            const episodeNumber = type === 'film' ? `الفيلم ${number}` : number;
+                            if (this.episodeNotesDebug) console.log('Episode link clicked:', { type, number });
+                            
+                            this.resetStatusForEpisodeManga();
+                            this.openEpisodeModal(episodeNumber);
+                        };
+                        
+                        // Attach the event listener to the document
+                        document.addEventListener('click', this.episodeLinkClickHandler);
+                        if (this.episodeNotesDebug) console.log('Event listener added to document');
+                    });
+                    
+                    return processed;
+                },
+
                 openEpisodeModal(episodeNumber) {
                     if (!this.episodes || this.episodes.length === 0) {
                         console.log('Episodes data is not loaded yet in openEpisodeModal!'); // Keeping this one, as it's a potential error case
@@ -16863,6 +17791,46 @@
                     this.calculateCountdown();
                 }, 60000); // Update every minute
                 if (enableDebug) console.log('mounted - Countdown timer set up complete');
+
+                // Load movie release date and set up interval for countdown/time-ago
+                this.loadMovieReleaseDate();
+                this.movieTimingInterval = setInterval(() => {
+                    this.updateMovieTiming();
+                }, 60000);
+
+                this.loadNextEpisodeInfo();
+                this.$watch('episodes', () => {
+                    this.refreshNextEpisodeState();
+                });
+                this.$watch(
+                    'nextEpisodeInfo',
+                    () => {
+                        this.refreshNextEpisodeState();
+                    },
+                    { deep: true }
+                );
+                this.nextEpisodeIntervalId = setInterval(() => {
+                    this.refreshNextEpisodeState();
+                }, 60000);
+
+                this.loadNextMangaInfo();
+                this.$watch(
+                    'nextMangaInfo',
+                    () => {
+                        this.refreshNextMangaState();
+                    },
+                    { deep: true }
+                );
+                this.$watch(
+                    () => this.groupedMangas,
+                    () => {
+                        this.refreshNextMangaState();
+                    },
+                    { deep: true }
+                );
+                this.nextMangaIntervalId = setInterval(() => {
+                    this.refreshNextMangaState();
+                }, 60000);
             },
 
             unmounted() {
@@ -16874,7 +17842,10 @@
                 if (this.mangaTimeInterval) clearInterval(this.mangaTimeInterval);
                 if (this.countdownInterval) clearInterval(this.countdownInterval);
                 if (this.episodeBroadcastCountdownInterval) clearInterval(this.episodeBroadcastCountdownInterval);
+                if (this.movieTimingInterval) clearInterval(this.movieTimingInterval);
                 if (this.timeoutId) clearTimeout(this.timeoutId);
+                if (this.nextEpisodeIntervalId) clearInterval(this.nextEpisodeIntervalId);
+                if (this.nextMangaIntervalId) clearInterval(this.nextMangaIntervalId);
 
                 // Clean up event listener to prevent memory leaks
                 document.removeEventListener("click", this.closeMenu);
