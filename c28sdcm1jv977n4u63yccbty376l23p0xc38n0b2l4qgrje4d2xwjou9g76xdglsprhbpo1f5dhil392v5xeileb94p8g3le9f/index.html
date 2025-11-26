@@ -5892,12 +5892,14 @@
                                     'border border-gray-300 px-4 text-lg font-bold py-2 text-center cursor-pointer',
                                     isJumpHighlighted(episode)
                                         ? 'bg-yellow-300 text-black hover:bg-yellow-900 hover:text-white'
-                                        : 'hover:bg-yellow-900'
+                                        : 'hover:bg-yellow-900',
+                                    lastClickedEpisode === episode ? 'bg-blue-300 text-black hover:text-white' : ''
                                 ]"
-                                @click="openModal(episode)"
+                                @click="selectEpisodeAndOpen(episode)"
                             >
                                 {{ episode.EpisodeTitle }}
                             </td>
+
                         </tr>
                     </tbody>
             
@@ -6442,6 +6444,7 @@
                     },
                     pendingJumpTarget: null,
                     jumpHighlightIdentifier: null,
+                    lastClickedEpisode: null,
                     errorMessage: "",
                     statusClearTimeout: 2000,
                     ep: 1182,
@@ -13829,6 +13832,11 @@
                 },
             },
             methods: {
+
+                selectEpisodeAndOpen(episode) {
+                    this.lastClickedEpisode = episode;
+                    this.openModal(episode);
+                },
 
                 async loadNextMangaInfo() {
                     try {
