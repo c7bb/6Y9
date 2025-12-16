@@ -10354,13 +10354,16 @@
                             const numberList = [];
                             const textFragments = [];
 
-                            rawSearchQuery.split(',').forEach(part => {
+                            rawSearchQuery.split(/[،,]/).forEach(part => {
                                 part = part.trim();
                                 if (!part) return;
 
-                                if (part.includes('-') && !part.match(/^\d+\.\d+-/)) {
+                                // Normalize digits so ranges and numbers work with Arabic-Indic/Persian numerals
+                                const normalizedPart = this.normalizeDigits(part);
+
+                                if (normalizedPart.includes('-') && !normalizedPart.match(/^\d+\.\d+-/)) {
                                     // Handle ranges like "44-60" (but not decimals like "1076.5-")
-                                    const [start, end] = part.split('-').map(num => parseFloat(num.trim()));
+                                    const [start, end] = normalizedPart.split('-').map(num => parseFloat(num.trim()));
                                     if (!isNaN(start) && !isNaN(end) && start <= end) {
                                         // For integer ranges, add all integers in the range
                                         if (Number.isInteger(start) && Number.isInteger(end)) {
@@ -10375,11 +10378,11 @@
                                     }
                                 } else {
                                     // Handle single numbers (including decimals)
-                                    const num = parseFloat(part);
+                                    const num = parseFloat(normalizedPart);
                                     if (!isNaN(num)) {
                                         numberList.push(num.toString());
                                     } else {
-                                        textFragments.push(part);
+                                        textFragments.push(normalizedPart);
                                     }
                                 }
                             });
@@ -12079,7 +12082,8 @@
                     const trimmed = newQuery.trim();
 
                     if (trimmed.endsWith('+')) {
-                        const targetValue = trimmed.slice(0, -1).trim();
+                        // Normalize digits so quick-jump works for Arabic-Indic/Persian numbers
+                        const targetValue = this.normalizeDigits(trimmed.slice(0, -1).trim());
 
                         if (!targetValue) {
                             this.pendingJumpTarget = null;
@@ -15445,8 +15449,20 @@
                     this.trackLastPage();
                 },
 
+                // Convert Eastern-Arabic / Persian numerals to Western numerals
+                normalizeDigits(text) {
+                    if (!text) return '';
+                    const digitMap = {
+                        '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4',
+                        '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9',
+                        '۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4',
+                        '۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9',
+                    };
+                    return String(text).replace(/[٠-٩۰-۹]/g, (digit) => digitMap[digit] || digit);
+                },
+
                 normalizeText(text) {
-                    let normalizedText = text.toLowerCase();
+                    let normalizedText = this.normalizeDigits(text).toLowerCase();
                     normalizedText = normalizedText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                     for (let [key, values] of Object.entries(this.replacementDict)) {
                         const regex = new RegExp(key, 'g'); // Global search for the word
@@ -15458,7 +15474,7 @@
                     return normalizedText;
                 },
                 normalizeEpisodeIdentifier(value) {
-                    return String(value || '')
+                    return this.normalizeDigits(String(value || ''))
                         .replace(/\s+/g, ' ')
                         .trim()
                         .toLowerCase();
