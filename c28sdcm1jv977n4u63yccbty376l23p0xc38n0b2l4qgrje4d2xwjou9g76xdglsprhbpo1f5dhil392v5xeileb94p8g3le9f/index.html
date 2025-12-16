@@ -17636,7 +17636,7 @@
                     if (episode) {
                         this.openModal(episode); // Open the modal for the found episode
                     } else {
-                        console.log("Episode not found!");
+                        console.log("Episode not found!", { requested: episodeCode, totalLoaded: this.episodes.length });
                     }
                 },
 
