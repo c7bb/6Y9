@@ -17763,11 +17763,46 @@
 						                    https://t.me/CodeSubs
 						                </a>
 						            </div>
-						            <button id="retryButton" style="width: 80%; padding: 12px; background: #1a6dc4; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: bold; transition: background 0.3s; display: inline-flex; justify-content: center; align-items: center; gap: 8px;">
-						                <span>🔍</span>
-						                <span>تحقق مرة أخرى</span>
-						                <span>🔍</span>
-						            </button>
+									<button id="retryButton"
+									style="
+									width: 80%;
+									padding: 12px;
+									background: linear-gradient(135deg, #1a6dc4, #0f4fa8);
+									color: #fff;
+									border: none;
+									border-radius: 10px;
+									cursor: pointer;
+									font-size: 18px;
+									font-weight: bold;
+									display: inline-flex;
+									justify-content: center;
+									align-items: center;
+									gap: 8px;
+									
+									box-shadow: 0 6px 0 #0c3e82, 0 10px 20px rgba(0,0,0,0.3);
+									transition: all 0.15s ease;
+									"
+									onmouseover="
+									this.style.transform='translateY(-2px)';
+									this.style.boxShadow='0 8px 0 #0c3e82, 0 14px 25px rgba(0,0,0,0.35)';
+									"
+									onmouseout="
+									this.style.transform='translateY(0)';
+									this.style.boxShadow='0 6px 0 #0c3e82, 0 10px 20px rgba(0,0,0,0.3)';
+									"
+									onmousedown="
+									this.style.transform='translateY(3px)';
+									this.style.boxShadow='0 3px 0 #0c3e82, 0 6px 10px rgba(0,0,0,0.25)';
+									"
+									onmouseup="
+									this.style.transform='translateY(-2px)';
+									this.style.boxShadow='0 8px 0 #0c3e82, 0 14px 25px rgba(0,0,0,0.35)';
+									"
+									>
+									    <span>🔍</span>
+									    <span>تحقق مرة أخرى</span>
+									    <span>🔍</span>
+									</button>
 						        </div>
 						    </div>
 						`;
@@ -18695,6 +18730,7 @@
     </style>
 </body>
 </html>
+
 
 
 
