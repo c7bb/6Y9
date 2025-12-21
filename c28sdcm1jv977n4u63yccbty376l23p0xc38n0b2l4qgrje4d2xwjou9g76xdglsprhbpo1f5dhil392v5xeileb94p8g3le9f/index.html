@@ -760,13 +760,13 @@
                                 v-model.trim="searchQuery"
                                 @focus="clearJumpHighlight"
                                 @keydown.enter.prevent
-                                rows="2"
+                                :rows="(searchFilters.title || searchFilters.story || searchFilters.summary) ? 2 : 1"
                                 placeholder="ابحث..."
                                 class="w-full p-2 text-lg bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-teal-400 resize-none overflow-y-auto whitespace-pre-wrap break-words"
                                 ></textarea>
                                 <button
                                 @click="clearSearch"
-                                class="absolute top-5 left-3 text-xl text-red-600 font-black transition-all duration-100 active:scale-90"
+                                :class="['absolute left-3 text-xl text-red-600 font-black transition-all duration-100 active:scale-90', (searchFilters.title || searchFilters.story || searchFilters.summary) ? 'top-5' : 'top-2']"
                                 >
                                 ✕
                                 </button>
