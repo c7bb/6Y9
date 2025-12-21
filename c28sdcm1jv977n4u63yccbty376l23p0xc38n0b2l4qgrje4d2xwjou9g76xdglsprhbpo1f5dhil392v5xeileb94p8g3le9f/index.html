@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="rtl">
 <head>
-	<script src="https://cdn.lgrckt-in.com/LogRocket.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.lgrckt-in.com/LogRocket.min.js" crossorigin="anonymous"></script>
     <script>
        window.LogRocket && window.LogRocket.init('hitfhq/dcref-emt');
     </script>
@@ -13,7 +13,7 @@
         })(window, document, "clarity", "script", "tzsxusebyo");
     </script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="4d04a0ff-950d-42aa-b123-ce9984e37559"></script>
-    <script>
+    <!-- <script>
         // Immediate cleanup function
         (function() {
             // Clear localStorage and sessionStorage
@@ -48,7 +48,11 @@
                 });
             }
         })();
-    </script>    
+    </script>  -->
+    <script type="module">
+        import { init, id, lookup } from 'https://cdn.jsdelivr.net/npm/@instantdb/core@0.22.90/+esm';
+        window.InstantDB = { init, id, lookup };
+    </script>
     <script src="https://telegram.org/js/telegram-web-app.js?56"></script>    
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
@@ -533,6 +537,24 @@
         .animate-ticker {
             animation: ticker 15s linear infinite;
         }
+
+        @keyframes successHintIn {
+            from { opacity: 0; transform: translateX(48px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes successHintOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(48px); }
+        }
+
+        .success-hint-in {
+            animation: successHintIn 220ms ease-out both;
+        }
+
+        .success-hint-out {
+            animation: successHintOut 220ms ease-in both;
+        }
     </style>
     <style>
         /* Apple Notch Style */
@@ -631,6 +653,63 @@
             ⚠️ تنتهي الجلسة خلال {{ formattedInactivityCountdown }} بسبب عدم النشاط
         </div>
 
+        <div 
+            v-if="successHintVisible"
+            :class="['fixed bottom-4 right-1 z-[111] bg-emerald-900 text-yellow-100 px-3 py-2 rounded shadow-lg text-sm max-w-[90vw] sm:max-w-[420px]', successHintAnimatingOut ? 'success-hint-out' : 'success-hint-in']"
+        >
+            <div class="flex items-center gap-4">
+                <!-- <button @click="dismissSuccessHint" class="text-red-600 hover:text-yellow-300 transition-all duration-100 active:scale-90">
+                    <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png" alt="Close" class="h-8 w-8" />
+                </button> -->
+                <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/true.png" alt="Success" class="h-7 w-7 -mx-2" />
+                <div class="flex-1 font-bold">
+                    {{ successHintMessage }}
+                    <!-- <span class="opacity-80">({{ successHintCountdown }})</span> -->
+                </div>
+                <!-- <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/true.png" alt="Success" class="h-7 w-7" /> -->
+            </div>
+        </div>
+
+        <div
+            v-if="showErrorOverlay"
+            class="fixed z-[105] inset-0 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center"
+        >
+            <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-1/2 lg:w-1/3 max-h-[90vh] overflow-hidden flex flex-col">
+                <div class="sticky top-0 bg-cyan-900 pt-4 pl-4 pr-4 pb-2">
+                    <h2 :class="['text-lg', isFailedToFetch ? 'text-yellow-300' : 'text-red-500', 'font-bold', 'text-center']">{{ displayErrorMessage }}</h2>
+                </div>
+
+                <div v-if="!isFailedToFetch" class="overflow-y-auto p-4 flex-1">
+                    <p class="text-lg text-white text-center font-bold mb-4">
+                        تأكد من أن البوت لديه صلاحية إرسال الرسائل لك من خلال اشتراكك فيه، وذلك بالضغط على زر 'Start' أو 'Restart' أو 'بدء' كما هو موضح في الصورة 👇
+                    </p>
+                    <img
+                        src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/error_hint.png"
+                        alt="Error Hint"
+                        class="mb-4 w-full rounded"
+                    />
+                    <p class="text-lg text-white font-bold text-center mt-4">
+                        إذا لم يظهر لك الزر، فهذا يعني أنك مشترك بالفعل في البوت.
+                    </p>
+                </div>
+
+                <div :class="['p-4', 'bg-cyan-900', 'flex', isFailedToFetch ? 'justify-center' : 'justify-between']">
+                    <a
+                        v-if="!isFailedToFetch"
+                        href="https://t.me/DCRef_bot"
+                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all duration-100 active:scale-90"
+                    >
+                        أضغط هنا للذهاب إلى البوت
+                    </a>
+                    <button
+                        @click="clearError()"
+                        class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition-all duration-100 active:scale-90"
+                    >
+                        إغلاق
+                    </button>
+                </div>
+            </div>
+        </div>
             <!-- Updated Menu Button -->
             <div class="fixed top-4 right-4 z-50 menu-container">
                 <button @click.stop="toggleMenu" :disabled="loading" class="bg-gray-700 text-white p-2 rounded flex flex-col items-center transition-all duration-100 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed">
@@ -643,6 +722,10 @@
                     <button @click="openDirectWindow('episodes')" class="block w-full px-4 py-2 text-base font-bold text-white hover:bg-teal-600 transition-all duration-100 active:scale-90">حلقات</button>
                     <button @click="openDirectWindow('movies')" class="block w-full px-4 py-2 text-base font-bold text-white hover:bg-teal-600 transition-all duration-100 active:scale-90">أفلام</button>
                     <button @click="openDirectWindow('mangas')" class="block w-full px-4 py-2 text-base font-bold text-white hover:bg-teal-600 transition-all duration-100 active:scale-90">مانغا</button>
+                    <hr class="my-1 border-gray-500">
+                    <button @click="openFastingWindow('episodes')" class="block w-full px-4 py-2 text-base font-bold text-white hover:bg-teal-600 transition-all duration-100 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed" disabled>(قريبًا)</button>
+                    <button @click="openFastingWindow('mangas')" class="block w-full px-4 py-2 text-base font-bold text-white hover:bg-teal-600 transition-all duration-100 active:scale-90">مانغا 🚀</button>
+                    <button @click="openFastingWindow('movies')" class="block w-full px-4 py-2 text-base font-bold text-white hover:bg-teal-600 transition-all duration-100 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed" disabled>(قريبًا)</button>
                 </div>
             </div>
 
@@ -673,16 +756,17 @@
                             </div>
                             
                             <div class="relative">
-                                <input
+                                <textarea
                                 v-model.trim="searchQuery"
                                 @focus="clearJumpHighlight"
-                                type="text"
+                                @keydown.enter.prevent
+                                rows="2"
                                 placeholder="ابحث..."
-                                class="w-full p-2 text-lg bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-teal-400"
-                                />
+                                class="w-full p-2 text-lg bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-teal-400 resize-none overflow-y-auto whitespace-pre-wrap break-words"
+                                ></textarea>
                                 <button
                                 @click="clearSearch"
-                                class="absolute top-2 left-3 text-xl text-red-600 font-black transition-all duration-100 active:scale-90"
+                                class="absolute top-5 left-3 text-xl text-red-600 font-black transition-all duration-100 active:scale-90"
                                 >
                                 ✕
                                 </button>
@@ -746,7 +830,7 @@
                             <h2 class="text-xl font-bold">النافذة المباشرة</h2>
                             <button @click="closeDirectWindow" class="text-red-600 hover:text-yellow-300 transition-all duration-100 active:scale-90">
                                 <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png" alt="Close" class="h-8 w-8" />
-                              </button>                              
+                            </button>                              
                         </div>
                         
                         <fieldset class="border p-2 rounded mt-2">
@@ -767,53 +851,6 @@
                             </div>
                         </fieldset>
                     </div>
-
-                    <div  
-                        v-if="(selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'error')) || (selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'error')) || (selectedManga?.status === 'error') || (selectedEpisode?.status === 'error')"
-                        class="fixed z-10 inset-0 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center"
-                        >
-                        <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-1/2 lg:w-1/3 max-h-[90vh] overflow-hidden flex flex-col">
-                            <!-- Sticky Header Section -->
-                            <div class="sticky top-0 bg-cyan-900 pt-4 pl-4 pr-4 pb-2">
-                            <h2 class="text-lg text-red-500 font-bold text-center">{{ errorMessage }}</h2>
-                            </div>
-
-                            <!-- Scrollable Content -->
-                            <div class="overflow-y-auto p-4 flex-1">
-                            <p class="text-lg text-white text-center font-bold mb-4">
-                                تأكد من أن البوت لديه صلاحية إرسال الرسائل لك من خلال اشتراكك فيه، وذلك بالضغط على زر 'Start' أو 'Restart' أو 'بدء' كما هو موضح في الصورة 👇
-                            </p>
-                            <img
-                                src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/error_hint.png"
-                                alt="Error Hint"
-                                class="mb-4 w-full rounded"
-                            />
-                            <!-- Display Telegram's error message -->
-                            <!-- <p v-if="errorMessage" class="text-lg text-white text-center font-bold mt-4">
-                                {{ errorMessage }}
-                            </p> -->
-                            <p class="text-lg text-white font-bold text-center mt-4">
-                                إذا لم يظهر لك الزر، فهذا يعني أنك مشترك بالفعل في البوت.
-                            </p>
-                            </div>
-
-                            <!-- Footer Section -->
-                            <div class="p-4 bg-cyan-900 flex justify-between">
-                            <a
-                                href="https://t.me/DCRef_bot"
-                                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all duration-100 active:scale-90"
-                            >
-                                أضغط هنا للذهاب إلى البوت
-                            </a>
-                            <button
-                                @click="clearError()"
-                                class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition-all duration-100 active:scale-90"
-                            >
-                                إغلاق
-                            </button>
-                            </div>
-                        </div>
-                    </div> 
 
                     <!-- Episodes Content -->
                     <div v-if="selectedCategory === 'episodes'" class="overflow-y-auto p-4 flex-1 always-visible-scrollbar">
@@ -1197,6 +1234,434 @@
                                     </div>
                                 </div>
                             </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- النافذة السريعة Modal -->
+            <div v-if="showFastingWindow" class="fixed z-50 inset-0 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center">
+                <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-2/3 lg:w-1/2 max-h-[90vh] overflow-hidden flex flex-col">
+                    <div class="sticky top-0 bg-cyan-900 pt-4 pl-4 pr-4 pb-2">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-xl font-bold">النافذة السريعة <span class="text-xs text-yellow-300 font-normal">(تجريبي)</span></h2>
+                            <button 
+                                v-if="!isMangaQueueRunning" 
+                                @click="closeFastingWindow" 
+                                class="text-red-600 hover:text-yellow-300 transition-all duration-100 active:scale-90">
+                                <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png" alt="Close" class="h-8 w-8" />
+                            </button>                              
+                        </div>
+                        
+                        <fieldset class="border p-2 rounded mt-2">
+                            <legend class="px-2">اختر نوع المحتوى:</legend>
+                            <div class="flex justify-around">
+                                <label class="flex items-center transition-all duration-100 active:scale-90">
+                                    <input type="radio" v-model="selectedCategory" value="episodes" class="ml-2" disabled>
+                                    حلقات
+                                </label>
+                                <label class="flex items-center transition-all duration-100 active:scale-90">
+                                    <input type="radio" v-model="selectedCategory" value="movies" class="ml-2" disabled>
+                                    أفلام
+                                </label>
+                                <label class="flex items-center transition-all duration-100 active:scale-90">
+                                    <input type="radio" v-model="selectedCategory" value="mangas" class="ml-2" :disabled="isMangaQueueRunning">
+                                    مانغا
+                                </label>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <!-- Manga Bulk Send Content -->
+                    <div v-if="selectedCategory === 'mangas'" class="overflow-y-auto p-4 flex-1 always-visible-scrollbar">
+                        <!-- Daily Limit Status -->
+                        <div class="pt-2 mb-4">
+                            <div class="bg-slate-800 rounded p-2 text-sm flex flex-col gap-1 border border-cyan-700">
+                                <div class="flex justify-between items-center">
+                                    <span>التحميلات اليومية:</span>
+                                    <span v-if="dailyReady" :class="{'text-green-400': effectiveRemainingDownloads > 20, 'text-yellow-400': effectiveRemainingDownloads <= 20 && effectiveRemainingDownloads > 0, 'text-red-500': effectiveRemainingDownloads === 0}">
+                                        <span v-if="pendingDailyIncrements > 0" class="text-cyan-300 text-xs inline-flex items-center gap-1">{{ pendingDailyIncrements }}+</span>
+                                        {{ dailyDownloads }} / {{ safeMaxDailyDownloads }}
+                                    </span>
+                                    <span v-else class="text-slate-300 text-xs">جارٍ المزامنة...</span>
+                                </div>
+                                <div class="w-full bg-slate-700 rounded-full h-2.5 dark:bg-slate-700 mt-1">
+                                    <div class="bg-cyan-600 h-2.5 rounded-full transition-all duration-500" :style="{ width: (effectiveDailyDownloads / safeMaxDailyDownloads * 100) + '%' }"></div>
+                                </div>
+                                <div class="flex justify-between items-center mt-1 text-xs text-slate-400">
+                                    <span>
+                                        المتبقي:
+                                        <span v-if="!dailyReady" class="text-slate-300 text-xs">جارٍ المزامنة...</span>
+                                        <span v-else>
+                                            {{ effectiveRemainingDownloads }}
+                                            <span v-if="pendingDailyIncrements > 0 && (safeMaxDailyDownloads - dailyDownloads) > 0" class="text-cyan-300 text-xs inline-flex items-center gap-1">{{ Math.min(pendingDailyIncrements, (safeMaxDailyDownloads - dailyDownloads)) }}-</span>
+                                        </span>
+                                    </span>
+                                    <span>🔄️ {{ timeUntilReset }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div v-if="!isMangaQueueRunning && mangaQueueStats.total === 0" class="space-y-4">
+                            <div class="flex gap-4 items-center">
+                                <div class="flex-1">
+                                    <label class="block mb-2 text-sm">من الفصل:</label>
+                                    <input
+                                        v-model="mangaStartNumberModel"
+                                        type="text"
+                                        inputmode="numeric"
+                                        pattern="[0-9٠-٩۰-۹]*"
+                                        class="w-full p-2 bg-gray-700 rounded text-white"
+                                        :placeholder="`${minMangaNumber}`"
+                                        dir="ltr"
+                                    />
+                                </div>
+                                <div class="flex-1">
+                                    <label class="block mb-2 text-sm">إلى الفصل:</label>
+                                    <input
+                                        v-model="mangaEndNumberModel"
+                                        type="text"
+                                        inputmode="numeric"
+                                        pattern="[0-9٠-٩۰-۹]*"
+                                        class="w-full p-2 bg-gray-700 rounded text-white"
+                                        :placeholder="`${maxMangaNumber}`"
+                                        dir="ltr"
+                                    />
+                                </div>
+                            </div>
+                            <button 
+                                @click="startMangaQueue" 
+                                :disabled="mangaStartNumber === null || mangaStartNumber === undefined || mangaEndNumber === null || mangaEndNumber === undefined || mangaStartNumber > mangaEndNumber || mangaStartNumber < minMangaNumber || mangaEndNumber > maxMangaNumber || isRetryAllFailedRunning"
+                                class="w-full bg-green-500 text-white px-6 py-3 rounded hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90 font-bold">
+                                إرسال المانغا ({{ (mangaStartNumber !== null && mangaStartNumber !== undefined && mangaEndNumber !== null && mangaEndNumber !== undefined && mangaStartNumber <= mangaEndNumber && mangaStartNumber >= minMangaNumber && mangaEndNumber <= maxMangaNumber) ? (mangaEndNumber - mangaStartNumber + 1) : 0 }})
+                            </button>
+                        </div>
+
+                        <!-- Queue Progress Display -->
+                        <div v-if="isMangaQueueRunning || mangaQueueStats.total > 0" class="space-y-4 mt-4">
+                            <!-- Current Chapter Status (only current, not full list) -->
+                            <div v-if="mangaQueueCurrent && mangaQueueCurrent.chapter !== null" class="bg-gray-800 p-3 rounded flex items-center justify-center">
+                                <div class="flex items-center gap-3" dir="ltr">
+                                    <span class="text-lg font-bold text-yellow-300">{{ mangaQueueCurrent.chapter }}</span>
+                                    <span v-if="mangaQueueCurrent.status === 'sending'" class="inline-flex items-center">
+                                        <span class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></span>
+                                    </span>
+                                    <span v-else-if="mangaQueueCurrent.status === 'success'" class="text-green-400 text-lg">✅</span>
+                                    <span v-else-if="mangaQueueCurrent.status === 'failed'" class="text-red-400 text-lg">❌</span>
+                                </div>
+                            </div>
+
+                            <!-- Progress Bar -->
+                            <div class="w-full">
+                                <div class="flex justify-between mb-2 text-sm">
+                                    <span>التقدم</span>
+                                    <span>{{ mangaQueueProgress }}%</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-6 overflow-hidden">
+                                    <div 
+                                        class="h-6 transition-all duration-300 rounded-full"
+                                        :class="{
+                                            'bg-green-500': mangaQueueProgress >= 100,
+                                            'bg-blue-500': mangaQueueProgress >= 50 && mangaQueueProgress < 100,
+                                            'bg-yellow-500': mangaQueueProgress >= 25 && mangaQueueProgress < 50,
+                                            'bg-red-500': mangaQueueProgress < 25
+                                        }"
+                                        :style="{ width: mangaQueueProgress + '%' }"
+                                    ></div>
+                                </div>
+                            </div>
+
+                            <!-- Statistics -->
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div class="bg-gray-800 p-3 rounded">
+                                    <div class="text-gray-400">إجمالي المانغا</div>
+                                    <div class="text-xl font-bold">{{ mangaQueueStats.total }}</div>
+                                </div>
+                                <div class="bg-gray-800 p-3 rounded">
+                                    <div class="text-gray-400">تم الإرسال</div>
+                                    <div class="text-xl font-bold text-green-400">
+                                        <button
+                                            v-if="mangaQueueStats.sent > 0"
+                                            @click="showMangaSentLogModal = true"
+                                            class="underline underline-offset-4 hover:text-green-300 transition-all duration-100 active:scale-90"
+                                        >
+                                            {{ mangaQueueStats.sent }}
+                                        </button>
+                                        <span v-else>{{ mangaQueueStats.sent }}</span>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-800 p-3 rounded">
+                                    <div class="text-gray-400">في الانتظار</div>
+                                    <div class="text-xl font-bold text-yellow-400">{{ mangaQueueStats.waiting }}</div>
+                                </div>
+                                <div class="bg-gray-800 p-3 rounded">
+                                    <div class="text-gray-400">فشل</div>
+                                    <div class="text-xl font-bold text-red-400">
+                                        <button
+                                            v-if="mangaQueueStats.failed > 0"
+                                            @click="showMangaFailedLogModal = true"
+                                            class="underline underline-offset-4 hover:text-red-300 transition-all duration-100 active:scale-90"
+                                        >
+                                            {{ mangaQueueStats.failed }}
+                                        </button>
+                                        <span v-else>{{ mangaQueueStats.failed }}</span>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-800 p-3 rounded">
+                                    <div class="text-gray-400">الوقت المستغرق</div>
+                                    <div class="text-xl font-bold">{{ formatTime(mangaQueueStats.elapsedTime) }}</div>
+                                </div>
+                                <div class="bg-gray-800 p-3 rounded">
+                                    <div class="text-gray-400">الوقت المتبقي</div>
+                                    <div class="text-xl font-bold">{{ formatTime(mangaQueueStats.remainingTime) }}</div>
+                                </div>
+                            </div>
+
+                            <!-- Control Buttons -->
+                            <div v-if="isMangaQueueRunning" class="flex gap-4">
+                                <button 
+                                    @click="toggleMangaQueuePause" 
+                                    :disabled="isMangaQueuePauseRequested"
+                                    class="flex-1 bg-yellow-500 text-black px-6 py-3 rounded hover:bg-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90 font-bold">
+                                    {{ isMangaQueuePauseRequested ? 'جاري الإيقاف...' : (isMangaQueuePaused ? 'استئناف' : 'إيقاف مؤقت') }}
+                                </button>
+                                <button 
+                                    @click="showStopConfirmation = true" 
+                                    class="flex-1 bg-red-500 text-white px-6 py-3 rounded hover:bg-red-600 transition-all duration-100 active:scale-90 font-bold">
+                                    إيقاف
+                                </button>
+                            </div>
+
+                            <!-- Finished Button -->
+                            <div v-if="!isMangaQueueRunning && mangaQueueStats.total > 0" class="flex gap-4 mt-4">
+                                <button 
+                                    @click="resetMangaQueue" 
+                                    :disabled="isAnyMangaQueueRunning"
+                                    class="w-full bg-green-500 text-white px-6 py-3 rounded hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90 font-bold">
+                                    إرسال جديد
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stop Confirmation Modal -->
+            <div v-if="showStopConfirmation" class="fixed z-[75] inset-0 overflow-y-auto bg-black bg-opacity-70 flex items-center justify-center">
+                <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-2/3 lg:w-1/2 max-h-[90vh] overflow-hidden flex flex-col text-center p-6">
+                    <h3 class="text-xl mb-4">تأكيد الإيقاف</h3>
+                    <p class="mb-6">هل أنت متأكد من إيقاف عملية الإرسال؟</p>
+                    <div class="flex gap-4">
+                        <button 
+                            @click="stopMangaQueue" 
+                            class="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-all duration-100 active:scale-90">
+                            نعم
+                        </button>
+                        <button 
+                            @click="showStopConfirmation = false" 
+                            class="flex-1 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-all duration-100 active:scale-90">
+                            لا
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Retry Stop Confirmation Modal -->
+            <div v-if="showRetryStopConfirmation" class="fixed z-[75] inset-0 overflow-y-auto bg-black bg-opacity-70 flex items-center justify-center">
+                <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-2/3 lg:w-1/2 max-h-[90vh] overflow-hidden flex flex-col text-center p-6">
+                    <h3 class="text-xl mb-4">تأكيد الإغلاق</h3>
+                    <p class="mb-6">هناك عمليات جارية. هل تريد إيقافها وإغلاق النافذة؟</p>
+                    <div class="flex gap-4">
+                        <button 
+                            @click="confirmStopAndCloseFailedModal" 
+                            class="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-all duration-100 active:scale-90">
+                            نعم
+                        </button>
+                        <button 
+                            @click="showRetryStopConfirmation = false" 
+                            class="flex-1 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-all duration-100 active:scale-90">
+                            لا
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Limit Reached Modal -->
+            <div v-if="showLimitModal" class="fixed z-[80] inset-0 overflow-y-auto bg-black bg-opacity-70 flex items-center justify-center">
+                <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-2/3 lg:w-1/2 max-h-[90vh] overflow-hidden flex flex-col text-center p-6">
+                    <h3 class="text-xl mb-4 text-red-400">عذرًا</h3>
+                    <p v-if="remainingDownloads === 0" class="mb-6 text-lg">
+                        تم استهلاك الحدّ اليومي، وسيُعاد التعيين خلال
+                        <span class="text-yellow-300 font-bold text-xl">{{ timeUntilReset }}</span>
+                    </p>
+                    <p v-else class="mb-6 text-lg">
+                        متبقي لديك 
+                        <span v-if="remainingDownloads > 2" class="text-yellow-300 font-bold text-xl">{{ remainingDownloads }}</span>
+                        {{ remainingDownloadsLabel }} لهذا اليوم.
+                    </p>
+                    <button
+                        @click="showLimitModal = false" 
+                        class="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600 transition-all duration-100 active:scale-90">
+                        حسنًا
+                    </button>
+                </div>
+            </div>
+
+            <!-- Manga Sent Log Modal -->
+            <div v-if="showMangaSentLogModal" class="fixed z-[70] inset-0 overflow-y-auto bg-black bg-opacity-70 flex items-center justify-center">
+                <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-11/12 md:w-2/3 lg:w-1/2 max-h-[85vh] overflow-hidden flex flex-col">
+                    <div class="sticky top-0 bg-cyan-900 p-4 flex justify-between items-center border-b border-cyan-700">
+                        <div class="text-lg">سجل المُرسل ({{ mangaSentLog.length }})</div>
+                        <button @click="showMangaSentLogModal = false" class="text-red-600 hover:text-yellow-300 transition-all duration-100 active:scale-90">
+                            <span class="text-2xl font-black">✕</span>
+                        </button>
+                    </div>
+                    <div class="p-4 overflow-y-auto flex-1 always-visible-scrollbar">
+                        <div v-if="!mangaSentLog.length" class="text-center text-gray-200">
+                            لا يوجد فصول مرسلة بعد.
+                        </div>
+                        <div v-else class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2" dir="ltr">
+                            <button
+                                v-for="entry in sortedMangaSentLog"
+                                :key="entry.chapter"
+                                class="bg-gray-800 text-yellow-300 px-2 py-1 rounded underline underline-offset-4 hover:bg-gray-700 transition-all duration-100 active:scale-90"
+                            >
+                                {{ entry.chapter }}
+                            </button>
+                        </div>
+                    </div>    
+                </div>
+            </div>
+
+            <!-- Tab Lock Modal -->
+            <div 
+                v-if="tabLockModal" 
+                class="fixed inset-0 z-[130] bg-black/80 backdrop-blur-sm flex items-center justify-center"
+            >
+                <div class="bg-gray-900 text-yellow-200 rounded-lg p-6 shadow-2xl w-11/12 max-w-md text-center space-y-4">
+                    <div class="text-xl text-red-500 -m-3 font-bold">
+                        عذرًا، الدليل مفتوح في تبويب آخر
+                    </div>
+                    <div class="text-base">
+                        يسمح الدليل بتبويب واحد فقط لتجنب تعارض المزامنة.
+                    </div>
+                </div>        
+            </div>
+
+            <!-- Manga Failed Log Modal -->
+            <div v-if="showMangaFailedLogModal" class="fixed z-[70] inset-0 overflow-y-auto bg-black bg-opacity-70 flex items-center justify-center">
+                <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-11/12 md:w-5/6 lg:w-2/3 max-h-[85vh] overflow-hidden flex flex-col">
+                    <div class="sticky top-0 bg-cyan-900 p-4 flex justify-between items-center border-b border-cyan-700">
+                        <div class="text-lg">سجل الفشل ({{ mangaFailedLog.length }})</div>
+                        <button @click="closeMangaFailedLogModal" class="text-red-600 hover:text-yellow-300 transition-all duration-100 active:scale-90">
+                            <span class="text-2xl font-black">✕</span>
+                        </button>
+                    </div>
+                    <div class="p-4 overflow-y-auto flex-1 always-visible-scrollbar space-y-3">
+                        <!-- Current Retry Status -->
+                        <div v-if="retryQueueCurrent && retryQueueCurrent.chapter !== null" class="bg-gray-800 p-3 rounded flex items-center justify-center">
+                            <div class="flex items-center gap-3" dir="ltr">
+                                <span class="text-lg font-bold text-yellow-300">{{ retryQueueCurrent.chapter }}</span>
+                                <span v-if="retryQueueCurrent.status === 'sending'" class="inline-flex items-center">
+                                    <span class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></span>
+                                </span>
+                                <span v-else-if="retryQueueCurrent.status === 'success'" class="text-green-400 text-lg">✅</span>
+                                <span v-else-if="retryQueueCurrent.status === 'failed'" class="text-red-400 text-lg">❌</span>
+                            </div>
+                        </div>
+
+                        <div v-if="!allFailedMangaRowsSucceeded" class="flex gap-3 items-center justify-center flex-wrap">
+                            <button
+                                @click="retryAllFailedMangas"
+                                :disabled="checkAnyRetryRunning() || !mangaFailedLog.some(e => e.status !== 'success') || (isMangaQueueRunning && !isMangaQueuePaused)"
+                                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:opacity-80 disabled:cursor-not-allowed transition-all duration-100 active:scale-90"
+                            >
+                                <span v-if="isRetryAllFailedRunning" class="inline-flex items-center gap-2">
+                                    <span class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+                                    جاري الإرسال ({{ retryAllFailedProgress.done }}/{{ retryAllFailedProgress.total }})
+                                </span>
+                                <span v-else>إعادة إرسال الكل</span>
+                            </button>
+
+                            <!-- Queue Controls -->
+                             <button
+                                @click="startFailedQueue"
+                                :disabled="checkAnyRetryRunning() || failedMangaQueue.length === 0"
+                                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-80 disabled:cursor-not-allowed transition-all duration-100 active:scale-90"
+                            >
+                                <span v-if="isRetryQueueRunning" class="inline-flex items-center gap-2">
+                                    <span v-if="!isRetryQueuePaused" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+                                    {{ isRetryQueuePaused ? 'المعالجة موقفة موقتًا' : 'جاري المعالجة' }} ({{ failedQueueStats.sent + failedQueueStats.failed }}/{{ failedQueueStats.total }})
+                                </span>
+                                <span v-else>بدء الطابور</span>
+                            </button>
+
+                            <button 
+                                v-if="isRetryQueueRunning || isRetryQueuePaused"
+                                @click="toggleRetryQueuePause" 
+                                :disabled="isRetryQueuePauseRequested"
+                                class="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90 font-bold">
+                                {{ isRetryQueuePauseRequested ? 'جاري الإيقاف...' : (isRetryQueuePaused ? 'استئناف الطابور' : 'إيقاف مؤقت للطابور') }}
+                            </button>
+
+                            <button 
+                                v-if="isRetryQueueRunning || isRetryQueuePaused"
+                                @click="cancelRetryQueue" 
+                                class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-all duration-100 active:scale-90 font-bold">
+                                إلغاء الطابور
+                            </button>
+                        </div>
+
+                        <div v-if="!mangaFailedLog.length" class="text-center text-gray-200">
+                            لا يوجد فصول فاشلة.
+                        </div>
+
+                        <div v-else class="overflow-x-auto">
+                            <table class="w-full border border-cyan-700 rounded">
+                                <thead class="bg-cyan-800">
+                                    <tr>
+                                        <th class="p-2 border border-cyan-700 w-24">الفصل</th>
+                                        <th v-if="!allFailedMangaRowsSucceeded" class="p-2 border border-cyan-700">الخطأ</th>
+                                        <th class="p-2 border border-cyan-700 w-36">إجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="entry in mangaFailedLog" :key="entry.chapter" class="bg-gray-800">
+                                        <td class="p-2 border border-cyan-700 text-center text-yellow-300" dir="ltr">
+                                            <span class="font-bold">{{ entry.chapter }}</span>
+                                        </td>
+                                        <td v-if="!allFailedMangaRowsSucceeded" class="p-2 border border-cyan-700 align-top">
+                                            <div class="text-xs text-gray-100 whitespace-pre-wrap break-words max-h-28 overflow-y-auto" dir="ltr">
+                                                {{ entry.error }}
+                                            </div>
+                                        </td>
+                                        <td class="p-2 border border-cyan-700 text-center">
+                                            <span v-if="entry.status === 'success'" class="text-green-400 text-xl">✅</span>
+                                            <div v-else class="flex flex-col gap-2">
+                                                <button
+                                                    @click="retryFailedMangaWrapped(entry)"
+                                                    :disabled="entry.status === 'retrying' || checkAnyRetryRunning() || (isMangaQueueRunning && !isMangaQueuePaused)"
+                                                    class="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-100 active:scale-90"
+                                                >
+                                                    <span v-if="entry.status === 'retrying'" class="inline-flex items-center gap-2">
+                                                        <span class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+                                                    </span>
+                                                    <span v-else>إعادة</span>
+                                                </button>
+                                                
+                                                <button
+                                                    @click="toggleFailedQueue(entry)"
+                                                    :disabled="isRetryQueueRunning || isRetryAllFailedRunning"
+                                                    class="px-3 py-2 rounded transition-all duration-100 active:scale-90 text-sm font-bold"
+                                                    :class="getQueueRank(entry) > 0 ? 'bg-purple-600 hover:bg-purple-700 text-white' : 'bg-gray-600 hover:bg-gray-500 text-gray-200'"
+                                                >
+                                                    {{ getQueueRank(entry) > 0 ? 'ر.ط: ' + getQueueRank(entry) : 'طابور' }}
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -5544,112 +6009,9 @@
                             </fieldset>   
 
                         </fieldset>
-
-                        <!-- <div class="text-center mt-4">
-                            <button 
-                                class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition mt-4" 
-                                @click="closeEmptyPopup">
-                                إغلاق
-                            </button>
-
-                            <br />
-                            
-                            <button 
-                                class="bg-red-500 text-white font-bold py-2 px-4 mx-2 rounded hover:bg-red-700 transition mt-4" 
-                                @click="resetFilters">
-                                إعادة تعيين التصفية
-                            </button>
-                        </div> -->
                     </div>
                 </div>
             </div>   
-
-            <!-- <fieldset class="border p-4 rounded w-full">
-                <legend class="font-bold text-lg px-2">مربع البحث</legend>
-              
-                <div class="w-full mb-4">
-                  <div class="flex items-center w-full mb-2">
-
-                    <input
-                      v-model="searchQuery"
-                      :class="['border px-4 font-bold text-xl rounded w-full', searchFilters.number ? 'py-8' : 'py-2']"
-                      placeholder="بحث..."
-                    />
-              
-                    <div class="flex flex-col items-end mr-2">
-
-                      <button
-                        @click="clearSearch"
-                        class="px-4 py-2 bg-red-500 text-white font-bold rounded transition-all duration-100 active:scale-90"
-                      >
-                        مسح
-                      </button>
-              
-                      <div v-if="searchFilters.number" class="flex flex-col space-y-2 mt-2 -ml-2">
-                        <label class="flex items-center transition-all duration-100 active:scale-90">
-                          <input
-                            type="radio"
-                            v-model="textNumberMatchMode"
-                            value="enabled"
-                            class="scale-150"
-                          />
-                          <span class="px-2 font-bold">تفعيل</span>
-                        </label>
-                        <label class="flex items-center transition-all duration-100 active:scale-90">
-                          <input
-                            type="radio"
-                            v-model="textNumberMatchMode"
-                            value="disabled"
-                            class="scale-150"
-                          />
-                          <span class="px-2 font-bold">تعطيل</span>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              
-                <div class="flex flex-wrap mt-2 justify-center text-lg">
-                  <label class="flex items-center transition-all duration-100 active:scale-90">
-                    <input
-                      type="checkbox"
-                      v-model="searchFilters.title"
-                      class="scale-100"
-                      @change="ensureOneChecked('title')"
-                    />
-                    <span class="px-2 font-bold">العنوان</span>
-                  </label>
-                  <label class="flex items-center transition-all duration-100 active:scale-90">
-                    <input
-                      type="checkbox"
-                      v-model="searchFilters.number"
-                      class="scale-100"
-                      @change="ensureOneChecked('number')"
-                    />
-                    <span class="px-2 font-bold">الرقم</span>
-                  </label>
-                  <label class="flex items-center transition-all duration-100 active:scale-90">
-                    <input
-                      type="checkbox"
-                      v-model="searchFilters.story"
-                      class="scale-100"
-                      @change="ensureOneChecked('story')"
-                    />
-                    <span class="px-2 font-bold">القصة</span>
-                  </label>
-                  <label class="flex items-center transition-all duration-100 active:scale-90">
-                    <input
-                      type="checkbox"
-                      v-model="searchFilters.summary"
-                      class="scale-100"
-                      @change="ensureOneChecked('summary')"
-                    />
-                    <span class="px-2 font-bold">الملخص</span>
-                  </label>
-                </div>
-            </fieldset> -->
-              
-                                                 
 
                         <!-- Manga Announcement Box -->
                         <div class="relative w-full max-w-2xl p-4 mt-4 bg-black bg-opacity-85 rounded-lg shadow-lg border border-yellow-500 animate-borderMove">
@@ -6195,54 +6557,6 @@
                                         </div>
                                     </div>
                                 </fieldset>                                                                    
-
-                                <div  
-                                    v-if="(selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'error')) || (selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'error'))"
-                                    class="fixed z-10 inset-0 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center"
-                                    >
-                                    <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-1/2 lg:w-1/3 max-h-[90vh] overflow-hidden flex flex-col">
-                                        <!-- Sticky Header Section -->
-                                        <div class="sticky top-0 bg-cyan-900 pt-4 pl-4 pr-4 pb-2">
-                                        <h2 class="text-lg text-red-500 font-bold text-center">{{ errorMessage }}</h2>
-                                        </div>
-
-                                        <!-- Scrollable Content -->
-                                        <div class="overflow-y-auto p-4 flex-1">
-                                        <p class="text-lg text-white text-center font-bold mb-4">
-                                            تأكد من أن البوت لديه صلاحية إرسال الرسائل لك من خلال اشتراكك فيه، وذلك بالضغط على زر 'Start' أو 'Restart' أو 'بدء' كما هو موضح في الصورة 👇
-                                        </p>
-                                        <img
-                                            src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/error_hint.png"
-                                            alt="Error Hint"
-                                            class="mb-4 w-full rounded"
-                                        />
-                                        <!-- Display Telegram's error message -->
-                                        <!-- <p v-if="errorMessage" class="text-lg text-white text-center font-bold mt-4">
-                                            {{ errorMessage }}
-                                        </p> -->
-                                        <p class="text-lg text-white font-bold text-center mt-4">
-                                            إذا لم يظهر لك الزر، فهذا يعني أنك مشترك بالفعل في البوت.
-                                        </p>
-                                        </div>
-
-                                        <!-- Footer Section -->
-                                        <div class="p-4 bg-cyan-900 flex justify-between">
-                                        <a
-                                            href="https://t.me/DCRef_bot"
-                                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all duration-100 active:scale-90"
-                                        >
-                                            أضغط هنا للذهاب إلى البوت
-                                        </a>
-                                        <button
-                                            @click="clearError()"
-                                            class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition-all duration-100 active:scale-90"
-                                        >
-                                            إغلاق
-                                        </button>
-                                        </div>
-                                    </div>
-                                </div>                               
-
                                 <p v-if="selectedEpisode && selectedEpisode.EpisodeSeason !== ''" class="mb-2 text-lg">
                                     <span>الموسم: </span>{{ selectedEpisode.EpisodeSeason }} ({{ selectedEpisode.EpisodeSeasonCount }} حلقة)
                                 </p>
@@ -6552,7 +6866,7 @@
 
     <script>
         const webApp = window.Telegram?.WebApp || null;
-        const { createApp } = Vue;
+        const { createApp, markRaw } = Vue;
     
         const app = createApp({
             data() {
@@ -6562,7 +6876,62 @@
                     userJoined: false,
                     showEmptyPopup: false,
                     showDirectWindow: false,
+                    showFastingWindow: false,
                     selectedCategory: 'episodes',
+                    mangaStartNumber: null,
+                    mangaEndNumber: null,
+                    mangaQueue: [],
+                    mangaQueueIndex: 0,
+                    isMangaQueueRunning: false,
+                    isMangaQueuePaused: false,
+                    isMangaQueueSending: false,
+                    isMangaQueuePauseRequested: false,
+                    mangaQueueProcessId: null,
+                    mangaQueueTimeoutId: null,
+                    showStopConfirmation: false,
+                    showLimitModal: false,
+                    showMangaSentLogModal: false,
+                    showMangaFailedLogModal: false,
+                    mangaQueueCurrent: {
+                        chapter: null,
+                        status: null, // 'sending' | 'success' | 'failed'
+                        error: null,
+                    },
+                    mangaSentLog: [], // [{ chapter, fileId, sentAt }]
+                    mangaFailedLog: [], // [{ chapter, fileId, fileSize, error, status, attempts }]
+                    isRetryAllFailedRunning: false,
+                    retryAllFailedProgress: { done: 0, total: 0 },
+                    // New Queue & Retry States
+                    isRetryQueueRunning: false,
+                    isRetryQueuePaused: false,
+                    isRetryQueuePauseRequested: false,
+                    showRetryStopConfirmation: false,
+                    failedMangaQueue: [], // Array of objects { chapter, ... } reference from mangaFailedLog
+                    failedQueueStats: {
+                        total: 0,
+                        sent: 0,
+                        failed: 0,
+                        waiting: 0,
+                        elapsedTime: 0,
+                        remainingTime: 0
+                    },
+                    retryQueueCurrent: {
+                        chapter: null,
+                        status: null, // 'sending' | 'success' | 'failed'
+                        error: null,
+                    },
+                    mangaQueueStats: {
+                        total: 0,
+                        sent: 0,
+                        failed: 0,
+                        waiting: 0,
+                        elapsedTime: 0,
+                        remainingTime: 0
+                    },
+                    mangaQueueStartTime: null,
+                    mangaQueuePausedTime: 0,
+                    mangaQueueTotalPausedTime: 0,
+                    mangaQueueInterval: null,
                     activeTab: { episodes: 0, movies: 0, mangas: 0 },
                     searchFilters: {
                         number: true,
@@ -6575,14 +6944,63 @@
                     lastClickedEpisode: null,
                     errorMessage: "",
                     statusClearTimeout: 2000,
+                    fastingStatusClearTimeout: 3000,
                     inactivityDurationSeconds: 300,
                     inactivityCountdown: 300,
                     inactivityIntervalId: null,
                     inactivityModal: false,
                     inactivityListeners: [],
                     lastActivityAt: Date.now(),
+                    successHintVisible: false,
+                    successHintAnimatingOut: false,
+                    successHintMessage: '',
+                    successHintCountdown: 0,
+                    successHintCountdownIntervalId: null,
+                    successHintHideTimeoutId: null,
+                    successHintHideAnimationTimeoutId: null,
+                    episode: { status: null },
+                    movie: { status: null },
                     ep: 1185,
                     mangaCh: 1155,
+                    // Daily Limit Data
+                    dailyDownloads: 0,
+                    dailyReady: false,
+                    pendingDailyIncrements: 0,
+                    dailyLimitRetryTimer: null,
+                    dailyLimitRetryAttempts: 0,
+                    dailyLimitRowId: null,
+                    dailyLimitRowIdRam: null,
+                    dailyLimitRowIdResyncIntervalId: null,
+                    dailyLimitDate: null,
+                    dailyLimitDayStartUtcMs: null,
+                    maxDailyDownloads: 100,
+                    now: Date.now(),
+                    _db: null,
+                    userId: window.Telegram?.WebApp?.initDataUnsafe?.user?.id || 'anonymous-user', // Fallback for testing if not in Telegram
+                    testMinuteReset: false,
+                    nowIntervalId: null,
+                    
+                    // Time Synchronization
+                    serverTimeOffset: 0,
+                    lastServerSync: 0,
+                    trustedToday: null,
+                    unsubscribeDaily: null,
+
+                    // Tab Locking System
+                    tabLockModal: false,
+                    isTabOwner: false,
+                    tabWorkerPort: null,
+                    tabBroadcastChannel: null,
+                    tabLockLock: null,
+                    tabHeartbeatInterval: null,
+                    tabId: null,
+                    tabStorageLockInterval: null,
+                    tabStorageLockVisibilityHandler: null,
+                    tabWebLockRetryInterval: null,
+                    tabWebLockRequestInFlight: false,
+                    tabWebLockReleaseResolver: null,
+                    tabWebLockVisibilityHandler: null,
+
                     replacementDict: {
                     "سينشي": ["شينتشي", "سينشي"],
                     "شينتشي": ["سينشي", "شينتشي"],
@@ -7424,6 +7842,105 @@
                 };
             },
             computed: {
+                mangaStartNumberModel: {
+                    get() {
+                        return this.mangaStartNumber ?? '';
+                    },
+                    set(value) {
+                        const normalized = this.normalizeNumericString(value).trim();
+
+                        if (normalized === '') {
+                            this.mangaStartNumber = null;
+                            return;
+                        }
+
+                        const parsed = parseFloat(normalized);
+                        if (isNaN(parsed)) {
+                            this.mangaStartNumber = null;
+                            return;
+                        }
+
+                        const clamped = Math.min(Math.max(parsed, this.minMangaNumber), this.maxMangaNumber);
+                        this.mangaStartNumber = Math.round(clamped);
+                    }
+                },
+                mangaEndNumberModel: {
+                    get() {
+                        return this.mangaEndNumber ?? '';
+                    },
+                    set(value) {
+                        const normalized = this.normalizeNumericString(value).trim();
+
+                        if (normalized === '') {
+                            this.mangaEndNumber = null;
+                            return;
+                        }
+
+                        const parsed = parseFloat(normalized);
+                        if (isNaN(parsed)) {
+                            this.mangaEndNumber = null;
+                            return;
+                        }
+
+                        const clamped = Math.min(Math.max(parsed, this.minMangaNumber), this.maxMangaNumber);
+                        this.mangaEndNumber = Math.round(clamped);
+                    }
+                },
+                isFailedToFetch() {
+                    return (this.errorMessage || '').trim() === 'Failed to fetch';
+                },
+                displayErrorMessage() {
+                    return this.isFailedToFetch ? 'حدث خطأ، حاول مرة أخرى' : this.errorMessage;
+                },
+                showErrorOverlay() {
+                    return Boolean(
+                        (this.selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'error')) ||
+                        (this.selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'error')) ||
+                        (this.selectedManga?.status === 'error') ||
+                        (this.selectedEpisode?.status === 'error')
+                    );
+                },
+                effectiveDailyDownloads() {
+                    return Math.min(this.safeMaxDailyDownloads, this.dailyDownloads);
+                },
+                effectiveRemainingDownloads() {
+                    return Math.max(0, this.safeMaxDailyDownloads - this.effectiveDailyDownloads);
+                },
+                safeMaxDailyDownloads() {
+                    return this.maxDailyDownloads > 0 ? this.maxDailyDownloads : 100;
+                },
+                remainingDownloads() {
+                    return Math.max(0, this.maxDailyDownloads - (this.dailyDownloads + this.pendingDailyIncrements));
+                },
+                remainingDownloadsLabel() {
+                    const n = this.remainingDownloads;
+                    if (n === 1) return 'فصل';
+                    if (n === 2) return 'فصلين';
+                    if (n >= 3 && n <= 10) return 'فصول';
+                    return 'فصل';
+                },
+                timeUntilReset() {
+                    // Calculate time until next UTC midnight (00:00 UTC)
+                    // Matches Cloudflare Workers & Pages Functions reset time (UTC+0)
+                    const tick = this.now;
+                    const now = this.getTrustedDate();
+                    const target = new Date(now);
+                    if (this.testMinuteReset) {
+                        target.setUTCSeconds(0, 0);
+                        target.setUTCMinutes(target.getUTCMinutes() + 1);
+                    } else {
+                        target.setUTCHours(24, 0, 0, 0); // Sets to 00:00:00 UTC of the next day
+                    }
+                    const diff = target - now;
+                    if (diff < 0) return "00:00:00"; // Should not happen with setUTCHours(24)
+
+                    const hours = Math.floor(diff / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                    
+                    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                },
+
 
                 formattedInactivityCountdown() {
                     const minutes = Math.floor(this.inactivityCountdown / 60)
@@ -7511,7 +8028,7 @@
                     const allMangas = [
                         ...mangaSources.flatMap(m => Array.isArray(m.MangasIDs) ? m.MangasIDs : []),
                         ...episodeSources.flatMap(e => Array.isArray(e.EpisodeMangasIDs) ? e.EpisodeMangasIDs : [])
-                    ].filter(manga => manga && manga.MangaNumber)
+                    ].filter(manga => manga && (manga.MangaNumber === 0 || manga.MangaNumber === "0" || manga.MangaNumber))
                      .sort((a, b) => Number(a.MangaNumber) - Number(b.MangaNumber));
 
                     if (!allMangas.length) {
@@ -7535,6 +8052,47 @@
                         }
                         return acc;
                     }, []);
+                },
+
+                mangaQueueProgress() {
+                    if (this.mangaQueueStats.total === 0) return 0;
+                    const completed = this.mangaQueueStats.sent + this.mangaQueueStats.failed;
+                    return Math.round((completed / this.mangaQueueStats.total) * 100);
+                },
+
+                allFailedMangaRowsSucceeded() {
+                    return this.mangaFailedLog.length > 0 && this.mangaFailedLog.every(e => e.status === 'success');
+                },
+
+                isAnyMangaQueueRunning() {
+                    return this.isMangaQueueRunning || this.isRetryAllFailedRunning;
+                },
+
+                sortedMangaSentLog() {
+                    // Sort by chapter number (ascending: lower to upper)
+                    return [...this.mangaSentLog].sort((a, b) => {
+                        const numA = parseFloat(a.chapter);
+                        const numB = parseFloat(b.chapter);
+                        if (isNaN(numA) || isNaN(numB)) {
+                            // Fallback to string comparison if not numeric
+                            return String(a.chapter).localeCompare(String(b.chapter));
+                        }
+                        return numA - numB;
+                    });
+                },
+
+                minMangaNumber() {
+                    const allMangas = this.groupedMangas.flatMap(group => group.items);
+                    if (allMangas.length === 0) return 0;
+                    const numbers = allMangas.map(m => parseFloat(m.MangaNumber)).filter(n => !isNaN(n));
+                    return numbers.length > 0 ? Math.min(...numbers) : 0;
+                },
+
+                maxMangaNumber() {
+                    const allMangas = this.groupedMangas.flatMap(group => group.items);
+                    if (allMangas.length === 0) return 0;
+                    const numbers = allMangas.map(m => parseFloat(m.MangaNumber)).filter(n => !isNaN(n));
+                    return numbers.length > 0 ? Math.max(...numbers) : 0;
                 },
 
                 hasNextEpisode() {
@@ -14222,8 +14780,10 @@
 
 
                 jsonUrl() {
-                    // Automatically refetch data when jsonUrl changes
-                    this.loadData();
+                    // Automatically refetch data when jsonUrl changes (only if tab owner)
+                    if (this.isTabOwner) {
+                        this.loadData();
+                    }
                 },
 
                 pageSize(newSize) {
@@ -14231,6 +14791,408 @@
                 },
             },
             methods: {
+                // InstantDB Methods
+                async syncServerTime() {
+                    try {
+                        const start = performance.now();
+                        // Try current origin first (likely to have Date header)
+                        // Or use a lightweight HEAD request to a reliable public server if local fails
+                        const response = await fetch(window.location.href, { method: 'HEAD', cache: 'no-store' });
+                        const dateHeader = response.headers.get('date');
+                        
+                        if (dateHeader) {
+                            const serverTime = new Date(dateHeader).getTime();
+                            const end = performance.now();
+                            const latency = (end - start) / 2;
+                            // Calculate offset: Server Time - (Local Time at request start + latency)
+                            // But simpler: Server Time - (Date.now() roughly)
+                            // More precise: 
+                            // trustedNow = Date.now() + offset
+                            // offset = serverTime - Date.now()
+                            // We adjust for latency to be slightly more accurate
+                            this.serverTimeOffset = serverTime - (Date.now() + latency);
+                            this.lastServerSync = Date.now();
+                            console.log('Time synced with server. Offset:', this.serverTimeOffset, 'ms');
+                        } else {
+                            console.warn('No Date header in response, using local time fallback.');
+                        }
+                    } catch (e) {
+                        console.error('Failed to sync time:', e);
+                        // Fallback: try worldtimeapi if origin fails (e.g. file://)
+                        try {
+                             const r = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC');
+                             const data = await r.json();
+                             const serverTime = new Date(data.utc_datetime).getTime();
+                             this.serverTimeOffset = serverTime - Date.now();
+                             console.log('Time synced with WorldTimeAPI. Offset:', this.serverTimeOffset, 'ms');
+                        } catch (e2) {
+                            console.warn('All time sync failed, defaulting to local time.');
+                        }
+                    }
+                },
+
+                getTrustedDate() {
+                    return new Date(Date.now() + this.serverTimeOffset);
+                },
+
+                getTrustedTodayISO() {
+                    return this.getTrustedDate().toISOString().split('T')[0];
+                },
+
+                getTrustedDayStartUtcMs() {
+                    const d = this.getTrustedDate();
+                    return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 0, 0, 0, 0);
+                },
+
+                getDailyLimitStorageKey() {
+                    return `dcrefbot-dailyLimitRowId:${String(this.userId)}`;
+                },
+
+                isUuidLike(value) {
+                    return typeof value === 'string' && /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(value);
+                },
+
+                getStoredDailyLimitRowId() {
+                    try {
+                        const stored = localStorage.getItem(this.getDailyLimitStorageKey());
+                        if (this.isUuidLike(stored)) {
+                            return stored;
+                        }
+                        if (stored) {
+                            localStorage.removeItem(this.getDailyLimitStorageKey());
+                        }
+                    } catch (e) {}
+                    return null;
+                },
+
+                setStoredDailyLimitRowId(id) {
+                    if (!this.isUuidLike(id)) return;
+                    this.dailyLimitRowId = id;
+                    this.dailyLimitRowIdRam = id;
+                    try {
+                        localStorage.setItem(this.getDailyLimitStorageKey(), id);
+                    } catch (e) {}
+                },
+
+                startDailyLimitRowIdResync() {
+                    if (this.dailyLimitRowIdResyncIntervalId) return;
+
+                    const existing =
+                        (this.isUuidLike(this.dailyLimitRowId) && this.dailyLimitRowId) ||
+                        (this.isUuidLike(this.dailyLimitRowIdRam) && this.dailyLimitRowIdRam) ||
+                        this.getStoredDailyLimitRowId();
+
+                    if (existing) {
+                        this.dailyLimitRowId = existing;
+                        this.dailyLimitRowIdRam = existing;
+                    } else {
+                        const created = this.ensureDailyLimitRowId();
+                        if (this.isUuidLike(created)) {
+                            this.dailyLimitRowId = created;
+                            this.dailyLimitRowIdRam = created;
+                        }
+                    }
+
+                    this.dailyLimitRowIdResyncIntervalId = setInterval(() => {
+                        const ram = this.dailyLimitRowIdRam;
+                        if (!this.isUuidLike(ram)) return;
+                        try {
+                            const key = this.getDailyLimitStorageKey();
+                            const stored = localStorage.getItem(key);
+                            if (stored !== ram) {
+                                localStorage.setItem(key, ram);
+                            }
+                        } catch (e) {}
+                    }, 500);
+                },
+
+                stopDailyLimitRowIdResync() {
+                    if (!this.dailyLimitRowIdResyncIntervalId) return;
+                    clearInterval(this.dailyLimitRowIdResyncIntervalId);
+                    this.dailyLimitRowIdResyncIntervalId = null;
+                },
+
+                syncDailyLimitLocalDay() {
+                    const today = this.getTrustedTodayISO();
+                    const dayStartUtcMs = this.getTrustedDayStartUtcMs();
+                    const isNewDay = this.dailyLimitDate !== today;
+                    if (isNewDay) {
+                        this.dailyDownloads = 0;
+                        this.dailyLimitDate = today;
+                        this.dailyLimitDayStartUtcMs = dayStartUtcMs;
+                        this.trustedToday = today;
+                    }
+                    return { today, dayStartUtcMs, isNewDay };
+                },
+                
+                getDailyLimitId() {
+                    if (this.isUuidLike(this.dailyLimitRowId)) {
+                        if (this.dailyLimitRowIdRam !== this.dailyLimitRowId) {
+                            this.dailyLimitRowIdRam = this.dailyLimitRowId;
+                        }
+                        return this.dailyLimitRowId;
+                    }
+
+                    const stored = this.getStoredDailyLimitRowId();
+                    if (stored) {
+                        this.dailyLimitRowId = stored;
+                        this.dailyLimitRowIdRam = stored;
+                        return stored;
+                    }
+
+                    return null;
+                },
+
+                ensureDailyLimitRowId() {
+                    const existing = this.getDailyLimitId();
+                    if (existing) return existing;
+
+                    const instantDB = window.InstantDB || window.instantdb;
+                    const newId = instantDB?.id ? instantDB.id() : crypto.randomUUID();
+                    this.dailyLimitRowId = newId;
+                    this.setStoredDailyLimitRowId(newId);
+                    return newId;
+                },
+                
+                async resetDailyLimitForNewDay() {
+                    if (!this._db) return;
+
+                    const { today, dayStartUtcMs } = this.syncDailyLimitLocalDay();
+                    this.pendingDailyIncrements = 0;
+                    const id = this.getDailyLimitId();
+                    if (!id) return;
+
+                    try {
+                        await this._db.transact(
+                            this._db.tx.dailyLimitDownloadsMangas[id].update({
+                                userId: this.userId,
+                                date: today,
+                                dayStartUtcMs,
+                                count: 0
+                            })
+                        );
+                        this.dailyDownloads = 0;
+                        this.dailyLimitDate = today;
+                        this.dailyLimitDayStartUtcMs = dayStartUtcMs;
+                    } catch (e) {
+                        console.error('DB Reset Error', e);
+                    }
+                },
+
+                initInstantDB() {
+                    // Block InstantDB initialization if this tab is not the owner
+                    if (!this.isTabOwner) {
+                        console.warn('InstantDB initialization blocked: Tab is not the owner');
+                        return;
+                    }
+                    
+                    const APP_ID = '4c54b210-15b2-4e56-9d0b-85a9ce2aa6e3';
+                    const getInstantDB = () => window.InstantDB || window.instantdb;
+
+                    // Sync time immediately
+                    this.syncServerTime();
+
+                    const initialize = () => {
+                        const instantDB = getInstantDB();
+                        if (instantDB && instantDB.init) {
+                            console.log('InstantDB SDK loaded, initializing...');
+                            this._db = markRaw(instantDB.init({ appId: APP_ID }));
+                            this.subscribeToDailyDownloads();
+
+                            // Update timer for reset every second and check for date change
+                            setInterval(() => {
+                                this.now = Date.now();
+                                
+                                // Check for reset time (UTC midnight or test reset)
+                                // Use the same logic as timeUntilReset calculation
+                                const tick = this.now;
+                                const now = this.getTrustedDate();
+                                const target = new Date(now);
+                                if (this.testMinuteReset) {
+                                    target.setUTCSeconds(0, 0);
+                                    target.setUTCMinutes(target.getUTCMinutes() + 1);
+                                } else {
+                                    target.setUTCHours(24, 0, 0, 0);
+                                }
+                                const diff = target - now;
+                                
+                                // Check if we hit the reset moment (diff is 0 or very close to it, or we just crossed it)
+                                // Also robustly check if the date string has changed
+                                const currentToday = this.getTrustedTodayISO();
+                                
+                                // Trigger if date changed OR if we hit the explicit timer (for minute tests)
+                                // And avoid duplicate triggers by checking if we already handled this date
+                                if (this.trustedToday !== currentToday || (this.testMinuteReset && Math.floor(diff / 1000) === 0)) {
+                                    console.log('Reset trigger: Date changed or timer hit zero. Old:', this.trustedToday, 'New:', currentToday);
+                                    this.resetDailyLimitForNewDay();
+                                }
+                            }, 1000);
+                        } else {
+                            console.log('Waiting for InstantDB SDK...');
+                            setTimeout(initialize, 500);
+                        }
+                    };
+                    initialize();
+                },
+
+                subscribeToDailyDownloads() {
+                    // Block subscription if this tab is not the owner
+                    if (!this.isTabOwner) {
+                        console.warn('InstantDB subscription blocked: Tab is not the owner');
+                        return;
+                    }
+                    
+                    if (!this._db) return;
+                    
+                    // Unsubscribe previous if exists
+                    if (this.unsubscribeDaily) {
+                        this.unsubscribeDaily();
+                        this.unsubscribeDaily = null;
+                    }
+
+                    const today = this.getTrustedTodayISO();
+                    this.trustedToday = today; // Track current subscription date
+
+                    const query = { 
+                        dailyLimitDownloadsMangas: { 
+                            $: { 
+                                where: { 
+                                    userId: this.userId
+                                } 
+                            } 
+                        } 
+                    };
+
+                    try {
+                        const subscribeFunc = this._db.subscribeQuery || this._db.subscribe;
+                        if (typeof subscribeFunc === 'function') {
+                            this.unsubscribeDaily = subscribeFunc.call(this._db, query, (resp) => {
+                                if (resp.error) {
+                                    console.error('InstantDB Error:', resp.error);
+                                    return;
+                                }
+                                const data = resp.data;
+                                if (data && data.dailyLimitDownloadsMangas && data.dailyLimitDownloadsMangas.length > 0) {
+                                    const records = data.dailyLimitDownloadsMangas;
+                                    const record = records
+                                        .slice()
+                                        .sort((a, b) => {
+                                            const aKey = Number.isFinite(a?.dayStartUtcMs) ? a.dayStartUtcMs : Date.parse(String(a?.date || ''));
+                                            const bKey = Number.isFinite(b?.dayStartUtcMs) ? b.dayStartUtcMs : Date.parse(String(b?.date || ''));
+                                            return (bKey || 0) - (aKey || 0);
+                                        })[0];
+
+                                    if (record?.id) {
+                                        this.dailyLimitRowId = record.id;
+                                        this.setStoredDailyLimitRowId(record.id);
+                                    }
+
+                                    const { today, dayStartUtcMs } = this.syncDailyLimitLocalDay();
+                                    const recordDayStart = Number.isFinite(record?.dayStartUtcMs) ? record.dayStartUtcMs : null;
+                                    const recordDay = recordDayStart != null
+                                        ? new Date(recordDayStart).toISOString().split('T')[0]
+                                        : (record?.date || null);
+
+                                    if (recordDay === today) {
+                                        this.dailyDownloads = Math.min(this.maxDailyDownloads, record?.count || 0);
+                                        this.dailyLimitDate = today;
+                                        this.dailyLimitDayStartUtcMs = recordDayStart != null ? recordDayStart : dayStartUtcMs;
+                                    } else {
+                                        this.dailyDownloads = 0;
+                                        this.dailyLimitDate = today;
+                                        this.dailyLimitDayStartUtcMs = dayStartUtcMs;
+                                    }
+                                    this.dailyReady = true;
+
+                                    if (records.length > 1 && record?.id) {
+                                        try {
+                                            const txTable = this._db?.tx?.dailyLimitDownloadsMangas;
+                                            if (txTable) {
+                                                const deletes = records
+                                                    .filter(r => r?.id && r.id !== record.id)
+                                                    .map(r => {
+                                                        const entry = txTable[r.id];
+                                                        if (entry && typeof entry.delete === 'function') return entry.delete();
+                                                        if (entry && typeof entry.remove === 'function') return entry.remove();
+                                                        return null;
+                                                    })
+                                                    .filter(Boolean);
+
+                                                if (deletes.length) {
+                                                    this._db.transact(deletes);
+                                                }
+                                            }
+                                        } catch (e) {}
+                                    }
+                                } else {
+                                    this.syncDailyLimitLocalDay();
+                                    this.dailyDownloads = 0;
+                                    // Do NOT reset dailyLimitRowId here, as we might have just generated it 
+                                    // and it hasn't synced yet.
+                                    this.dailyReady = true;
+                                }
+                            });
+                        } else {
+                            console.error('InstantDB subscribe method not found on _db instance');
+                        }
+                    } catch (e) {
+                        console.error('Error subscribing to InstantDB:', e);
+                    }
+                },
+
+                async checkDailyLimit() {
+                    this.syncDailyLimitLocalDay();
+                    // Check local state first for immediate feedback
+                    if ((this.dailyDownloads + this.pendingDailyIncrements) >= this.maxDailyDownloads) {
+                        return false;
+                    }
+                    return true;
+                },
+
+                async incrementDailyLimit(count = 1) {
+                    this.syncDailyLimitLocalDay();
+                    this.pendingDailyIncrements += count;
+                    this.flushDailyLimitPending();
+                    return true;
+                },
+
+                async flushDailyLimitPending() {
+                    if (!this._db) return false;
+                    if (this.pendingDailyIncrements <= 0) return true;
+
+                    const { today, dayStartUtcMs, isNewDay } = this.syncDailyLimitLocalDay();
+                    const id = this.ensureDailyLimitRowId();
+                    const baseCount = isNewDay ? 0 : this.dailyDownloads;
+                    const targetCount = Math.min(this.maxDailyDownloads, baseCount + this.pendingDailyIncrements);
+                    
+                    try {
+                        await this._db.transact(
+                            this._db.tx.dailyLimitDownloadsMangas[id].update({
+                                userId: this.userId,
+                                date: today,
+                                dayStartUtcMs,
+                                count: targetCount
+                            })
+                        );
+                        this.pendingDailyIncrements = 0;
+                        this.dailyLimitRetryAttempts = 0;
+                        if (this.dailyLimitRetryTimer) {
+                            clearTimeout(this.dailyLimitRetryTimer);
+                            this.dailyLimitRetryTimer = null;
+                        }
+                        return true;
+                    } catch (e) {
+                        console.error('DB Update Error', e);
+                        // retry with backoff, up to 5 attempts
+                        this.dailyLimitRetryAttempts = Math.min(this.dailyLimitRetryAttempts + 1, 5);
+                        const delay = Math.min(1000 * this.dailyLimitRetryAttempts, 5000);
+                        if (this.dailyLimitRetryTimer) {
+                            clearTimeout(this.dailyLimitRetryTimer);
+                        }
+                        this.dailyLimitRetryTimer = setTimeout(() => this.flushDailyLimitPending(), delay);
+                        return false;
+                    }
+                },
 
                 setupInactivityTracking() {
                     this.resetInactivityCountdown();
@@ -14257,6 +15219,10 @@
 
                 updateInactivityCountdown() {
                     if (this.inactivityModal) return;
+                    // Pause countdown when any manga queue is running
+                    if (this.isAnyMangaQueueRunning) {
+                        return;
+                    }
                     const now = Date.now();
                     const elapsedSeconds = Math.floor((now - this.lastActivityAt) / 1000);
                     const remaining = this.inactivityDurationSeconds - elapsedSeconds;
@@ -15562,6 +16528,13 @@
                 // Method to load data from JSON
                 loadData() {
                     return new Promise((resolve, reject) => {
+                        // Block data loading if this tab is not the owner
+                        if (!this.isTabOwner) {
+                            console.warn('loadData blocked: Tab is not the owner');
+                            reject('Tab is not the owner');
+                            return;
+                        }
+                        
                         // Reset progress and start the progress interval
                         this.loadProgress = 0;
                         if (this.progressInterval) clearInterval(this.progressInterval);
@@ -15600,7 +16573,10 @@
                                     if (response.status === 429) {
                                         // If rate-limited, parse the JSON response
                                         return response.json().then(data => {
-                                            this.loading = false;
+                                            // Only set loading = false if this tab is the owner
+                                            if (this.isTabOwner) {
+                                                this.loading = false;
+                                            }
                                             clearInterval(this.progressInterval); // Stop progress animation
                                             this.loadProgress = 0; // Reset progress
 
@@ -15634,13 +16610,16 @@
                                         clearInterval(this.progressInterval); // Stop progress animation
                                         this.loadProgress = 100; // Set progress to 100%
                                         setTimeout(() => {
-                                            this.episodes = data.Episodes || [];
-                                            this.mangas = data.Mangas || [];
-                                            this.loading = false;
-                                            localStorage.removeItem('waitTime');
-                                            
-                                            // Update episode time ago after data loads
-                                            this.updateEpisodeTimeAgo();
+                                            // Only update data and set loading = false if this tab is the owner
+                                            if (this.isTabOwner) {
+                                                this.episodes = data.Episodes || [];
+                                                this.mangas = data.Mangas || [];
+                                                this.loading = false;
+                                                localStorage.removeItem('waitTime');
+                                                
+                                                // Update episode time ago after data loads
+                                                this.updateEpisodeTimeAgo();
+                                            }
                                             
                                             resolve();
                                         }, 300); // Delay to show 100% progress
@@ -15649,9 +16628,12 @@
                                 .catch(error => {
                                     clearInterval(this.progressInterval); // Stop progress animation
                                     this.loadProgress = 0; // Reset progress
-                                    this.loading = false;
+                                    // Only set loading = false if this tab is the owner
+                                    if (this.isTabOwner) {
+                                        this.loading = false;
+                                    }
 
-                                    if (!this.error) {
+                                    if (!this.error && this.isTabOwner) {
                                         this.error = 'حدث خطأ أثناء محاولة تحميل البيانات. قد تكون هناك مشكلة مؤقتة في الاتصال أو الخادم. يُرجى التحقق من اتصالك بالإنترنت أو استخدام VPN والمحاولة مرة أخرى.';
                                     }
                                     reject(error);
@@ -15659,7 +16641,10 @@
                         } else {
                             clearInterval(this.progressInterval); // Stop progress animation
                             this.loadProgress = 0; // Reset progress
-                            this.loading = false;
+                            // Only set loading = false if this tab is the owner
+                            if (this.isTabOwner) {
+                                this.loading = false;
+                            }
                             console.log("User not joined, not loading data.");
                             reject('User not joined to the channel');
                         }        
@@ -15804,6 +16789,7 @@
                     this.previousEpisodeByNumberExists = currentIndex > 0;
                 },
                 closeModal() {
+                    this.dismissSuccessHint();
                     this.showModal = false;
                     document.body.style.overflow = ''; // Restore background scrolling
                     
@@ -17347,6 +18333,10 @@
                     try {
                         await this.sendVideoResponse(videoID, caption);
                         this.selectedEpisode.EpisodeVideosIDs[index].status = 'success';
+                        const isMovie = String(this.selectedEpisode?.EpisodeNumber ?? '').includes('الفيلم');
+                        this.movie.status = isMovie ? 'success' : null;
+                        this.episode.status = isMovie ? null : 'success';
+                        this.showSuccessHint(isMovie ? 'تم إرسال الفيلم للخاص' : 'تم إرسال الحلقة للخاص');
                         this.startCountdown(index);
                         this.errorMessage = "";
                     } catch (error) {
@@ -17402,10 +18392,18 @@
                                 manga.countdown = undefined;
                             });
                         }
+                        this.episode.status = null;
+                        this.movie.status = null;
                     }, this.statusClearTimeout);
                 },
 
                 async sendVideoResponse(fileId, caption) {
+                    // Block API request if this tab is not the owner
+                    if (!this.isTabOwner) {
+                        console.warn('sendVideoResponse blocked: Tab is not the owner');
+                        throw new Error('This tab is not the active tab. Please close other tabs and refresh.');
+                    }
+                    
                     const payload = new URLSearchParams();
                     payload.append("method", "sendVideo");
                     payload.append("chat_id", webApp?.initDataUnsafe?.user?.id);
@@ -17431,7 +18429,7 @@
 
                         if (!response.ok) {
                             const status = data?.status || response.status;
-                            throw new Error(`Telegram Error: (${status})\n\n` + (data.description || text) + `\n\n(${webApp?.initDataUnsafe?.user?.id})`);
+                            throw new Error(`Telegram Error: (${status}) ` + (data.description || text) + ` (${webApp?.initDataUnsafe?.user?.id})`);
                         }
 
                     } catch (error) {
@@ -17441,6 +18439,12 @@
                 },
 
                 async sendMangaResponse(fileId, caption) {
+                    // Block API request if this tab is not the owner
+                    if (!this.isTabOwner) {
+                        console.warn('sendMangaResponse blocked: Tab is not the owner');
+                        throw new Error('This tab is not the active tab. Please close other tabs and refresh.');
+                    }
+                    
                     const payload = new URLSearchParams();
                     payload.append("method", "sendDocument");
                     payload.append("chat_id", webApp?.initDataUnsafe?.user?.id);
@@ -17465,7 +18469,7 @@
 
                         if (!response.ok) {
                             const status = data?.status || response.status;
-                            throw new Error(`Telegram Error: (${status})\n\n` + (data.description || text) + `\n\n(${webApp?.initDataUnsafe?.user?.id})`);
+                            throw new Error(`Telegram Error: (${status}) ` + (data.description || text) + ` (${webApp?.initDataUnsafe?.user?.id})`);
                         }
 
                     } catch (error) {
@@ -17475,6 +18479,12 @@
                 },
 
                 async sendMangaToBot(fileId, mangaNumber, index) {
+                    // Block API request if this tab is not the owner
+                    if (!this.isTabOwner) {
+                        console.warn('sendMangaToBot blocked: Tab is not the owner');
+                        throw new Error('This tab is not the active tab. Please close other tabs and refresh.');
+                    }
+                    
                     if (!this.selectedEpisode?.EpisodeNumber) {
                         return;
                     }
@@ -17501,6 +18511,7 @@
                     try {
                         await this.sendMangaResponse(fileId, caption);
                         this.selectedEpisode.EpisodeMangasIDs[index].status = 'success';
+                        this.showSuccessHint('تم إرسال الفصل للخاص');
                         this.startCountdownForManga(index);
                         this.errorMessage = "";
                     } catch (error) {
@@ -17560,6 +18571,12 @@
                 },
 
                 async sendMangaToBotD(fileId, mangaNumber, index) {
+                    // Block API request if this tab is not the owner
+                    if (!this.isTabOwner) {
+                        console.warn('sendMangaToBotD blocked: Tab is not the owner');
+                        throw new Error('This tab is not the active tab. Please close other tabs and refresh.');
+                    }
+                    
                     if (!this.selectedManga?.MangaNumber) return;
 
                     // Set ratelimiting for all other buttons
@@ -17582,6 +18599,7 @@
                     try {
                         await this.sendMangaResponse(fileId, caption);
                         this.selectedManga.status = 'success';
+                        this.showSuccessHint('تم إرسال الفصل للخاص');
                         this.startCountdownForMangaD();
                         this.errorMessage = "";
                     } catch (error) {
@@ -17709,7 +18727,7 @@
                         console.log("platform:", webApp?.platform);
                         console.log("===============================");
 
-						 if (webApp?.initDataUnsafe?.user) {
+                        if (webApp?.initDataUnsafe?.user) {
                             const initData = webApp.initDataUnsafe;
                             const user = webApp.initDataUnsafe.user;
                             LogRocket.identify(String(user.id), {
@@ -18034,11 +19052,765 @@
                     }
                 },
 
+                showSuccessHint(message) {
+                    const msg = String(message ?? '').trim();
+                    if (!msg) return;
+
+                    if (this.successHintCountdownIntervalId) {
+                        clearInterval(this.successHintCountdownIntervalId);
+                        this.successHintCountdownIntervalId = null;
+                    }
+                    if (this.successHintHideTimeoutId) {
+                        clearTimeout(this.successHintHideTimeoutId);
+                        this.successHintHideTimeoutId = null;
+                    }
+                    if (this.successHintHideAnimationTimeoutId) {
+                        clearTimeout(this.successHintHideAnimationTimeoutId);
+                        this.successHintHideAnimationTimeoutId = null;
+                    }
+
+                    this.successHintMessage = msg;
+                    this.successHintVisible = true;
+                    this.successHintAnimatingOut = false;
+                    this.successHintCountdown = 2;
+
+                    this.successHintCountdownIntervalId = setInterval(() => {
+                        if (!this.successHintVisible) return;
+                        this.successHintCountdown = Math.max(0, Number(this.successHintCountdown || 0) - 1);
+                    }, 1000);
+
+                    this.successHintHideTimeoutId = setTimeout(() => {
+                        this.dismissSuccessHint();
+                    }, 3000);
+                },
+
+                dismissSuccessHint() {
+                    if (this.successHintCountdownIntervalId) {
+                        clearInterval(this.successHintCountdownIntervalId);
+                        this.successHintCountdownIntervalId = null;
+                    }
+                    if (this.successHintHideTimeoutId) {
+                        clearTimeout(this.successHintHideTimeoutId);
+                        this.successHintHideTimeoutId = null;
+                    }
+                    if (this.successHintHideAnimationTimeoutId) {
+                        clearTimeout(this.successHintHideAnimationTimeoutId);
+                        this.successHintHideAnimationTimeoutId = null;
+                    }
+
+                    if (!this.successHintVisible) return;
+                    this.successHintAnimatingOut = true;
+                    this.successHintHideAnimationTimeoutId = setTimeout(() => {
+                        this.successHintVisible = false;
+                        this.successHintAnimatingOut = false;
+                        this.successHintMessage = '';
+                        this.successHintCountdown = 0;
+                        this.successHintHideAnimationTimeoutId = null;
+                    }, 240);
+                },
+
                 openDirectWindow(category) {
                     document.body.style.overflow = 'hidden'; // Block background scrolling
                     this.selectedCategory = category;
                     this.showDirectWindow = true;
                     this.menuOpen = false;
+                },
+
+                openFastingWindow(category) {
+                    document.body.style.overflow = 'hidden';
+                    this.selectedCategory = category;
+                    this.showFastingWindow = true;
+                    this.menuOpen = false;
+                },
+
+                closeFastingWindow() {
+                    this.dismissSuccessHint();
+                    if (!this.isMangaQueueRunning) {
+                        this.stopMangaQueue();
+                        document.body.style.overflow = '';
+                        this.showFastingWindow = false;
+                        this.mangaStartNumber = null;
+                        this.mangaEndNumber = null;
+                    }
+                },
+
+                formatTime(seconds) {
+                    if (!seconds || seconds < 0) return '00:00';
+                    const mins = Math.floor(seconds / 60);
+                    const secs = Math.floor(seconds % 60);
+                    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                },
+
+                copyText(text) {
+                    try {
+                        const value = String(text ?? '');
+                        if (!value) return;
+                        if (navigator?.clipboard?.writeText) {
+                            navigator.clipboard.writeText(value);
+                            return;
+                        }
+                        // Fallback
+                        const textarea = document.createElement('textarea');
+                        textarea.value = value;
+                        textarea.style.position = 'fixed';
+                        textarea.style.left = '-9999px';
+                        document.body.appendChild(textarea);
+                        textarea.focus();
+                        textarea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textarea);
+                    } catch (e) {
+                        // best-effort copy
+                    }
+                },
+
+                buildMangaCaption(chapter, fileSize) {
+                    const sizeText = (fileSize !== undefined && fileSize !== null)
+                        ? this.formatFileSize(fileSize, true)
+                        : '';
+                    return sizeText
+                        ? `*الفصل: ${chapter}\nالحجم: ${sizeText}*`
+                        : `*الفصل: ${chapter}*`;
+                },
+
+                recordMangaSuccess(manga) {
+                    const chapter = String(manga?.MangaNumber ?? '');
+                    if (!chapter) return;
+                    const fileId = manga?.MangaFileID;
+
+                    // Mark failed row as success (if exists)
+                    const failedEntry = this.mangaFailedLog.find(e => e.chapter === chapter);
+                    if (failedEntry) {
+                        failedEntry.status = 'success';
+                        failedEntry.error = '';
+                    }
+
+                    // Add to sent log (unique by chapter)
+                    const existing = this.mangaSentLog.find(e => e.chapter === chapter);
+                    if (!existing) {
+                        this.mangaSentLog.push({ chapter, fileId, sentAt: Date.now() });
+                    }
+                },
+
+                recordMangaFailure(manga, error) {
+                    const chapter = String(manga?.MangaNumber ?? '');
+                    if (!chapter) return;
+                    const fileId = manga?.MangaFileID;
+                    const fileSize = manga?.MangaFileSize;
+                    const message = String(error?.message ?? error ?? 'Unknown error');
+
+                    const existing = this.mangaFailedLog.find(e => e.chapter === chapter);
+                    if (existing) {
+                        existing.error = message; // overwrite error
+                        existing.fileId = fileId ?? existing.fileId;
+                        existing.fileSize = fileSize ?? existing.fileSize;
+                        existing.status = 'failed';
+                        existing.attempts = (existing.attempts || 1) + 1;
+                    } else {
+                        this.mangaFailedLog.push({
+                            chapter,
+                            fileId,
+                            fileSize,
+                            error: message,
+                            status: 'failed',
+                            attempts: 1,
+                        });
+                    }
+                },
+
+                closeMangaFailedLogModal() {
+                    if (this.checkAnyRetryRunning()) {
+                        this.showRetryStopConfirmation = true;
+                    } else {
+                        // Remove successful rows from failed log before closing
+                        this.mangaFailedLog = this.mangaFailedLog.filter(e => e.status !== 'success');
+                        this.failedMangaQueue = [];
+                        this.failedQueueStats = {
+                            total: 0,
+                            sent: 0,
+                            failed: 0,
+                            waiting: 0,
+                            elapsedTime: 0,
+                            remainingTime: 0
+                        };
+                        this.retryQueueCurrent = { chapter: null, status: null, error: null };
+                        this.showMangaFailedLogModal = false;
+                    }
+                },
+
+                async retryFailedManga(entry) {
+                    if (!entry || entry.status === 'success' || entry.status === 'retrying') return;
+                    entry.status = 'retrying';
+                    
+                    // Update Current Status
+                    this.retryQueueCurrent = {
+                        chapter: entry.chapter,
+                        status: 'sending',
+                        error: null
+                    };
+                    
+                    try {
+                        // Check daily limit before attempting resend
+                        const canDownload = await this.checkDailyLimit();
+                        if (!canDownload) {
+                            entry.status = 'failed';
+                            entry.error = `لقد وصلت للحد اليومي (${this.maxDailyDownloads}). المتبقي: ${this.remainingDownloads}.`;
+                            this.retryQueueCurrent.status = 'failed';
+                            this.retryQueueCurrent.error = entry.error;
+                            this.showLimitModal = true;
+                            return;
+                        }
+                        
+                        await this.sendMangaResponse(entry.fileId, this.buildMangaCaption(entry.chapter, entry.fileSize));
+                        // Increment daily limit only on success
+                        await this.incrementDailyLimit();
+                        
+                        entry.status = 'success';
+                        entry.error = '';
+                        this.retryQueueCurrent.status = 'success';
+                        this.showSuccessHint('تم إرسال الفصل للخاص');
+                        
+                        // Move this chapter from failed → sent in the aggregate stats (MAIN stats)
+                        if (this.mangaQueueStats.failed > 0) {
+                            this.mangaQueueStats.failed -= 1;
+                        }
+                        this.mangaQueueStats.sent += 1;
+                        
+                        // also record as success
+                        this.recordMangaSuccess({ MangaNumber: entry.chapter, MangaFileID: entry.fileId });
+                    } catch (error) {
+                        entry.status = 'failed';
+                        entry.error = String(error?.message ?? error ?? 'Unknown error'); // overwrite
+                        this.retryQueueCurrent.status = 'failed';
+                        this.retryQueueCurrent.error = entry.error;
+                    }
+                },
+
+                async retryAllFailedMangas() {
+                    // Block API request if this tab is not the owner
+                    if (!this.isTabOwner) {
+                        console.warn('retryAllFailedMangas blocked: Tab is not the owner');
+                        return;
+                    }
+                    
+                    // Prevent starting if main queue is running
+                    if (this.isMangaQueueRunning && !this.isMangaQueuePaused) return;
+                    if (this.isRetryAllFailedRunning) return;
+                    const retryables = this.mangaFailedLog.filter(e => e.status !== 'success');
+                    if (!retryables.length) return;
+
+                    this.isRetryAllFailedRunning = true;
+                    this.retryAllFailedProgress = { done: 0, total: retryables.length };
+                    try {
+                        for (const entry of retryables) {
+                            if (!this.isRetryAllFailedRunning) break; // Check stop flag
+                            
+                            await this.retryFailedManga(entry);
+                            this.retryAllFailedProgress.done += 1;
+                            
+                            if (!this.isRetryAllFailedRunning) break; // Check stop flag
+                            
+                            // delay between retries (queue-style)
+                            await new Promise(resolve => setTimeout(resolve, this.fastingStatusClearTimeout));
+                        }
+                    } finally {
+                        this.isRetryAllFailedRunning = false;
+                        this.retryQueueCurrent = { chapter: null, status: null, error: null };
+                    }
+                },
+
+                // --- Retry Queue & Enhanced Logic ---
+
+                toggleFailedQueue(entry) {
+                    const index = this.failedMangaQueue.findIndex(e => e.chapter === entry.chapter);
+                    if (index === -1) {
+                        this.failedMangaQueue.push(entry);
+                    } else {
+                        this.failedMangaQueue.splice(index, 1);
+                    }
+                },
+
+                getQueueRank(entry) {
+                    const index = this.failedMangaQueue.findIndex(e => e.chapter === entry.chapter);
+                    return index > -1 ? index + 1 : 0;
+                },
+
+                toggleRetryQueuePause() {
+                    if (this.isRetryQueuePaused) {
+                        this.isRetryQueuePaused = false;
+                        this.isRetryQueuePauseRequested = false;
+                    } else {
+                        this.isRetryQueuePauseRequested = true;
+                    }
+                },
+
+                cancelRetryQueue() {
+                    this.isRetryQueueRunning = false;
+                    this.isRetryQueuePaused = false;
+                    this.isRetryQueuePauseRequested = false;
+                    this.failedMangaQueue = []; // Clear queue as requested
+                    this.retryQueueCurrent = { chapter: null, status: null, error: null };
+                },
+                
+                async startFailedQueue() {
+                    if (this.isRetryQueueRunning || this.isRetryAllFailedRunning) return;
+                    // If main queue is running and NOT paused, we cannot start.
+                    // BUT if it IS paused, we CAN start.
+                    if (this.isMangaQueueRunning && !this.isMangaQueuePaused) return;
+
+                    if (this.failedMangaQueue.length === 0) {
+                         alert('القائمة فارغة');
+                         return;
+                    }
+
+                    // Check daily limit
+                    if (this.failedMangaQueue.length > this.remainingDownloads) {
+                        this.showLimitModal = true;
+                        return;
+                    }
+
+                    this.isRetryQueueRunning = true;
+                    this.isRetryQueuePaused = false;
+                    this.isRetryQueuePauseRequested = false;
+                    
+                    // Reset stats for this run
+                    this.failedQueueStats = {
+                        total: this.failedMangaQueue.length,
+                        sent: 0,
+                        failed: 0,
+                        waiting: this.failedMangaQueue.length,
+                        elapsedTime: 0,
+                        remainingTime: this.failedMangaQueue.length * (this.fastingStatusClearTimeout / 1000)
+                    };
+                    
+                    this.processFailedQueue();
+                },
+
+                async processFailedQueue() {
+                     let i = 0;
+                     while (i < this.failedMangaQueue.length && this.isRetryQueueRunning) {
+                         // Check Pause
+                         if (this.isRetryQueuePauseRequested) {
+                             this.isRetryQueuePaused = true;
+                             this.isRetryQueuePauseRequested = false;
+                         }
+                         
+                         if (this.isRetryQueuePaused) {
+                             await new Promise(r => setTimeout(r, 100));
+                             continue; // Retry loop to check pause again
+                         }
+
+                         const entry = this.failedMangaQueue[i];
+                         
+                         // Check daily limit again
+                         const canDownload = await this.checkDailyLimit();
+                         if (!canDownload) {
+                             this.showLimitModal = true;
+                             this.isRetryQueueRunning = false;
+                             break;
+                         }
+
+                         try {
+                             entry.status = 'retrying';
+                             this.retryQueueCurrent = {
+                                 chapter: entry.chapter,
+                                 status: 'sending',
+                                 error: null
+                             };
+
+                             const caption = this.buildMangaCaption(entry.chapter, entry.fileSize);
+                             await this.sendMangaResponse(entry.fileId, caption);
+                             
+                             await this.incrementDailyLimit();
+                             this.recordMangaSuccess({ MangaNumber: entry.chapter });
+                             
+                             this.failedQueueStats.sent++;
+                             // Update main stats too
+                             if (this.mangaQueueStats.failed > 0) this.mangaQueueStats.failed--;
+                             this.mangaQueueStats.sent++;
+                            
+                             entry.status = 'success';
+                             this.retryQueueCurrent.status = 'success';
+                             this.showSuccessHint('تم إرسال الفصل للخاص');
+                         } catch (error) {
+                             console.error(error);
+                             entry.status = 'failed';
+                             entry.error = String(error);
+                             
+                             this.failedQueueStats.failed++;
+                             this.retryQueueCurrent.status = 'failed';
+                             this.retryQueueCurrent.error = entry.error;
+                         }
+                         
+                         i++;
+                         this.failedQueueStats.waiting = this.failedMangaQueue.length - i;
+                         
+                         // Delay
+                         if (i < this.failedMangaQueue.length && this.isRetryQueueRunning) {
+                             await new Promise(r => setTimeout(r, this.fastingStatusClearTimeout));
+                         }
+                     }
+                     
+                     this.isRetryQueueRunning = false;
+                     this.retryQueueCurrent = { chapter: null, status: null, error: null };
+                },
+                
+                checkAnyRetryRunning() {
+                    return this.isRetryAllFailedRunning || this.isRetryQueueRunning || this.mangaFailedLog.some(e => e.status === 'retrying');
+                },
+
+                confirmStopAndCloseFailedModal() {
+                    this.isRetryAllFailedRunning = false;
+                    this.isRetryQueueRunning = false;
+                    this.isRetryQueuePaused = false;
+                    this.isRetryQueuePauseRequested = false;
+                    this.failedMangaQueue = [];
+                    this.failedQueueStats = {
+                        total: 0,
+                        sent: 0,
+                        failed: 0,
+                        waiting: 0,
+                        elapsedTime: 0,
+                        remainingTime: 0
+                    };
+                    this.retryQueueCurrent = { chapter: null, status: null, error: null };
+                    this.showRetryStopConfirmation = false;
+                    this.showMangaFailedLogModal = false;
+                },
+
+                // Modified retryFailedManga to check concurrency
+                async retryFailedMangaWrapped(entry) {
+                    if (this.isRetryAllFailedRunning || this.isRetryQueueRunning) return;
+                    if (this.isMangaQueueRunning && !this.isMangaQueuePaused) return;
+                    
+                    await this.retryFailedManga(entry);
+                },
+
+                handleMangaNumberFocus(field) {
+                    // When focusing on empty field, set to min value
+                    if (this[field] === null || this[field] === undefined || this[field] === '') {
+                        this.$nextTick(() => {
+                            this[field] = this.minMangaNumber;
+                        });
+                    }
+                },
+
+                normalizeNumericString(value) {
+                    if (value === null || value === undefined) return '';
+                    const str = String(value);
+                    const map = {
+                        '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4',
+                        '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9',
+                        '۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4',
+                        '۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9'
+                    };
+                    let out = '';
+                    for (let i = 0; i < str.length; i++) {
+                        const ch = str[i];
+                        out += map[ch] ?? ch;
+                    }
+                    return out;
+                },
+
+                handleMangaNumberInput(event, field) {
+                    const rawValue = event?.target?.value ?? '';
+                    const normalized = this.normalizeNumericString(rawValue).trim();
+
+                    if (normalized === '') {
+                        this[field] = null;
+                        return;
+                    }
+
+                    const parsed = parseFloat(normalized);
+                    if (isNaN(parsed)) {
+                        this[field] = null;
+                        return;
+                    }
+
+                    const clamped = Math.min(Math.max(parsed, this.minMangaNumber), this.maxMangaNumber);
+                    this[field] = Math.round(clamped);
+                },
+
+                startMangaQueue() {
+                    // Block API request if this tab is not the owner
+                    if (!this.isTabOwner) {
+                        console.warn('startMangaQueue blocked: Tab is not the owner');
+                        this.tabLockModal = true;
+                        return;
+                    }
+                    
+                    // Prevent starting if retry queue is running
+                    if (this.isRetryAllFailedRunning) {
+                        return;
+                    }
+                    if (this.mangaStartNumber === null || this.mangaStartNumber === undefined || 
+                        this.mangaEndNumber === null || this.mangaEndNumber === undefined || 
+                        this.mangaStartNumber > this.mangaEndNumber) {
+                        return;
+                    }
+
+                    // Get all mangas
+                    const allMangas = this.groupedMangas.flatMap(group => group.items);
+                    
+                    // Filter mangas in range (handles "0" as valid manga number)
+                    this.mangaQueue = allMangas.filter(manga => {
+                        const num = parseFloat(manga.MangaNumber);
+                        return !isNaN(num) && num >= this.mangaStartNumber && num <= this.mangaEndNumber;
+                    }).sort((a, b) => parseFloat(a.MangaNumber) - parseFloat(b.MangaNumber));
+
+                    if (this.mangaQueue.length === 0) {
+                        alert('لا توجد مانغا في النطاق المحدد');
+                        return;
+                    }
+
+                    // Check daily limit
+                    if (this.mangaQueue.length > this.remainingDownloads) {
+                        this.showLimitModal = true;
+                        return;
+                    }
+
+                    // Initialize queue
+                    this.mangaQueueIndex = 0;
+                    this.isMangaQueueRunning = true;
+                    this.isMangaQueuePaused = false;
+                    this.isMangaQueueSending = false;
+                    this.isMangaQueuePauseRequested = false;
+                    this.mangaQueueStartTime = Date.now();
+                    this.mangaQueuePausedTime = 0;
+                    this.mangaQueueTotalPausedTime = 0;
+                    this.mangaQueueStats = {
+                        total: this.mangaQueue.length,
+                        sent: 0,
+                        failed: 0,
+                        waiting: this.mangaQueue.length,
+                        elapsedTime: 0,
+                        remainingTime: this.mangaQueue.length * (this.fastingStatusClearTimeout / 1000)
+                    };
+
+                    // Clear any existing process
+                    if (this.mangaQueueTimeoutId !== null) {
+                        clearTimeout(this.mangaQueueTimeoutId);
+                        this.mangaQueueTimeoutId = null;
+                    }
+                    this.mangaQueueProcessId = null;
+
+                    // Start timer
+                    this.mangaQueueInterval = setInterval(() => {
+                        if (this.isMangaQueueRunning && !this.isMangaQueuePaused) {
+                            const now = Date.now();
+                            const elapsed = Math.floor((now - this.mangaQueueStartTime - this.mangaQueueTotalPausedTime) / 1000);
+                            // Calculate remaining time based on actual remaining items
+                            const remainingItems = this.mangaQueueStats.waiting;
+                            const estimatedTimePerItem = this.fastingStatusClearTimeout / 1000;
+                            // If no items waiting, remaining time should be 0
+                            const remaining = remainingItems > 0 ? Math.max(0, remainingItems * estimatedTimePerItem) : 0;
+                            this.mangaQueueStats.elapsedTime = elapsed;
+                            this.mangaQueueStats.remainingTime = remaining;
+                        } else if (!this.isMangaQueueRunning && this.mangaQueueStats.total > 0) {
+                            // When finished, ensure remaining time is 0
+                            if (this.mangaQueueStats.waiting === 0) {
+                                this.mangaQueueStats.remainingTime = 0;
+                            }
+                        }
+                    }, 1000);
+
+                    // Start processing
+                    this.processMangaQueue();
+                },
+
+                async processMangaQueue() {
+                    // Generate unique process ID to prevent duplicate processing
+                    const currentProcessId = Date.now() + Math.random();
+                    this.mangaQueueProcessId = currentProcessId;
+
+                    const processNext = async (processId) => {
+                        // Verify this is still the active process
+                        if (this.mangaQueueProcessId !== processId) {
+                            return; // Another process has started, exit
+                        }
+
+                        // Check if we should continue
+                        if (!this.isMangaQueueRunning || this.mangaQueueIndex >= this.mangaQueue.length) {
+                            if (this.mangaQueueIndex >= this.mangaQueue.length) {
+                                this.finishMangaQueue();
+                            }
+                            return;
+                        }
+
+                        // Check if pause was requested - wait for current send to complete
+                        if (this.isMangaQueuePauseRequested && !this.isMangaQueueSending) {
+                            this.isMangaQueuePaused = true;
+                            this.isMangaQueuePauseRequested = false;
+                            this.mangaQueuePausedTime = Date.now(); // Record when pause started
+                            this.mangaQueueTimeoutId = setTimeout(() => processNext(processId), 100);
+                            return;
+                        }
+
+                        // Wait if paused (but not if pause is just being requested)
+                        if (this.isMangaQueuePaused && !this.isMangaQueuePauseRequested) {
+                            this.mangaQueueTimeoutId = setTimeout(() => processNext(processId), 100);
+                            return;
+                        }
+
+                        // Mark as sending
+                        this.isMangaQueueSending = true;
+                        const currentIndex = this.mangaQueueIndex;
+                        const manga = this.mangaQueue[currentIndex];
+                        // Show only the current chapter status
+                        this.mangaQueueCurrent.chapter = manga?.MangaNumber ?? null;
+                        this.mangaQueueCurrent.status = 'sending';
+                        this.mangaQueueCurrent.error = null;
+                        
+                        // Update waiting count before sending
+                        this.mangaQueueStats.waiting = this.mangaQueue.length - currentIndex - 1;
+
+                        try {
+                            // Check daily limit before sending
+                            const canDownload = await this.checkDailyLimit();
+                            if (!canDownload) {
+                                throw new Error(`Daily download limit of ${this.maxDailyDownloads} reached.`);
+                            }
+
+                            await this.sendMangaResponse(manga.MangaFileID, this.buildMangaCaption(manga.MangaNumber, manga.MangaFileSize));
+                            // Only increment if we're still on the same index (prevent duplicates)
+                            if (this.mangaQueueIndex === currentIndex) {
+                                // Increment daily limit on success
+                                await this.incrementDailyLimit();
+
+                                this.mangaQueueCurrent.status = 'success';
+                                this.showSuccessHint('تم إرسال الفصل للخاص');
+                                this.recordMangaSuccess(manga);
+                                this.mangaQueueStats.sent++;
+                                this.mangaQueueIndex++;
+                                // Update waiting count after increment
+                                this.mangaQueueStats.waiting = this.mangaQueue.length - this.mangaQueueIndex;
+                                // If no more items, set remaining time to 0 immediately
+                                if (this.mangaQueueStats.waiting === 0) {
+                                    this.mangaQueueStats.remainingTime = 0;
+                                }
+                            }
+                        } catch (error) {
+                            // console.error(error);
+                            // Only increment if we're still on the same index
+                            if (this.mangaQueueIndex === currentIndex) {
+                                this.mangaQueueCurrent.status = 'failed';
+                                this.mangaQueueCurrent.error = String(error?.message ?? error ?? 'Unknown error');
+                                this.recordMangaFailure(manga, error);
+                                this.mangaQueueStats.failed++;
+                                this.mangaQueueIndex++;
+                                // Update waiting count after increment
+                                this.mangaQueueStats.waiting = this.mangaQueue.length - this.mangaQueueIndex;
+                                // If no more items, set remaining time to 0 immediately
+                                if (this.mangaQueueStats.waiting === 0) {
+                                    this.mangaQueueStats.remainingTime = 0;
+                                }
+                            }
+                        }
+
+                        // Mark as not sending
+                        this.isMangaQueueSending = false;
+
+                        // Check if pause was requested during send
+                        if (this.isMangaQueuePauseRequested) {
+                            this.isMangaQueuePaused = true;
+                            this.isMangaQueuePauseRequested = false;
+                            this.mangaQueuePausedTime = Date.now(); // Record when pause started
+                            return;
+                        }
+
+                        // Wait before next send
+                        if (this.isMangaQueueRunning && this.mangaQueueIndex < this.mangaQueue.length) {
+                            this.mangaQueueTimeoutId = setTimeout(() => processNext(processId), this.fastingStatusClearTimeout);
+                        } else if (this.mangaQueueIndex >= this.mangaQueue.length) {
+                            this.finishMangaQueue();
+                        }
+                    };
+
+                    processNext(currentProcessId);
+                },
+
+                toggleMangaQueuePause() {
+                    if (this.isMangaQueuePaused) {
+                        // Resume - calculate paused time and add to total
+                        if (this.mangaQueuePausedTime > 0) {
+                            const pausedDuration = Date.now() - this.mangaQueuePausedTime;
+                            this.mangaQueueTotalPausedTime += pausedDuration;
+                            this.mangaQueuePausedTime = 0;
+                        }
+                        this.isMangaQueuePaused = false;
+                        this.isMangaQueuePauseRequested = false;
+                    } else {
+                        // Request pause - will wait for current send to complete
+                        this.isMangaQueuePauseRequested = true;
+                    }
+                },
+
+                stopMangaQueue() {
+                    this.isMangaQueueRunning = false;
+                    this.isMangaQueuePaused = false;
+                    this.isMangaQueueSending = false;
+                    this.isMangaQueuePauseRequested = false;
+                    this.showStopConfirmation = false;
+                    if (this.mangaQueueInterval) {
+                        clearInterval(this.mangaQueueInterval);
+                        this.mangaQueueInterval = null;
+                    }
+                    if (this.mangaQueueTimeoutId !== null) {
+                        clearTimeout(this.mangaQueueTimeoutId);
+                        this.mangaQueueTimeoutId = null;
+                    }
+                    this.mangaQueueProcessId = null;
+                    this.mangaQueue = [];
+                    this.mangaQueueIndex = 0;
+                    this.mangaQueueStats = {
+                        total: 0,
+                        sent: 0,
+                        failed: 0,
+                        waiting: 0,
+                        elapsedTime: 0,
+                        remainingTime: 0
+                    };
+                    this.mangaQueueStartTime = null;
+                    this.mangaQueuePausedTime = 0;
+                    this.mangaQueueTotalPausedTime = 0;
+                    // Clear UI/log state
+                    this.mangaQueueCurrent = { chapter: null, status: null, error: null };
+                    this.mangaSentLog = [];
+                    this.mangaFailedLog = [];
+                    this.showMangaSentLogModal = false;
+                    this.showMangaFailedLogModal = false;
+                    this.isRetryAllFailedRunning = false;
+                    this.retryAllFailedProgress = { done: 0, total: 0 };
+                    // document.body.style.overflow = '';
+                },
+
+                finishMangaQueue() {
+                    // Called when queue finishes naturally - don't reset stats
+                    this.isMangaQueueRunning = false;
+                    this.isMangaQueuePaused = false;
+                    this.isMangaQueueSending = false;
+                    this.isMangaQueuePauseRequested = false;
+                    // Ensure waiting is 0 and remaining time is 0
+                    this.mangaQueueStats.waiting = 0;
+                    this.mangaQueueStats.remainingTime = 0;
+                    if (this.mangaQueueInterval) {
+                        clearInterval(this.mangaQueueInterval);
+                        this.mangaQueueInterval = null;
+                    }
+                    if (this.mangaQueueTimeoutId !== null) {
+                        clearTimeout(this.mangaQueueTimeoutId);
+                        this.mangaQueueTimeoutId = null;
+                    }
+                    this.mangaQueueProcessId = null;
+                    // Keep stats visible, just stop the process
+                },
+
+                resetMangaQueue() {
+                    this.dismissSuccessHint();
+                    // Reset everything for a new queue
+                    this.stopMangaQueue();
+                    this.mangaStartNumber = null;
+                    this.mangaEndNumber = null;
                 },
 
                 resetEpisodesView() {
@@ -18054,6 +19826,7 @@
                 },
 
                 closeDirectWindow() {
+                    this.dismissSuccessHint();
                     document.body.style.overflow = ''; // Restore background scrolling
                     // Store references to the current objects before clearing them
                     const tempEpisode = this.selectedEpisode;
@@ -18517,19 +20290,407 @@
                     }, 1000);
                 },
 
+                // Tab Locking System Methods
+                initTabLocking() {
+                    // Generate unique tab ID
+                    this.tabId = `tab-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+                    
+                    // Try SharedWorker first
+                    try {
+                        if (typeof SharedWorker !== 'undefined') {
+                            const worker = new SharedWorker('./tab-shared-worker.js', { name: 'dcrefbot-tab-worker' });
+                            this.tabWorkerPort = worker.port;
+                            
+                            this.tabWorkerPort.onmessage = (event) => {
+                                const { type, isOwner, ownerTabId } = event.data;
+                                
+                                switch (type) {
+                                    case 'ownership-granted':
+                                        this.isTabOwner = true;
+                                        this.tabLockModal = false;
+                                        console.log('Tab ownership granted');
+                                        // Initialize InstantDB and load data when ownership is granted
+                                        if (this.userJoined && !this._db) {
+                                            this.initInstantDB();
+                                        }
+                                        if (this.userJoined && this.episodes.length === 0) {
+                                            this.loadData();
+                                        }
+                                        break;
+                                        
+                                    case 'ownership-denied':
+                                        this.isTabOwner = false;
+                                        this.tabLockModal = true;
+                                        console.log('Tab ownership denied, owner:', ownerTabId);
+                                        break;
+                                        
+                                    case 'ownership-status':
+                                        this.isTabOwner = !!isOwner;
+                                        this.tabLockModal = !this.isTabOwner;
+                                        break;
+                                        
+                                    case 'heartbeat-request':
+                                        // Respond to heartbeat request
+                                        if (this.tabWorkerPort) {
+                                            this.tabWorkerPort.postMessage({
+                                                type: 'heartbeat',
+                                                tabId: this.tabId,
+                                                timestamp: Date.now()
+                                            });
+                                        }
+                                        break;
+                                }
+                            };
+                            
+                            this.tabWorkerPort.start();
+                            
+                            // Request ownership
+                            this.tabWorkerPort.postMessage({
+                                type: 'init',
+                                tabId: this.tabId
+                            });
+                            
+                            // Start heartbeat
+                            this.tabHeartbeatInterval = setInterval(() => {
+                                if (this.tabWorkerPort) {
+                                    this.tabWorkerPort.postMessage({
+                                        type: 'heartbeat',
+                                        tabId: this.tabId,
+                                        timestamp: Date.now()
+                                    });
+                                }
+                            }, 2000);
+                            
+                            return;
+                        }
+                    } catch (e) {
+                        console.warn('SharedWorker not supported, using BroadcastChannel + Web Locks:', e);
+                    }
+                    
+                    // Fallback: Use BroadcastChannel API
+                    try {
+                        if (typeof BroadcastChannel !== 'undefined') {
+                            this.tabBroadcastChannel = new BroadcastChannel('dcrefbot-tab-broadcast');
+                            
+                            this.tabBroadcastChannel.onmessage = (event) => {
+                                const { type, ownerTabId, tabId } = event.data;
+                                
+                                switch (type) {
+                                    case 'ownership-granted':
+                                        if (tabId === this.tabId) {
+                                            this.isTabOwner = true;
+                                            this.tabLockModal = false;
+                                            // Initialize InstantDB and load data when ownership is granted
+                                            if (this.userJoined && !this._db) {
+                                                this.initInstantDB();
+                                            }
+                                            if (this.userJoined && this.episodes.length === 0) {
+                                                this.loadData();
+                                            }
+                                        } else {
+                                            this.isTabOwner = false;
+                                            this.tabLockModal = true;
+                                        }
+                                        break;
+                                        
+                                    case 'ownership-status':
+                                        if (tabId === this.tabId) {
+                                            this.isTabOwner = true;
+                                            this.tabLockModal = false;
+                                            // Initialize InstantDB and load data when ownership is granted
+                                            if (this.userJoined && !this._db) {
+                                                this.initInstantDB();
+                                            }
+                                            if (this.userJoined && this.episodes.length === 0) {
+                                                this.loadData();
+                                            }
+                                        } else {
+                                            this.isTabOwner = false;
+                                            this.tabLockModal = true;
+                                        }
+                                        break;
+                                        
+                                    case 'ownership-released':
+                                        // Try to claim ownership
+                                        this.tabBroadcastChannel.postMessage({
+                                            type: 'request-ownership',
+                                            tabId: this.tabId,
+                                            timestamp: Date.now()
+                                        });
+                                        break;
+                                }
+                            };
+                            
+                            // Request ownership via BroadcastChannel
+                            this.tabBroadcastChannel.postMessage({
+                                type: 'request-ownership',
+                                tabId: this.tabId,
+                                timestamp: Date.now()
+                            });
+                        }
+                    } catch (e) {
+                        console.warn('BroadcastChannel not supported:', e);
+                    }
+                    
+                    const startedWebLock = this.startWebLocksTabLocking();
+                    if (!startedWebLock) {
+                        this.startStorageTabLocking();
+                    }
+                },
+                
+                startWebLocksTabLocking() {
+                    if (!(navigator.locks && navigator.locks.request)) {
+                        return false;
+                    }
+
+                    const attempt = async () => {
+                        if (this.tabWebLockRequestInFlight) return;
+                        this.tabWebLockRequestInFlight = true;
+
+                        try {
+                            await navigator.locks.request('dcrefbot-tab-lock', { ifAvailable: true }, async (lock) => {
+                                if (!lock) {
+                                    this.isTabOwner = false;
+                                    this.tabLockModal = true;
+                                    return;
+                                }
+
+                                if (this.tabWebLockRetryInterval) {
+                                    clearInterval(this.tabWebLockRetryInterval);
+                                    this.tabWebLockRetryInterval = null;
+                                }
+
+                                const becameOwner = !this.isTabOwner;
+                                this.isTabOwner = true;
+                                this.tabLockModal = false;
+                                this.tabLockLock = lock;
+
+                                if (becameOwner) {
+                                    console.log('Tab ownership granted');
+                                    if (this.userJoined && !this._db) {
+                                        this.initInstantDB();
+                                    }
+                                    if (this.userJoined && this.episodes.length === 0) {
+                                        this.loadData();
+                                    }
+                                }
+
+                                await new Promise(resolve => {
+                                    this.tabWebLockReleaseResolver = resolve;
+                                });
+                            });
+                        } catch (e) {
+                            console.warn('Web Locks API error:', e);
+                            if (this.tabWebLockRetryInterval) {
+                                clearInterval(this.tabWebLockRetryInterval);
+                                this.tabWebLockRetryInterval = null;
+                            }
+                            this.tabWebLockRequestInFlight = false;
+                            this.startStorageTabLocking();
+                            return;
+                        } finally {
+                            if (!this.isTabOwner) {
+                                this.tabWebLockRequestInFlight = false;
+                            }
+                        }
+                    };
+
+                    attempt();
+
+                    if (this.tabWebLockRetryInterval) {
+                        clearInterval(this.tabWebLockRetryInterval);
+                    }
+                    this.tabWebLockRetryInterval = setInterval(attempt, 2000);
+
+                    if (!this.tabWebLockVisibilityHandler) {
+                        this.tabWebLockVisibilityHandler = () => {
+                            if (!document.hidden) {
+                                attempt();
+                            }
+                        };
+                        document.addEventListener('visibilitychange', this.tabWebLockVisibilityHandler);
+                    }
+
+                    return true;
+                },
+
+                startStorageTabLocking() {
+                    const key = 'dcrefbot-tab-owner';
+                    const ttlMs = 10000;
+                    const heartbeatMs = 1000;
+
+                    const safeRead = () => {
+                        try {
+                            const raw = localStorage.getItem(key);
+                            return raw ? JSON.parse(raw) : null;
+                        } catch (e) {
+                            return null;
+                        }
+                    };
+
+                    const safeWrite = (value) => {
+                        try {
+                            localStorage.setItem(key, JSON.stringify(value));
+                            return true;
+                        } catch (e) {
+                            return false;
+                        }
+                    };
+
+                    const step = () => {
+                        const now = Date.now();
+                        const current = safeRead();
+
+                        if (!current || typeof current.expiresAt !== 'number' || !current.tabId || current.expiresAt <= now) {
+                            const ok = safeWrite({ tabId: this.tabId, expiresAt: now + ttlMs });
+                            if (!ok) {
+                                this.isTabOwner = true;
+                                this.tabLockModal = false;
+                                return;
+                            }
+                        } else if (current.tabId === this.tabId) {
+                            safeWrite({ tabId: this.tabId, expiresAt: now + ttlMs });
+                        }
+
+                        const latest = safeRead();
+                        const isOwner = !!latest && latest.tabId === this.tabId && typeof latest.expiresAt === 'number' && latest.expiresAt > now;
+                        const becameOwner = isOwner && !this.isTabOwner;
+
+                        this.isTabOwner = isOwner;
+                        this.tabLockModal = !isOwner;
+
+                        if (becameOwner) {
+                            console.log('Tab ownership granted');
+                            if (this.userJoined && !this._db) {
+                                this.initInstantDB();
+                            }
+                            if (this.userJoined && this.episodes.length === 0) {
+                                this.loadData();
+                            }
+                        }
+                    };
+
+                    if (this.tabStorageLockInterval) {
+                        clearInterval(this.tabStorageLockInterval);
+                    }
+                    this.tabStorageLockInterval = setInterval(step, heartbeatMs);
+
+                    if (!this.tabStorageLockVisibilityHandler) {
+                        this.tabStorageLockVisibilityHandler = () => {
+                            if (!document.hidden) {
+                                step();
+                            }
+                        };
+                        document.addEventListener('visibilitychange', this.tabStorageLockVisibilityHandler);
+                    }
+
+                    step();
+                },
+                
+                releaseTabLock() {
+                    if (this.tabHeartbeatInterval) {
+                        clearInterval(this.tabHeartbeatInterval);
+                        this.tabHeartbeatInterval = null;
+                    }
+                    
+                    if (this.tabWorkerPort) {
+                        this.tabWorkerPort.postMessage({
+                            type: 'disconnect',
+                            tabId: this.tabId
+                        });
+                        this.tabWorkerPort.close();
+                        this.tabWorkerPort = null;
+                    }
+                    
+                    if (this.tabBroadcastChannel) {
+                        this.tabBroadcastChannel.postMessage({
+                            type: 'release-ownership',
+                            tabId: this.tabId,
+                            timestamp: Date.now()
+                        });
+                        this.tabBroadcastChannel.close();
+                        this.tabBroadcastChannel = null;
+                    }
+
+                    if (this.tabStorageLockInterval) {
+                        clearInterval(this.tabStorageLockInterval);
+                        this.tabStorageLockInterval = null;
+                    }
+
+                    if (this.tabStorageLockVisibilityHandler) {
+                        document.removeEventListener('visibilitychange', this.tabStorageLockVisibilityHandler);
+                        this.tabStorageLockVisibilityHandler = null;
+                    }
+
+                    if (this.tabWebLockRetryInterval) {
+                        clearInterval(this.tabWebLockRetryInterval);
+                        this.tabWebLockRetryInterval = null;
+                    }
+
+                    if (this.tabWebLockVisibilityHandler) {
+                        document.removeEventListener('visibilitychange', this.tabWebLockVisibilityHandler);
+                        this.tabWebLockVisibilityHandler = null;
+                    }
+
+                    if (this.tabWebLockReleaseResolver) {
+                        try { this.tabWebLockReleaseResolver(); } catch (e) {}
+                        this.tabWebLockReleaseResolver = null;
+                    }
+
+                    this.tabWebLockRequestInFlight = false;
+
+                    try {
+                        const key = 'dcrefbot-tab-owner';
+                        const raw = localStorage.getItem(key);
+                        const current = raw ? JSON.parse(raw) : null;
+                        if (current && current.tabId === this.tabId) {
+                            localStorage.setItem(key, JSON.stringify({ tabId: this.tabId, expiresAt: 0 }));
+                        }
+                    } catch (e) {}
+                    
+                    this.isTabOwner = false;
+                    this.tabLockLock = null;
+                },
+
             },
             
             async created() {
+                // Initialize tab locking system FIRST
+                this.initTabLocking();
+                
                 // Run the Telegram check before mounting the app.
                 await this.checkTelegram();
+                this.startDailyLimitRowIdResync();
                 // If the user is valid, immediately load data.
-                if (this.userJoined) {
+                if (this.userJoined && this.isTabOwner) {
+                    if (!this._db) {
+                        this.initInstantDB();
+                    }
                     this.loadData();
                 }
             },
 
             mounted() {
+                // Initialize InstantDB only if this tab is the owner
+                if (this.isTabOwner && !this._db) {
+                    this.initInstantDB();
+                }
+                
+                // Cleanup on unmount
+                window.addEventListener('beforeunload', () => {
+                    this.stopDailyLimitRowIdResync();
+                    this.releaseTabLock();
+                });
+                window.addEventListener('pagehide', () => {
+                    this.stopDailyLimitRowIdResync();
+                    this.releaseTabLock();
+                });
+
                 const enableDebug = false; // Set to true to enable debug logging
+                
+                this.nowIntervalId = setInterval(() => {
+                    this.now = Date.now();
+                }, 1000);
                 
                 // Hide loading spinner when Vue is ready
                 document.body.classList.add('vue-ready');
@@ -18653,6 +20814,7 @@
                 if (this.intervalZikrId) clearInterval(this.intervalZikrId);
                 if (this.episodeTimeInterval) clearInterval(this.episodeTimeInterval);
                 if (this.mangaTimeInterval) clearInterval(this.mangaTimeInterval);
+                if (this.nowIntervalId) clearInterval(this.nowIntervalId);
                 if (this.countdownInterval) clearInterval(this.countdownInterval);
                 if (this.episodeBroadcastCountdownInterval) clearInterval(this.episodeBroadcastCountdownInterval);
                 if (this.movieTimingInterval) clearInterval(this.movieTimingInterval);
@@ -18730,11 +20892,3 @@
     </style>
 </body>
 </html>
-
-
-
-
-
-
-
-
