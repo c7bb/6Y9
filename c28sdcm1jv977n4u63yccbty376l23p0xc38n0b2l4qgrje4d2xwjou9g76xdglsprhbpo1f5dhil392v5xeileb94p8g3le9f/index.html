@@ -637,10 +637,15 @@
                 </div>
             
                 <button 
-                    @click="refreshSession" 
-                    class="px-4 py-2 bg-yellow-500 text-black font-bold rounded hover:bg-yellow-400 transition-all duration-100 active:scale-95"
+                    @click="refreshSession"
+                    :disabled="isRefreshingSession"
+                    class="px-4 py-2 bg-yellow-500 text-black font-bold rounded hover:bg-yellow-400 transition-all duration-100 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"
                 >
-                    تحديث الجلسة
+                    <span
+                        v-if="isRefreshingSession"
+                        class="animate-spin inline-block h-5 w-5 rounded-full border-2 border-black/30 border-t-black"
+                    ></span>
+                    <span>تحديث الجلسة</span>
                 </button>
             </div>        
         </div>
@@ -655,7 +660,8 @@
 
         <div 
             v-if="successHintVisible"
-            :class="['fixed bottom-4 right-1 z-[111] bg-emerald-900 text-yellow-100 px-3 py-2 rounded shadow-lg text-sm max-w-[90vw] sm:max-w-[420px]', successHintAnimatingOut ? 'success-hint-out' : 'success-hint-in']"
+            @click="goToBot()"
+            :class="['fixed bottom-4 right-1 z-[111] bg-emerald-900 text-yellow-100 px-3 py-2 cursor-pointer rounded shadow-lg text-sm max-w-[90vw] sm:max-w-[420px]', successHintAnimatingOut ? 'success-hint-out' : 'success-hint-in']"
         >
             <div class="flex items-center gap-4">
                 <!-- <button @click="dismissSuccessHint" class="text-red-600 hover:text-yellow-300 transition-all duration-100 active:scale-90">
@@ -1796,7 +1802,7 @@
                             <!-- Reset Button (Refresh Icon with Image) -->
                             <button 
                             @click="resetFilters" 
-                            class="absolute top-0 left-16 text-yellow-300 hover:text-yellow-600 font-bold transition-all duration-100 active:scale-90">
+                            class="absolute top-0 left-14 text-yellow-300 hover:text-yellow-600 font-bold transition-all duration-100 active:scale-90">
                             <img src="https://raw.githubusercontent.com/c7bb/6Y9//main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/redo.png" alt="Reset" class="h-9 w-9"/>
                         </button>
                         </h2>
@@ -1814,6 +1820,11 @@
                                 <li class="mb-2">لعرض نتائج التصفية، انتقل إلى الجدول عن طريق إغلاق هذه النافذة بالضغط على زر الإغلاق (الزر الأحمر) في الزاوية العلوية اليسرى.</li>
                                 <li>لإعادة التصفية إلى الوضع الافتراضي، اضغط على زر إعادة التعيين (الزر البرتقالي) في الزاوية العلوية اليسرى.</li>                                
                             </ul>
+                        </div>
+                        
+                        <div class="bg-gray-800 text-yellow-300 p-4 rounded mb-4 text-center">
+                            <h3 class="text-lg font-bold mb-2">ملاحظة</h3>
+                            <p class="text-base">اسماء الشخصيات بالترتيب الياباني (اسم العائلة + اسم الشخص)</p>
                         </div>
 
                         <fieldset class="border p-4 rounded">
@@ -6512,7 +6523,7 @@
                                         class="font-bold text-lg"
                                     >
                                         <p>
-                                        <span dir="ltr">:قراءة الفصول (عبر البوت)</span> {{ selectedEpisode.EpisodeMangaQuoted }}
+                                        <span dir="ltr">:الفصول المقتبسة</span> {{ selectedEpisode.EpisodeMangaQuoted }}
                                         </p>
                                     </legend>
 
@@ -6558,7 +6569,11 @@
                                     </div>
                                 </fieldset>                                                                    
                                 <p v-if="selectedEpisode && selectedEpisode.EpisodeSeason !== ''" class="mb-2 text-lg">
-                                    <span>الموسم: </span>{{ selectedEpisode.EpisodeSeason }} ({{ selectedEpisode.EpisodeSeasonCount }} حلقة)
+                                    <span>الموسم: </span>{{ selectedEpisode.EpisodeSeason }}
+                                    <span class="opacity-80">(</span>
+                                    <span v-if="seasonCountParts.numberText" class="text-yellow-300 font-black pl-1">{{ seasonCountParts.numberText }}</span>
+                                    <span class="opacity-80">{{ seasonCountParts.suffixText }}</span>
+                                    <span class="opacity-80">)</span>
                                 </p>
 
                                 <p v-if="selectedEpisode && selectedEpisode.EpisodeBCDate !== ''" class="mb-2 text-lg">
@@ -6705,7 +6720,19 @@
                                     </div>
                                 </fieldset>
 
-                                <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeVideosIDs !== null" class="border p-2 rounded mb-4">
+                                <fieldset v-if="selectedEpisode && episodeTrailers.length > 0" class="border p-2 rounded mb-2 border-purple-400">
+                                    <legend class="font-bold text-lg px-2 text-center">
+                                        {{ trailerModalTitleText }}
+                                    </legend>
+                                    <button
+                                        @click="openTrailerModal"
+                                        class="w-full bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700 flex items-center justify-center shadow-md transition-all duration-100 active:scale-90"
+                                    >
+                                        {{ trailerMainButtonText }}
+                                    </button>
+                                </fieldset>
+
+                                <fieldset v-if="selectedEpisode && Array.isArray(selectedEpisode.EpisodeVideosIDs) && selectedEpisode.EpisodeVideosIDs.length > 0" class="border p-2 rounded mb-4">
                                     <legend class="font-bold text-lg px-2">مشاهدة (عبر البوت)</legend>
                                     <div class="flex flex-col gap-4">
                                         <!-- Videos without metadata (rendered directly under main legend) -->
@@ -6797,6 +6824,110 @@
                                         </template>
                                     </div>
                                 </fieldset>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-if="showTrailerModal" class="fixed z-[90] inset-0 overflow-y-auto bg-black bg-opacity-80 flex items-center justify-center" @click.self="closeTrailerModal">
+                        <div class="relative bg-slate-950 text-slate-200 font-bold rounded-lg w-11/12 md:w-3/4 lg:w-1/2 max-h-[90vh] overflow-hidden flex flex-col border border-cyan-800">
+                            <div class="sticky top-0 bg-slate-950 p-4 flex items-center justify-end border-b border-cyan-900 relative">
+                                <div class="text-lg text-center w-full absolute left-1/2 -translate-x-1/2 pointer-events-none">
+                                    {{ trailerModalTitleText }}
+                                </div>
+                                <button @click="closeTrailerModal" class="text-red-500 hover:text-yellow-300 transition-all duration-100 active:scale-90">
+                                    <span class="text-2xl font-black">✕</span>
+                                </button>
+                            </div>
+
+                            <div class="overflow-y-auto p-4 flex-1 always-visible-scrollbar">
+                                <div v-if="groupedTrailers.length > 1" class="flex flex-wrap justify-center gap-2 mb-4 text-center">
+                                    <button
+                                        v-for="group in groupedTrailers"
+                                        :key="group.key"
+                                        @click="selectTrailerGroup(group.key)"
+                                        :class="[
+                                            'px-3 py-2 rounded font-bold transition-all duration-100 active:scale-90',
+                                            selectedTrailerGroupKey === group.key ? 'bg-orange-500 text-black' : 'bg-gray-800 text-slate-200 hover:bg-gray-700'
+                                        ]"
+                                    >
+                                        {{ group.label }}
+                                    </button>
+                                </div>
+
+                                <div v-if="shouldShowTrailerProviderButtons" class="flex flex-wrap justify-center gap-2 mb-4 text-center">
+                                    <button
+                                        v-for="p in activeTrailerProviders"
+                                        :key="p.key"
+                                        @click="selectTrailerProvider(p.key)"
+                                        :class="[
+                                            'px-4 py-2 rounded font-bold transition-all duration-100 active:scale-90',
+                                            selectedTrailerProviderKey === p.key
+                                                ? 'bg-blue-600 text-white'
+                                                : 'bg-blue-900 text-slate-100 hover:bg-blue-800'
+                                        ]"
+                                    >
+                                        {{ p.label }}
+                                    </button>
+                                </div>
+
+                                <div v-if="isActiveTrailerProviderTelegram" class="flex flex-col gap-2 mb-4">
+                                    <div
+                                        v-for="t in activeTrailerProviderTrailers"
+                                        :key="`${t.TrailerID || ''}-${t.Resolution || ''}-${t.Size || ''}`"
+                                        class="relative"
+                                    >
+                                        <button
+                                            :disabled="t.status === 'success' || t.status === 'ratelimiting' || t.status === 'sending'"
+                                            @click="sendTrailerToBot(t)"
+                                            class="w-full bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-100 active:scale-90 disabled:cursor-not-allowed relative overflow-hidden"
+                                        >
+                                            <span v-if="t.status === 'ratelimiting'">{{ t.Resolution }} ({{ formatFileSize(t.Size) }})</span>
+                                            <span v-else-if="t.countdown !== undefined">{{ t.countdown }}</span>
+                                            <span v-else>{{ t.Resolution }} ({{ formatFileSize(t.Size) }})</span>
+                                        </button>
+                                        <img
+                                            v-if="t.status === 'success'"
+                                            src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/true.png"
+                                            class="absolute right-0 top-0 w-6 h-6 z-10 pointer-events-none"
+                                        />
+                                        <img
+                                            v-else-if="t.status === 'error'"
+                                            src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/close.png"
+                                            class="absolute right-0 top-0 w-6 h-6 z-10 pointer-events-none"
+                                        />
+                                        <div v-if="t.status === 'sending'" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded z-20">
+                                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div v-else-if="trailerIframeSrc" class="w-full">
+                                    <div class="w-full h-[60vh] rounded relative overflow-hidden bg-black/20">
+                                        <div v-if="isTrailerIframeLoading" class="absolute inset-0 flex items-center justify-center">
+                                            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-white"></div>
+                                        </div>
+                                        <iframe
+                                            :key="trailerIframeKey"
+                                            :src="trailerIframeSrc"
+                                            class="w-full h-full rounded"
+                                            frameborder="0"
+                                            allow="autoplay; fullscreen; picture-in-picture"
+                                            allowfullscreen
+                                            webkitallowfullscreen
+                                            mozallowfullscreen
+                                            v-show="!isTrailerIframeLoading"
+                                            @load="handleTrailerIframeLoad"
+                                            @error="handleTrailerIframeError"
+                                        ></iframe>
+                                    </div>
+                                    <button
+                                        v-if="trailerExternalUrl"
+                                        @click="openTrailerInBrowser"
+                                        class="w-full mt-3 bg-gray-700 text-white px-6 py-2 rounded hover:bg-gray-600 flex items-center justify-center shadow-md transition-all duration-100 active:scale-90"
+                                    >
+                                        فتح الإعلان في المتصفح
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -6949,6 +7080,8 @@
                     inactivityCountdown: 300,
                     inactivityIntervalId: null,
                     inactivityModal: false,
+                    isRefreshingSession: false,
+                    isTrailerIframeLoading: false,
                     inactivityListeners: [],
                     lastActivityAt: Date.now(),
                     successHintVisible: false,
@@ -7207,7 +7340,12 @@
                     pageSize: 15,
                     oldPageSize: 15,
                     showModal: false,
+                    showTrailerModal: false,
                     selectedEpisode: null,
+                    selectedTrailerGroupKey: null,
+                    selectedTrailerProviderKey: null,
+                    selectedTrailer: null,
+                    trailerIframeSrc: '',
                     preserveSelectedEpisodeOnModalClose: false,
                     showMangaButtons: false,
                     filterBlackOrganization: false,
@@ -7894,8 +8032,10 @@
                 },
                 showErrorOverlay() {
                     return Boolean(
+                        ((this.errorMessage || '').trim()) ||
                         (this.selectedEpisode?.EpisodeMangasIDs?.some(manga => manga.status === 'error')) ||
                         (this.selectedEpisode?.EpisodeVideosIDs?.some(video => video.status === 'error')) ||
+                        (this.episodeTrailers?.some(trailer => trailer.status === 'error')) ||
                         (this.selectedManga?.status === 'error') ||
                         (this.selectedEpisode?.status === 'error')
                     );
@@ -8259,6 +8399,117 @@
                     }
                     
                     return groupedVideos;
+                },
+
+                episodeTrailers() {
+                    if (!this.selectedEpisode) return [];
+                    const raw = this.selectedEpisode.EpisodeTrailersIDs;
+                    if (!raw) return [];
+                    if (Array.isArray(raw)) return raw.filter(Boolean);
+                    if (typeof raw === 'string') {
+                        try {
+                            const parsed = JSON.parse(raw);
+                            if (Array.isArray(parsed)) return parsed.filter(Boolean);
+                            if (parsed && typeof parsed === 'object') return [parsed];
+                            return [];
+                        } catch (e) {
+                            return [];
+                        }
+                    }
+                    if (raw && typeof raw === 'object') return [raw];
+                    return [];
+                },
+
+                groupedTrailers() {
+                    const trailers = this.episodeTrailers;
+                    if (!trailers.length) return [];
+
+                    const hasNumbers = trailers.some(t => t && t.TrailerNumber !== undefined && t.TrailerNumber !== null && String(t.TrailerNumber).trim() !== '');
+                    const groups = new Map();
+
+                    trailers.forEach((t) => {
+                        const number = hasNumbers ? String(t.TrailerNumber ?? '').trim() : '';
+                        const key = number || 'default';
+                        if (!groups.has(key)) {
+                            groups.set(key, { key, label: number ? `إعلان ${number}` : 'الإعلان', trailers: [] });
+                        }
+                        groups.get(key).trailers.push(t);
+                    });
+
+                    return Array.from(groups.values());
+                },
+
+                activeTrailerGroup() {
+                    if (!this.groupedTrailers.length) return null;
+                    const picked = this.groupedTrailers.find(g => g.key === this.selectedTrailerGroupKey);
+                    return picked || this.groupedTrailers[0];
+                },
+
+                trailerMainButtonText() {
+                    if (!this.selectedEpisode) return '';
+                    return this.selectedEpisode.EpisodeNumber?.includes('الفيلم')
+                        ? 'أضغط هنا للمشاهدة'
+                        : 'أضغط هنا للمشاهدة';
+                },
+
+                trailerModalTitleText() {
+                    if (!this.selectedEpisode) return '';
+                    const isMovie = !!this.selectedEpisode.EpisodeNumber?.includes('الفيلم');
+                    const isPlural = this.groupedTrailers.length > 1;
+                    if (isPlural) {
+                        return isMovie ? 'إعلانات الفيلم' : 'إعلانات الحلقة';
+                    }
+                    return isMovie ? 'إعلان الفيلم' : 'إعلان الحلقة';
+                },
+
+                activeTrailerProviders() {
+                    const trailers = this.activeTrailerGroup?.trailers || [];
+                    const byProvider = new Map();
+
+                    trailers.forEach((t) => {
+                        const label = (t?.Provider == null ? '' : String(t.Provider)).trim() || 'Server';
+                        const key = label.toLowerCase();
+                        if (!byProvider.has(key)) {
+                            byProvider.set(key, { key, label });
+                        }
+                    });
+
+                    return Array.from(byProvider.values());
+                },
+
+                activeTrailerProviderTrailers() {
+                    const trailers = this.activeTrailerGroup?.trailers || [];
+                    const key = (this.selectedTrailerProviderKey == null ? '' : String(this.selectedTrailerProviderKey)).toLowerCase();
+                    if (!key) return [];
+                    return trailers.filter(t => ((t?.Provider == null ? '' : String(t.Provider)).trim() || 'Server').toLowerCase() === key);
+                },
+
+                isActiveTrailerProviderTelegram() {
+                    const key = (this.selectedTrailerProviderKey == null ? '' : String(this.selectedTrailerProviderKey)).toLowerCase();
+                    return key === 'tg' || key.includes('telegram');
+                },
+
+                shouldShowTrailerProviderButtons() {
+                    return this.activeTrailerProviders.length > 1;
+                },
+
+                trailerExternalUrl() {
+                    const t = this.selectedTrailer;
+                    if (!t) return '';
+                    return this.buildTrailerExternalUrl(t.Provider, t.TrailerID);
+                },
+
+                trailerIframeKey() {
+                    return `${this.selectedTrailerGroupKey || ''}-${this.selectedTrailerProviderKey || ''}-${this.trailerIframeSrc || ''}`;
+                },
+
+                seasonCountParts() {
+                    const count = Number(this.selectedEpisode?.EpisodeSeasonCount);
+                    if (!Number.isFinite(count) || count <= 0) return { numberText: '', suffixText: '' };
+                    if (count === 1) return { numberText: '', suffixText: 'حلقة' };
+                    if (count === 2) return { numberText: '', suffixText: 'حلقتين' };
+                    if (count >= 3 && count <= 10) return { numberText: String(count), suffixText: 'حلقات' };
+                    return { numberText: String(count), suffixText: 'حلقة' };
                 },
 
                 hasPreviousMovie() {
@@ -15298,8 +15549,11 @@
                 },
 
                 refreshSession() {
-                    // this.setBodyScrollLock(false);
-                    window.location.reload();
+                    if (this.isRefreshingSession) return;
+                    this.isRefreshingSession = true;
+                    requestAnimationFrame(() => {
+                        window.location.reload();
+                    });
                 },
 
                 setBodyScrollLock(lock) {
@@ -15472,6 +15726,13 @@
                     } catch (error) {
                         console.error('Error loading next episode info:', error);
                         this.nextEpisodeInfo = null;
+                    }
+                },
+                goToBot() {
+                    if (window.Telegram?.WebApp) {
+                        Telegram.WebApp.openTelegramLink('https://t.me/DCRef_bot');
+                    } else {
+                        window.open('https://t.me/DCRef_bot', '_blank');
                     }
                 },
                 parseNextEpisodeDate(dateStr) {
@@ -16790,6 +17051,7 @@
                 },
                 closeModal() {
                     this.dismissSuccessHint();
+                    this.closeTrailerModal();
                     this.showModal = false;
                     document.body.style.overflow = ''; // Restore background scrolling
                     
@@ -16856,6 +17118,211 @@
                         }
                     }, 0);
                     this.preserveSelectedEpisodeOnModalClose = false;
+                },
+
+                openTrailerModal() {
+                    if (!this.episodeTrailers.length) return;
+                    this.showTrailerModal = true;
+                    const firstGroup = this.groupedTrailers[0];
+                    this.selectedTrailerGroupKey = firstGroup ? firstGroup.key : null;
+                    const firstProvider = this.activeTrailerProviders[0];
+                    this.selectedTrailerProviderKey = firstProvider ? firstProvider.key : null;
+                    const firstTrailer = this.activeTrailerProviderTrailers[0] || null;
+                    this.selectedTrailer = firstTrailer;
+                    this.isTrailerIframeLoading = Boolean(firstTrailer && !this.isActiveTrailerProviderTelegram);
+                    this.trailerIframeSrc = firstTrailer && !this.isActiveTrailerProviderTelegram
+                        ? this.buildTrailerIframeSrc(firstTrailer.Provider, firstTrailer.TrailerID)
+                        : '';
+                },
+
+                closeTrailerModal() {
+                    this.showTrailerModal = false;
+                    this.selectedTrailerGroupKey = null;
+                    this.selectedTrailerProviderKey = null;
+                    this.selectedTrailer = null;
+                    this.trailerIframeSrc = '';
+                    this.isTrailerIframeLoading = false;
+                },
+
+                selectTrailerGroup(groupKey) {
+                    this.selectedTrailerGroupKey = groupKey;
+                    const firstProvider = this.activeTrailerProviders[0];
+                    this.selectedTrailerProviderKey = firstProvider ? firstProvider.key : null;
+                    const firstTrailer = this.activeTrailerProviderTrailers[0] || null;
+                    this.selectedTrailer = firstTrailer;
+                    this.isTrailerIframeLoading = Boolean(firstTrailer && !this.isActiveTrailerProviderTelegram);
+                    this.trailerIframeSrc = firstTrailer && !this.isActiveTrailerProviderTelegram
+                        ? this.buildTrailerIframeSrc(firstTrailer.Provider, firstTrailer.TrailerID)
+                        : '';
+                },
+
+                selectTrailerProvider(providerKey) {
+                    this.selectedTrailerProviderKey = providerKey;
+                    const firstTrailer = this.activeTrailerProviderTrailers[0] || null;
+                    this.selectedTrailer = firstTrailer;
+                    this.isTrailerIframeLoading = Boolean(firstTrailer && !this.isActiveTrailerProviderTelegram);
+                    this.trailerIframeSrc = firstTrailer && !this.isActiveTrailerProviderTelegram
+                        ? this.buildTrailerIframeSrc(firstTrailer.Provider, firstTrailer.TrailerID)
+                        : '';
+                },
+
+                handleTrailerIframeLoad() {
+                    this.isTrailerIframeLoading = false;
+                },
+
+                handleTrailerIframeError() {
+                    this.isTrailerIframeLoading = false;
+                },
+
+                buildTrailerIframeSrc(provider, trailerId) {
+                    const id = trailerId == null ? '' : String(trailerId).trim();
+                    if (!id) return '';
+
+                    if (/^https?:\/\//i.test(id)) return id;
+
+                    const p = (provider == null ? '' : String(provider)).toLowerCase();
+                    if (p === 'tg' || p.includes('telegram')) return '';
+                    if (p.includes('mega')) return `https://mega.nz/embed/${encodeURIComponent(id)}`;
+                    if (p.includes('gdrive') || p.includes('google') || p.includes('drive')) return `https://drive.google.com/file/d/${encodeURIComponent(id)}/preview`;
+                    return id;
+                },
+
+                buildTrailerExternalUrl(provider, trailerId) {
+                    const idRaw = trailerId == null ? '' : String(trailerId).trim();
+                    if (!idRaw) return '';
+
+                    const p = (provider == null ? '' : String(provider)).toLowerCase();
+                    const isHttp = /^https?:\/\//i.test(idRaw);
+
+                    if (isHttp) {
+                        if (idRaw.includes('drive.google.com') && idRaw.endsWith('/preview')) {
+                            return idRaw.replace(/\/preview$/, '/view');
+                        }
+                        if (idRaw.includes('mega.nz') && idRaw.includes('/embed/')) {
+                            return idRaw.replace('/embed/', '/file/');
+                        }
+                        return idRaw;
+                    }
+
+                    if (p.includes('gdrive') || p.includes('google') || p.includes('drive')) {
+                        return `https://drive.google.com/file/d/${encodeURIComponent(idRaw)}/view`;
+                    }
+                    if (p.includes('mega')) {
+                        return `https://mega.nz/file/${idRaw}`;
+                    }
+                    return idRaw;
+                },
+
+                openTrailerInBrowser() {
+                    const url = this.trailerExternalUrl;
+                    if (!url) return;
+                    if (webApp && typeof webApp.openLink === 'function') {
+                        webApp.openLink(url);
+                        return;
+                    }
+                    window.open(url, '_blank', 'noopener,noreferrer');
+                },
+
+                async sendTrailerToBot(trailer) {
+                    if (!trailer || !this.selectedEpisode?.EpisodeNumber) return;
+
+                    const videoId = trailer.TrailerID;
+                    const resolution = trailer.Resolution;
+                    const size = trailer.Size;
+
+                    let episodeNumber = String(this.selectedEpisode.EpisodeNumber);
+                    const isMovie = episodeNumber.includes("الفيلم");
+
+                    if (episodeNumber.includes("خاصة بالفيلم")) {
+                        episodeNumber = episodeNumber.replace("خاصة بالفيلم", "").trim();
+                    } else if (episodeNumber.includes("الفيلم")) {
+                        episodeNumber = episodeNumber.replace("الفيلم", "").trim();
+                    } else if (episodeNumber.includes("قصة قصيرة")) {
+                        episodeNumber = episodeNumber.replace("قصة قصيرة", "").trim();
+                    } else if (episodeNumber.includes("أوفا3")) {
+                        episodeNumber = episodeNumber.replace("أوفا3", "").trim();
+                    } else if (episodeNumber.includes("أوفا2")) {
+                        episodeNumber = episodeNumber.replace("أوفا2", "").trim();
+                    } else if (episodeNumber.includes("أوفا")) {
+                        episodeNumber = episodeNumber.replace("أوفا", "").trim();
+                    } else if (episodeNumber.includes("إصدار خاص")) {
+                        episodeNumber = episodeNumber.replace("إصدار خاص", "").trim();
+                    } else if (episodeNumber.includes("ماجيك كايتو")) {
+                        episodeNumber = episodeNumber.replace("ماجيك كايتو1", "").trim();
+                        episodeNumber = episodeNumber.replace("ماجيك كايتو2", "").trim();
+                    } else if (episodeNumber.includes("يوميات زيرو")) {
+                        episodeNumber = episodeNumber.replace("يوميات زيرو", "").trim();
+                    } else if (episodeNumber.includes("المجرم هانزاوا")) {
+                        episodeNumber = episodeNumber.replace("المجرم هانزاوا", "").trim();
+                    }
+
+                    const trailerNumberRaw = trailer.TrailerNumber == null ? '' : String(trailer.TrailerNumber).trim();
+                    const trailerNumberText = trailerNumberRaw ? ` ${trailerNumberRaw}` : '';
+                    const titleLine = isMovie
+                        ? `إعلان${trailerNumberText} للفيلم ${episodeNumber}`
+                        : `إعلان${trailerNumberText} للحلقة ${episodeNumber}`;
+
+                    function escapeMarkdown(text) {
+                        return String(text)
+                            .replace(/[_*[\]()~`>#+\-=|{}.!]/g, '\\$&')
+                            .replace(/\n/g, '\\n');
+                    }
+
+                    let details = "";
+                    if (trailer.IntroductionTime) details += `\n*المقدمة:* ${escapeMarkdown(trailer.IntroductionTime)}`;
+                    if (trailer.StartStoryTime) details += `\n*بداية القصة:* ${escapeMarkdown(trailer.StartStoryTime)}`;
+                    if (trailer.EpisodeSuspenseTime) details += `\n*تشويق الحلقة:* ${escapeMarkdown(trailer.EpisodeSuspenseTime)}`;
+                    if (trailer.StartSongTime) details += `\n*أغنية البداية:* ${escapeMarkdown(trailer.StartSongTime)}`;
+                    if (trailer.ChapterOneTime) details += `\n*الفصل الأول:* ${escapeMarkdown(trailer.ChapterOneTime)}`;
+                    if (trailer.ChapterTwoTime) details += `\n*الفصل الثاني:* ${escapeMarkdown(trailer.ChapterTwoTime)}`;
+                    if (trailer.EndSongTime) details += `\n*أغنية النهاية:* ${escapeMarkdown(trailer.EndSongTime)}`;
+                    if (trailer.ChapterThreeTime) details += `\n*الفصل الثالث:* ${escapeMarkdown(trailer.ChapterThreeTime)}`;
+                    if (trailer.NextEpisodeTeaserTime) details += `\n*تشويق الحلقة القادمة:* ${escapeMarkdown(trailer.NextEpisodeTeaserTime)}`;
+                    if (trailer.NextEpisodeHintTime) details += `\n*تلميح الحلقة القادمة:* ${escapeMarkdown(trailer.NextEpisodeHintTime)}`;
+
+                    let caption = `*${escapeMarkdown(titleLine)}\nالجودة: ${escapeMarkdown(resolution)}\nالحجم: ${this.formatFileSize(size, true)}*`;
+                    if (details) caption += `\n\n*✦✦— محتويات الإعلان —✦✦*${details}`;
+
+                    this.errorMessage = "";
+                    this.ratelimiting = true;
+
+                    const trailersRef = Array.isArray(this.activeTrailerProviderTrailers) ? this.activeTrailerProviderTrailers.slice() : [];
+                    trailersRef.forEach((t) => {
+                        if (t && t !== trailer) t.status = 'ratelimiting';
+                    });
+                    trailer.status = 'sending';
+
+                    try {
+                        await this.sendVideoResponse(videoId, caption);
+                        trailer.status = 'success';
+                        this.showSuccessHint('تم إرسال الإعلان للخاص');
+                        this.startCountdownForTrailer(trailer);
+                    } catch (error) {
+                        trailer.status = 'error';
+                        this.errorMessage = error?.message || String(error);
+                        return;
+                    }
+
+                    setTimeout(() => {
+                        if (trailer.countdownInterval) {
+                            clearInterval(trailer.countdownInterval);
+                            trailer.countdownInterval = null;
+                        }
+                        trailer.countdown = undefined;
+                        trailer.status = null;
+
+                        trailersRef.forEach((t) => {
+                            if (!t || t === trailer) return;
+                            if (t.countdownInterval) {
+                                clearInterval(t.countdownInterval);
+                                t.countdownInterval = null;
+                            }
+                            t.countdown = undefined;
+                            if (t.status === 'ratelimiting') t.status = null;
+                        });
+
+                        this.ratelimiting = false;
+                    }, this.statusClearTimeout);
                 },
 
                 openEmptyPopup() {
@@ -18328,21 +18795,29 @@
                     let caption = `*${label} ${episodeNumber}\nالجودة: ${resolution}\nالحجم: ${this.formatFileSize(size, true)}*`;
                     if (details) caption += `\n\n*✦✦— محتويات الحلقة —✦✦*${details}`;
 
-                    this.selectedEpisode.EpisodeVideosIDs[index].status = 'sending';
+                    if (this.selectedEpisode?.EpisodeVideosIDs?.[index]) {
+                        this.selectedEpisode.EpisodeVideosIDs[index].status = 'sending';
+                    }
 
                     try {
                         await this.sendVideoResponse(videoID, caption);
-                        this.selectedEpisode.EpisodeVideosIDs[index].status = 'success';
+                        if (this.selectedEpisode?.EpisodeVideosIDs?.[index]) {
+                            this.selectedEpisode.EpisodeVideosIDs[index].status = 'success';
+                        }
                         const isMovie = String(this.selectedEpisode?.EpisodeNumber ?? '').includes('الفيلم');
                         this.movie.status = isMovie ? 'success' : null;
                         this.episode.status = isMovie ? null : 'success';
                         this.showSuccessHint(isMovie ? 'تم إرسال الفيلم للخاص' : 'تم إرسال الحلقة للخاص');
-                        this.startCountdown(index);
+                        if (this.selectedEpisode?.EpisodeVideosIDs?.[index]) {
+                            this.startCountdown(index);
+                        }
                         this.errorMessage = "";
                     } catch (error) {
-                        this.selectedEpisode.EpisodeVideosIDs[index].status = 'error';
+                        if (this.selectedEpisode?.EpisodeVideosIDs?.[index]) {
+                            this.selectedEpisode.EpisodeVideosIDs[index].status = 'error';
+                        }
                         this.errorMessage = error.message;
-                        if (this.selectedEpisode.EpisodeVideosIDs.some((video) => video.status === "error")) {
+                        if (Array.isArray(this.selectedEpisode?.EpisodeVideosIDs) && this.selectedEpisode.EpisodeVideosIDs.some((video) => video.status === "error")) {
                             return;
                         }
                     }
@@ -18698,6 +19173,18 @@
                         });
                     }
 
+                    if (Array.isArray(this.episodeTrailers)) {
+                        this.episodeTrailers.forEach((trailer) => {
+                            if (!trailer) return;
+                            if (trailer.countdownInterval) {
+                                clearInterval(trailer.countdownInterval);
+                                trailer.countdownInterval = null;
+                            }
+                            trailer.countdown = undefined;
+                            trailer.status = null;
+                        });
+                    }
+
                     // Reset the status of selectedManga
                     if (this.selectedManga) {
                         // Clear countdown interval if it exists
@@ -18716,6 +19203,7 @@
 
                     // Always reset ratelimiting flag
                     this.ratelimiting = false;
+                    this.errorMessage = "";
                 },
 
                 async checkTelegram() {
@@ -18756,6 +19244,7 @@
                             this.userJoined = true;
                         } else {
                             this.userJoined = false;
+
                             document.body.innerHTML = `
                                 <div style="position: fixed; inset: 0; display: flex; justify-content: center; align-items: center; background: #23447d; font-family: Tahoma, 'Segoe UI', Geneva, sans-serif; z-index: 99999;">
                                     <div style="text-align: center; padding: 30px 20px; border: 2px solid #fff; border-radius: 15px; background-color: #0f141f; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); max-width: 400px; width: 95%; direction: rtl;">
@@ -18774,10 +19263,11 @@
 
                                         <div style="margin-bottom: 35px;">
                                             <div style="font-size: 22px;">👇</div>
-                                            <a href="https://t.me/CodeSubs"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            style="display: block; color: #ffff00; font-size: 18px; font-weight: bold; text-decoration: none;">
+                                            <a
+                                                id="telegramChannelLink"
+                                                href="#"
+                                                style="display: block; color: #ffff00; font-size: 18px; font-weight: bold; text-decoration: none;"
+                                            >
                                                 https://t.me/CodeSubs
                                             </a>
                                         </div>
@@ -18826,6 +19316,18 @@
                                 setTimeout(() => {
                                     window.location.reload();
                                 }, 500);
+                            });
+
+                            const tgLink = document.getElementById('telegramChannelLink');
+
+                            tgLink.addEventListener('click', (e) => {
+                                e.preventDefault();
+
+                                if (window.Telegram?.WebApp?.openTelegramLink) {
+                                    Telegram.WebApp.openTelegramLink('https://t.me/CodeSubs');
+                                } else {
+                                    window.location.href = 'https://t.me/CodeSubs';
+                                }
                             });
                         }
                     } catch (error) {
@@ -20174,6 +20676,26 @@
                     const maxSize = 24;
                     const calculated = screenWidth / 50;
                     this.fontSize = Math.min(Math.max(calculated, minSize), maxSize);
+                },
+
+                startCountdownForTrailer(trailer) {
+                    if (!trailer) return;
+                    const countdownSeconds = Math.ceil(this.statusClearTimeout / 1000);
+                    trailer.countdown = countdownSeconds;
+
+                    if (trailer.countdownInterval) {
+                        clearInterval(trailer.countdownInterval);
+                    }
+
+                    const trailerRef = trailer;
+                    trailer.countdownInterval = setInterval(() => {
+                        if (trailerRef.countdown > 0) {
+                            trailerRef.countdown--;
+                        } else {
+                            clearInterval(trailerRef.countdownInterval);
+                            trailerRef.countdownInterval = null;
+                        }
+                    }, 1000);
                 },
 
                 startCountdown(index) {
