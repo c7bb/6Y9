@@ -7120,6 +7120,8 @@
                         summary: false,
                     },
                     pendingJumpTarget: null,
+                    pendingJumpRegex: null,
+                    pendingJumpOpenModal: false,
                     jumpHighlightIdentifier: null,
                     lastClickedEpisode: null,
                     errorMessage: "",
@@ -8704,8 +8706,19 @@
                 },
 
                 filteredEpisodes() {
-                    const rawSearchQuery = this.searchQuery.trim().toLowerCase();
+                    const rawSearchQuery = this.normalizeDigits(this.searchQuery.trim().toLowerCase());
                     const searchQuery = this.normalizeText(this.searchQuery);
+                    let searchRegex = null;
+                    if (searchQuery) {
+                        try {
+                            searchRegex = new RegExp(searchQuery, 'i');
+                        } catch (e) {
+                            searchRegex = null;
+                        }
+                    }
+                    const parsedNumberSearch = this.searchFilters.number && rawSearchQuery
+                        ? this.parseNumberSearchParts(rawSearchQuery)
+                        : null;
 
                     // Filter by EpisodeType
                     let filteredByType = this.episodes;
@@ -11250,41 +11263,9 @@
                         
                         // Number filter logic
                         if (this.searchFilters.number) {
-                            const numberList = [];
-                            const textFragments = [];
-
-                            rawSearchQuery.split(/[،,]/).forEach(part => {
-                                part = part.trim();
-                                if (!part) return;
-
-                                // Normalize digits so ranges and numbers work with Arabic-Indic/Persian numerals
-                                const normalizedPart = this.normalizeDigits(part);
-
-                                if (normalizedPart.includes('-') && !normalizedPart.match(/^\d+\.\d+-/)) {
-                                    // Handle ranges like "44-60" (but not decimals like "1076.5-")
-                                    const [start, end] = normalizedPart.split('-').map(num => parseFloat(num.trim()));
-                                    if (!isNaN(start) && !isNaN(end) && start <= end) {
-                                        // For integer ranges, add all integers in the range
-                                        if (Number.isInteger(start) && Number.isInteger(end)) {
-                                            for (let i = start; i <= end; i++) {
-                                                numberList.push(i.toString());
-                                            }
-                                        } else {
-                                            // For decimal ranges, just add start and end
-                                            numberList.push(start.toString());
-                                            numberList.push(end.toString());
-                                        }
-                                    }
-                                } else {
-                                    // Handle single numbers (including decimals)
-                                    const num = parseFloat(normalizedPart);
-                                    if (!isNaN(num)) {
-                                        numberList.push(num.toString());
-                                    } else {
-                                        textFragments.push(normalizedPart);
-                                    }
-                                }
-                            });
+                            const numberList = parsedNumberSearch ? parsedNumberSearch.numberList : [];
+                            const textFragments = parsedNumberSearch ? parsedNumberSearch.textFragments : [];
+                            const textFragmentRegexes = parsedNumberSearch ? parsedNumberSearch.textFragmentRegexes : [];
 
                             // Extract number from episode.EpisodeNumber based on textNumberMatchMode
                             let numberConditionEvaluated = false;
@@ -11305,10 +11286,15 @@
 
                             if (textFragments.length) {
                                 numberConditionEvaluated = true;
-                                const normalizedEpisodeNumberText = this.normalizeEpisodeIdentifier(episode.EpisodeNumber);
-                                numberMatch = numberMatch || textFragments.some(fragment =>
-                                    normalizedEpisodeNumberText.includes(this.normalizeEpisodeIdentifier(fragment))
-                                );
+                                const episodeNumberText = this.normalizeDigits(String(episode.EpisodeNumber || '')).toLowerCase();
+                                const normalizedEpisodeNumberText = this.normalizeEpisodeIdentifier(episodeNumberText);
+
+                                numberMatch = numberMatch || textFragmentRegexes.some(regex => (regex ? regex.test(episodeNumberText) : false));
+                                if (!numberMatch) {
+                                    numberMatch = textFragments.some(fragment =>
+                                        normalizedEpisodeNumberText.includes(this.normalizeEpisodeIdentifier(fragment))
+                                    );
+                                }
                             }
 
                             if (numberConditionEvaluated) {
@@ -11318,17 +11304,20 @@
                         
                         // Title filter logic
                         if (this.searchFilters.title) {
-                            matchConditions.push(new RegExp(searchQuery, 'i').test(episode.EpisodeTitle));
+                            const titleText = String(episode.EpisodeTitle || '');
+                            matchConditions.push(searchRegex ? searchRegex.test(titleText) : titleText.toLowerCase().includes(rawSearchQuery));
                         }
                         
                         // Story filter logic
                         if (this.searchFilters.story) {
-                            matchConditions.push(new RegExp(searchQuery, 'i').test(episode.EpisodeStory));
+                            const storyText = String(episode.EpisodeStory || '');
+                            matchConditions.push(searchRegex ? searchRegex.test(storyText) : storyText.toLowerCase().includes(rawSearchQuery));
                         }
                         
                         // Summary filter logic
                         if (this.searchFilters.summary) {
-                            matchConditions.push(new RegExp(searchQuery, 'i').test(episode.EpisodeSummary));
+                            const summaryText = String(episode.EpisodeSummary || '');
+                            matchConditions.push(searchRegex ? searchRegex.test(summaryText) : summaryText.toLowerCase().includes(rawSearchQuery));
                         }
                         
                         // Return true if ANY condition is true (OR logic)
@@ -13001,6 +12990,37 @@
                         }
 
                         this.pendingJumpTarget = targetValue;
+                        this.pendingJumpRegex = null;
+                        this.pendingJumpOpenModal = false;
+                        if (this.searchQuery !== '') this.searchQuery = '';
+                        this.executePendingJump();
+                        return;
+                    }
+
+                    if (trimmed.endsWith('=')) {
+                        const targetValue = this.normalizeDigits(trimmed.slice(0, -1).trim());
+
+                        if (!targetValue) {
+                            this.pendingJumpTarget = null;
+                            this.pendingJumpRegex = null;
+                            this.pendingJumpOpenModal = false;
+                            if (this.searchQuery !== '') this.searchQuery = '';
+                            return;
+                        }
+
+                        let jumpRegex = null;
+                        try {
+                            const pattern = this.normalizeText(targetValue);
+                            if (pattern) {
+                                jumpRegex = new RegExp(`^${pattern}$`, 'i');
+                            }
+                        } catch (e) {
+                            jumpRegex = null;
+                        }
+
+                        this.pendingJumpTarget = targetValue;
+                        this.pendingJumpRegex = jumpRegex;
+                        this.pendingJumpOpenModal = true;
                         if (this.searchQuery !== '') this.searchQuery = '';
                         this.executePendingJump();
                         return;
@@ -16789,22 +16809,140 @@
                 },
 
                 normalizeText(text) {
-                    let normalizedText = this.normalizeDigits(text).toLowerCase();
-                    normalizedText = normalizedText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                    for (let [key, values] of Object.entries(this.replacementDict)) {
-                        const regex = new RegExp(key, 'g'); // Global search for the word
-                        normalizedText = normalizedText.replace(regex, (match) => {
-                            // Replace with all possible values, separated by "|"
-                            return `(${values.join("|")})`;
-                        });
+                    const raw = this.normalizeDigits(text).toLowerCase();
+                    if (!raw) return '';
+
+                    if (!this._replacementMatcher) {
+                        const keys = Object.keys(this.replacementDict || {})
+                            .filter(key => typeof key === 'string' && (key.length >= 2 || /^\d+$/.test(key)))
+                            .sort((a, b) => b.length - a.length);
+
+                        const alternation = keys.map(key => this.escapeRegExpLiteral(key)).join('|');
+                        this._replacementMatcher = alternation
+                            ? new RegExp(`(^|[\\s،,])(${alternation})(?=$|[\\s،,])`, 'g')
+                            : null;
                     }
-                    return normalizedText;
+
+                    let out = '';
+                    let lastIndex = 0;
+                    const matcher = this._replacementMatcher;
+
+                    if (matcher) {
+                        matcher.lastIndex = 0;
+                        let match;
+                        while ((match = matcher.exec(raw)) !== null) {
+                            out += this.expandFreeTextToPattern(raw.slice(lastIndex, match.index));
+                            out += this.expandFreeTextToPattern(match[1] || '');
+                            out += this.buildReplacementPatternForKey(match[2] || '');
+                            lastIndex = match.index + match[0].length;
+                        }
+                    }
+
+                    out += this.expandFreeTextToPattern(raw.slice(lastIndex));
+                    return out;
+                },
+                escapeRegExpLiteral(text) {
+                    return String(text).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                },
+                expandArabicCharToPattern(ch) {
+                    if (ch === 'ا' || ch === 'أ' || ch === 'إ') return '[اأإ]';
+                    if (ch === 'ه' || ch === 'ة') return '[هة]';
+                    if (ch === 'س' || ch === 'ش') return '[سش]';
+                    return this.escapeRegExpLiteral(ch);
+                },
+                expandFreeTextToPattern(text) {
+                    const input = String(text || '');
+                    if (!input) return '';
+                    let out = '';
+                    for (let i = 0; i < input.length; i++) {
+                        const ch = input[i];
+                        if (ch === ' ' || ch === '\t' || ch === '\n' || ch === '\r' || ch === '،' || ch === ',') {
+                            out += '\\s+';
+                            while (i + 1 < input.length) {
+                                const next = input[i + 1];
+                                if (next === ' ' || next === '\t' || next === '\n' || next === '\r' || next === '،' || next === ',') {
+                                    i++;
+                                    continue;
+                                }
+                                break;
+                            }
+                            continue;
+                        }
+                        out += this.expandArabicCharToPattern(ch);
+                    }
+                    return out;
+                },
+                buildReplacementPatternForKey(key) {
+                    const normalizedKey = String(key || '').toLowerCase();
+                    if (!normalizedKey) return '';
+                    const values = this.replacementDict ? this.replacementDict[normalizedKey] : null;
+                    const alternativesRaw = Array.isArray(values) ? [normalizedKey, ...values] : [normalizedKey];
+
+                    const alternatives = [];
+                    for (const value of alternativesRaw) {
+                        const normalizedValue = String(value || '').toLowerCase();
+                        if (!normalizedValue) continue;
+                        if (!alternatives.includes(normalizedValue)) {
+                            alternatives.push(normalizedValue);
+                        }
+                    }
+
+                    const patterns = alternatives.map(value => this.expandFreeTextToPattern(value));
+                    const uniquePatterns = Array.from(new Set(patterns));
+
+                    if (uniquePatterns.length === 1) return uniquePatterns[0];
+                    return `(?:${uniquePatterns.join('|')})`;
                 },
                 normalizeEpisodeIdentifier(value) {
                     return this.normalizeDigits(String(value || ''))
                         .replace(/\s+/g, ' ')
                         .trim()
                         .toLowerCase();
+                },
+                parseNumberSearchParts(rawSearchQuery) {
+                    const numberList = [];
+                    const textFragments = [];
+                    const parts = String(rawSearchQuery || '').split(/[،,]/);
+
+                    for (let part of parts) {
+                        part = String(part || '').trim();
+                        if (!part) continue;
+
+                        const normalizedPart = this.normalizeDigits(part);
+
+                        if (normalizedPart.includes('-') && !normalizedPart.match(/^\d+\.\d+-/)) {
+                            const [start, end] = normalizedPart.split('-').map(num => parseFloat(String(num || '').trim()));
+                            if (!isNaN(start) && !isNaN(end) && start <= end) {
+                                if (Number.isInteger(start) && Number.isInteger(end)) {
+                                    for (let i = start; i <= end; i++) {
+                                        numberList.push(i.toString());
+                                    }
+                                } else {
+                                    numberList.push(start.toString());
+                                    numberList.push(end.toString());
+                                }
+                            }
+                        } else {
+                            const num = parseFloat(normalizedPart);
+                            if (!isNaN(num)) {
+                                numberList.push(num.toString());
+                            } else {
+                                textFragments.push(normalizedPart);
+                            }
+                        }
+                    }
+
+                    const textFragmentRegexes = textFragments.map(fragment => {
+                        try {
+                            const pattern = this.normalizeText(fragment);
+                            if (!pattern) return null;
+                            return new RegExp(pattern, 'i');
+                        } catch (e) {
+                            return null;
+                        }
+                    });
+
+                    return { numberList, textFragments, textFragmentRegexes };
                 },
 
                 async loadRelatedEpisodesData() {
@@ -16912,6 +17050,8 @@
                     if (!this.pendingJumpTarget) return;
 
                     const targetValue = this.pendingJumpTarget;
+                    const openModalAfterJump = !!this.pendingJumpOpenModal;
+                    const jumpRegex = this.pendingJumpRegex instanceof RegExp ? this.pendingJumpRegex : null;
 
                     this.$nextTick(() => {
                         const dataset = Array.isArray(this.filteredEpisodes) ? this.filteredEpisodes : [];
@@ -16928,6 +17068,12 @@
                         const fallbackNumber = !searchTitle && !searchNumber;
 
                         const matchIndex = dataset.findIndex((episode) => {
+                            if (jumpRegex) {
+                                const episodeNumberRaw = this.normalizeDigits(String(episode?.EpisodeNumber || '')).toLowerCase();
+                                if (jumpRegex.test(episodeNumberRaw)) return true;
+                                return false;
+                            }
+
                             if (searchNumber || fallbackNumber) {
                                 const normalizedEpisodeNumber = this.normalizeEpisodeIdentifier(episode.EpisodeNumber);
                                 if (normalizedEpisodeNumber === normalizedTarget) {
@@ -16946,6 +17092,8 @@
                         });
 
                         this.pendingJumpTarget = null;
+                        this.pendingJumpRegex = null;
+                        this.pendingJumpOpenModal = false;
 
                         if (matchIndex === -1) {
                             console.warn(`Quick-jump target "${targetValue}" was not found.`);
@@ -16963,6 +17111,9 @@
                             const el = document.getElementById(targetId);
                             if (el && typeof el.scrollIntoView === 'function') {
                                 el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                            if (openModalAfterJump) {
+                                this.openModal(matchedEpisode);
                             }
                         });
                     });
@@ -19015,6 +19166,41 @@
                         13: 'الثالث عشر',
                         14: 'الرابع عشر',
                         15: 'الخامس عشر',
+                        16: 'السادس عشر',
+                        17: 'السابع عشر',
+                        18: 'الثامن عشر',
+                        19: 'التاسع عشر',
+                        20: 'العشرون',
+                        21: 'الحادي والعشرون',
+                        22: 'الثاني والعشرون',
+                        23: 'الثالث والعشرون',
+                        24: 'الرابع والعشرون',
+                        25: 'الخامس والعشرون',
+                        26: 'السادس والعشرون',
+                        27: 'السابع والعشرون',
+                        28: 'الثامن والعشرون',
+                        29: 'التاسع والعشرون',
+                        30: 'الثلاثون',
+                        31: 'الحادي والثلاثون',
+                        32: 'الثاني والثلاثون',
+                        33: 'الثالث والثلاثون',
+                        34: 'الرابع والثلاثون',
+                        35: 'الخامس والثلاثون',
+                        36: 'السادس والثلاثون',
+                        37: 'السابع والثلاثون',
+                        38: 'الثامن والثلاثون',
+                        39: 'التاسع والثلاثون',
+                        40: 'الأربعون',
+                        41: 'الحادي والأربعون',
+                        42: 'الثاني والأربعون',
+                        43: 'الثالث والأربعون',
+                        44: 'الرابع والأربعون',
+                        45: 'الخامس والأربعون',
+                        46: 'السادس والأربعون',
+                        47: 'السابع والأربعون',
+                        48: 'الثامن والأربعون',
+                        49: 'التاسع والأربعون',
+                        50: 'الخمسون'
                     };
                     return map[n] || String(n);
                 },
