@@ -747,9 +747,9 @@
                     <button @click="openDirectWindow('movies')" class="block w-full px-4 py-2 text-base font-bold text-white hover:bg-teal-600 transition-all duration-100 active:scale-90">أفلام</button>
                     <button @click="openDirectWindow('mangas')" class="block w-full px-4 py-2 text-base font-bold text-white hover:bg-teal-600 transition-all duration-100 active:scale-90">مانغا</button>
                     <hr class="my-1 border-gray-500">
-                    <button @click="openFastingWindow('episodes')" class="block w-full px-4 py-2 text-base font-bold text-white hover:bg-teal-600 transition-all duration-100 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed" disabled>(قريبًا)</button>
+                    <!-- <button @click="openFastingWindow('episodes')" class="block w-full px-4 py-2 text-base font-bold text-white hover:bg-teal-600 transition-all duration-100 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed" disabled>(قريبًا)</button> -->
                     <button @click="openFastingWindow('mangas')" class="block w-full px-4 py-2 text-base font-bold text-white hover:bg-teal-600 transition-all duration-100 active:scale-90">مانغا 🚀</button>
-                    <button @click="openFastingWindow('movies')" class="block w-full px-4 py-2 text-base font-bold text-white hover:bg-teal-600 transition-all duration-100 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed" disabled>(قريبًا)</button>
+                    <!-- <button @click="openFastingWindow('movies')" class="block w-full px-4 py-2 text-base font-bold text-white hover:bg-teal-600 transition-all duration-100 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed" disabled>(قريبًا)</button> -->
                 </div>
             </div>
 
@@ -1280,14 +1280,14 @@
                         <fieldset class="border p-2 rounded mt-2">
                             <legend class="px-2">اختر نوع المحتوى:</legend>
                             <div class="flex justify-around">
-                                <label class="flex items-center transition-all duration-100 active:scale-90">
+                                <!-- <label class="flex items-center transition-all duration-100 active:scale-90">
                                     <input type="radio" v-model="selectedCategory" value="episodes" class="ml-2" disabled>
                                     حلقات
-                                </label>
-                                <label class="flex items-center transition-all duration-100 active:scale-90">
+                                </label> -->
+                                <!-- <label class="flex items-center transition-all duration-100 active:scale-90">
                                     <input type="radio" v-model="selectedCategory" value="movies" class="ml-2" disabled>
                                     أفلام
-                                </label>
+                                </label> -->
                                 <label class="flex items-center transition-all duration-100 active:scale-90">
                                     <input type="radio" v-model="selectedCategory" value="mangas" class="ml-2" :disabled="isMangaQueueRunning">
                                     مانغا
