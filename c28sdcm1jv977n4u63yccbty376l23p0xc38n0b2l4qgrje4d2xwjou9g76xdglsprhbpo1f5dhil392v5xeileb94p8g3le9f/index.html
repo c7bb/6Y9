@@ -19948,6 +19948,8 @@
                         });
                         const result = await response.json();
 
+                        const validateUserId = webApp?.initDataUnsafe?.user?.id;
+
                         const formatDurationArabic = (ms) => {
                             const totalSeconds = Math.max(0, Math.floor(ms / 1000));
                             const days = Math.floor(totalSeconds / 86400);
@@ -19963,6 +19965,12 @@
                             return parts.join(' و ');
                         };
 
+                        const formatDateTimeYmdHms = (ms) => {
+                            const d = new Date(ms);
+                            const pad2 = (n) => String(n).padStart(2, '0');
+                            return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}, ${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
+                        };
+
                         if (result?.error) {
                             throw new Error(result.error);
                         }
@@ -19970,13 +19978,12 @@
                         if (result?.banned) {
                             this.userJoined = false;
 
+                            const banUntilMs = typeof result.banUntil === 'number' ? result.banUntil : 0;
                             const remainingMs = typeof result.banRemainingMs === 'number'
                                 ? result.banRemainingMs
-                                : (typeof result.banUntil === 'number' ? Math.max(0, result.banUntil - Date.now()) : 0);
+                                : (banUntilMs ? Math.max(0, banUntilMs - Date.now()) : 0);
                             const remainingText = formatDurationArabic(remainingMs);
-                            const untilText = typeof result.banUntil === 'number'
-                                ? new Date(result.banUntil).toLocaleString('en-US', { hour12: false })
-                                : '';
+                            const untilText = banUntilMs ? formatDateTimeYmdHms(banUntilMs) : '';
 
                             document.body.innerHTML = `
                                 <div style="position: fixed; inset: 0; display: flex; justify-content: center; align-items: center; background: #23447d; font-family: Tahoma, 'Segoe UI', Geneva, sans-serif; z-index: 99999;">
@@ -19984,65 +19991,44 @@
                                         <h1 style="font-size: 28px; font-weight: bold; color: #ff4f4f; margin-bottom: 20px; display: flex; justify-content: center; gap: 10px;">
                                             <span>🚫</span><span>تم حظرك مؤقتًا</span><span>🚫</span>
                                         </h1>
+                                        <div style="font-size: 14px; color: #cbd5e1; font-weight: bold; margin-top: -10px; margin-bottom: 18px;">
+                                            (${validateUserId})
+                                        </div>
 
                                         <p style="font-size: 18px; color: #fff; font-weight: bold; margin-bottom: 12px; line-height: 1.6;">
                                             لقد قمت بمغادرة القناة 3 مرات خلال أسبوع.
                                         </p>
 
                                         <p style="font-size: 17px; color: #ffff00; font-weight: bold; margin-bottom: 10px; line-height: 1.6;">
-                                            الوقت المتبقي لرفع الحظر: <span style="color: #00ff00;">${remainingText}</span>
+                                            الوقت المتبقي لرفع الحظر:
+                                            <br>
+                                            <span id="banRemaining" style="color: #00ff00;">${remainingText}</span>
                                         </p>
 
                                         ${untilText ? `
                                             <p style="font-size: 14px; color: #cbd5e1; margin-bottom: 25px;">
-                                                ينتهي الحظر في: <span style="color: #ffffff; font-weight: bold;">${untilText}</span>
+                                                ينتهي الحظر في:
+                                                <br>
+                                                <span style="color: #ffffff; font-weight: bold;">${untilText}</span>
                                             </p>
                                         ` : `<div style="margin-bottom: 25px;"></div>`}
-
-                                        <button
-                                            id="retryButton"
-                                            class="
-                                                w-[80%] px-3 py-3
-                                                bg-gradient-to-br from-blue-600 to-blue-800
-                                                text-white text-[18px] font-bold
-                                                rounded-xl
-                                                inline-flex items-center justify-center gap-2
-                                                shadow-[0_6px_0_#0c3e82,0_10px_20px_rgba(0,0,0,0.3)]
-                                                transition-all duration-150 ease-out
-                                                hover:-translate-y-1
-                                                hover:shadow-[0_8px_0_#0c3e82,0_14px_25px_rgba(0,0,0,0.35)]
-                                                active:translate-y-1
-                                                active:shadow-[0_3px_0_#0c3e82,0_6px_10px_rgba(0,0,0,0.25)]
-                                                active:scale-[0.98]
-                                                active:brightness-90
-                                            "
-                                        >
-                                            <span id="retryText" class="inline-flex items-center gap-2">
-                                                <span>🔍</span>
-                                                <span>تحقق مرة أخرى</span>
-                                                <span>🔍</span>
-                                            </span>
-
-                                            <div id="retrySpinner" class="hidden animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-                                        </button>
                                     </div>
                                 </div>
                             `;
 
-                            const btn = document.getElementById('retryButton');
-                            const text = document.getElementById('retryText');
-                            const spinner = document.getElementById('retrySpinner');
-
-                            btn.addEventListener('click', () => {
-                                text.classList.add('hidden');
-                                spinner.classList.remove('hidden');
-                                btn.disabled = true;
-                                btn.classList.add('opacity-80', 'cursor-not-allowed');
-
-                                setTimeout(() => {
-                                    window.location.reload();
-                                }, 500);
-                            });
+                            if (banUntilMs) {
+                                const remainingEl = document.getElementById('banRemaining');
+                                if (remainingEl) {
+                                    const intervalId = setInterval(() => {
+                                        const msLeft = Math.max(0, banUntilMs - Date.now());
+                                        remainingEl.textContent = formatDurationArabic(msLeft);
+                                        if (msLeft <= 0) {
+                                            clearInterval(intervalId);
+                                            setTimeout(() => window.location.reload(), 500);
+                                        }
+                                    }, 1000);
+                                }
+                            }
                         } else if (result.valid) {
                             this.userJoined = true;
                         } else {
