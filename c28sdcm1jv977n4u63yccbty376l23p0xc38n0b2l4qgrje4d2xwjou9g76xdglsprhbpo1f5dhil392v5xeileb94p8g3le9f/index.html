@@ -19978,10 +19978,12 @@
                         if (result?.banned) {
                             this.userJoined = false;
 
+                            const trustedOffsetMs = typeof result?.now === 'number'
+                                ? (result.now - Date.now())
+                                : (typeof this.serverTimeOffset === 'number' ? this.serverTimeOffset : 0);
+
                             const banUntilMs = typeof result.banUntil === 'number' ? result.banUntil : 0;
-                            const remainingMs = typeof result.banRemainingMs === 'number'
-                                ? result.banRemainingMs
-                                : (banUntilMs ? Math.max(0, banUntilMs - Date.now()) : 0);
+                            const remainingMs = banUntilMs ? Math.max(0, banUntilMs - (Date.now() + trustedOffsetMs)) : 0;
                             const remainingText = formatDurationArabic(remainingMs);
                             const untilText = banUntilMs ? formatDateTimeYmdHms(banUntilMs) : '';
 
@@ -20013,7 +20015,7 @@
                                 const remainingEl = document.getElementById('banRemaining');
                                 if (remainingEl) {
                                     const intervalId = setInterval(() => {
-                                        const msLeft = Math.max(0, banUntilMs - Date.now());
+                                        const msLeft = Math.max(0, banUntilMs - (Date.now() + trustedOffsetMs));
                                         remainingEl.textContent = formatDurationArabic(msLeft);
                                         if (msLeft <= 0) {
                                             clearInterval(intervalId);
