@@ -19975,7 +19975,7 @@
                                 : (typeof result.banUntil === 'number' ? Math.max(0, result.banUntil - Date.now()) : 0);
                             const remainingText = formatDurationArabic(remainingMs);
                             const untilText = typeof result.banUntil === 'number'
-                                ? new Date(result.banUntil).toLocaleString('ar-EG', { hour12: false })
+                                ? new Date(result.banUntil).toLocaleString('en-US', { hour12: false })
                                 : '';
 
                             document.body.innerHTML = `
