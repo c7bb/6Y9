@@ -19947,6 +19947,9 @@
                             body: JSON.stringify({ token: webApp?.initDataUnsafe?.user?.id })
                         });
                         const result = await response.json();
+                        if (result && (result.error || result.telegramError)) {
+                            console.log('Membership check result', result);
+                        }
 
                         const validateUserId = webApp?.initDataUnsafe?.user?.id;
 
@@ -19972,7 +19975,11 @@
                         };
 
                         if (result?.error) {
-                            throw new Error(result.error);
+                            const desc = String(result?.telegramError?.description || '');
+                            if (!desc.includes('PARTICIPANT_ID_INVALID')) {
+                                throw new Error(result.error);
+                            }
+                            console.warn('Telegram membership check returned PARTICIPANT_ID_INVALID', result);
                         }
 
                         if (result?.banned) {
