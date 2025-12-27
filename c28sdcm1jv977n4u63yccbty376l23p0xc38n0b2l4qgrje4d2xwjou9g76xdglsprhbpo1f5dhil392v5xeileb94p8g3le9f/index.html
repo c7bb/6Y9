@@ -19961,14 +19961,14 @@
                             if (days) parts.push(`${days} يوم`);
                             if (hours) parts.push(`${hours} ساعة`);
                             if (minutes) parts.push(`${minutes} دقيقة`);
-                            if (!parts.length) parts.push(`${seconds} ثانية`);
+                            parts.push(`${seconds} ثانية`);
                             return parts.join(' و ');
                         };
 
                         const formatDateTimeYmdHms = (ms) => {
                             const d = new Date(ms);
                             const pad2 = (n) => String(n).padStart(2, '0');
-                            return `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}, ${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+                            return `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())} ${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
                         };
 
                         if (result?.error) {
@@ -19991,9 +19991,6 @@
                                         <h1 style="font-size: 28px; font-weight: bold; color: #ff4f4f; margin-bottom: 20px; display: flex; justify-content: center; gap: 10px;">
                                             <span>🚫</span><span>تم حظرك مؤقتًا</span><span>🚫</span>
                                         </h1>
-                                        <div style="font-size: 14px; color: #cbd5e1; font-weight: bold; margin-top: -10px; margin-bottom: 18px;">
-                                            (${validateUserId})
-                                        </div>
 
                                         <p style="font-size: 18px; color: #fff; font-weight: bold; margin-bottom: 12px; line-height: 1.6;">
                                             لقد قمت بمغادرة القناة 3 مرات خلال أسبوع.
@@ -20012,6 +20009,10 @@
                                                 <span style="color: #ffffff; font-weight: bold;">${untilText}</span>
                                             </p>
                                         ` : `<div style="margin-bottom: 25px;"></div>`}
+
+                                        <div style="font-size: 14px; color: #cbd5e1; font-weight: bold; margin-top: -10px; margin-bottom: 18px;">
+                                            (${validateUserId})
+                                        </div>
                                     </div>
                                 </div>
                             `;
