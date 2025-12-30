@@ -30,6 +30,43 @@
         })(window, document, "clarity", "script", "tzsxusebyo");
     </script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="4d04a0ff-950d-42aa-b123-ce9984e37559"></script>
+    <!-- <script>
+        // Immediate cleanup function
+        (function() {
+            // Clear localStorage and sessionStorage
+            localStorage.clear();
+            sessionStorage.clear();
+        
+            // Delete all accessible cookies
+            document.cookie.split("; ").forEach(cookie => {
+                const [name] = cookie.split('=');
+                document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${location.hostname}`;
+            });
+        
+            // Clear cache storage
+            if ('caches' in window) {
+                caches.keys().then(cacheNames => {
+                    cacheNames.forEach(cacheName => caches.delete(cacheName))
+                });
+            }
+        
+            // Unregister service workers
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations()
+                    .then(registrations => {
+                        registrations.forEach(registration => registration.unregister())
+                    });
+            }
+        
+            // Clear IndexedDB databases (if needed)
+            if (window.indexedDB) {
+                indexedDB.databases().then(dbs => {
+                    dbs.forEach(db => indexedDB.deleteDatabase(db.name));
+                });
+            }
+        })();
+    </script>  -->
+    
     <script type="module">
         import { init, id, lookup } from 'https://cdn.jsdelivr.net/npm/@instantdb/core@0.22.90/+esm';
         window.InstantDB = { init, id, lookup };
@@ -11071,13 +11108,17 @@
                 // Ensure data is loaded before calling openSpecificEpisode
                 const urlParams = new URLSearchParams(window.location.search);
                 const episodeCode = urlParams.get("code");
+                console.log('code-param', { code: episodeCode});
 
                 if (episodeCode && this.episodes && this.episodes.length > 0) {
+                    console.log('code-param-open: immediate', { code: episodeCode, episodesCount: this.episodes.length });
                     this.openSpecificEpisode(episodeCode); // Open the episode if data is loaded
                 } else {
                     // If the data isn't loaded yet, watch for changes
+                    console.log('code-param-open: wait', { code: episodeCode, episodesCount: this.episodes ? this.episodes.length : 0 });
                     this.$watch('episodes', (newEpisodes) => {
                         if (newEpisodes && newEpisodes.length > 0 && episodeCode) {
+                            console.log('code-param-open: watch', { code: episodeCode, episodesCount: newEpisodes.length });
                             this.openSpecificEpisode(episodeCode);
                         }
                     });
