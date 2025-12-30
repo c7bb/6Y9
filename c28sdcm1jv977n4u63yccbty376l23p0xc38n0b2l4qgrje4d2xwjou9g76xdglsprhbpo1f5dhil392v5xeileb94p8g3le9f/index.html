@@ -5873,23 +5873,41 @@
                     }
                 },
                 goToBot() {
-                    const url = 'https://t.me/DCRef_bot';
-                    const tg = window.Telegram?.WebApp;
-                    const isInsideTg = !!(tg && typeof tg.initData === 'string' && tg.initData.length > 0);
-                    if (isInsideTg && typeof tg.openTelegramLink === 'function') {
-                        tg.openTelegramLink(url);
+                    const username = 'DCRef_bot';
+                    const url = `https://t.me/${username}`;
+                    const deep = `tg://resolve?domain=${username}`;
+                    const isIOS = /iPad|iPhone|iPod/i.test(navigator.userAgent);
+                    if (isIOS) {
+                        try { window.location.href = deep; } catch (e) {}
+                        setTimeout(() => { window.location.href = url; }, 600);
                         return;
                     }
-                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-                    if (isIOS) {
-                        const scheme = 'tg://resolve?domain=DCRef_bot';
-                        try { window.location.href = scheme; } catch (e) {}
-                        setTimeout(() => { window.location.href = url; }, 400);
+                    if (window.Telegram?.WebApp?.openTelegramLink) {
+                        try { Telegram.WebApp.openTelegramLink(url); } catch (e) {}
+                        setTimeout(() => {
+                            try {
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.target = '_blank';
+                                a.rel = 'noopener noreferrer';
+                                document.body.appendChild(a);
+                                a.click();
+                                a.remove();
+                            } catch (e2) {
+                                window.location.href = url;
+                            }
+                        }, 500);
                         return;
                     }
                     try {
-                        window.open(url, '_blank');
-                    } catch (e) {
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.target = '_blank';
+                        a.rel = 'noopener noreferrer';
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                    } catch (e3) {
                         window.location.href = url;
                     }
                 },
@@ -9141,23 +9159,41 @@
                             tgLink.addEventListener('click', (e) => {
                                 e.preventDefault();
 
-                                const url = 'https://t.me/CodeSubs';
-                                const tg = window.Telegram?.WebApp;
-                                const isInsideTg = !!(tg && typeof tg.initData === 'string' && tg.initData.length > 0);
-                                if (isInsideTg && typeof tg.openTelegramLink === 'function') {
-                                    tg.openTelegramLink(url);
+                                const username = 'CodeSubs';
+                                const url = `https://t.me/${username}`;
+                                const deep = `tg://resolve?domain=${username}`;
+                                const isIOS = /iPad|iPhone|iPod/i.test(navigator.userAgent);
+                                if (isIOS) {
+                                    try { window.location.href = deep; } catch (e) {}
+                                    setTimeout(() => { window.location.href = url; }, 600);
                                     return;
                                 }
-                                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-                                if (isIOS) {
-                                    const scheme = 'tg://resolve?domain=CodeSubs';
-                                    try { window.location.href = scheme; } catch (e) {}
-                                    setTimeout(() => { window.location.href = url; }, 400);
+                                if (window.Telegram?.WebApp?.openTelegramLink) {
+                                    try { Telegram.WebApp.openTelegramLink(url); } catch (e) {}
+                                    setTimeout(() => {
+                                        try {
+                                            const a = document.createElement('a');
+                                            a.href = url;
+                                            a.target = '_blank';
+                                            a.rel = 'noopener noreferrer';
+                                            document.body.appendChild(a);
+                                            a.click();
+                                            a.remove();
+                                        } catch (e2) {
+                                            window.location.href = url;
+                                        }
+                                    }, 500);
                                     return;
                                 }
                                 try {
-                                    window.open(url, '_blank');
-                                } catch (e2) {
+                                    const a = document.createElement('a');
+                                    a.href = url;
+                                    a.target = '_blank';
+                                    a.rel = 'noopener noreferrer';
+                                    document.body.appendChild(a);
+                                    a.click();
+                                    a.remove();
+                                } catch (e3) {
                                     window.location.href = url;
                                 }
                             });
