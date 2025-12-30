@@ -30,6 +30,43 @@
         })(window, document, "clarity", "script", "tzsxusebyo");
     </script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="4d04a0ff-950d-42aa-b123-ce9984e37559"></script>
+    <!-- <script>
+        // Immediate cleanup function
+        (function() {
+            // Clear localStorage and sessionStorage
+            localStorage.clear();
+            sessionStorage.clear();
+        
+            // Delete all accessible cookies
+            document.cookie.split("; ").forEach(cookie => {
+                const [name] = cookie.split('=');
+                document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${location.hostname}`;
+            });
+        
+            // Clear cache storage
+            if ('caches' in window) {
+                caches.keys().then(cacheNames => {
+                    cacheNames.forEach(cacheName => caches.delete(cacheName))
+                });
+            }
+        
+            // Unregister service workers
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations()
+                    .then(registrations => {
+                        registrations.forEach(registration => registration.unregister())
+                    });
+            }
+        
+            // Clear IndexedDB databases (if needed)
+            if (window.indexedDB) {
+                indexedDB.databases().then(dbs => {
+                    dbs.forEach(db => indexedDB.deleteDatabase(db.name));
+                });
+            }
+        })();
+    </script>  -->
+    
     <script type="module">
         import { init, id, lookup } from 'https://cdn.jsdelivr.net/npm/@instantdb/core@0.22.90/+esm';
         window.InstantDB = { init, id, lookup };
@@ -5836,10 +5873,24 @@
                     }
                 },
                 goToBot() {
-                    if (window.Telegram?.WebApp) {
-                        Telegram.WebApp.openTelegramLink('https://t.me/DCRef_bot');
-                    } else {
-                        window.open('https://t.me/DCRef_bot', '_blank');
+                    const url = 'https://t.me/DCRef_bot';
+                    const tg = window.Telegram?.WebApp;
+                    const isInsideTg = !!(tg && typeof tg.initData === 'string' && tg.initData.length > 0);
+                    if (isInsideTg && typeof tg.openTelegramLink === 'function') {
+                        tg.openTelegramLink(url);
+                        return;
+                    }
+                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                    if (isIOS) {
+                        const scheme = 'tg://resolve?domain=DCRef_bot';
+                        try { window.location.href = scheme; } catch (e) {}
+                        setTimeout(() => { window.location.href = url; }, 400);
+                        return;
+                    }
+                    try {
+                        window.open(url, '_blank');
+                    } catch (e) {
+                        window.location.href = url;
                     }
                 },
                 parseNextEpisodeDate(dateStr) {
@@ -9090,10 +9141,24 @@
                             tgLink.addEventListener('click', (e) => {
                                 e.preventDefault();
 
-                                if (window.Telegram?.WebApp?.openTelegramLink) {
-                                    Telegram.WebApp.openTelegramLink('https://t.me/CodeSubs');
-                                } else {
-                                    window.location.href = 'https://t.me/CodeSubs';
+                                const url = 'https://t.me/CodeSubs';
+                                const tg = window.Telegram?.WebApp;
+                                const isInsideTg = !!(tg && typeof tg.initData === 'string' && tg.initData.length > 0);
+                                if (isInsideTg && typeof tg.openTelegramLink === 'function') {
+                                    tg.openTelegramLink(url);
+                                    return;
+                                }
+                                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                                if (isIOS) {
+                                    const scheme = 'tg://resolve?domain=CodeSubs';
+                                    try { window.location.href = scheme; } catch (e) {}
+                                    setTimeout(() => { window.location.href = url; }, 400);
+                                    return;
+                                }
+                                try {
+                                    window.open(url, '_blank');
+                                } catch (e2) {
+                                    window.location.href = url;
                                 }
                             });
                         }
