@@ -11108,17 +11108,15 @@
                 // Ensure data is loaded before calling openSpecificEpisode
                 const urlParams = new URLSearchParams(window.location.search);
                 const episodeCode = urlParams.get("code");
-                console.log('code-param', { code: episodeCode});
+                console.log('code-param-init:', { code: episodeCode});
 
                 if (episodeCode && this.episodes && this.episodes.length > 0) {
-                    console.log('code-param-open: immediate', { code: episodeCode, episodesCount: this.episodes.length });
                     this.openSpecificEpisode(episodeCode); // Open the episode if data is loaded
                 } else {
                     // If the data isn't loaded yet, watch for changes
-                    console.log('code-param-open: wait', { code: episodeCode, episodesCount: this.episodes ? this.episodes.length : 0 });
                     this.$watch('episodes', (newEpisodes) => {
                         if (newEpisodes && newEpisodes.length > 0 && episodeCode) {
-                            console.log('code-param-open: watch', { code: episodeCode, episodesCount: newEpisodes.length });
+                            console.log('code-param-open:', { code: episodeCode, episodesCount: newEpisodes.length });
                             this.openSpecificEpisode(episodeCode);
                         }
                     });
