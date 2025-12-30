@@ -30,43 +30,6 @@
         })(window, document, "clarity", "script", "tzsxusebyo");
     </script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="4d04a0ff-950d-42aa-b123-ce9984e37559"></script>
-    <!-- <script>
-        // Immediate cleanup function
-        (function() {
-            // Clear localStorage and sessionStorage
-            localStorage.clear();
-            sessionStorage.clear();
-        
-            // Delete all accessible cookies
-            document.cookie.split("; ").forEach(cookie => {
-                const [name] = cookie.split('=');
-                document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${location.hostname}`;
-            });
-        
-            // Clear cache storage
-            if ('caches' in window) {
-                caches.keys().then(cacheNames => {
-                    cacheNames.forEach(cacheName => caches.delete(cacheName))
-                });
-            }
-        
-            // Unregister service workers
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations()
-                    .then(registrations => {
-                        registrations.forEach(registration => registration.unregister())
-                    });
-            }
-        
-            // Clear IndexedDB databases (if needed)
-            if (window.indexedDB) {
-                indexedDB.databases().then(dbs => {
-                    dbs.forEach(db => indexedDB.deleteDatabase(db.name));
-                });
-            }
-        })();
-    </script>  -->
-    
     <script type="module">
         import { init, id, lookup } from 'https://cdn.jsdelivr.net/npm/@instantdb/core@0.22.90/+esm';
         window.InstantDB = { init, id, lookup };
