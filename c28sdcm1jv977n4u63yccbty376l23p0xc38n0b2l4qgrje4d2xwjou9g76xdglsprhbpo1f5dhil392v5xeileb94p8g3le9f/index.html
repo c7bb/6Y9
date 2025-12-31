@@ -5041,6 +5041,9 @@
                     } catch (e) {}
                     this.activeFilterHighlightedEl = null;
                 },
+                escapeMarkdown(text) {
+                    return String(text).replace(/[_*[\]()~`>#+\-=|{}.!]/g, '\\$&');
+                },
                 onFilterCheckboxChange(key, event) {
                     const checked = Boolean(event && event.target && event.target.checked);
                     this.setByKey(key, checked);
