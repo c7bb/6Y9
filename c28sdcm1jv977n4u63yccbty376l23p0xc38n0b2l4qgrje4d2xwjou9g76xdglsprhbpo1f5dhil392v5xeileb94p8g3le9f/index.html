@@ -4083,7 +4083,14 @@
                     }
                 },
                 isFailedToFetch() {
-                    return (this.errorMessage || '').trim() === 'Failed to fetch';
+                    const msg = (this.errorMessage || '').trim().toLowerCase();
+                    if (!msg) return false;
+                    return (
+                        msg.includes('failed to fetch') ||
+                        msg.includes('load failed') ||
+                        msg.includes('networkerror when attempting to fetch resource') ||
+                        msg.includes('network error')
+                    );
                 },
                 displayErrorMessage() {
                     return this.isFailedToFetch ? 'حدث خطأ، حاول مرة أخرى' : this.errorMessage;
