@@ -990,13 +990,13 @@
                                                 </div>
                                             </template>
                                             <!-- Condition for grouped list (metadata) -->
-                                            <fieldset v-else class="rounded relative border p-3 mb-4">
-                                                <legend class="px-2 text-sm">
+                                            <fieldset v-else class="rounded relative border p-2 mb-4">
+                                                <legend class="px-1 text-sm">
                                                     <span v-if="group.EpisodeCategory">
                                                         {{ group.EpisodeCategory === 'S' ? 'مترجم' : (group.EpisodeCategory === 'D' ? 'مدبلج' : group.EpisodeCategory) }}
                                                     </span>
                                                     <span v-if="group.EpisodeTranslator">
-                                                        <span v-if="group.EpisodeCategory"> - </span>{{ group.EpisodeTranslator }}
+                                                        <span v-if="group.EpisodeCategory"> - </span>{{ group.EpisodeTranslator }}<span v-if="isProfessionalTranslator(group.EpisodeTranslator)" v-tippy="'ترجمة احترافية'">⭐</span>
                                                     </span>
                                                     <span v-if="group.EpisodeRemastered">
                                                         <span v-if="group.EpisodeCategory || group.EpisodeTranslator"> - </span>
@@ -2080,7 +2080,7 @@
                                         </button>
                                     </div>
                                     <button
-                                        @click="executeJumpValue"
+                                        @click.stop="executeJumpValue"
                                         class="bg-teal-600 text-white font-bold px-2 py-3 rounded hover:bg-teal-500 transition-all duration-100 active:scale-90"
                                     >
                                         اذهب
@@ -2563,7 +2563,7 @@
                                 </fieldset>
 
                                 <fieldset v-if="selectedEpisode && Array.isArray(selectedEpisode.EpisodeVideosIDs) && selectedEpisode.EpisodeVideosIDs.length > 0" class="border p-2 rounded mb-4">
-                                    <legend class="font-bold text-lg px-2">مشاهدة (عبر البوت)</legend>
+                                    <legend class="font-bold text-lg">مشاهدة (عبر البوت)</legend>
                                     <div class="flex flex-col gap-4">
                                         <!-- Videos without metadata (rendered directly under main legend) -->
                                         <template v-for="group in groupedVideos">
@@ -2601,14 +2601,14 @@
                                                 </div>
                                             </template>
                                             <div v-else :key="group.key" class="relative">
-                                                <fieldset class="rounded relative border p-3">
+                                                <fieldset class="rounded relative border p-2">
                                                     <!-- Group Legend -->
-                                                    <legend class="px-2 text-sm">
+                                                    <legend class="px-1 text-sm">
                                                         <span v-if="group.EpisodeCategory">
                                                             {{ group.EpisodeCategory === 'S' ? 'مترجم' : (group.EpisodeCategory === 'D' ? 'مدبلج' : group.EpisodeCategory) }}
                                                         </span>
                                                         <span v-if="group.EpisodeTranslator">
-                                                            <span v-if="group.EpisodeCategory"> - </span>{{ group.EpisodeTranslator }}
+                                                            <span v-if="group.EpisodeCategory"> - </span>{{ group.EpisodeTranslator }}<span v-if="isProfessionalTranslator(group.EpisodeTranslator)" v-tippy="'ترجمة احترافية'">⭐</span>
                                                         </span>
                                                         <span v-if="group.EpisodeRemastered">
                                                             <span v-if="group.EpisodeCategory || group.EpisodeTranslator"> - </span>
@@ -3419,6 +3419,27 @@
             episodeTypeHourlySpecialCount: (episode) => String(episode?.EpisodeSpecial || '').includes('1'),
             episodeTypeTwoHourSpecialCount: (episode) => String(episode?.EpisodeSpecial || '').includes('2'),
         };
+
+        const normalizeTranslatorName = (s) => String(s || '').toLowerCase().replace(/[\s\-_]+/g, '').trim();
+        const PROFESSIONAL_TRANSLATOR_TOKENS = new Set([
+            'CodeSubs',
+            'ABOODYSUBS',
+            'Aoibu',
+            'DCAN',
+            'ReineR',
+            'عبد المللك',
+            'Shinjitsu Fansubs',
+            'DCMS',
+            'Marchi-Fansub',
+            'MA-SHI',
+            'Variom',
+            'MAT-Fansubs',
+            'KaidoKidTH',
+            'Yusaku-Kudo',
+            'Mystery-Fansubs',
+            'ALPhantom',
+            'Celestial-Dragons'
+        ].map(normalizeTranslatorName));
     
         const app = createApp({
             data() {
@@ -5252,6 +5273,14 @@
                 },
                 escapeMarkdown(text) {
                     return String(text).replace(/[_*[\]()~`>#+\-=|{}.!]/g, '\\$&');
+                },
+                isProfessionalTranslator(text) {
+                    const n = normalizeTranslatorName(text);
+                    if (!n) return false;
+                    for (const token of PROFESSIONAL_TRANSLATOR_TOKENS) {
+                        if (n.includes(token)) return true;
+                    }
+                    return false;
                 },
                 onFilterCheckboxChange(key, event) {
                     const checked = Boolean(event && event.target && event.target.checked);
@@ -7132,13 +7161,22 @@
                 },
                 executeJumpValue() {
                     const raw = String(this.jumpInput || '').trim();
-                    if (!raw) return;
+                    if (this.jumpTargetMode === 'episode') {
+                        if (!raw) {
+                            this.toggleSearch();
+                            return;
+                        }
+                    }
                     if (this.jumpTargetMode === 'page') {
                         let val = this.normalizeDigits(raw).trim();
                         let num = parseInt(val, 10);
                         if (isNaN(num)) num = 1;
                         if (num < 1) num = 1;
                         if (num > this.totalPages) num = this.totalPages;
+                        if (num === this.currentPage) {
+                            this.toggleSearch();
+                            return;
+                        }
                         this.handlePageSelect({ target: { value: num } });
                         return;
                     }
