@@ -86,11 +86,17 @@
             .coin-spin {
                 animation: spin-y 3s infinite linear; 
                 transform-style: preserve-3d;
+                -webkit-animation: spin-y 3s infinite linear;
+                -webkit-transform-style: preserve-3d;
             }
 
             @keyframes spin-y {
                 0% { transform: rotateY(0deg); }
                 100% { transform: rotateY(360deg); }
+            }
+            @-webkit-keyframes spin-y {
+                0% { -webkit-transform: rotateY(0deg); transform: rotateY(0deg); }
+                100% { -webkit-transform: rotateY(360deg); transform: rotateY(360deg); }
             }
             
             /* Hide loading spinner when Vue is ready */
@@ -629,8 +635,28 @@
     </style>
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/dist/tippy.umd.min.js"></script>
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@loadingio/loading-bar@0.1.1/dist/loading-bar.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@loadingio/loading-bar@0.1.1/dist/loading-bar.min.js"></script> -->
+    <style>
+        @keyframes gradient-x {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes stripes {
+            from { background-position: 0 0; }
+            to { background-position: 40px 0; }
+        }
+        .animate-gradient-x {
+            background-size: 200% 200%;
+            animation: gradient-x 3s ease infinite;
+        }
+        .animate-stripes {
+            animation: stripes 1s linear infinite;
+        }
+    </style>
 </head>
-<body class="bg-gray-800 p-4 relative">
+<body class="bg-gray-800 py-4 relative">
     <!-- Loading spinner - shows before Vue initializes -->
     <div id="vue-loading" class="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center">
         <div>
@@ -700,9 +726,9 @@
 
         <div
             v-if="showErrorOverlay"
-            class="fixed z-[105] inset-0 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center"
+            class="fixed z-[105] inset-0 overflow-y-auto bg-black bg-opacity-70 flex items-center justify-center"
         >
-            <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-1/2 lg:w-1/3 max-h-[90vh] overflow-hidden flex flex-col">
+            <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-1/2 lg:w-1/3 max-h-[95vh] overflow-hidden flex flex-col">
                 <div class="sticky top-0 bg-cyan-900 pt-4 pl-4 pr-4 pb-2">
                     <h2 :class="['text-lg', isFailedToFetch ? 'text-yellow-300' : 'text-red-500', 'font-bold', 'text-center']">{{ displayErrorMessage }}</h2>
                 </div>
@@ -851,8 +877,8 @@
             </div>
 
             <!-- Updated Direct Window Modal -->
-            <div v-if="showDirectWindow" class="fixed z-50 inset-0 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center">
-                <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-1/2 lg:w-1/3 max-h-[90vh] overflow-hidden flex flex-col">
+            <div v-if="showDirectWindow" class="fixed z-50 inset-0 overflow-y-auto bg-black bg-opacity-70 flex items-center justify-center">
+                <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-1/2 lg:w-1/3 max-h-[95vh] overflow-hidden flex flex-col">
                     <div class="sticky top-0 bg-cyan-900 pt-4 pl-4 pr-4 pb-2">
                         <div class="flex justify-between items-center">
                             <h2 class="text-xl font-bold">النافذة المباشرة</h2>
@@ -1027,8 +1053,8 @@
             </div>
 
             <!-- النافذة السريعة Modal -->
-            <div v-if="showFastingWindow" class="fixed z-50 inset-0 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center">
-                <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-2/3 lg:w-1/2 max-h-[90vh] overflow-hidden flex flex-col">
+            <div v-if="showFastingWindow" class="fixed z-50 inset-0 overflow-y-auto bg-black bg-opacity-70 flex items-center justify-center">
+                <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-2/3 lg:w-1/2 max-h-[95vh] overflow-hidden flex flex-col">
                     <div class="sticky top-0 bg-cyan-900 pt-4 pl-4 pr-4 pb-2">
                         <div class="flex justify-between items-center">
                             <h2 class="text-xl font-bold">النافذة السريعة <span class="text-xs text-yellow-300 font-normal">(تجريبي)</span></h2>
@@ -1235,7 +1261,7 @@
 
             <!-- Stop Confirmation Modal -->
             <div v-if="showStopConfirmation" class="fixed z-[75] inset-0 overflow-y-auto bg-black bg-opacity-70 flex items-center justify-center">
-                <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-2/3 lg:w-1/2 max-h-[90vh] overflow-hidden flex flex-col text-center p-6">
+                <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-2/3 lg:w-1/2 max-h-[95vh] overflow-hidden flex flex-col text-center p-6">
                     <h3 class="text-xl mb-4">تأكيد الإيقاف</h3>
                     <p class="mb-6">هل أنت متأكد من إيقاف عملية الإرسال؟</p>
                     <div class="flex gap-4">
@@ -1255,7 +1281,7 @@
 
             <!-- Retry Stop Confirmation Modal -->
             <div v-if="showRetryStopConfirmation" class="fixed z-[75] inset-0 overflow-y-auto bg-black bg-opacity-70 flex items-center justify-center">
-                <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-2/3 lg:w-1/2 max-h-[90vh] overflow-hidden flex flex-col text-center p-6">
+                <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-2/3 lg:w-1/2 max-h-[95vh] overflow-hidden flex flex-col text-center p-6">
                     <h3 class="text-xl mb-4">تأكيد الإغلاق</h3>
                     <p class="mb-6">هناك عمليات جارية. هل تريد إيقافها وإغلاق النافذة؟</p>
                     <div class="flex gap-4">
@@ -1274,7 +1300,7 @@
             </div>
 
             <div v-if="showSendInProgressConfirmation" class="fixed z-[95] inset-0 overflow-y-auto bg-black bg-opacity-70 flex items-center justify-center">
-                <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-2/3 lg:w-1/2 max-h-[90vh] overflow-hidden flex flex-col text-center p-6">
+                <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-2/3 lg:w-1/2 max-h-[95vh] overflow-hidden flex flex-col text-center p-6">
                     <h3 class="text-xl mb-4">تأكيد الإيقاف</h3>
                     <p class="mb-6">عملية الإرسال قيد التنفيذ، هل تريد إيقافها</p>
                     <div class="flex gap-4">
@@ -1289,7 +1315,7 @@
             </div>
 
             <div v-if="showCaptureInProgressConfirmation" data-capture-allow="1" class="fixed z-[95] inset-0 overflow-y-auto bg-black bg-opacity-70 flex items-center justify-center">
-                <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-2/3 lg:w-1/2 max-h-[90vh] overflow-hidden flex flex-col text-center p-6">
+                <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-2/3 lg:w-1/2 max-h-[95vh] overflow-hidden flex flex-col text-center p-6">
                     <h3 class="text-xl mb-4">تأكيد الإيقاف</h3>
                     <p class="mb-6">عملية التصوير قيد التنفيذ، هل تريد إيقافها</p>
                     <div class="flex gap-4">
@@ -1305,7 +1331,7 @@
 
             <!-- Limit Reached Modal -->
             <div v-if="showLimitModal" class="fixed z-[80] inset-0 overflow-y-auto bg-black bg-opacity-70 flex items-center justify-center">
-                <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-2/3 lg:w-1/2 max-h-[90vh] overflow-hidden flex flex-col text-center p-6">
+                <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-2/3 lg:w-1/2 max-h-[95vh] overflow-hidden flex flex-col text-center p-6">
                     <h3 class="text-xl mb-4 text-red-400">عذرًا</h3>
                     <p v-if="remainingDownloads === 0" class="mb-6 text-lg">
                         تم استهلاك الحدّ اليومي، وسيُعاد التعيين خلال
@@ -1485,21 +1511,44 @@
             </div>
 
             <!-- Error Message with Retry Button -->
-    <div v-if="error" class="text-center text-xl mb-4 text-red-500 font-bold py-4">
-        <p class="mb-4">{{ error }}</p>
-        <button 
-        @click="reloadPage" 
-        :disabled="waitTime > 0" 
-        class="bg-blue-500 text-white font-bold py-2 px-4 rounded transition-all duration-100 active:scale-90"
-        :class="{'opacity-50 cursor-not-allowed': waitTime > 0, 'hover:bg-blue-700': waitTime === 0}">
-        حاول مرة أخرى
-    </button>    
-    </div>
+        <div v-if="error" class="text-center text-xl mb-4 text-red-500 font-bold py-4">
+            <p class="mb-4">{{ error }}</p>
+            <button 
+            @click="reloadPage" 
+            :disabled="waitTime > 0" 
+            class="bg-blue-500 text-white font-bold py-2 px-4 rounded transition-all duration-100 active:scale-90"
+            :class="{'opacity-50 cursor-not-allowed': waitTime > 0, 'hover:bg-blue-700': waitTime === 0}">
+            حاول مرة أخرى
+        </button>    
+        </div>
 
-    <h1 
-        class="text-5xl font-bold mb-4 text-center">
-        <span>الدليل الشامل لمشاهدة المحقق كونان</span>
-    </h1>
+        <h1 
+            class="text-5xl font-bold mt-10 mb-4 text-center">
+            <span>الدليل الشامل لمشاهدة المحقق كونان</span>
+        </h1>
+        <div v-if="loading" class="flex items-center justify-center w-full">
+            <div class="flex flex-col items-center" style="position: relative; top: 0;">
+                <transition name="fade">
+                    <span key="zikr" class="zikr-box">{{ currentZikr }}</span>
+                </transition>
+                <div class="w-64">
+                    <div class="relative h-6 rounded-full overflow-hidden bg-gray-700 shadow-inner ring-2 ring-gray-600">
+                        <div class="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-blue-700 via-teal-500 to-emerald-500 animate-gradient-x"></div>
+                        <div class="absolute top-0 left-0 h-full w-full opacity-30 bg-[length:20px_20px] bg-[linear-gradient(45deg,rgba(255,255,255,.15)_25%,transparent_25%,transparent_50%,rgba(255,255,255,.15)_50%,rgba(255,255,255,.15)_75%,transparent_75%,transparent)] animate-stripes"></div>
+                        <div class="absolute top-0 right-0 h-full bg-gray-800 transition-all duration-300 ease-out" :style="{ width: (100 - loadProgress) + '%' }"></div>
+                        <div class="absolute top-0 left-0 h-full w-full flex items-center justify-center">
+                            <span class="text-xs font-bold text-white shadow-black drop-shadow-md">{{ loadProgress }}%</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center text-white text-sm font-semibold tracking-wider animate-pulse">
+                        <span class="inline-flex items-center gap-2">
+                            <span>جاري تحميل البيانات...</span>
+                            <!-- <span class="animate-spin inline-block h-5 w-5 rounded-full border-2 border-black/30 border-t-black"></span> -->
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- <br>
 
         <div class="flex flex-col items-center justify-center">
@@ -1550,13 +1599,8 @@
 
         <br>
         <!-- Search and Filters -->
-        <div v-if="loading">
-            <transition name="fade">
-                <span key="zikr" class="zikr-box">{{ currentZikr }}</span>
-            </transition>
-        </div>
-        <div v-else class="flex flex-col gap-4 items-center">
-            <div class="flex gap-4 w-full justify-center">
+        <div v-if="!loading" class="flex flex-col gap-4 items-center">
+            <div class="flex gap-3 w-full justify-center">
                 <select
                     v-model="selectedFilter"
                     :disabled="isCapturingEpisodeTableImages"
@@ -1604,8 +1648,8 @@
             </div>
             
             <!-- Empty popup window -->
-            <div v-if="showEmptyPopup" ref="emptyPopupRoot" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
-                <div class="relative bg-sky-900 rounded shadow-lg w-4/5 md:w-1/2 lg:w-1/3 max-h-[90vh] overflow-hidden flex flex-col"> <!-- the defualt is 80vh in max-h-[90vh]-->
+            <div v-if="showEmptyPopup" ref="emptyPopupRoot" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center z-50">
+                <div class="relative bg-sky-900 rounded shadow-lg w-4/5 md:w-1/2 lg:w-1/3 max-h-[95vh] overflow-hidden flex flex-col"> <!-- the defualt is 80vh in max-h-[95vh]-->
                     <!-- Sticky Header Section -->
                     <div class="sticky top-0 z-50 bg-sky-900 p-4">
                         <h2 class="text-xl font-bold text-green-400 relative">
@@ -1776,7 +1820,7 @@
 
                                 <!-- 2. Movie Column (MIDDLE POSITION) -->
                                 <div class="flex flex-col items-center">
-                                    <p class="text-white text-lg text-center font-bold mb-4">فيلم السنة</p>
+                                    <p class="text-white text-lg text-center font-bold mb-4">فيلم السنة الماضية</p>
                                     <button 
                                         @click="openEpisodeModal('الفيلم 28')"
                                         class="w-full py-2 bg-red-500 text-white font-bold text-lg rounded transition-all duration-100 hover:scale-105 active:scale-90">
@@ -1999,32 +2043,48 @@
                             
                         </div>
 
+                        <div class="mt-4 w-full">
+                            <div class="flex flex-col gap-2 text-white font-bold items-center">
+                                <div class="w-full flex items-center justify-center gap-3">
+                                    <div class="flex flex-col gap-1">
+                                        <label class="inline-flex items-center gap-2">
+                                            <input type="radio" v-model="jumpTargetMode" value="episode" class="cursor-pointer" />
+                                            <span>حلقة</span>
+                                        </label>
+                                        <label class="inline-flex items-center gap-2">
+                                            <input type="radio" v-model="jumpTargetMode" value="page" class="cursor-pointer" />
+                                            <span>صفحة</span>
+                                        </label>
+                                    </div>
+                                    <input
+                                        v-model.trim="jumpInput"
+                                        @focus="onJumpInputFocus"
+                                        @blur="onJumpInputBlur"
+                                        @keydown.enter.prevent="executeJumpValue"
+                                        :inputmode="jumpTargetMode === 'page' ? 'numeric' : 'text'"
+                                        :pattern="jumpTargetMode === 'page' ? '[0-9٠-٩۰-۹]*' : undefined"
+                                        :class="[
+                                            'flex-1 w-full max-w-xs px-1 py-2 text-lg bg-gray-700 rounded text-white focus:outline-none focus:ring-2 focus:ring-teal-400',
+                                            jumpTargetMode === 'page'
+                                                ? (jumpInputActive ? 'text-right' : 'text-center')
+                                                : ''
+                                        ]"
+                                        placeholder="اكتب رقم الحلقة"
+                                    />
+                                    <button
+                                        @click="executeJumpValue"
+                                        class="bg-teal-600 text-white font-bold px-4 py-2 rounded hover:bg-teal-500 transition-all duration-100 active:scale-90"
+                                    >
+                                        اذهب
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
         </div>
 
         <!-- Table -->
-        <!-- Progress Spinner -->
-        <div v-if="loading" class="text-center py-4">
-            <div class="relative w-24 h-24 mx-auto">
-              <div class="w-full h-full animate-spin">
-                <svg class="w-full h-full" viewBox="0 0 100 100" style="transform: rotate(-90deg);">
-                  <circle 
-                    class="stroke-orange-700" 
-                    cx="50" 
-                    cy="50" 
-                    r="45" 
-                    fill="none" 
-                    stroke-width="10"
-                    :stroke-dasharray="circumference"
-                    :stroke-dashoffset="strokeDashOffset" 
-                  />
-                </svg>
-              </div>
-              <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white font-bold text-lg">
-                {{ loadProgress }}%
-              </div>
-            </div>
-        </div>          
-        <div v-else>
+        <div v-if="!loading">
             <table class="min-w-full border-collapse border border-gray-300">
                 <thead>
                     <!-- Top full-width row -->
@@ -2133,9 +2193,9 @@
                         </tr>
                     </tbody>
             
-                    <div v-if="showModal" class="fixed z-50 inset-0 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center">
+                    <div v-if="showModal" class="fixed z-50 inset-0 overflow-y-auto bg-black bg-opacity-70 flex items-center justify-center">
                         
-                        <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-1/2 lg:w-1/3 max-h-[90vh] flex flex-col"> <!-- the defualt is 80vh in max-h-[90vh]-->
+                        <div class="relative bg-cyan-900 text-slate-200 font-bold rounded-lg w-4/5 md:w-1/2 lg:w-1/3 max-h-[95vh] flex flex-col"> <!-- the defualt is 80vh in max-h-[95vh]-->
                             
 
                             <!-- Side Navigation Buttons -->
@@ -2591,7 +2651,7 @@
                     </div>
 
                     <div v-if="showTrailerModal" class="fixed z-[90] inset-0 overflow-y-auto bg-black bg-opacity-80 flex items-center justify-center" @click.self="closeTrailerModal">
-                        <div class="relative bg-slate-950 text-slate-200 font-bold rounded-lg w-11/12 md:w-3/4 lg:w-1/2 max-h-[90vh] overflow-hidden flex flex-col border border-cyan-800">
+                        <div class="relative bg-slate-950 text-slate-200 font-bold rounded-lg w-11/12 md:w-3/4 lg:w-1/2 max-h-[95vh] overflow-hidden flex flex-col border border-cyan-800">
                             <div class="sticky top-0 bg-slate-950 p-4 flex items-center justify-end border-b border-cyan-900 relative">
                                 <div class="text-lg text-center w-full absolute left-1/2 -translate-x-1/2 pointer-events-none">
                                     {{ trailerModalTitleText }}
@@ -2710,6 +2770,9 @@
                     <!-- <span>صفحة</span> -->
                     <select v-model="currentPage" 
                             @change="handlePageSelect" 
+                            :disabled="isCapturingEpisodeTableImages" 
+                            @mousedown="guardEventIfCapturing($event)" 
+                            @click="guardEventIfCapturing($event)"
                             class="w-24 px-2 py-2 rounded border border-gray-500 bg-gray-800 text-center font-bold">
                         <option v-for="page in totalPages" :key="page" :value="page">
                             {{ page }}
@@ -3454,7 +3517,7 @@
                     successHintHideAnimationTimeoutId: null,
                     episode: { status: null },
                     movie: { status: null },
-                    ep: 1186,
+                    ep: 1187,
                     mangaCh: 1156,
                     // Daily Limit Data
                     dailyDownloads: 0,
@@ -3692,8 +3755,16 @@
                     selectedMovie: null, // Track the selected movie for resolution/size view
                     selectedManga: null, // Track the selected manga for file size view
                     movies: [], // Movies will be populated separately
+                    mangas: [], // Declare mangas to avoid Vue render warn
                     loading: true,
                     loadProgress: 0,
+                    inputSearchQuery: '',
+                    searchDebounceTimer: null,
+                    loadingRelated: false,
+                    loadingNextManga: false,
+                    loadingPreviousManga: false,
+                    loadingManga: false,
+                    loadingEpisode: false,
                     circumference: 2 * Math.PI * 45, // 2πr where r=45
                     progressInterval: null,
                     error: null,
@@ -3781,7 +3852,10 @@
                         "أستغفر الله العظيم وأتوب إليه"
                     ],
                     remainingAdhkar: [],
-                    intervalZikrId: null
+                    intervalZikrId: null,
+                    jumpTargetMode: 'episode',
+                    jumpInput: '',
+                    jumpInputActive: false
                 };
             },
             computed: {
@@ -4933,6 +5007,82 @@
                 },
             },
             watch: {
+                jumpTargetMode(newVal) {
+                    if (newVal === 'page') {
+                        this.jumpInputActive = false;
+                        this.jumpInput = `${this.displayCurrentPage}/${this.totalPages}`;
+                    } else {
+                        this.jumpInput = '';
+                    }
+                },
+                currentPage() {
+                    if (this.jumpTargetMode === 'page') {
+                        if (!this.jumpInputActive) {
+                            this.jumpInput = `${this.displayCurrentPage}/${this.totalPages}`;
+                        }
+                    }
+                },
+                totalPages() {
+                    if (this.jumpTargetMode === 'page') {
+                        if (!this.jumpInputActive) {
+                            this.jumpInput = `${this.displayCurrentPage}/${this.totalPages}`;
+                        }
+                    }
+                },
+                jumpInput(newVal) {
+                    const trimmed = String(newVal || '').trim();
+                    if (this.jumpTargetMode === 'page') {
+                        if (trimmed.endsWith('+') || trimmed.endsWith('=')) {
+                            let val = this.normalizeDigits(trimmed.slice(0, -1).trim());
+                            let num = parseInt(val, 10);
+                            if (isNaN(num)) num = this.displayCurrentPage || 1;
+                            if (num < 1) num = 1;
+                            if (num > this.totalPages) num = this.totalPages;
+                            this.handlePageSelect({ target: { value: num } });
+                            this.jumpInput = String(this.displayCurrentPage);
+                            return;
+                        }
+                        if (this.jumpInputActive) {
+                            const val = this.normalizeDigits(trimmed);
+                            let num = parseInt(val, 10);
+                            if (isNaN(num)) return;
+                            if (num < 1) num = 1;
+                            if (num > this.totalPages) num = this.totalPages;
+                            const next = String(num);
+                            if (next !== trimmed) this.jumpInput = next;
+                        }
+                        return;
+                    }
+                    if (trimmed.endsWith('+') || trimmed.endsWith('=')) {
+                        const targetValue = this.normalizeDigits(trimmed.slice(0, -1).trim());
+                        if (!targetValue) {
+                            this.pendingJumpTarget = null;
+                            this.pendingJumpRegex = null;
+                            this.pendingJumpOpenModal = false;
+                            this.jumpInput = '';
+                            return;
+                        }
+                        let jumpRegex = null;
+                        if (trimmed.endsWith('=')) {
+                            try {
+                                const pattern = this.normalizeText(targetValue);
+                                if (pattern) jumpRegex = new RegExp(`^${pattern}$`, 'i');
+                            } catch (e) {
+                                jumpRegex = null;
+                            }
+                        }
+                        this.pendingJumpTarget = targetValue;
+                        this.pendingJumpRegex = jumpRegex;
+                        this.pendingJumpOpenModal = trimmed.endsWith('=');
+                        this.jumpInput = '';
+                        this.executePendingJump();
+                        return;
+                    }
+                    const cleaned = this.buildEpisodeJumpTarget(trimmed);
+                    if (cleaned && cleaned !== trimmed) {
+                        this.jumpInput = cleaned;
+                    }
+                },
                 episodeSendInProgress(newValue) {
                     if (!newValue) this.handleAutoCloseIfRequested('modal');
                 },
@@ -4941,6 +5091,31 @@
                 },
                 trailerSendInProgress(newValue) {
                     if (!newValue) this.handleAutoCloseIfRequested('trailer');
+                },
+                loading(newValue) {
+                    if (newValue) {
+                        this.$nextTick(() => {
+                            const container = document.getElementById('loading-bar-container');
+                            if (container && !container.ldBar) {
+                                new ldBar(container);
+                            }
+                            if (container && container.ldBar) {
+                                container.ldBar.set(this.loadProgress);
+                            }
+                        });
+                    }
+                },
+                loadProgress(newValue) {
+                    const container = document.getElementById('loading-bar-container');
+                    if (container && container.ldBar) {
+                        container.ldBar.set(newValue);
+                    }
+                },
+                inputSearchQuery(newVal) {
+                    if (this.searchDebounceTimer) clearTimeout(this.searchDebounceTimer);
+                    this.searchDebounceTimer = setTimeout(() => {
+                        this.searchQuery = newVal;
+                    }, 300);
                 },
                 selectedEpisode() {
                     // When episode changes, recalculate the countdown
@@ -5033,6 +5208,24 @@
                 },
             },
             methods: {
+                onJumpInputFocus() {
+                    this.jumpInputActive = true;
+                    if (this.jumpTargetMode === 'page') {
+                        this.jumpInput = String(this.displayCurrentPage);
+                    }
+                },
+                onJumpInputBlur() {
+                    this.jumpInputActive = false;
+                    if (this.jumpTargetMode === 'page') {
+                        const trimmed = this.normalizeDigits(String(this.jumpInput || '').trim());
+                        let num = parseInt(trimmed, 10);
+                        if (!isNaN(num)) {
+                            if (num < 1) num = 1;
+                            if (num > this.totalPages) num = this.totalPages;
+                            this.jumpInput = `${num}/${this.totalPages}`;
+                        }
+                    }
+                },
                 clearActiveFilterHighlight() {
                     const el = this.activeFilterHighlightedEl;
                     if (!el) return;
@@ -5601,6 +5794,9 @@
                     if (this.isAnyMangaQueueRunning) {
                         return;
                     }
+                    if (this.isCapturingEpisodeTableImages) {
+                        return;
+                    }
                     const now = Date.now();
                     const elapsedSeconds = Math.floor((now - this.lastActivityAt) / 1000);
                     const remaining = this.inactivityDurationSeconds - elapsedSeconds;
@@ -5695,17 +5891,21 @@
                     this.openModal(episode);
                 },
 
-                async loadNextMangaInfo() {
+                async loadUpcomingDates() {
                     try {
                         const response = await fetch(`./UpcomingDates.json?cb=${Date.now()}`);
                         const payload = await response.json();
+                        this.nextEpisodeInfo = payload?.nextEpisode ? { ...payload.nextEpisode } : null;
                         this.nextMangaInfo = payload?.nextManga ? { ...payload.nextManga } : null;
+                        this.refreshNextEpisodeState();
                         this.refreshNextMangaState();
                     } catch (error) {
-                        console.error('Error loading next manga info:', error);
+                        console.error('Error loading upcoming dates:', error);
+                        this.nextEpisodeInfo = null;
                         this.nextMangaInfo = null;
                     }
                 },
+
                 parseNextMangaDate(dateStr) {
                     if (!dateStr) return null;
                     const parts = String(dateStr).trim().split('-');
@@ -5844,18 +6044,6 @@
                         return;
                     }
                     this.showEnglishNextMangaCountdown = !this.showEnglishNextMangaCountdown;
-                },
-
-                async loadNextEpisodeInfo() {
-                    try {
-                        const response = await fetch(`./UpcomingDates.json?cb=${Date.now()}`);
-                        const payload = await response.json();
-                        this.nextEpisodeInfo = payload?.nextEpisode ? { ...payload.nextEpisode } : null;
-                        this.refreshNextEpisodeState();
-                    } catch (error) {
-                        console.error('Error loading next episode info:', error);
-                        this.nextEpisodeInfo = null;
-                    }
                 },
                 goToBot() {
                     const username = 'DCRef_bot';
@@ -6834,6 +7022,116 @@
                     this.trackLastPage();
                 },
 
+                getMaxForPrefix(prefix) {
+                    const p = String(prefix || '').trim();
+                    if (!p) return 0;
+                    const escaped = this.escapeRegExpLiteral(p);
+                    const rx = new RegExp(`^${escaped}\\s*(\\d+(?:\\.\\d+)?)$`, 'i');
+                    let max = 0;
+                    for (const ep of this.episodes || []) {
+                        const s = this.normalizeDigits(String(ep?.EpisodeNumber || '')).trim();
+                        const m = rx.exec(s);
+                        if (m) {
+                            const n = parseFloat(m[1]);
+                            if (!isNaN(n) && n > max) max = n;
+                        }
+                    }
+                    return max;
+                },
+                getMaxNumericEpisode() {
+                    let max = -Infinity;
+                    let maxStr = '';
+                    for (const ep of this.episodes || []) {
+                        const s = this.normalizeDigits(String(ep?.EpisodeNumber || '')).trim();
+                        if (/^\d+(\.\d+)?$/.test(s)) {
+                            const n = parseFloat(s);
+                            if (!isNaN(n) && n > max) {
+                                max = n;
+                                maxStr = s;
+                            }
+                        }
+                    }
+                    return maxStr || '1';
+                },
+                normalizeMagicKaitoBraces(input) {
+                    let raw = this.normalizeDigits(String(input || '')).toLowerCase();
+                    if (raw.includes('ماجيك كايتو')) {
+                        const hasJ1 = /\{\s*ج\s*1\s*\}/.test(raw);
+                        const hasJ2 = /\{\s*ج\s*2\s*\}/.test(raw);
+                        if (hasJ1) {
+                            raw = raw.replace(/\{\s*ج\s*1\s*\}/g, '').replace(/ماجيك\s+كايتو/g, 'ماجيك كايتو1');
+                        } else if (hasJ2) {
+                            raw = raw.replace(/\{\s*ج\s*2\s*\}/g, '').replace(/ماجيك\s+كايتو/g, 'ماجيك كايتو2');
+                        }
+                    }
+                    return raw;
+                },
+                buildEpisodeJumpTarget(rawInput) {
+                    let s = this.normalizeMagicKaitoBraces(rawInput).trim();
+                    if (!s) return '';
+                    if (/^\d+(\.\d+)?$/.test(s)) {
+                        const maxStr = this.getMaxNumericEpisode();
+                        const maxNum = parseFloat(maxStr);
+                        let num = parseFloat(s);
+                        if (isNaN(num)) num = 1;
+                        if (!isNaN(maxNum)) {
+                            if (num > maxNum) s = maxStr;
+                            else if (num < 1) s = '1';
+                            else s = String(s);
+                        }
+                        return s;
+                    }
+                    const prefixes = [
+                        'الفيلم',
+                        'فيلم تعاوني',
+                        'قصة قصيرة',
+                        'أوفا',
+                        'خاصة بالفيلم',
+                        'إصدار خاص',
+                        'ماجيك كايتو1',
+                        'ماجيك كايتو2',
+                        'يوميات زيرو',
+                        'المجرم هانزاوا'
+                    ];
+                    let matchedPrefix = '';
+                    for (const p of prefixes) {
+                        const rx = new RegExp(`^\\s*${this.escapeRegExpLiteral(p)}\\b`, 'i');
+                        if (rx.test(s)) {
+                            matchedPrefix = p;
+                            break;
+                        }
+                    }
+                    if (matchedPrefix) {
+                        const numMatch = s.match(/(\d+(?:\\.\\d+)?)/);
+                        let n = numMatch ? parseFloat(numMatch[1]) : 1;
+                        if (isNaN(n)) n = 1;
+                        const max = this.getMaxForPrefix(matchedPrefix);
+                        if (max > 0) {
+                            if (n > max) n = max;
+                            if (n < 1) n = 1;
+                        }
+                        return `${matchedPrefix} ${String(n)}`;
+                    }
+                    return s;
+                },
+                executeJumpValue() {
+                    const raw = String(this.jumpInput || '').trim();
+                    if (!raw) return;
+                    if (this.jumpTargetMode === 'page') {
+                        let val = this.normalizeDigits(raw).trim();
+                        let num = parseInt(val, 10);
+                        if (isNaN(num)) num = 1;
+                        if (num < 1) num = 1;
+                        if (num > this.totalPages) num = this.totalPages;
+                        this.handlePageSelect({ target: { value: num } });
+                        return;
+                    }
+                    const target = this.buildEpisodeJumpTarget(raw);
+                    if (!target) return;
+                    this.pendingJumpTarget = target;
+                    this.pendingJumpOpenModal = false;
+                    this.executePendingJump();
+                },
                 // Update page size and recalculate total pages
                 handlePageSizeChange() {
                     const startIndex = (this.currentPage - 1) * this.oldPageSize;
@@ -6863,8 +7161,17 @@
                 },
 
                 normalizeText(text) {
-                    const raw = this.normalizeDigits(text).toLowerCase();
+                    let raw = this.normalizeDigits(text).toLowerCase();
                     if (!raw) return '';
+                    if (raw.includes('ماجيك كايتو')) {
+                        const hasJ1 = /\{\s*ج\s*1\s*\}/.test(raw);
+                        const hasJ2 = /\{\s*ج\s*2\s*\}/.test(raw);
+                        if (hasJ1) {
+                            raw = raw.replace(/\{\s*ج\s*1\s*\}/g, '').replace(/ماجيك\s+كايتو/g, 'ماجيك كايتو1');
+                        } else if (hasJ2) {
+                            raw = raw.replace(/\{\s*ج\s*2\s*\}/g, '').replace(/ماجيك\s+كايتو/g, 'ماجيك كايتو2');
+                        }
+                    }
 
                     if (!this._replacementMatcher) {
                         const keys = Object.keys(this.replacementDict || {})
@@ -7180,25 +7487,19 @@
                 },
 
                 // Method to load data from JSON
-                loadData() {
+                loadData(force = false) {
                     return new Promise((resolve, reject) => {
-                        // Block data loading if this tab is not the owner
+                        if (this.loading && !force) {
+                            console.warn('loadData blocked: Already loading');
+                            resolve();
+                            return;
+                        }
                         if (!this.isTabOwner) {
                             console.warn('loadData blocked: Tab is not the owner');
                             reject('Tab is not the owner');
                             return;
                         }
-                        
-                        // Reset progress and start the progress interval
                         this.loadProgress = 0;
-                        if (this.progressInterval) clearInterval(this.progressInterval);
-
-                        // Start progress animation
-                        this.progressInterval = setInterval(() => {
-                            if (this.loadProgress < 90) {
-                                this.loadProgress += 1;
-                            }
-                        }, 50);
 
                         if (this.userJoined) {
                             // Reset states before attempting to fetch
@@ -7223,40 +7524,52 @@
                             const urlWithCacheBust = `${this.jsonUrl}?t=${new Date().getTime()}`;
 
                             fetch(urlWithCacheBust, { cache: 'no-store' })
-                                .then(response => {
+                                .then(async response => {
                                     if (response.status === 429) {
-                                        // If rate-limited, parse the JSON response
-                                        return response.json().then(data => {
-                                            // Only set loading = false if this tab is the owner
-                                            if (this.isTabOwner) {
-                                                this.loading = false;
-                                            }
-                                            clearInterval(this.progressInterval); // Stop progress animation
-                                            this.loadProgress = 0; // Reset progress
-
-                                            if (data.error === "User blocked") {
-                                                this.error = "لقد تجاوزت الحد المسموح به من الطلبات لهذا اليوم.";
-                                                reject('User blocked');
-                                                return;
-                                            }
-
-                                            const resetTime = data.resetTime || Date.now() + 60000;
-                                            this.waitTime = Math.max(0, Math.floor((resetTime - Date.now()) / 1000));
-                                            this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
-                                            localStorage.setItem('waitTime', this.waitTime);
-                                            console.warn(data.message);
-
-                                            // Start a timer to update the wait time
-                                            this.startTimer();
-                                            reject('Rate limit exceeded');
-                                        });
+                                        const data = await response.json();
+                                        if (this.isTabOwner) {
+                                            this.loading = false;
+                                        }
+                                        this.loadProgress = 0;
+                                        if (data.error === "User blocked") {
+                                            this.error = "لقد تجاوزت الحد المسموح به من الطلبات لهذا اليوم.";
+                                            reject('User blocked');
+                                            return;
+                                        }
+                                        const resetTime = data.resetTime || Date.now() + 60000;
+                                        this.waitTime = Math.max(0, Math.floor((resetTime - Date.now()) / 1000));
+                                        this.error = `لقد تجاوزت الحد المسموح به من الطلبات. يُرجى الانتظار ${this.waitTime} ثانية.`;
+                                        localStorage.setItem('waitTime', this.waitTime);
+                                        this.startTimer();
+                                        reject('Rate limit exceeded');
+                                        return;
                                     }
-
                                     if (!response.ok) {
                                         throw new Error(`HTTP error! status: ${response.status}`);
                                     }
-
-                                    return response.json();
+                                    const reader = response.body.getReader();
+                                    const contentLength = +response.headers.get('Content-Length');
+                                    let receivedLength = 0;
+                                    const chunks = [];
+                                    while(true) {
+                                        const {done, value} = await reader.read();
+                                        if (done) break;
+                                        chunks.push(value);
+                                        receivedLength += value.length;
+                                        if (contentLength) {
+                                            this.loadProgress = Math.min(100, Math.round((receivedLength / contentLength) * 100));
+                                        } else {
+                                            this.loadProgress = Math.min(99, this.loadProgress + 1);
+                                        }
+                                    }
+                                    const allChunks = new Uint8Array(receivedLength);
+                                    let position = 0;
+                                    for(let chunk of chunks) {
+                                        allChunks.set(chunk, position);
+                                        position += chunk.length;
+                                    }
+                                    const resultString = new TextDecoder("utf-8").decode(allChunks);
+                                    return JSON.parse(resultString);
                                 })
                                 .then(data => {
                                     if (data) {
@@ -10573,7 +10886,7 @@
                                             this.initInstantDB();
                                         }
                                         if (this.userJoined && this.episodes.length === 0) {
-                                            this.loadData();
+                                            this.loadData(true);
                                         }
                                         break;
                                         
@@ -10584,8 +10897,21 @@
                                         break;
                                         
                                     case 'ownership-status':
-                                        this.isTabOwner = !!isOwner;
-                                        this.tabLockModal = !this.isTabOwner;
+                                        {
+                                            const wasOwner = this.isTabOwner;
+                                            const nowOwner = !!isOwner;
+                                            const becameOwner = nowOwner && !wasOwner;
+                                            this.isTabOwner = nowOwner;
+                                            this.tabLockModal = !this.isTabOwner;
+                                            if (becameOwner) {
+                                                if (this.userJoined && !this._db) {
+                                                    this.initInstantDB();
+                                                }
+                                                if (this.userJoined && this.episodes.length === 0) {
+                                                    this.loadData(true);
+                                                }
+                                            }
+                                        }
                                         break;
                                         
                                     case 'heartbeat-request':
@@ -10644,7 +10970,7 @@
                                                 this.initInstantDB();
                                             }
                                             if (this.userJoined && this.episodes.length === 0) {
-                                                this.loadData();
+                                                this.loadData(true);
                                             }
                                         } else {
                                             this.isTabOwner = false;
@@ -10654,14 +10980,18 @@
                                         
                                     case 'ownership-status':
                                         if (tabId === this.tabId) {
-                                            this.isTabOwner = true;
+                                            const wasOwner = this.isTabOwner;
+                                            const nowOwner = true;
+                                            const becameOwner = nowOwner && !wasOwner;
+                                            this.isTabOwner = nowOwner;
                                             this.tabLockModal = false;
-                                            // Initialize InstantDB and load data when ownership is granted
-                                            if (this.userJoined && !this._db) {
-                                                this.initInstantDB();
-                                            }
-                                            if (this.userJoined && this.episodes.length === 0) {
-                                                this.loadData();
+                                            if (becameOwner) {
+                                                if (this.userJoined && !this._db) {
+                                                    this.initInstantDB();
+                                                }
+                                                if (this.userJoined && this.episodes.length === 0) {
+                                                    this.loadData(true);
+                                                }
                                             }
                                         } else {
                                             this.isTabOwner = false;
@@ -10730,7 +11060,7 @@
                                         this.initInstantDB();
                                     }
                                     if (this.userJoined && this.episodes.length === 0) {
-                                        this.loadData();
+                                        this.loadData(true);
                                     }
                                 }
 
@@ -10824,7 +11154,7 @@
                                 this.initInstantDB();
                             }
                             if (this.userJoined && this.episodes.length === 0) {
-                                this.loadData();
+                                this.loadData(true);
                             }
                         }
                     };
@@ -10926,7 +11256,7 @@
                     if (!this._db) {
                         this.initInstantDB();
                     }
-                    this.loadData();
+                    this.loadData(true);
                 }
             },
 
@@ -11046,7 +11376,7 @@
                     this.updateMovieTiming();
                 }, 60000);
 
-                this.loadNextEpisodeInfo();
+                this.loadUpcomingDates();
                 this.$watch('episodes', () => {
                     this.refreshNextEpisodeState();
                 });
@@ -11061,7 +11391,7 @@
                     this.refreshNextEpisodeState();
                 }, 60000);
 
-                this.loadNextMangaInfo();
+                // Already loaded via loadUpcomingDates()
                 this.$watch(
                     'nextMangaInfo',
                     () => {
