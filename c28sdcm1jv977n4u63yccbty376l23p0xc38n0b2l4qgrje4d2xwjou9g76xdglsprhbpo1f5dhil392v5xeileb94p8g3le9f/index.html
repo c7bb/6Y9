@@ -732,9 +732,6 @@
                 <div class="sticky top-0 z-10">
                     <div :class="['mx-4 mt-4 rounded-xl shadow-lg ring-1 backdrop-blur bg-gradient-to-r', isFailedToFetch ? 'from-yellow-500/20 to-orange-500/20 ring-yellow-400/40' : 'from-red-600/20 to-pink-600/20 ring-red-400/40']">
                         <div class="px-4 py-3 flex items-center gap-3">
-                            <div :class="[isFailedToFetch ? 'text-yellow-300' : 'text-red-400']" class="shrink-0">
-                                <span class="text-2xl">⚠️</span>
-                            </div>
                             <div class="flex-1 text-center">
                                 <span :class="['block', isFailedToFetch ? 'text-yellow-300' : 'text-red-500', 'font-bold', 'text-base md:text-lg']">{{ displayErrorPrimary }}</span>
                                 <span :class="['block', 'text-gray-200', 'text-sm', 'mt-1']">{{ displayErrorSecondary }}</span>
@@ -797,7 +794,7 @@
             <div class="fixed top-4 left-4 z-50">
                 <button
                     @click.stop="toggleSearch" :disabled="loading"
-                    class="bg-yellow-600 text-white p-2 rounded-full shadow-md transition-all duration-100 active:scale-90 hover:bg-teal-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="bg-yellow-600 text-white p-2 rounded-full shadow-md transition-all duration-100 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
@@ -4104,12 +4101,12 @@
                 },
                 displayErrorPrimary() {
                     return this.isFailedToFetch
-                        ? 'حدث خطأ، حاول مرة أخرى'
+                        ? 'حدث خطأ، حاول مرة أخرى.'
                         : this.errorMessage;
                 },
                 displayErrorSecondary() {
                     return this.isFailedToFetch
-                        ? 'وفي حال استمرار المشكلة، جرّب استخدام VPN.'
+                        ? 'في حال استمرار المشكلة، جرّب استخدام VPN.'
                         : '';
                 },
                 showErrorOverlay() {
