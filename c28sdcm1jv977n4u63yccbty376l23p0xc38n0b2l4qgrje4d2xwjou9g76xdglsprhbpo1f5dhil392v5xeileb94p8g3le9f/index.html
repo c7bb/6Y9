@@ -12041,6 +12041,7 @@
                 // 1. Clean URL and set Canonical to prevent Comnto 400 errors
                 // Remove Telegram's huge hash to fix "preload id must be UUID" and "page_url too big"
                 if (window.location.hash.includes('tgWebAppData') || window.location.hash.includes('tgWebApp')) {
+                    console.log('Full URL before cleaning:', window.location.href);
                     // Use replaceState to clean the URL without reloading
                     const cleanUrl = window.location.origin + window.location.pathname + window.location.search;
                     window.history.replaceState(null, null, cleanUrl);
@@ -12300,4 +12301,3 @@
     </style>
 </body>
 </html>
-
