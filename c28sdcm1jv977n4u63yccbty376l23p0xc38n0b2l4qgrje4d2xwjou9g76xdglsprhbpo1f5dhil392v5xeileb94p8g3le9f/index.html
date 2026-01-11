@@ -592,10 +592,10 @@
         /* Apple Notch Style */
         .search-notch {
             position: absolute;
-            top: -35px;
+            top: -40px;
             left: 50%;
-            width: 80px;
-            height: 35px;
+            width: 100px;
+            height: 40px;
             background-color: #1f2937;
             border-radius: 28px 28px 0 0;
             transform: translateX(-50%);
@@ -1011,7 +1011,7 @@
                         @click.stop
                         >
                             <div class="search-notch">
-                                {{ totalEpisodes }}
+                                {{ episodeCountText }}
                             </div>
                             
                             <div class="relative">
@@ -1874,7 +1874,7 @@
                         </h2>
                         <span class="font-bold text-base">
                             <span style="color: rgb(0 255 222)">نتائج التصفية: </span>
-                            <span class="text-yellow-300">({{ totalEpisodes }} حلقة)</span>
+                            <span class="text-yellow-300">({{ episodeCountText }})</span>
                         </span>
                     </div>                    
                     
@@ -2342,7 +2342,7 @@
                                     v-tippy="tooltipText"
                                     :style="(isAnyFilterActive || searchQuery) ? 'color: rgb(0 6 255);' : ''"
                                 >
-                                    ({{ totalEpisodes }} حلقة)
+                                    ({{ episodeCountText }})
                                 </span>
                             </div>
                             <div v-if="showEpisodeTableCaptureButton" class="mt-2 flex flex-col items-center gap-2">
@@ -5214,6 +5214,13 @@
                 },
                 totalEpisodes() {
                     return this.filteredEpisodes.length; // Calculates based on the filtered episodes
+                },
+                episodeCountText() {
+                    const count = this.totalEpisodes;
+                    if (count === 1) return 'حلقة';
+                    if (count === 2) return 'حلقتين';
+                    if (count >= 3 && count <= 10) return `${count} حلقات`;
+                    return `${count} حلقة`;
                 },
                 episodeNumberHeader() {
                     return this.selectedFilter === 'movies' ? 'رقم الفيلم' : 'رقم الحلقة';
