@@ -12047,22 +12047,10 @@
             mounted() {
                 // 1. Clean URL and set Canonical to prevent Comnto 400 errors
                 // Remove Telegram's huge hash to fix "preload id must be UUID" and "page_url too big"
-                // Also remove long path segments like c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/
-                const longPathSegment = 'c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f';
-                const needsCleaning = window.location.hash.includes('tgWebAppData') || window.location.hash.includes('tgWebApp') || window.location.pathname.includes(longPathSegment);
-                
-                if (needsCleaning) {
+                if (window.location.hash.includes('tgWebAppData') || window.location.hash.includes('tgWebApp')) {
                     console.log('Full URL before cleaning:', window.location.href);
-                    // Clean the pathname by removing the long path segment
-                    let cleanPath = window.location.pathname;
-                    if (cleanPath.includes(longPathSegment)) {
-                        cleanPath = cleanPath.replace(new RegExp(`/${longPathSegment}(?:/|$)`), '/');
-                        if (cleanPath !== '/' && cleanPath.endsWith('/')) {
-                            cleanPath = cleanPath.slice(0, -1);
-                        }
-                    }
                     // Use replaceState to clean the URL without reloading
-                    const cleanUrl = window.location.origin + cleanPath + window.location.search;
+                    const cleanUrl = window.location.origin + window.location.pathname + window.location.search;
                     window.history.replaceState(null, null, cleanUrl);
                 }
 
