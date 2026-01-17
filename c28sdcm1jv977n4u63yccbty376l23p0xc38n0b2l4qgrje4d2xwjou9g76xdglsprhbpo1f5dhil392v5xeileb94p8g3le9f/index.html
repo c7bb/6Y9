@@ -3,7 +3,7 @@
 <head>
     <script src="https://cdn.lgrckt-in.com/LogRocket.min.js" crossorigin="anonymous"></script>
     <script>
-       window.LogRocket && window.LogRocket.init('pfmsbg/dcrefbot');
+       window.LogRocket && window.LogRocket.init('hitfhq/dcref-emt');
     </script>
     <script src="https://www.unpkg.com/@hyperdx/browser@0.21.0/build/index.js"></script>
     <script>
@@ -866,7 +866,7 @@
         </div>
     </div>
     
-    <div id="app" v-cloak class="container mx-auto p-4 shadow-lg rounded"> <!-- Removed .bg-slate-700 -->
+    <div id="app" v-cloak class="container mx-auto p-4 rounded"> <!-- Removed .bg-slate-700 -->
 
         <!-- Inactivity session modal -->
         <div 
@@ -970,7 +970,7 @@
             </div>
         </div>
             <!-- Updated Menu Button -->
-            <div class="fixed top-4 right-4 z-50 menu-container">
+            <div v-if="loadingModeResolved && !loadingFromCache" class="fixed top-4 right-4 z-50 menu-container">
                 <button @click.stop="toggleMenu" :disabled="loading" :class="isApplePlatform ? 'liquid-glass liquid-glass-hamburger flex flex-col items-center transition-transform duration-200 disabled:opacity-50 disabled:cursor-not-allowed' : 'bg-yellow-600 text-white p-2 rounded flex flex-col items-center transition-all duration-100 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed'">
                     <span :class="isApplePlatform ? 'bar' : 'block w-6 h-1 bg-white mb-1'"></span>
                     <span :class="isApplePlatform ? 'bar' : 'block w-6 h-1 bg-white mb-1'"></span>
@@ -989,7 +989,7 @@
             </div>
 
             <!-- 🔍 Search Button + Popup -->
-            <div class="fixed top-4 left-4 z-50">
+            <div v-if="loadingModeResolved && !loadingFromCache" class="fixed top-4 left-4 z-50">
                 <button
                     @click.stop="toggleSearch" :disabled="loading"
                     :class="isApplePlatform ? 'liquid-glass liquid-glass-round transition-transform duration-200 disabled:opacity-50 disabled:cursor-not-allowed' : 'bg-yellow-600 text-white p-2 rounded-full shadow-md transition-all duration-100 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed'"
@@ -1728,11 +1728,19 @@
         </div>
 
         <h1 
+            v-if="loadingModeResolved && !loadingFromCache"
             class="text-5xl font-bold mt-10 mb-4 text-center">
             <span>الدليل الشامل لمشاهدة المحقق كونان</span>
         </h1>
         <div v-if="loading" class="flex items-center justify-center w-full">
-            <div class="flex flex-col items-center" style="position: relative; top: 0;">
+            <div v-if="loadingFromCache" class="fixed inset-0 flex items-center justify-center z-50">
+                <div class="mt-4 text-center text-white text-sm font-semibold tracking-wider">
+                    <span class="inline-flex items-center gap-2">
+                        <span class="animate-spin inline-block h-12 w-12 rounded-full border-2 border-white/30 border-t-white"></span>
+                    </span>
+                </div>
+            </div>
+            <div v-else-if="loadingModeResolved" class="flex flex-col items-center" style="position: relative; top: 0;">
                 <transition name="fade">
                     <span key="zikr" class="zikr-box">{{ currentZikr }}</span>
                 </transition>
@@ -4071,6 +4079,8 @@
                     movies: [], // Movies will be populated separately
                     mangas: [], // Declare mangas to avoid Vue render warn
                     loading: true,
+                    loadingFromCache: false,
+                    loadingModeResolved: false,
                     loadProgress: 0,
                     inputSearchQuery: '',
                     searchDebounceTimer: null,
@@ -8258,9 +8268,93 @@
                     this.handlePageSelect({ target: { value: 1 } }); // Call handlePageSelect to update
                 },
 
+                // IDB Helper
+                getDB() {
+                    return new Promise((resolve, reject) => {
+                        try {
+                            const request = indexedDB.open('DCRDB', 1);
+                            request.onerror = () => reject('IDB Error');
+                            request.onupgradeneeded = (event) => {
+                                const db = event.target.result;
+                                if (!db.objectStoreNames.contains('store')) {
+                                    db.createObjectStore('store');
+                                }
+                            };
+                            request.onsuccess = (event) => resolve(event.target.result);
+                        } catch (e) {
+                            reject('IDB Error');
+                        }
+                    });
+                },
+                saveToIDB(key, data) {
+                    return this.getDB().then(db => {
+                        return new Promise((resolve, reject) => {
+                            try {
+                                const tx = db.transaction('store', 'readwrite');
+                                const store = tx.objectStore('store');
+                                store.put(data, key);
+                                tx.oncomplete = () => resolve();
+                                tx.onerror = () => reject('IDB Save Error');
+                            } catch (e) {
+                                reject('IDB Save Error');
+                            }
+                        });
+                    });
+                },
+                loadFromIDB(key) {
+                    return this.getDB().then(db => {
+                        return new Promise((resolve, reject) => {
+                            try {
+                                const tx = db.transaction('store', 'readonly');
+                                const store = tx.objectStore('store');
+                                const request = store.get(key);
+                                request.onsuccess = () => resolve(request.result);
+                                request.onerror = () => reject('IDB Load Error');
+                            } catch (e) {
+                                reject('IDB Load Error');
+                            }
+                        });
+                    });
+                },
+                // Method to load data version metadata
+                async checkDataVersion() {
+                    try {
+                        const url = `./version.json?t=${Date.now()}`;
+                        const response = await fetch(url, { cache: 'no-store' });
+                        if (!response.ok) return null;
+                        return await response.json();
+                    } catch (e) {
+                        return null;
+                    }
+                },
+                isVersionUpToDate(localVer, remoteVer) {
+                    try {
+                        if (!localVer || !remoteVer) return false;
+                        const lv = String(localVer.version || '').trim();
+                        const rv = String(remoteVer.version || '').trim();
+                        const ld = String(localVer.date || '').trim();
+                        const rd = String(remoteVer.date || '').trim();
+                        return !!lv && !!rv && lv === rv && !!ld && !!rd && ld === rd;
+                    } catch (e) {
+                        return false;
+                    }
+                },
+                validateDataset(payload) {
+                    try {
+                        return payload && Array.isArray(payload.Episodes) && Array.isArray(payload.Mangas);
+                    } catch (e) {
+                        return false;
+                    }
+                },
+                hasCachedDataset() {
+                    return this.loadFromIDB('dataset-cache')
+                        .then(data => !!this.validateDataset(data))
+                        .catch(() => false);
+                },
+
                 // Method to load data from JSON
                 loadData(force = false) {
-                    return new Promise((resolve, reject) => {
+                    return new Promise(async (resolve, reject) => {
                         if (this.loading && !force) {
                             console.warn('loadData blocked: Already loading');
                             resolve();
@@ -8274,7 +8368,44 @@
                         this.loadProgress = 0;
 
                         if (this.userJoined) {
+                            // Try cache-first using IndexedDB if version matches
+                            this.error = null;
+                            let remoteVersion = null;
+                            try { remoteVersion = await this.checkDataVersion(); } catch (e) { remoteVersion = null; }
+                            let localVersion = null;
+                            try {
+                                const raw = localStorage.getItem('dcrdb-version-state');
+                                localVersion = raw ? JSON.parse(raw) : null;
+                            } catch (e) {
+                                localVersion = null;
+                            }
+                            const versionOk = this.isVersionUpToDate(localVersion, remoteVersion);
+                            if (versionOk) {
+                                this.loadingFromCache = true;
+                                try {
+                                    const cached = await this.loadFromIDB('dataset-cache');
+                                    if (this.validateDataset(cached)) {
+                                        if (this.isTabOwner) {
+                                            this.episodes = cached.Episodes || [];
+                                            this.mangas = cached.Mangas || [];
+                                            this.rebuildEpisodesByKey();
+                                            this.updateEpisodeTimeAgo();
+                                            this.loading = false;
+                                            this.loadProgress = 100;
+                                            localStorage.removeItem('waitTime');
+                                            this.loadingFromCache = false;
+                                        }
+                                        resolve();
+                                        return;
+                                    }
+                                } catch (e) {
+                                    console.warn('IDB load failed, falling back to network', e);
+                                } finally {
+                                    this.loadingFromCache = false;
+                                }
+                            }
                             // Reset states before attempting to fetch
+                            this.loadingFromCache = false;
                             this.episodes = [];
                             this.mangas = [];
                             this.error = null;
@@ -8343,11 +8474,27 @@
                                     const resultString = new TextDecoder("utf-8").decode(allChunks);
                                     return JSON.parse(resultString);
                                 })
-                                .then(data => {
+                                .then(async data => {
                                     if (data) {
                                         // Data fetched successfully
                                         clearInterval(this.progressInterval); // Stop progress animation
                                         this.loadProgress = 100; // Set progress to 100%
+                                        
+                                        // Persist cache and version metadata
+                                        try {
+                                            await this.saveToIDB('dataset-cache', data);
+                                        } catch (e) {
+                                            console.warn('Failed to cache dataset in IDB', e);
+                                        }
+                                        try {
+                                            if (remoteVersion && remoteVersion.version) {
+                                                localStorage.setItem('dcrdb-version-state', JSON.stringify({
+                                                    version: remoteVersion.version,
+                                                    date: remoteVersion.date
+                                                }));
+                                            }
+                                        } catch (e) {}
+
                                         setTimeout(() => {
                                             // Only update data and set loading = false if this tab is the owner
                                             if (this.isTabOwner) {
@@ -8365,13 +8512,32 @@
                                         }, 300); // Delay to show 100% progress
                                     }
                                 })
-                                .catch(error => {
+                                .catch(async error => {
                                     clearInterval(this.progressInterval); // Stop progress animation
                                     this.loadProgress = 0; // Reset progress
                                     // Only set loading = false if this tab is the owner
                                     if (this.isTabOwner) {
                                         this.loading = false;
                                     }
+
+                                    // Fallback: try using cached dataset even if version mismatched
+                                    try {
+                                        const cached = await this.loadFromIDB('dataset-cache');
+                                        if (this.validateDataset(cached)) {
+                                            if (this.isTabOwner) {
+                                                this.episodes = cached.Episodes || [];
+                                                this.mangas = cached.Mangas || [];
+                                                this.rebuildEpisodesByKey();
+                                                this.updateEpisodeTimeAgo();
+                                                this.loading = false;
+                                                this.loadProgress = 100;
+                                                localStorage.removeItem('waitTime');
+                                                this.error = null;
+                                            }
+                                            resolve();
+                                            return;
+                                        }
+                                    } catch (e) {}
 
                                     if (!this.error && this.isTabOwner) {
                                         this.error = 'حدث خطأ أثناء محاولة تحميل البيانات. قد تكون هناك مشكلة مؤقتة في الاتصال أو الخادم. يُرجى التحقق من اتصالك بالإنترنت أو استخدام VPN والمحاولة مرة أخرى.';
@@ -12028,6 +12194,17 @@
             },
             
             async created() {
+                try {
+                    const rawVer = localStorage.getItem('dcrdb-version-state');
+                    if (rawVer) {
+                        try {
+                            const has = await this.hasCachedDataset();
+                            if (has) this.loadingFromCache = true;
+                        } catch (e2) {}
+                    }
+                } catch (e) {}
+                this.loadingModeResolved = true;
+                
                 // Initialize tab locking system FIRST
                 this.initTabLocking();
                 
