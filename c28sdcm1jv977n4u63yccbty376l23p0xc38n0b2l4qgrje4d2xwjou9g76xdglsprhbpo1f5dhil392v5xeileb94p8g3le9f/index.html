@@ -9360,7 +9360,7 @@
                     let translatorLine = '';
                     if (translatorNameRaw) {
                         const normalized = normalizeTranslatorName(translatorNameRaw);
-                        let labelKey = '';
+                        let labelKey = 'الفريق';
                         if (normalized) {
                             for (const token of INDIVIDUAL_TRANSLATOR_TOKENS) {
                                 if (normalized.includes(token)) {
@@ -9368,16 +9368,8 @@
                                     break;
                                 }
                             }
-                            if (!labelKey) {
-                                for (const token of TEAM_TRANSLATOR_TOKENS) {
-                                    if (normalized.includes(token)) {
-                                        labelKey = 'الفريق';
-                                        break;
-                                    }
-                                }
-                            }
                         }
-                        if (labelKey) translatorLine = `\n${labelKey}: ${escapeMarkdown(translatorNameRaw)}`;
+                        translatorLine = `\n${labelKey}: ${escapeMarkdown(translatorNameRaw)}`;
                     }
 
                     if (type === 'manga') {
@@ -9400,6 +9392,13 @@
                     } else {
                         const { cleanNum, cleanLabel } = this.parseEpisodeLabel(episodeRef.EpisodeNumber);
                         
+                        const categoryRaw = String(itemRef?.EpisodeCategory ?? '').trim();
+                        const remasteredRaw = String(itemRef?.EpisodeRemastered ?? '').trim();
+                        const metaBits = [];
+                        if (categoryRaw) metaBits.push(escapeMarkdown(categoryRaw));
+                        if (remasteredRaw) metaBits.push(escapeMarkdown(remasteredRaw));
+                        const metaParen = metaBits.length ? ` \\(${metaBits.join(' \\- ')}\\)` : '';
+
                         let details = "";
                         if (videoDetails) {
                              const fields = [
@@ -9419,7 +9418,7 @@
                              });
                         }
 
-                        caption = `*${escapeMarkdown(cleanLabel)} ${escapeMarkdown(cleanNum)}\nالعنوان: ${escapeMarkdown(episodeRef.EpisodeTitle || '')}${translatorLine}\nالجودة: ${escapeMarkdown(resolution)}\nالحجم: ${escapeMarkdown(this.formatFileSize(mediaSize, true))}*`;
+                        caption = `*${escapeMarkdown(cleanLabel)} ${escapeMarkdown(cleanNum)} ${metaParen}\nالعنوان: ${escapeMarkdown(episodeRef.EpisodeTitle || '')}${translatorLine}\nالجودة: ${escapeMarkdown(resolution)}\nالحجم: ${escapeMarkdown(this.formatFileSize(mediaSize, true))}*`;
                         if (details) caption += `\n\n*✦✦— محتويات الحلقة —✦✦*${details}`;
                     }
 
