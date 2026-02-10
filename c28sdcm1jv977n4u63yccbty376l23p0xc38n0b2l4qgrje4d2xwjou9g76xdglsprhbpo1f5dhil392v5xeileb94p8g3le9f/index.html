@@ -3701,25 +3701,28 @@
         };
 
         const normalizeTranslatorName = (s) => String(s || '').toLowerCase().replace(/[\s\-_]+/g, '').trim();
-        const PROFESSIONAL_TRANSLATOR_TOKENS = new Set([
+        const INDIVIDUAL_TRANSLATOR_TOKENS = new Set([
             'CodeSubs',
             'ABOODYSUBS',
-            'Aoibu',
-            'DCAN',
             'ReineR',
             'عبد المللك',
+            'Variom',
+            'KaidoKidTH',
+            'ALPhantom',
+            'Yusaku-Kudo',
+            'MA-SHI'
+        ].map(normalizeTranslatorName));
+        const TEAM_TRANSLATOR_TOKENS = new Set([
+            'Aoibu',
+            'DCAN',
             'Shinjitsu Fansubs',
             'DCMS',
             'Marchi-Fansub',
-            'MA-SHI',
-            'Variom',
             'MAT-Fansubs',
-            'KaidoKidTH',
-            'Yusaku-Kudo',
             'Mystery-Fansubs',
-            'ALPhantom',
             'Celestial-Dragons'
         ].map(normalizeTranslatorName));
+        const PROFESSIONAL_TRANSLATOR_TOKENS = new Set([...INDIVIDUAL_TRANSLATOR_TOKENS, ...TEAM_TRANSLATOR_TOKENS]);
     
         const app = createApp({
             data() {
@@ -9353,6 +9356,30 @@
                         return String(text).replace(/[_*[\]()~`>#+\-=|{}.!]/g, '\\$&');
                     }
 
+                    const translatorNameRaw = String(itemRef?.EpisodeTranslator ?? '').trim();
+                    let translatorLine = '';
+                    if (translatorNameRaw) {
+                        const normalized = normalizeTranslatorName(translatorNameRaw);
+                        let labelKey = '';
+                        if (normalized) {
+                            for (const token of INDIVIDUAL_TRANSLATOR_TOKENS) {
+                                if (normalized.includes(token)) {
+                                    labelKey = 'المترجم';
+                                    break;
+                                }
+                            }
+                            if (!labelKey) {
+                                for (const token of TEAM_TRANSLATOR_TOKENS) {
+                                    if (normalized.includes(token)) {
+                                        labelKey = 'الفريق';
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (labelKey) translatorLine = `\n${labelKey}: ${escapeMarkdown(translatorNameRaw)}`;
+                    }
+
                     if (type === 'manga') {
                         caption = `*الفصل: ${escapeMarkdown(label)}\nالحجم: ${escapeMarkdown(this.formatFileSize(mediaSize, true))}*`;
                     } else if (type === 'trailer') {
@@ -9369,7 +9396,7 @@
                             ? `إعلان${trailerNumberText} للفيلم ${episodeNumber}`
                             : `إعلان${trailerNumberText} للحلقة ${episodeNumber}`;
 
-                        caption = `*${escapeMarkdown(titleLine)}\nالجودة: ${escapeMarkdown(resolution)}\nالحجم: ${escapeMarkdown(this.formatFileSize(mediaSize, true))}*`;
+                        caption = `*${escapeMarkdown(titleLine)}${translatorLine}\nالجودة: ${escapeMarkdown(resolution)}\nالحجم: ${escapeMarkdown(this.formatFileSize(mediaSize, true))}*`;
                     } else {
                         const { cleanNum, cleanLabel } = this.parseEpisodeLabel(episodeRef.EpisodeNumber);
                         
@@ -9392,7 +9419,7 @@
                              });
                         }
 
-                        caption = `*${escapeMarkdown(cleanLabel)} ${escapeMarkdown(cleanNum)}\nالعنوان: ${escapeMarkdown(episodeRef.EpisodeTitle || '')}\nالجودة: ${escapeMarkdown(resolution)}\nالحجم: ${escapeMarkdown(this.formatFileSize(mediaSize, true))}*`;
+                        caption = `*${escapeMarkdown(cleanLabel)} ${escapeMarkdown(cleanNum)}\nالعنوان: ${escapeMarkdown(episodeRef.EpisodeTitle || '')}${translatorLine}\nالجودة: ${escapeMarkdown(resolution)}\nالحجم: ${escapeMarkdown(this.formatFileSize(mediaSize, true))}*`;
                         if (details) caption += `\n\n*✦✦— محتويات الحلقة —✦✦*${details}`;
                     }
 
@@ -12496,8 +12523,3 @@
     </style>
 </body>
 </html>
-
-
-
-
-
