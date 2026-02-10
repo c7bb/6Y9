@@ -9361,7 +9361,12 @@
                     if (translatorNameRaw) {
                         const normalized = normalizeTranslatorName(translatorNameRaw);
                         let labelKey = 'ترجمة فريق';
+                        const categoryForTranslator = String(itemRef?.EpisodeCategory ?? '').trim();
                         if (normalized) {
+                            if (normalized.includes(normalizeTranslatorName('Spacetoon'))) {
+                                if (categoryForTranslator === 'D') labelKey = 'دبلجة';
+                                else if (categoryForTranslator === 'S') labelKey = 'ترجمة';
+                            }
                             for (const token of INDIVIDUAL_TRANSLATOR_TOKENS) {
                                 if (normalized.includes(token)) {
                                     labelKey = 'ترجمة';
