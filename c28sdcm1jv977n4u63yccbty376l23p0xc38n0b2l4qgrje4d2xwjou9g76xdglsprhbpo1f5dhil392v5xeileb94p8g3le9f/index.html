@@ -9360,11 +9360,11 @@
                     let translatorLine = '';
                     if (translatorNameRaw) {
                         const normalized = normalizeTranslatorName(translatorNameRaw);
-                        let labelKey = 'الفريق';
+                        let labelKey = 'ترجمة فريق';
                         if (normalized) {
                             for (const token of INDIVIDUAL_TRANSLATOR_TOKENS) {
                                 if (normalized.includes(token)) {
-                                    labelKey = 'المترجم';
+                                    labelKey = 'ترجمة';
                                     break;
                                 }
                             }
