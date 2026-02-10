@@ -9394,9 +9394,19 @@
                         
                         const categoryRaw = String(itemRef?.EpisodeCategory ?? '').trim();
                         const remasteredRaw = String(itemRef?.EpisodeRemastered ?? '').trim();
+                        const categoryLabel = categoryRaw === 'S' ? 'مترجم' : (categoryRaw === 'D' ? 'مدبلج' : categoryRaw);
+                        const remasteredLabel = remasteredRaw === 'TP'
+                            ? 'محسنة وخاصة'
+                            : (remasteredRaw === 'FP'
+                                ? 'غير محسنة وخاصة'
+                                : (remasteredRaw === 'P'
+                                    ? 'حلقة خاصة'
+                                    : (remasteredRaw === 'T'
+                                        ? 'محسنة'
+                                        : (remasteredRaw === 'F' ? 'غير محسنة' : remasteredRaw))));
                         const metaBits = [];
-                        if (categoryRaw) metaBits.push(escapeMarkdown(categoryRaw));
-                        if (remasteredRaw) metaBits.push(escapeMarkdown(remasteredRaw));
+                        if (categoryRaw) metaBits.push(escapeMarkdown(categoryLabel));
+                        if (remasteredRaw) metaBits.push(escapeMarkdown(remasteredLabel));
                         const metaParen = metaBits.length ? ` \\(${metaBits.join(' \\- ')}\\)` : '';
 
                         let details = "";
@@ -9418,7 +9428,7 @@
                              });
                         }
 
-                        caption = `*${escapeMarkdown(cleanLabel)} ${escapeMarkdown(cleanNum)} ${metaParen}\nالعنوان: ${escapeMarkdown(episodeRef.EpisodeTitle || '')}${translatorLine}\nالجودة: ${escapeMarkdown(resolution)}\nالحجم: ${escapeMarkdown(this.formatFileSize(mediaSize, true))}*`;
+                        caption = `*${escapeMarkdown(cleanLabel)} ${escapeMarkdown(cleanNum)}${metaParen}\nالعنوان: ${escapeMarkdown(episodeRef.EpisodeTitle || '')}${translatorLine}\nالجودة: ${escapeMarkdown(resolution)}\nالحجم: ${escapeMarkdown(this.formatFileSize(mediaSize, true))}*`;
                         if (details) caption += `\n\n*✦✦— محتويات الحلقة —✦✦*${details}`;
                     }
 
