@@ -9179,6 +9179,118 @@
                     return map[n] || String(n);
                 },
 
+                getEpisodePartsEmojiIds() {
+                    if (window.__dcrEpisodePartsEmojiIds) return window.__dcrEpisodePartsEmojiIds;
+                    window.__dcrEpisodePartsEmojiIds = [
+                        "5253747800562234731",
+                        "5253919676563487697",
+                        "5253618509161722431",
+                        "5255957389437332130",
+                        "5253898541029421187",
+                        "5253860234216108222",
+                        "5253648247515283988",
+                        "5253464946901023563",
+                        "5253894018428859818",
+                        "5253779342802057398",
+                        "5253940721903233952",
+                        "5253736259985112373",
+                        "5254007293896324985",
+                        "5253653667764006485",
+                        "5253525424335518984",
+                        "5253709463684145939",
+                        "5256239422759791254",
+                        "5256085130354648464",
+                        "5253678140487660826",
+                        "5256245431419038868",
+                        "5254008268853901494",
+                        "5253795633613007560",
+                        "5253816940945767500",
+                        "5255724962987140830",
+                        "5254001843582824983",
+                        "5253714265457586976",
+                        "5256091671589840421",
+                        "5253576306813074313",
+                        "5255828643497665700",
+                        "5255836116740762270",
+                        "5253735297912433984",
+                        "5255753971196258783",
+                        "5253592992761015452",
+                        "5255924704736209495",
+                        "5253906512488723189",
+                        "5255859618801804149",
+                        "5253692262340132085",
+                        "5253959894637245556",
+                        "5255949581186787950",
+                        "5255801971750759812",
+                        "5256105570104007951",
+                        "5253553620795815554",
+                        "5253477814623041159",
+                        "5256019696527895774",
+                        "5253541740916275145",
+                        "5253537634927539413",
+                        "5253835512384353682",
+                        "5253545675106314335",
+                        "5253624371792084980",
+                        "5253591742925534201",
+                        "5253567515015014566",
+                        "5256198246908321937"
+                    ];
+                    return window.__dcrEpisodePartsEmojiIds;
+                },
+
+                takeNextEpisodePartsEmojiId() {
+                    const poolKey = "dcr_episodePartsEmojiPool_v1";
+                    const idxKey = "dcr_episodePartsEmojiIdx_v1";
+                    const base = this.getEpisodePartsEmojiIds();
+
+                    const shuffleInPlace = (arr) => {
+                        for (let i = arr.length - 1; i > 0; i--) {
+                            const j = Math.floor(Math.random() * (i + 1));
+                            const tmp = arr[i];
+                            arr[i] = arr[j];
+                            arr[j] = tmp;
+                        }
+                        return arr;
+                    };
+
+                    try {
+                        let pool = null;
+                        let idx = 0;
+
+                        const rawPool = sessionStorage.getItem(poolKey);
+                        if (rawPool) {
+                            try { pool = JSON.parse(rawPool); } catch (e) { pool = null; }
+                        }
+
+                        const rawIdx = sessionStorage.getItem(idxKey);
+                        if (rawIdx != null) {
+                            const parsed = parseInt(rawIdx, 10);
+                            idx = isNaN(parsed) || parsed < 0 ? 0 : parsed;
+                        }
+
+                        const poolValid = Array.isArray(pool) && pool.length === base.length;
+                        if (!poolValid) {
+                            pool = shuffleInPlace(base.slice());
+                            idx = 0;
+                            sessionStorage.setItem(poolKey, JSON.stringify(pool));
+                            sessionStorage.setItem(idxKey, "0");
+                        }
+
+                        if (idx >= pool.length) {
+                            pool = shuffleInPlace(base.slice());
+                            idx = 0;
+                            sessionStorage.setItem(poolKey, JSON.stringify(pool));
+                            sessionStorage.setItem(idxKey, "0");
+                        }
+
+                        const id = pool[idx];
+                        sessionStorage.setItem(idxKey, String(idx + 1));
+                        return id;
+                    } catch (e) {
+                        return base[Math.floor(Math.random() * base.length)];
+                    }
+                },
+
                 buildEpisodePartsReplyMarkup(episode) {
                     if (!episode?.EpisodeParts) return null;
                     const group = this.getEpisodePartsGroupEpisodes(episode);
@@ -9195,6 +9307,7 @@
                         const code = this.normalizeEpisodeIdentifier(ep?.EpisodeNumber);
                         return [{
                             text,
+                            icon_custom_emoji_id: this.takeNextEpisodePartsEmojiId(),
                             style: isCurrent ? 'success' : 'primary',
                             web_app: { url: `${WEB_APP_URL}?code=${encodeURIComponent(code)}` }
                         }];
