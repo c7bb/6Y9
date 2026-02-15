@@ -9195,7 +9195,7 @@
                         const code = this.normalizeEpisodeIdentifier(ep?.EpisodeNumber);
                         return [{
                             text,
-                            style: isCurrent ? 'success' : 'primary',
+                            style: isCurrent ? 'success' : 'danger',
                             web_app: { url: `${WEB_APP_URL}?code=${encodeURIComponent(code)}` }
                         }];
                     });
