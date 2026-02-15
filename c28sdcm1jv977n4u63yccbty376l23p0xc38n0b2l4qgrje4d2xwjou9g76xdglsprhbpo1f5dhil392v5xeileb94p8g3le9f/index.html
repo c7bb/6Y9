@@ -9191,10 +9191,11 @@
                         const partNumber = idx + 1;
                         const ordinal = this.getArabicOrdinalNumberText(partNumber);
                         const isCurrent = this.normalizeEpisodeIdentifier(ep.EpisodeNumber) === normalizedCurrent;
-                        const text = `الجزء ${ordinal}${isCurrent ? ' ✅' : ''}`;
+                        const text = `الجزء ${ordinal}`;
                         const code = this.normalizeEpisodeIdentifier(ep?.EpisodeNumber);
                         return [{
                             text,
+                            style: isCurrent ? 'success' : 'primary',
                             web_app: { url: `${WEB_APP_URL}?code=${encodeURIComponent(code)}` }
                         }];
                     });
