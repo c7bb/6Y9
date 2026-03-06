@@ -2343,7 +2343,8 @@
                             <br v-if="isAnyFilterActive || searchQuery" />
                             <span :class="combinedFilterBadgeClasses">
                                 {{ selectedFilterLabel }} - {{ episodeTypeFilterLabel }}
-                                <span v-if="selectedFTOKEN"> ({{ selectedFTOKEN }})</span>
+                                <br v-if="selectedFTOKEN" />
+                                <span v-if="selectedFTOKEN">({{ selectedFTOKEN }})</span>
                             </span>
                             <div class="relative">
                                 <span
