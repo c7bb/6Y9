@@ -3,7 +3,7 @@
 <head>
     <script src="https://cdn.lgrckt-in.com/LogRocket.min.js" crossorigin="anonymous"></script>
     <script>
-       window.LogRocket && window.LogRocket.init('hitfhq/dcref-emt');
+       window.LogRocket && window.LogRocket.init('pfmsbg/dcrefbot');
     </script>
     <script src="https://www.unpkg.com/@hyperdx/browser@0.21.0/build/index.js"></script>
     <script>
@@ -3488,6 +3488,57 @@
         const FILTER_STATE_DEFAULTS = buildInitialFilterState(FILTER_UI);
         const FILTER_STATE_KEYS = Object.keys(FILTER_STATE_DEFAULTS);
 
+        const FILTER_DEEPLINK_CATEGORIES = {
+            all: 'all',
+            anime: 'anime',
+            movies: 'movies',
+            hourly_special: 'hourly_special',
+            two_hour_special: 'two_hour_special',
+            short_story: 'short_story',
+            ova: 'ova',
+            movie_special: 'movie_special',
+            special_release: 'special_release',
+            magic_kaito: 'magic_kaito',
+            zero_diaries: 'zero_diaries',
+            criminal_hanzawa: 'criminal_hanzawa',
+        };
+
+        const FILTER_DEEPLINK_TYPES = {
+            all: 'All',
+            manga: 'Manga',
+            filler: 'Filler',
+        };
+
+        const FILTER_DEEPLINK_GROUPS = {
+            BO: 'filterBlackOrganization',
+            DB: 'filterDetectiveBoys',
+            FBI: 'filterFBI',
+            PSB: 'filterPSB',
+            PA: 'filterPoliceAcademy',
+        };
+
+        const FILTER_DEEPLINK_SCENES = {
+            SCARY: 'filterScaryEpisodes',
+            SADY: 'filterSadyEpisodes',
+            ROMANCE: 'filterRomanceEpisodes',
+            NC: 'filterNewCharacter',
+            DC: 'filterDevelopmentCharacter',
+            FB: 'filterFlashBackEpisodes',
+        };
+
+        const buildCharacterCodeLookup = (filterUi) => {
+            const lookup = {};
+            const codeById = (filterUi && filterUi.characterCodeById) || {};
+            for (const [id, code] of Object.entries(codeById)) {
+                const key = String(code || '').trim().toUpperCase();
+                if (!key) continue;
+                lookup[key] = id;
+            }
+            return lookup;
+        };
+
+        const FILTER_CHARACTER_CODE_LOOKUP = buildCharacterCodeLookup(FILTER_UI);
+
         const getAllCharacterIds = (filterUi) => {
             const ids = new Set();
             const groups = filterUi && filterUi.characterGroups;
@@ -3842,7 +3893,7 @@
                     episode: { status: null },
                     movie: { status: null },
                     ep: 1191,
-                    mangaCh: 1159,
+                    mangaCh: 1157,
                     jumpCycleState: null,
                     // Ads Rows
                     showEpisodeAds: false,
@@ -5958,6 +6009,61 @@
                 setByKey(key, value) {
                     if (!key) return;
                     this[key] = value;
+                },
+                normalizeFilterToken(token) {
+                    return String(token || '').trim();
+                },
+                applyFilterToken(token) {
+                    const raw = this.normalizeFilterToken(token);
+                    if (!raw) return false;
+                    const lower = raw.toLowerCase();
+                    const upper = raw.toUpperCase();
+
+                    if (FILTER_DEEPLINK_CATEGORIES[lower]) {
+                        this.selectedFilter = FILTER_DEEPLINK_CATEGORIES[lower];
+                    }
+                    if (FILTER_DEEPLINK_TYPES[lower]) {
+                        this.episodeTypeFilter = FILTER_DEEPLINK_TYPES[lower];
+                    }
+                    if (FILTER_DEEPLINK_GROUPS[upper]) {
+                        this[FILTER_DEEPLINK_GROUPS[upper]] = true;
+                        return true;
+                    }
+                    if (FILTER_DEEPLINK_SCENES[upper]) {
+                        this[FILTER_DEEPLINK_SCENES[upper]] = true;
+                        return true;
+                    }
+                    if (FILTER_CHARACTER_CODE_LOOKUP[upper]) {
+                        const id = FILTER_CHARACTER_CODE_LOOKUP[upper];
+                        const key = this.characterEpisodesKey(id);
+                        this[key] = true;
+                        return true;
+                    }
+                    const fallbackMatches = Object.keys(FILTER_CHARACTER_CODE_LOOKUP).filter(code => code.startsWith(upper));
+                    if (fallbackMatches.length === 1) {
+                        const id = FILTER_CHARACTER_CODE_LOOKUP[fallbackMatches[0]];
+                        const key = this.characterEpisodesKey(id);
+                        this[key] = true;
+                        return true;
+                    }
+                    return FILTER_DEEPLINK_CATEGORIES[lower] || FILTER_DEEPLINK_TYPES[lower] ? true : false;
+                },
+                applyFilterFromQuery(param) {
+                    const raw = this.normalizeFilterToken(param);
+                    if (!raw) return false;
+                    const parts = raw.split(/[+,|]/).map((part) => this.normalizeFilterToken(part)).filter(Boolean);
+                    if (!parts.length) return false;
+                    this.resetFilters();
+                    let applied = false;
+                    for (const token of parts) {
+                        if (this.applyFilterToken(token)) applied = true;
+                    }
+                    if (applied) {
+                        this.showEmptyPopup = false;
+                        this.activeFilterCycleIndex = -1;
+                        this.clearActiveFilterHighlight();
+                    }
+                    return applied;
                 },
 
                 characterEpisodesKey(id) {
@@ -12455,7 +12561,9 @@
                 // Ensure data is loaded before calling openSpecificEpisode
                 const urlParams = new URLSearchParams(window.location.search);
                 const episodeCode = urlParams.get("code");
+                const filterParam = urlParams.get("filter");
                 if (episodeCode) console.log('code-param-init:', { code: episodeCode});
+                if (filterParam) console.log('filter-param-init:', { filter: filterParam });
 
                 if (episodeCode && this.episodes && this.episodes.length > 0) {
                     this.openSpecificEpisode(episodeCode); // Open the episode if data is loaded
@@ -12469,6 +12577,9 @@
                             }
                         });
                     }
+                }
+                if (filterParam) {
+                    this.applyFilterFromQuery(filterParam);
                 }
 
                 this.updateFontSize();
@@ -12651,5 +12762,3 @@
     </style>
 </body>
 </html>
-
-
