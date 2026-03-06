@@ -6072,7 +6072,7 @@
                 applyFilterFromQuery(param) {
                     const raw = this.normalizeFilterToken(param);
                     if (!raw) return false;
-                    const parts = raw.split(/[+,|]/).map((part) => this.normalizeFilterToken(part)).filter(Boolean);
+                    const parts = raw.split("-").map((part) => this.normalizeFilterToken(part)).filter(Boolean);
                     if (!parts.length) return false;
                     this.resetFilters();
                     let applied = false;
