@@ -2342,7 +2342,7 @@
                             </span>
                             <br v-if="isAnyFilterActive || searchQuery" />
                             <span :class="combinedFilterBadgeClasses">
-                                {{ selectedFilterLabel }} - {{ episodeTypeFilterLabel }}
+                                {{ selectedFilterLabel }} - {{ episodeTypeFilterLabel }}<span v-if="selectedFTOKEN"> ({{ selectedFTOKEN }})</span>
                             </span>
                             <div class="relative">
                                 <span
@@ -4310,6 +4310,21 @@
                 },
                 activeFiltersCount() {
                     return this.activeFilters.length;
+                },
+                selectedFTOKEN() {
+                    const labels = [];
+                    for (const opt of (this.filterUi?.groupOptions || [])) {
+                        if (this.getByKey(opt.modelKey)) labels.push(opt.label);
+                    }
+                    for (const opt of (this.filterUi?.sceneOptions || [])) {
+                        if (this.getByKey(opt.modelKey)) labels.push(opt.label);
+                    }
+                    const ids = getAllCharacterIds(this.filterUi);
+                    for (const id of ids) {
+                        const baseKey = this.characterEpisodesKey(id);
+                        if (this.getByKey(baseKey)) labels.push(this.characterLabel(id));
+                    }
+                    return labels.join('، ');
                 },
                 isGlobalBusy() {
                     const isEpisodeBusy = this.selectedEpisode?.EpisodeVideosIDs?.some(video => ['success', 'ratelimiting', 'sending'].includes(video.status)) ||
