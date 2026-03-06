@@ -2342,7 +2342,8 @@
                             </span>
                             <br v-if="isAnyFilterActive || searchQuery" />
                             <span :class="combinedFilterBadgeClasses">
-                                {{ selectedFilterLabel }} - {{ episodeTypeFilterLabel }}<span v-if="selectedFTOKEN"> ({{ selectedFTOKEN }})</span>
+                                {{ selectedFilterLabel }} - {{ episodeTypeFilterLabel }}
+                                <span v-if="selectedFTOKEN"> ({{ selectedFTOKEN }})</span>
                             </span>
                             <div class="relative">
                                 <span
@@ -3489,24 +3490,22 @@
         const FILTER_STATE_KEYS = Object.keys(FILTER_STATE_DEFAULTS);
 
         const FILTER_DEEPLINK_CATEGORIES = {
-            all: 'all',
-            anime: 'anime',
-            movies: 'movies',
-            hourly_special: 'hourly_special',
-            two_hour_special: 'two_hour_special',
-            short_story: 'short_story',
+            ani: 'anime',
+            mov: 'movies',
+            '1s': 'hourly_special',
+            '2s': 'two_hour_special',
+            ss: 'short_story',
             ova: 'ova',
-            movie_special: 'movie_special',
-            special_release: 'special_release',
-            magic_kaito: 'magic_kaito',
-            zero_diaries: 'zero_diaries',
-            criminal_hanzawa: 'criminal_hanzawa',
+            ms: 'movie_special',
+            sr: 'special_release',
+            mk: 'magic_kaito',
+            zd: 'zero_diaries',
+            ch: 'criminal_hanzawa',
         };
 
         const FILTER_DEEPLINK_TYPES = {
-            all: 'All',
-            manga: 'Manga',
-            filler: 'Filler',
+            man: 'Manga',
+            fil: 'Filler',
         };
 
         const FILTER_DEEPLINK_GROUPS = {
@@ -3518,12 +3517,12 @@
         };
 
         const FILTER_DEEPLINK_SCENES = {
-            SCARY: 'filterScaryEpisodes',
-            SADY: 'filterSadyEpisodes',
-            ROMANCE: 'filterRomanceEpisodes',
-            NC: 'filterNewCharacter',
-            DC: 'filterDevelopmentCharacter',
-            FB: 'filterFlashBackEpisodes',
+            sca: 'filterScaryEpisodes',
+            sad: 'filterSadyEpisodes',
+            rom: 'filterRomanceEpisodes',
+            nc: 'filterNewCharacter',
+            dc: 'filterDevelopmentCharacter',
+            fb: 'filterFlashBackEpisodes',
         };
 
         const buildCharacterCodeLookup = (filterUi) => {
@@ -6050,8 +6049,8 @@
                         this[FILTER_DEEPLINK_GROUPS[upper]] = true;
                         return true;
                     }
-                    if (FILTER_DEEPLINK_SCENES[upper]) {
-                        this[FILTER_DEEPLINK_SCENES[upper]] = true;
+                    if (FILTER_DEEPLINK_SCENES[lower]) {
+                        this[FILTER_DEEPLINK_SCENES[lower]] = true;
                         return true;
                     }
                     if (FILTER_CHARACTER_CODE_LOOKUP[upper]) {
