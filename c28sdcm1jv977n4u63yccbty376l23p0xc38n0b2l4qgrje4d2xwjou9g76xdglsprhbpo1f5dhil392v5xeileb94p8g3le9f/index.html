@@ -1859,9 +1859,6 @@
                     </div>
                 </fieldset>
             </div>
-            <div v-if="activeExtraFiltersSummary" class="text-center font-bold text-yellow-300">
-                التصفية المفعلة: {{ activeExtraFiltersSummary }}
-            </div>
             
             <!-- Empty popup window -->
             <div v-if="showEmptyPopup" ref="emptyPopupRoot" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center z-50">
@@ -2345,7 +2342,7 @@
                             </span>
                             <br v-if="isAnyFilterActive || searchQuery" />
                             <span :class="combinedFilterBadgeClasses">
-                                {{ activeFilterHeaderText }}
+                                {{ selectedFilterLabel }} - {{ episodeTypeFilterLabel }}
                             </span>
                             <div class="relative">
                                 <span
@@ -4313,26 +4310,6 @@
                 },
                 activeFiltersCount() {
                     return this.activeFilters.length;
-                },
-                activeExtraFiltersSummary() {
-                    const labels = [];
-                    for (const opt of (this.filterUi?.groupOptions || [])) {
-                        if (this.getByKey(opt.modelKey)) labels.push(opt.label);
-                    }
-                    for (const opt of (this.filterUi?.sceneOptions || [])) {
-                        if (this.getByKey(opt.modelKey)) labels.push(opt.label);
-                    }
-                    const ids = getAllCharacterIds(this.filterUi);
-                    for (const id of ids) {
-                        const baseKey = this.characterEpisodesKey(id);
-                        if (this.getByKey(baseKey)) labels.push(this.characterLabel(id));
-                    }
-                    return labels.join('، ');
-                },
-                activeFilterHeaderText() {
-                    const base = `${this.selectedFilterLabel} - ${this.episodeTypeFilterLabel}`;
-                    const extra = this.activeExtraFiltersSummary;
-                    return extra ? `${base} - ${extra}` : base;
                 },
                 isGlobalBusy() {
                     const isEpisodeBusy = this.selectedEpisode?.EpisodeVideosIDs?.some(video => ['success', 'ratelimiting', 'sending'].includes(video.status)) ||
