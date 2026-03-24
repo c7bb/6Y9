@@ -10548,53 +10548,41 @@
                             const text = document.getElementById('retryText');
                             const spinner = document.getElementById('retrySpinner');
 
-                            btn.addEventListener('click', async () => {
-                                text.classList.add('hidden');
-                                spinner.classList.remove('hidden');
-                                btn.disabled = true;
-                                btn.classList.add('opacity-80', 'cursor-not-allowed');
+                            const resetRetryButtonUi = () => {
+                                try { text.classList.remove('hidden'); } catch (e) {}
+                                try { spinner.classList.add('hidden'); } catch (e) {}
+                                try { btn.disabled = false; } catch (e) {}
+                                try { btn.classList.remove('opacity-80', 'cursor-not-allowed'); } catch (e) {}
+                            };
 
-                                try {
-                                    const response2 = await fetch('https://ccuid.mdccxxixix.workers.dev', {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify({ token: webApp?.initDataUnsafe?.user?.id })
-                                    });
-                                    const result2 = await response2.json();
+                            const checkMembershipOnce = async () => {
+                                const response2 = await fetch('https://ccuid.mdccxxixix.workers.dev', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ token: webApp?.initDataUnsafe?.user?.id })
+                                });
+                                return await response2.json();
+                            };
 
-                                    if (result2?.valid && !result2?.banned && !result2?.error) {
-                                        window.location.reload();
-                                        return;
-                                    }
-                                } catch (e) {}
-
+                            const tryOpenTelegramChannel = () => {
                                 try {
                                     tgLink.click();
-                                } catch (e2) {
-                                    try {
-                                        const username = 'CodeSubs';
-                                        const url = `https://t.me/${username}`;
-                                        const deep = `tg://resolve?domain=${username}`;
-                                        const isIOS = /iPad|iPhone|iPod/i.test(navigator.userAgent);
-                                        if (isIOS) {
-                                            try { window.location.href = deep; } catch (e) {}
-                                            setTimeout(() => { window.location.href = url; }, 600);
-                                        } else if (window.Telegram?.WebApp?.openTelegramLink) {
-                                            try { Telegram.WebApp.openTelegramLink(url); } catch (e) {}
-                                            setTimeout(() => {
-                                                try {
-                                                    const a = document.createElement('a');
-                                                    a.href = url;
-                                                    a.target = '_blank';
-                                                    a.rel = 'noopener noreferrer';
-                                                    document.body.appendChild(a);
-                                                    a.click();
-                                                    a.remove();
-                                                } catch (e2) {
-                                                    window.location.href = url;
-                                                }
-                                            }, 500);
-                                        } else {
+                                    return;
+                                } catch (e) {}
+
+                                const username = 'CodeSubs';
+                                const url = `https://t.me/${username}`;
+                                const deep = `tg://resolve?domain=${username}`;
+                                const isIOS = /iPad|iPhone|iPod/i.test(navigator.userAgent);
+                                if (isIOS) {
+                                    try { window.location.href = deep; } catch (e) {}
+                                    setTimeout(() => { window.location.href = url; }, 600);
+                                    return;
+                                }
+                                if (window.Telegram?.WebApp?.openTelegramLink) {
+                                    try { Telegram.WebApp.openTelegramLink(url); } catch (e) {}
+                                    setTimeout(() => {
+                                        try {
                                             const a = document.createElement('a');
                                             a.href = url;
                                             a.target = '_blank';
@@ -10602,11 +10590,57 @@
                                             document.body.appendChild(a);
                                             a.click();
                                             a.remove();
+                                        } catch (e2) {
+                                            window.location.href = url;
                                         }
-                                    } catch (e3) {
-                                        window.location.href = 'https://t.me/CodeSubs';
-                                    }
+                                    }, 500);
+                                    return;
                                 }
+                                try {
+                                    const a = document.createElement('a');
+                                    a.href = url;
+                                    a.target = '_blank';
+                                    a.rel = 'noopener noreferrer';
+                                    document.body.appendChild(a);
+                                    a.click();
+                                    a.remove();
+                                } catch (e3) {
+                                    window.location.href = url;
+                                }
+                            };
+
+                            btn.addEventListener('click', async () => {
+                                text.classList.add('hidden');
+                                spinner.classList.remove('hidden');
+                                btn.disabled = true;
+                                btn.classList.add('opacity-80', 'cursor-not-allowed');
+
+                                try {
+                                    const result2 = await checkMembershipOnce();
+                                    if (result2?.valid && !result2?.banned && !result2?.error) {
+                                        window.location.reload();
+                                        return;
+                                    }
+                                } catch (e) {}
+
+                                tryOpenTelegramChannel();
+
+                                setTimeout(resetRetryButtonUi, 800);
+
+                                const recheckOnReturn = async () => {
+                                    try {
+                                        const result3 = await checkMembershipOnce();
+                                        if (result3?.valid && !result3?.banned && !result3?.error) {
+                                            window.location.reload();
+                                            return;
+                                        }
+                                    } catch (e) {}
+                                    resetRetryButtonUi();
+                                };
+                                const onVis = () => { if (!document.hidden) recheckOnReturn(); };
+                                const onFocus = () => recheckOnReturn();
+                                document.addEventListener('visibilitychange', onVis, { once: true });
+                                window.addEventListener('focus', onFocus, { once: true });
                             });
 
                             const tgLink = document.getElementById('telegramChannelLink');
