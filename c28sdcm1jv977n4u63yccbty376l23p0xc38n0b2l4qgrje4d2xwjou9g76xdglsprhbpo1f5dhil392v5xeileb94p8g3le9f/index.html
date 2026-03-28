@@ -12686,12 +12686,20 @@
                 // Ensure data is loaded before calling openSpecificEpisode
                 const urlParams = new URLSearchParams(window.location.search);
                 let episodeCode = urlParams.get("code");
-                const filterParam = urlParams.get("filter");
+                let filterParam = urlParams.get("filter");
                 const telegramParam = urlParams.get("tgWebAppStartParam");
                 if (telegramParam) {
                     const decodedStartParam = this.decodeTelegramStartParamSafe(telegramParam);
-                    if (decodedStartParam) episodeCode = decodedStartParam.trim();
-                    console.log('tg-startapp-param-init:', { raw: telegramParam, code: episodeCode });
+                    if (decodedStartParam) {
+                        const normalizedStartParam = decodedStartParam.trim();
+                        if (/^f.+/i.test(normalizedStartParam)) {
+                            filterParam = normalizedStartParam.slice(1).trim().replace(/\+/g, '-');
+                            episodeCode = null;
+                        } else {
+                            episodeCode = normalizedStartParam;
+                        }
+                    }
+                    console.log('tg-startapp-param-init:', { raw: telegramParam, code: episodeCode, filter: filterParam });
                 }
                 if (episodeCode) console.log('code-param-init:', { code: episodeCode});
                 if (filterParam) console.log('filter-param-init:', { filter: filterParam });
