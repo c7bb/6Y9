@@ -10213,6 +10213,25 @@
                     });
                 },
 
+                decodeTelegramStartParamSafe(base64UrlSafe) {
+                    try {
+                        let base64 = String(base64UrlSafe || '').trim().replace(/-/g, '+').replace(/_/g, '/');
+                        const mod = base64.length % 4;
+                        if (mod === 2) base64 += '==';
+                        else if (mod === 3) base64 += '=';
+                        else if (mod === 1) return null;
+                        const binaryStr = window.atob(base64);
+                        if (typeof window.TextDecoder !== 'undefined') {
+                            const bytes = Uint8Array.from(binaryStr, c => c.charCodeAt(0));
+                            return new TextDecoder('utf-8').decode(bytes);
+                        }
+                        return decodeURIComponent(escape(binaryStr));
+                    } catch (e) {
+                        console.error('Failed to decode tgWebAppStartParam', e);
+                        return null;
+                    }
+                },
+
                 openSpecificEpisode(episodeCode) {
                     if (this.guardIfCapturing()) return;
                     if (!this.episodes || this.episodes.length === 0) {
@@ -12666,8 +12685,14 @@
                 document.addEventListener('click', this._captureInteractionGuardHandler, true);
                 // Ensure data is loaded before calling openSpecificEpisode
                 const urlParams = new URLSearchParams(window.location.search);
-                const episodeCode = urlParams.get("code");
+                let episodeCode = urlParams.get("code");
                 const filterParam = urlParams.get("filter");
+                const telegramParam = urlParams.get("tgWebAppStartParam");
+                if (telegramParam) {
+                    const decodedStartParam = this.decodeTelegramStartParamSafe(telegramParam);
+                    if (decodedStartParam) episodeCode = decodedStartParam.trim();
+                    console.log('tg-startapp-param-init:', { raw: telegramParam, code: episodeCode });
+                }
                 if (episodeCode) console.log('code-param-init:', { code: episodeCode});
                 if (filterParam) console.log('filter-param-init:', { filter: filterParam });
 
@@ -12868,4 +12893,3 @@
     </style>
 </body>
 </html>
-
