@@ -859,7 +859,7 @@
     <div id="vue-loading" class="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center">
         <div>
             <img 
-                src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/loading.png" 
+                src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/loading.png"
                 alt="" 
                 class="w-36 h-36 object-cover coin-spin rounded-full border-4 border-yellow-300/50 bg-yellow-300/10 drop-shadow-[0_0_20px_rgba(255,255,255,0.4)]"
             >
@@ -919,6 +919,31 @@
                     <!-- <span class="opacity-80">({{ successHintCountdown }})</span> -->
                 </div>
                 <!-- <img src="https://raw.githubusercontent.com/c7bb/6Y9/main/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/res/true.png" alt="Success" class="h-7 w-7" /> -->
+            </div>
+        </div>
+
+        <div
+            v-if="resourceWarningVisible"
+            @click.self="dismissResourceWarning"
+            class="fixed inset-0 z-[130] bg-black/75 backdrop-blur-sm flex items-center justify-center px-4"
+        >
+            <div class="relative w-full max-w-xl rounded-2xl border border-yellow-400/50 bg-slate-950 text-yellow-50 shadow-2xl px-5 py-6 sm:px-6">
+                <button
+                    @click="dismissResourceWarning"
+                    class="absolute left-4 top-4 text-red-400 hover:text-yellow-300 transition-all duration-100 active:scale-90"
+                    aria-label="إغلاق التنبيه"
+                >
+                    <span class="text-2xl font-black">✕</span>
+                </button>
+                <div class="pr-8 text-right text-base sm:text-lg font-bold leading-8" style="white-space: pre-line;">{{ resourceWarningMessage }}</div>
+                <label class="mt-5 flex items-start gap-3 text-right text-sm sm:text-base text-yellow-100 cursor-pointer select-none">
+                    <input
+                        v-model="resourceWarningDismissForTwoWeeks"
+                        type="checkbox"
+                        class="mt-1 h-4 w-4 accent-yellow-400 shrink-0"
+                    />
+                    <span>عدم إظهار هذا التنبيه مرة أخرى لمدة أسبوعين</span>
+                </label>
             </div>
         </div>
 
@@ -3118,6 +3143,13 @@
         const webApp = window.Telegram?.WebApp || null;
         const { createApp, markRaw } = Vue;
         const WEB_APP_URL = "https://euz.pages.dev/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/";
+        const RESOURCE_WARNING_MESSAGE = [
+            "⚠️ إشعار تلقائي من النظام",
+            "تم اكتشاف أخطاء في تحميل بعض المحتويات بسبب سياسات الحجب من مزود الإنترنت لديك.",
+            "إذا لم تواجه أي مشكلة أثناء التصفح، يمكنك تجاهل هذا التنبيه. أما في حال وجود خلل أو بيانات مفقودة، فجرّب تشغيل VPN لاستعادة التجربة الكاملة (يرجى التأكد من أن استخدامه مسموح في بلدك)."
+        ].join("\n");
+        const RESOURCE_WARNING_SNOOZE_KEY = 'dcref-resource-warning-hidden-until';
+        const RESOURCE_WARNING_SNOOZE_MS = 14 * 24 * 60 * 60 * 1000;
 
         const DIRECT_WINDOW_CONFIG = [
             { 
@@ -3880,6 +3912,12 @@
                     jumpHighlightIdentifier: null,
                     lastClickedEpisode: null,
                     errorMessage: "",
+                    resourceWarningVisible: false,
+                    resourceWarningMessage: RESOURCE_WARNING_MESSAGE,
+                    resourceWarningDismissForTwoWeeks: false,
+                    resourceWarningKeys: [],
+                    _resourceErrorHandler: null,
+                    _originalFetch: null,
                     statusClearTimeout: 2000,
                     fastingStatusClearTimeout: 3000,
                     inactivityDurationSeconds: 300,
@@ -10253,6 +10291,161 @@
                     }
                 },
 
+                dismissResourceWarning() {
+                    if (this.resourceWarningDismissForTwoWeeks) {
+                        this.saveResourceWarningSnooze();
+                    }
+                    this.resourceWarningVisible = false;
+                    this.resourceWarningDismissForTwoWeeks = false;
+                },
+
+                getResourceWarningSnoozeUntil() {
+                    try {
+                        const rawValue = localStorage.getItem(RESOURCE_WARNING_SNOOZE_KEY);
+                        const parsed = Number(rawValue);
+                        return Number.isFinite(parsed) ? parsed : 0;
+                    } catch (_) {
+                        return 0;
+                    }
+                },
+
+                isResourceWarningSnoozed() {
+                    const hiddenUntil = this.getResourceWarningSnoozeUntil();
+                    if (!hiddenUntil) return false;
+                    if (hiddenUntil > Date.now()) return true;
+                    try {
+                        localStorage.removeItem(RESOURCE_WARNING_SNOOZE_KEY);
+                    } catch (_) {}
+                    return false;
+                },
+
+                saveResourceWarningSnooze() {
+                    try {
+                        localStorage.setItem(
+                            RESOURCE_WARNING_SNOOZE_KEY,
+                            String(Date.now() + RESOURCE_WARNING_SNOOZE_MS)
+                        );
+                    } catch (_) {}
+                },
+
+                normalizeMonitoredResourceUrl(url) {
+                    if (!url) return '';
+                    try {
+                        return new URL(url, window.location.href).toString();
+                    } catch (_) {
+                        return String(url || '');
+                    }
+                },
+
+                shouldMonitorResourceUrl(url) {
+                    const normalizedUrl = this.normalizeMonitoredResourceUrl(url);
+                    if (!normalizedUrl) return false;
+                    if (normalizedUrl.startsWith(this.imageBaseUrl)) return true;
+                    if (normalizedUrl.startsWith(this.jsonUrl)) return true;
+                    try {
+                        return new URL(normalizedUrl).hostname === 'raw.githubusercontent.com';
+                    } catch (_) {
+                        return false;
+                    }
+                },
+
+                registerResourceWarning(kind, url) {
+                    const normalizedUrl = this.normalizeMonitoredResourceUrl(url);
+                    const warningKey = `${kind}:${normalizedUrl}`;
+                    if (this.resourceWarningKeys.includes(warningKey)) return;
+                    this.resourceWarningKeys.push(warningKey);
+                    if (this.isResourceWarningSnoozed()) return;
+                    this.resourceWarningDismissForTwoWeeks = false;
+                    this.resourceWarningVisible = true;
+                },
+
+                handleGlobalResourceError(event) {
+                    const target = event?.target;
+                    if (!target || target === window) return;
+                    const resourceUrl = target.currentSrc || target.src || target.href || '';
+                    if (!this.shouldMonitorResourceUrl(resourceUrl)) return;
+                    const tagName = String(target.tagName || '').toUpperCase();
+                    const kind = tagName === 'IMG'
+                        ? 'image'
+                        : tagName === 'SCRIPT'
+                            ? 'script'
+                            : tagName === 'LINK'
+                                ? 'stylesheet'
+                                : 'resource';
+                    this.registerResourceWarning(kind, resourceUrl);
+                },
+
+                resolveFetchRequestUrl(resource) {
+                    if (!resource) return '';
+                    if (typeof resource === 'string') return this.normalizeMonitoredResourceUrl(resource);
+                    if (typeof Request !== 'undefined' && resource instanceof Request) {
+                        return this.normalizeMonitoredResourceUrl(resource.url);
+                    }
+                    if (typeof resource?.url === 'string') return this.normalizeMonitoredResourceUrl(resource.url);
+                    return '';
+                },
+
+                looksLikeFetchNetworkIssue(error) {
+                    const message = String(error?.message || error || '').toLowerCase();
+                    return (
+                        message.includes('failed to fetch') ||
+                        message.includes('load failed') ||
+                        message.includes('networkerror when attempting to fetch resource') ||
+                        message.includes('network error')
+                    );
+                },
+
+                installResourceFailureMonitoring() {
+                    if (!this._resourceErrorHandler) {
+                        this._resourceErrorHandler = (event) => this.handleGlobalResourceError(event);
+                        window.addEventListener('error', this._resourceErrorHandler, true);
+                    }
+
+                    if (!this._originalFetch && typeof window.fetch === 'function') {
+                        const originalFetch = window.fetch.bind(window);
+                        this._originalFetch = originalFetch;
+                        window.fetch = async (...args) => {
+                            const requestUrl = this.resolveFetchRequestUrl(args[0]);
+                            try {
+                                return await originalFetch(...args);
+                            } catch (error) {
+                                if (this.shouldMonitorResourceUrl(requestUrl) || this.looksLikeFetchNetworkIssue(error)) {
+                                    this.registerResourceWarning('fetch', requestUrl || this.jsonUrl);
+                                }
+                                throw error;
+                            }
+                        };
+                    }
+                },
+
+                removeResourceFailureMonitoring() {
+                    if (this._resourceErrorHandler) {
+                        window.removeEventListener('error', this._resourceErrorHandler, true);
+                        this._resourceErrorHandler = null;
+                    }
+
+                    if (this._originalFetch) {
+                        window.fetch = this._originalFetch;
+                        this._originalFetch = null;
+                    }
+                },
+
+                probeCriticalBlockedResources() {
+                    const probeSuffix = `?resource_probe=${Date.now()}`;
+                    const imageProbe = new Image();
+                    imageProbe.onerror = () => {
+                        this.registerResourceWarning('image-probe', `${this.imageBaseUrl}res/close.png`);
+                    };
+                    imageProbe.src = `${this.imageBaseUrl}res/close.png${probeSuffix}`;
+
+                    if (typeof FontFace === 'function') {
+                        const fontProbe = new FontFace('__expo_arabic_probe__', `url("${this.imageBaseUrl}res/EAL.woff2${probeSuffix}")`);
+                        fontProbe.load().catch(() => {
+                            this.registerResourceWarning('font-probe', `${this.imageBaseUrl}res/EAL.woff2`);
+                        });
+                    }
+                },
+
                 clearError() {
                     // Reset ALL statuses for episode mangas (not just errors)
                     if (this.selectedEpisode?.EpisodeMangasIDs) {
@@ -12657,6 +12850,7 @@
                     }
                 } catch (e) {}
                 this.loadingModeResolved = true;
+                this.installResourceFailureMonitoring();
                 
                 // Initialize tab locking system FIRST
                 this.initTabLocking();
@@ -12716,6 +12910,8 @@
                 this.nowIntervalId = setInterval(() => {
                     this.now = Date.now();
                 }, 1000);
+
+                this.probeCriticalBlockedResources();
                 
                 // Hide loading spinner when Vue is ready
                 document.body.classList.add('vue-ready');
@@ -12888,6 +13084,7 @@
                     this._captureInteractionGuardHandler = null;
                 }
                 window.removeEventListener('resize', this.updateFontSize);
+                this.removeResourceFailureMonitoring();
             }
 
         });
