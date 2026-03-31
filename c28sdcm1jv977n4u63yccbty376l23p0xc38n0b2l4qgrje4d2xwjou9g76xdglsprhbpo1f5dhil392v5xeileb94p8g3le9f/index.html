@@ -583,9 +583,12 @@
         }
     </style>
     <style>
-        .no-scroll {
+        .no-scroll,
+        html.no-scroll,
+        body.no-scroll {
             overflow: hidden !important;
             touch-action: none;
+            overscroll-behavior: none;
         }
     </style>
     <style>
@@ -925,7 +928,10 @@
         <div
             v-if="resourceWarningVisible"
             @click.self="dismissResourceWarning"
-            class="fixed inset-0 z-[130] bg-black/75 backdrop-blur-sm flex items-center justify-center px-4"
+            @wheel.prevent
+            @touchmove.prevent
+            class="fixed inset-0 z-[130] overflow-hidden bg-black/75 backdrop-blur-sm flex items-center justify-center px-4"
+            style="touch-action: none; overscroll-behavior: contain;"
         >
             <div class="relative w-full max-w-xl rounded-2xl border border-yellow-400/50 bg-slate-950 text-yellow-50 shadow-2xl px-5 py-6 sm:px-6">
                 <button
@@ -935,8 +941,16 @@
                 >
                     <span class="text-2xl font-black">✕</span>
                 </button>
-                <div class="pr-8 text-right text-base sm:text-lg font-bold leading-8" style="white-space: pre-line;">{{ resourceWarningMessage }}</div>
-                <label class="mt-5 flex items-start gap-3 text-right text-sm sm:text-base text-yellow-100 cursor-pointer select-none">
+                <div class="pr-8 text-right">
+                    <div class="text-center text-lg sm:text-xl font-black text-yellow-200">{{ resourceWarningTitle }}</div>
+                    <p class="mt-4 text-base sm:text-lg font-bold leading-8 text-yellow-50">{{ resourceWarningPrimaryText }}</p>
+                    <p class="mt-4 text-base sm:text-lg font-bold leading-8 text-yellow-50">
+                        <span class="text-emerald-300">{{ resourceWarningIgnoreText }}</span>
+                        {{ resourceWarningSecondaryText }}
+                        <span class="text-cyan-300">{{ resourceWarningNoteText }}</span>
+                    </p>
+                </div>
+                <label class="mt-5 flex items-start gap-3 text-right text-sm sm:text-base text-sky-100 cursor-pointer select-none">
                     <input
                         v-model="resourceWarningDismissForTwoWeeks"
                         type="checkbox"
@@ -3143,11 +3157,11 @@
         const webApp = window.Telegram?.WebApp || null;
         const { createApp, markRaw } = Vue;
         const WEB_APP_URL = "https://euz.pages.dev/c28sdcm1jv977n4u63yccbty376l23p0xc38n0b2l4qgrje4d2xwjou9g76xdglsprhbpo1f5dhil392v5xeileb94p8g3le9f/";
-        const RESOURCE_WARNING_MESSAGE = [
-            "⚠️ إشعار تلقائي من النظام",
-            "تم اكتشاف أخطاء في تحميل بعض المحتويات بسبب سياسات الحجب من مزود الإنترنت لديك.",
-            "إذا لم تواجه أي مشكلة أثناء التصفح، يمكنك تجاهل هذا التنبيه. أما في حال وجود خلل أو بيانات مفقودة، فجرّب تشغيل VPN لاستعادة التجربة الكاملة (يرجى التأكد من أن استخدامه مسموح في بلدك)."
-        ].join("\n");
+        const RESOURCE_WARNING_TITLE = "⚠️ إشعار تلقائي من النظام";
+        const RESOURCE_WARNING_PRIMARY_TEXT = "تم اكتشاف أخطاء في تحميل بعض المحتويات بسبب سياسات الحجب من مزود الإنترنت لديك.";
+        const RESOURCE_WARNING_IGNORE_TEXT = "إذا لم تواجه أي مشكلة أثناء التصفح، يمكنك تجاهل هذا التنبيه. ";
+        const RESOURCE_WARNING_SECONDARY_TEXT = "أما في حال وجود خلل أو بيانات مفقودة، فجرّب تشغيل VPN لاستعادة التجربة الكاملة ";
+        const RESOURCE_WARNING_NOTE_TEXT = "(يرجى التأكد من أن استخدامه مسموح في بلدك).";
         const RESOURCE_WARNING_SNOOZE_KEY = 'dcref-resource-warning-hidden-until';
         const RESOURCE_WARNING_SNOOZE_MS = 14 * 24 * 60 * 60 * 1000;
 
@@ -3913,8 +3927,13 @@
                     lastClickedEpisode: null,
                     errorMessage: "",
                     resourceWarningVisible: false,
-                    resourceWarningMessage: RESOURCE_WARNING_MESSAGE,
+                    resourceWarningTitle: RESOURCE_WARNING_TITLE,
+                    resourceWarningPrimaryText: RESOURCE_WARNING_PRIMARY_TEXT,
+                    resourceWarningIgnoreText: RESOURCE_WARNING_IGNORE_TEXT,
+                    resourceWarningSecondaryText: RESOURCE_WARNING_SECONDARY_TEXT,
+                    resourceWarningNoteText: RESOURCE_WARNING_NOTE_TEXT,
                     resourceWarningDismissForTwoWeeks: false,
+                    resourceWarningHiddenUntil: 0,
                     resourceWarningKeys: [],
                     _resourceErrorHandler: null,
                     _originalFetch: null,
@@ -5779,18 +5798,27 @@
                     this.handlePageSizeChange();
                 },
                 comntoVisible(newVal) {
-                    try {
-                        const b = document.body;
-                        if (!b) return;
-                        if (newVal) {
-                            b.classList.add('no-scroll');
-                        } else {
-                            b.classList.remove('no-scroll');
-                        }
-                    } catch (e) {}
+                    this.syncBodyScrollLock();
+                },
+                resourceWarningVisible() {
+                    this.syncBodyScrollLock();
                 },
             },
             methods: {
+                syncBodyScrollLock() {
+                    try {
+                        const shouldLock = !!(this.comntoVisible || this.resourceWarningVisible);
+                        const targets = [document.documentElement, document.body].filter(Boolean);
+                        targets.forEach((target) => {
+                            if (shouldLock) {
+                                target.classList.add('no-scroll');
+                            } else {
+                                target.classList.remove('no-scroll');
+                            }
+                        });
+                    } catch (e) {}
+                },
+
                 handleModalScroll(event) {
                     const container = event.target;
                     const label = this.$refs.episodeTitleLabel;
@@ -8485,6 +8513,21 @@
                         });
                     });
                 },
+                removeFromIDB(key) {
+                    return this.getDB().then(db => {
+                        return new Promise((resolve, reject) => {
+                            try {
+                                const tx = db.transaction('store', 'readwrite');
+                                const store = tx.objectStore('store');
+                                store.delete(key);
+                                tx.oncomplete = () => resolve();
+                                tx.onerror = () => reject('IDB Delete Error');
+                            } catch (e) {
+                                reject('IDB Delete Error');
+                            }
+                        });
+                    });
+                },
                 loadFromIDB(key) {
                     return this.getDB().then(db => {
                         return new Promise((resolve, reject) => {
@@ -10291,15 +10334,15 @@
                     }
                 },
 
-                dismissResourceWarning() {
+                async dismissResourceWarning() {
                     if (this.resourceWarningDismissForTwoWeeks) {
-                        this.saveResourceWarningSnooze();
+                        await this.saveResourceWarningSnooze();
                     }
                     this.resourceWarningVisible = false;
                     this.resourceWarningDismissForTwoWeeks = false;
                 },
 
-                getResourceWarningSnoozeUntil() {
+                getResourceWarningSnoozeUntilFromLocalStorage() {
                     try {
                         const rawValue = localStorage.getItem(RESOURCE_WARNING_SNOOZE_KEY);
                         const parsed = Number(rawValue);
@@ -10310,22 +10353,150 @@
                 },
 
                 isResourceWarningSnoozed() {
-                    const hiddenUntil = this.getResourceWarningSnoozeUntil();
+                    const hiddenUntil = Number(this.resourceWarningHiddenUntil || 0);
                     if (!hiddenUntil) return false;
                     if (hiddenUntil > Date.now()) return true;
-                    try {
-                        localStorage.removeItem(RESOURCE_WARNING_SNOOZE_KEY);
-                    } catch (_) {}
+                    this.resourceWarningHiddenUntil = 0;
+                    this.clearResourceWarningSnooze();
                     return false;
                 },
 
-                saveResourceWarningSnooze() {
+                async getTelegramStorageItem(storage, key) {
+                    if (!storage || typeof storage.getItem !== 'function') return null;
+                    return new Promise((resolve) => {
+                        try {
+                            storage.getItem(key, (error, value) => {
+                                if (error) {
+                                    resolve(null);
+                                    return;
+                                }
+                                resolve(value ?? null);
+                            });
+                        } catch (_) {
+                            resolve(null);
+                        }
+                    });
+                },
+
+                async setTelegramStorageItem(storage, key, value) {
+                    if (!storage || typeof storage.setItem !== 'function') return false;
+                    return new Promise((resolve) => {
+                        try {
+                            storage.setItem(key, value, (error, stored) => {
+                                if (error) {
+                                    resolve(false);
+                                    return;
+                                }
+                                resolve(stored !== false);
+                            });
+                        } catch (_) {
+                            resolve(false);
+                        }
+                    });
+                },
+
+                async removeTelegramStorageItem(storage, key) {
+                    if (!storage || typeof storage.removeItem !== 'function') return false;
+                    return new Promise((resolve) => {
+                        try {
+                            storage.removeItem(key, (error, removed) => {
+                                if (error) {
+                                    resolve(false);
+                                    return;
+                                }
+                                resolve(removed !== false);
+                            });
+                        } catch (_) {
+                            resolve(false);
+                        }
+                    });
+                },
+
+                async loadResourceWarningSnoozeFromIDB() {
                     try {
-                        localStorage.setItem(
-                            RESOURCE_WARNING_SNOOZE_KEY,
-                            String(Date.now() + RESOURCE_WARNING_SNOOZE_MS)
-                        );
+                        const value = await this.loadFromIDB(RESOURCE_WARNING_SNOOZE_KEY);
+                        const parsed = Number(value);
+                        return Number.isFinite(parsed) ? parsed : 0;
+                    } catch (_) {
+                        return 0;
+                    }
+                },
+
+                async saveResourceWarningSnoozeToIDB(hiddenUntil) {
+                    try {
+                        await this.saveToIDB(RESOURCE_WARNING_SNOOZE_KEY, String(hiddenUntil));
+                        return true;
+                    } catch (_) {
+                        return false;
+                    }
+                },
+
+                async clearResourceWarningSnoozeFromIDB() {
+                    try {
+                        await this.removeFromIDB(RESOURCE_WARNING_SNOOZE_KEY);
+                        return true;
+                    } catch (_) {
+                        return false;
+                    }
+                },
+
+                async hydrateResourceWarningSnooze() {
+                    const storageReaders = [
+                        Promise.resolve(this.getResourceWarningSnoozeUntilFromLocalStorage()),
+                        this.loadResourceWarningSnoozeFromIDB(),
+                        this.getTelegramStorageItem(webApp?.DeviceStorage, RESOURCE_WARNING_SNOOZE_KEY).then(value => Number(value) || 0),
+                        this.getTelegramStorageItem(webApp?.CloudStorage, RESOURCE_WARNING_SNOOZE_KEY).then(value => Number(value) || 0),
+                    ];
+
+                    const results = await Promise.allSettled(storageReaders);
+                    const latestHiddenUntil = results.reduce((max, result) => {
+                        if (result.status !== 'fulfilled') return max;
+                        const value = Number(result.value);
+                        if (!Number.isFinite(value)) return max;
+                        return Math.max(max, value);
+                    }, 0);
+
+                    if (latestHiddenUntil > Date.now()) {
+                        this.resourceWarningHiddenUntil = latestHiddenUntil;
+                        await this.persistResourceWarningSnoozeToAllStorages(latestHiddenUntil);
+                        return latestHiddenUntil;
+                    }
+
+                    this.resourceWarningHiddenUntil = 0;
+                    await this.clearResourceWarningSnooze();
+                    return 0;
+                },
+
+                async persistResourceWarningSnoozeToAllStorages(hiddenUntil) {
+                    const serializedValue = String(hiddenUntil);
+                    try {
+                        localStorage.setItem(RESOURCE_WARNING_SNOOZE_KEY, serializedValue);
                     } catch (_) {}
+
+                    await Promise.allSettled([
+                        this.saveResourceWarningSnoozeToIDB(hiddenUntil),
+                        this.setTelegramStorageItem(webApp?.DeviceStorage, RESOURCE_WARNING_SNOOZE_KEY, serializedValue),
+                        this.setTelegramStorageItem(webApp?.CloudStorage, RESOURCE_WARNING_SNOOZE_KEY, serializedValue),
+                    ]);
+                },
+
+                async saveResourceWarningSnooze() {
+                    const hiddenUntil = Date.now() + RESOURCE_WARNING_SNOOZE_MS;
+                    this.resourceWarningHiddenUntil = hiddenUntil;
+                    await this.persistResourceWarningSnoozeToAllStorages(hiddenUntil);
+                    return hiddenUntil;
+                },
+
+                async clearResourceWarningSnooze() {
+                    try {
+                        localStorage.removeItem(RESOURCE_WARNING_SNOOZE_KEY);
+                    } catch (_) {}
+
+                    await Promise.allSettled([
+                        this.clearResourceWarningSnoozeFromIDB(),
+                        this.removeTelegramStorageItem(webApp?.DeviceStorage, RESOURCE_WARNING_SNOOZE_KEY),
+                        this.removeTelegramStorageItem(webApp?.CloudStorage, RESOURCE_WARNING_SNOOZE_KEY),
+                    ]);
                 },
 
                 normalizeMonitoredResourceUrl(url) {
@@ -12850,6 +13021,7 @@
                     }
                 } catch (e) {}
                 this.loadingModeResolved = true;
+                await this.hydrateResourceWarningSnooze();
                 this.installResourceFailureMonitoring();
                 
                 // Initialize tab locking system FIRST
@@ -12912,6 +13084,7 @@
                 }, 1000);
 
                 this.probeCriticalBlockedResources();
+                this.syncBodyScrollLock();
                 
                 // Hide loading spinner when Vue is ready
                 document.body.classList.add('vue-ready');
@@ -13084,6 +13257,10 @@
                     this._captureInteractionGuardHandler = null;
                 }
                 window.removeEventListener('resize', this.updateFontSize);
+                try {
+                    document.documentElement.classList.remove('no-scroll');
+                    document.body.classList.remove('no-scroll');
+                } catch (e) {}
                 this.removeResourceFailureMonitoring();
             }
 
