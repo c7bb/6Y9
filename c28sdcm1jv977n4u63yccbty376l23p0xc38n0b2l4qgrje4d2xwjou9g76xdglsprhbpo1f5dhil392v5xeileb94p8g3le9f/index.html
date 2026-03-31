@@ -1392,6 +1392,10 @@
                             <!-- Statistics -->
                             <div class="grid grid-cols-2 gap-4 text-sm">
                                 <div class="bg-gray-800 p-3 rounded">
+                                    <div class="text-gray-400">نطاق الفصول</div>
+                                    <div class="text-xl font-bold">{{ mangaStartNumber }} - {{ mangaEndNumber }}</div>
+                                </div>
+                                <div class="bg-gray-800 p-3 rounded">
                                     <div class="text-gray-400">إجمالي المانغا</div>
                                     <div class="text-xl font-bold">{{ mangaQueueStats.total }}</div>
                                 </div>
@@ -11700,14 +11704,50 @@
                         this.mangaQueueTimeoutId = null;
                     }
                     this.mangaQueueProcessId = null;
+                    // Play completion sound
+                    this.playCompletionSound();
                     // Keep stats visible, just stop the process
+                },
+
+                playCompletionSound() {
+                    // Create and play a completion sound
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    // Create a pleasant completion sound (ascending tones)
+                    oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+                    oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+                    oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+                    
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 3);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 5);
                 },
 
                 resetMangaQueue() {
                     this.dismissSuccessHint();
                     // Reset everything for a new queue
                     this.stopMangaQueue();
-                    this.mangaStartNumber = null;
+                    
+                    // Increment end number by 1 and set as new start, then clear end
+                    if (this.mangaEndNumber !== null && this.mangaEndNumber !== undefined) {
+                        const newStartNumber = this.mangaEndNumber + 1;
+                        // Only set the new start if it's within the valid range
+                        if (newStartNumber <= this.maxMangaNumber) {
+                            this.mangaStartNumber = newStartNumber;
+                        } else {
+                            this.mangaStartNumber = null;
+                        }
+                    } else {
+                        this.mangaStartNumber = null;
+                    }
+                    
                     this.mangaEndNumber = null;
                 },
 
