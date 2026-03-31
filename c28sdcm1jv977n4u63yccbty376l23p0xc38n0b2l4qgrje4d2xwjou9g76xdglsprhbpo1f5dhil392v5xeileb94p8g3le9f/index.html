@@ -3934,6 +3934,7 @@
                     resourceWarningNoteText: RESOURCE_WARNING_NOTE_TEXT,
                     resourceWarningDismissForTwoWeeks: false,
                     resourceWarningHiddenUntil: 0,
+                    resourceWarningHydrated: false,
                     resourceWarningKeys: [],
                     _resourceErrorHandler: null,
                     _originalFetch: null,
@@ -10440,13 +10441,19 @@
                     }
                 },
 
-                async hydrateResourceWarningSnooze() {
+                async hydrateResourceWarningSnooze(options = {}) {
+                    const includeTelegramStorage = options.includeTelegramStorage !== false;
                     const storageReaders = [
                         Promise.resolve(this.getResourceWarningSnoozeUntilFromLocalStorage()),
                         this.loadResourceWarningSnoozeFromIDB(),
-                        this.getTelegramStorageItem(webApp?.DeviceStorage, RESOURCE_WARNING_SNOOZE_KEY).then(value => Number(value) || 0),
-                        this.getTelegramStorageItem(webApp?.CloudStorage, RESOURCE_WARNING_SNOOZE_KEY).then(value => Number(value) || 0),
                     ];
+
+                    if (includeTelegramStorage) {
+                        storageReaders.push(
+                            this.getTelegramStorageItem(webApp?.DeviceStorage, RESOURCE_WARNING_SNOOZE_KEY).then(value => Number(value) || 0),
+                            this.getTelegramStorageItem(webApp?.CloudStorage, RESOURCE_WARNING_SNOOZE_KEY).then(value => Number(value) || 0),
+                        );
+                    }
 
                     const results = await Promise.allSettled(storageReaders);
                     const latestHiddenUntil = results.reduce((max, result) => {
@@ -10462,8 +10469,11 @@
                         return latestHiddenUntil;
                     }
 
+                    const hadStoredValue = latestHiddenUntil > 0 || Number(this.resourceWarningHiddenUntil || 0) > 0;
                     this.resourceWarningHiddenUntil = 0;
-                    await this.clearResourceWarningSnooze();
+                    if (hadStoredValue) {
+                        await this.clearResourceWarningSnooze();
+                    }
                     return 0;
                 },
 
@@ -10525,6 +10535,15 @@
                     const warningKey = `${kind}:${normalizedUrl}`;
                     if (this.resourceWarningKeys.includes(warningKey)) return;
                     this.resourceWarningKeys.push(warningKey);
+                    if (!this.resourceWarningHydrated) return;
+                    if (this.isResourceWarningSnoozed()) return;
+                    this.resourceWarningDismissForTwoWeeks = false;
+                    this.resourceWarningVisible = true;
+                },
+
+                flushResourceWarningIfNeeded() {
+                    if (!this.resourceWarningHydrated) return;
+                    if (!this.resourceWarningKeys.length) return;
                     if (this.isResourceWarningSnoozed()) return;
                     this.resourceWarningDismissForTwoWeeks = false;
                     this.resourceWarningVisible = true;
@@ -13021,7 +13040,7 @@
                     }
                 } catch (e) {}
                 this.loadingModeResolved = true;
-                await this.hydrateResourceWarningSnooze();
+                await this.hydrateResourceWarningSnooze({ includeTelegramStorage: false });
                 this.installResourceFailureMonitoring();
                 
                 // Initialize tab locking system FIRST
@@ -13029,6 +13048,9 @@
                 
                 // Run the Telegram check before mounting the app.
                 await this.checkTelegram();
+                await this.hydrateResourceWarningSnooze({ includeTelegramStorage: true });
+                this.resourceWarningHydrated = true;
+                this.flushResourceWarningIfNeeded();
                 this.loadRelatedEpisodesData();
                 this.startDailyLimitRowIdResync();
                 // If the user is valid, immediately load data.
