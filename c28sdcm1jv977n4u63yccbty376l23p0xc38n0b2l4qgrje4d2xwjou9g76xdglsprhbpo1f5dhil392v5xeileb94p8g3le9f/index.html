@@ -1433,7 +1433,7 @@
                                     <div class="text-gray-400">الوقت المستغرق</div>
                                     <div class="text-xl font-bold">{{ formatTime(mangaQueueStats.elapsedTime) }}</div>
                                 </div>
-                                <div class="bg-gray-800 p-3 rounded">
+                                <div class="bg-gray-800 p-3 rounded col-span-2 text-center">
                                     <div class="text-gray-400">الوقت المتبقي</div>
                                     <div class="text-xl font-bold">{{ formatTime(mangaQueueStats.remainingTime) }}</div>
                                 </div>
@@ -11710,24 +11710,40 @@
                 },
 
                 playCompletionSound() {
-                    // Create and play a completion sound
-                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    const oscillator = audioContext.createOscillator();
-                    const gainNode = audioContext.createGain();
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-                    
-                    // Create a pleasant completion sound (ascending tones)
-                    oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
-                    oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
-                    oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
-                    
-                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 3);
-                    
-                    oscillator.start(audioContext.currentTime);
-                    oscillator.stop(audioContext.currentTime + 5);
+                    const ctx = window.__audioCtx || (window.__audioCtx = new (window.AudioContext || window.webkitAudioContext)());
+                    const now = ctx.currentTime;
+
+                    const notes = [
+                        { freq: 523.25, time: 0.0, dur: 0.25 },
+                        { freq: 659.25, time: 0.3, dur: 0.25 },
+                        { freq: 783.99, time: 0.6, dur: 0.3 },
+
+                        { freq: 659.25, time: 1.2, dur: 0.25 },
+                        { freq: 783.99, time: 1.5, dur: 0.25 },
+                        { freq: 1046.5, time: 1.8, dur: 0.4 },
+
+                        { freq: 783.99, time: 3.0, dur: 0.3 },
+                        { freq: 659.25, time: 3.4, dur: 0.3 },
+                        { freq: 523.25, time: 3.8, dur: 0.5 },
+                    ];
+
+                    notes.forEach(note => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+
+                        osc.type = "square";
+                        osc.frequency.setValueAtTime(note.freq, now + note.time);
+
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+
+                        gain.gain.setValueAtTime(0, now + note.time);
+                        gain.gain.linearRampToValueAtTime(0.25, now + note.time + 0.02);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, now + note.time + note.dur);
+
+                        osc.start(now + note.time);
+                        osc.stop(now + note.time + note.dur);
+                    });
                 },
 
                 resetMangaQueue() {
