@@ -3935,6 +3935,7 @@
                     resourceWarningDismissForTwoWeeks: false,
                     resourceWarningHiddenUntil: 0,
                     resourceWarningHydrated: false,
+                    resourceWarningShownThisPage: false,
                     resourceWarningKeys: [],
                     _resourceErrorHandler: null,
                     _originalFetch: null,
@@ -10536,16 +10537,20 @@
                     if (this.resourceWarningKeys.includes(warningKey)) return;
                     this.resourceWarningKeys.push(warningKey);
                     if (!this.resourceWarningHydrated) return;
+                    if (this.resourceWarningShownThisPage) return;
                     if (this.isResourceWarningSnoozed()) return;
                     this.resourceWarningDismissForTwoWeeks = false;
+                    this.resourceWarningShownThisPage = true;
                     this.resourceWarningVisible = true;
                 },
 
                 flushResourceWarningIfNeeded() {
                     if (!this.resourceWarningHydrated) return;
                     if (!this.resourceWarningKeys.length) return;
+                    if (this.resourceWarningShownThisPage) return;
                     if (this.isResourceWarningSnoozed()) return;
                     this.resourceWarningDismissForTwoWeeks = false;
+                    this.resourceWarningShownThisPage = true;
                     this.resourceWarningVisible = true;
                 },
 
