@@ -2721,8 +2721,16 @@
                                 </fieldset>
 
                                 <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeStory !== ''" class="border p-2 rounded mb-2">
-                                    <legend class="font-bold text-lg">القصة</legend>
-                                    <p class="text-lg">{{ selectedEpisode.EpisodeStory }}</p>
+                                    <legend class="font-bold text-lg">
+                                        القصة
+                                        <img v-if="storyVisible" :src="imageBaseUrl + 'res/hide.png'" alt="إخفاء القصة" @click="toggleStoryBlur" class="inline-block h-5 w-5 cursor-pointer transition-all duration-100 active:scale-90" />
+                                    </legend>
+                                    <div class="relative" @click="storyVisible && toggleStoryBlur()">
+                                        <p class="text-lg" :class="{ 'select-none': !storyVisible }">{{ selectedEpisode.EpisodeStory }}</p>
+                                        <div v-if="!storyVisible" @click.stop="toggleStoryBlur" class="absolute inset-0 z-10 flex items-center justify-center cursor-pointer backdrop-blur-md bg-black/20">
+                                            <img :src="imageBaseUrl + 'res/view.png'" alt="عرض القصة" class="h-8 w-8" />
+                                        </div>
+                                    </div>
                                 </fieldset>
 
                                 <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeSummary !== ''" class="border p-2 border-orange-400 rounded mb-2">
@@ -4229,6 +4237,7 @@
                     nextMangaIntervalId: null,
 
                     spoilerVisible: false,
+                    storyVisible: false,
                     nextEpisodeExists: false,
                     previousEpisodeExists: false,
                     nextEpisodeByNumberExists: false,
@@ -4636,7 +4645,7 @@
                         { start: 900, end: 999 },
                         { start: 1000, end: 1099 },
                         { start: 1100, end: 1199 },
-						{ start: 1200, end: 1299 }
+                        { start: 1200, end: 1299 }
                     ];
                     
                     const groups = [];
@@ -8853,6 +8862,8 @@
 
                 forceCloseModal() {
                     this.dismissSuccessHint();
+                    this.spoilerVisible = false;
+                    this.storyVisible = false;
                     this.forceCloseTrailerModal();
                     this.showModal = false;
                     this.comntoVisible = false;
@@ -9152,6 +9163,10 @@
                     this.spoilerVisible = !this.spoilerVisible; // Toggle visibility
                 },
 
+                toggleStoryBlur() {
+                    this.storyVisible = !this.storyVisible; // Toggle story blur layer
+                },
+
                 highlightSpoilerText() {
                     const text = this.spoilerVisible ? "إخفاء الملخص" : "الملخص (حرق)";
                     
@@ -9161,6 +9176,7 @@
 
                 fetchNextEpisode() {
                     this.spoilerVisible = false;
+                    this.storyVisible = false;
                     // Find the current episode's index
                     const currentIndex = this.episodes.findIndex(
                         (ep) => ep.EpisodeNumber === this.selectedEpisode.EpisodeNumber
@@ -9182,6 +9198,7 @@
 
                 fetchPreviousEpisode() {
                     this.spoilerVisible = false;
+                    this.storyVisible = false;
                     // Find the current episode's index
                     const currentIndex = this.episodes.findIndex(
                         (ep) => ep.EpisodeNumber === this.selectedEpisode.EpisodeNumber
@@ -9203,6 +9220,7 @@
 
                 fetchNextEpisodeByNumber() {
                     this.spoilerVisible = false;
+                    this.storyVisible = false;
                     // Get the filtered episodes based on current filter
                     const filteredEps = this.filteredEpisodes;
                     
@@ -9223,6 +9241,7 @@
 
                 fetchPreviousEpisodeByNumber() {
                     this.spoilerVisible = false;
+                    this.storyVisible = false;
                     // Get the filtered episodes based on current filter
                     const filteredEps = this.filteredEpisodes;
                     
