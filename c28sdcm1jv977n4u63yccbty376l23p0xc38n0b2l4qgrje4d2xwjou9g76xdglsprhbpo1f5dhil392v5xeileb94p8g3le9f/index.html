@@ -2723,12 +2723,12 @@
                                 <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeStory !== ''" class="border p-2 rounded mb-2">
                                     <legend class="font-bold text-lg">
                                         القصة
-                                        <img v-if="storyVisible" :src="imageBaseUrl + 'res/hide.png'" alt="إخفاء القصة" @click="toggleStoryBlur" class="inline-block h-5 w-5 cursor-pointer transition-all duration-100 active:scale-90" />
+                                        <img v-if="storyVisible" :src="imageBaseUrl + 'res/hide.png'" alt="إخفاء القصة" @click="toggleStoryBlur" class="inline-block h-6 w-6 cursor-pointer transition-all duration-100 active:scale-90" />
                                     </legend>
                                     <div class="relative" @click="storyVisible && toggleStoryBlur()">
                                         <p class="text-lg" :class="{ 'select-none': !storyVisible }">{{ selectedEpisode.EpisodeStory }}</p>
                                         <div v-if="!storyVisible" @click.stop="toggleStoryBlur" class="absolute -inset-2 z-10 rounded flex items-center justify-center cursor-pointer backdrop-blur-md bg-black/20">
-                                            <img :src="imageBaseUrl + 'res/view.png'" alt="عرض القصة" class="h-8 w-8" />
+                                            <img :src="imageBaseUrl + 'res/view.png'" alt="عرض القصة" class="h-12 w-12" />
                                         </div>
                                     </div>
                                 </fieldset>
