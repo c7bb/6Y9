@@ -2314,7 +2314,10 @@
 
         <!-- Table -->
         <div v-if="!loading">
-            <table class="min-w-full border-collapse border border-gray-300">
+            <!-- Height stabilization wrapper: freezes the tallest page height seen while paginating,
+                 so the pagination controls below never shift up when a shorter page is shown. -->
+            <div :style="{ minHeight: episodesTableMinHeight + 'px' }">
+            <table ref="episodesTable" class="min-w-full border-collapse border border-gray-300">
                 <thead>
                     <!-- Top full-width row -->
                     <tr>
@@ -3018,6 +3021,7 @@
                         </div>
                     </div>
             </table>
+            </div>
 
             <!-- Pagination Controls -->
             <div class="flex justify-between items-center mt-4">
@@ -4183,6 +4187,7 @@
                     lastPage: 1,
                     pageSize: 15,
                     oldPageSize: 15,
+                    episodesTableMinHeight: 0,
                     showModal: false,
                     showTrailerModal: false,
                     selectedEpisode: null,
@@ -5508,6 +5513,12 @@
                 },
                 pageSize() {
                     this.comntoVisible = false;
+                    this.episodesTableMinHeight = 0;
+                },
+                filteredEpisodes() {
+                    // Dataset/filters/search changed: drop the frozen height so the table
+                    // re-flows naturally instead of keeping a stale maximum.
+                    this.episodesTableMinHeight = 0;
                 },
                 selectedFilter() {
                     this.comntoVisible = false;
@@ -5564,6 +5575,10 @@
                     }
                 },
                 currentPage() {
+                    // Pre-flush: DOM still shows the page being left. Capture its natural
+                    // height so the wrapper reserves it after the new (possibly shorter)
+                    // page renders, keeping the pagination controls under the cursor.
+                    this.stabilizeEpisodesTableHeight();
                     if (this.jumpTargetMode === 'page') {
                         if (!this.jumpInputActive) {
                             this.jumpInput = `${this.displayCurrentPage}/${this.totalPages}`;
@@ -7759,6 +7774,16 @@
                 },
                 trackLastPage() {
                     this.lastPage = this.currentPage;
+                },
+                stabilizeEpisodesTableHeight() {
+                    const table = this.$refs.episodesTable;
+                    if (!table) return;
+                    // Measure the table's own height (unaffected by the wrapper's
+                    // min-height) and only ever grow the frozen reserve, never shrink it.
+                    const height = table.offsetHeight;
+                    if (height > this.episodesTableMinHeight) {
+                        this.episodesTableMinHeight = height;
+                    }
                 },
                 goToFirstPage() {
                     this.comntoVisible = false;
@@ -10977,7 +11002,7 @@
                     this.successHintMessage = msg;
                     this.successHintVisible = true;
                     this.successHintAnimatingOut = false;
-                    this.successHintCountdown = 2;
+                    this.successHintCountdown = Math.ceil(this.statusClearTimeout / 1000);
 
                     this.successHintCountdownIntervalId = setInterval(() => {
                         if (!this.successHintVisible) return;
@@ -10986,7 +11011,7 @@
 
                     this.successHintHideTimeoutId = setTimeout(() => {
                         this.dismissSuccessHint();
-                    }, 3000);
+                    }, this.statusClearTimeout);
                 },
 
                 dismissSuccessHint() {
