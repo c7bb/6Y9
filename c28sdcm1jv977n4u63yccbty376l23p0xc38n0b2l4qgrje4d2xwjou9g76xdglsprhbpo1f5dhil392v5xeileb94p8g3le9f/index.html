@@ -947,6 +947,16 @@
             </div>
         </div>
 
+        <!-- Back to Top button -->
+        <button
+            v-if="backToTopVisible"
+            @click="backToTop"
+            class="fixed bottom-4 right-1 z-[100] bg-blue-700 hover:bg-blue-500 p-2 rounded-full shadow-lg transition-all duration-100 active:scale-90"
+            aria-label="العودة إلى الأعلى"
+        >
+            <img :src="imageBaseUrl + 'res/up-arrow.png'" alt="العودة إلى الأعلى" class="h-8 w-8" />
+        </button>
+
         <div
             v-if="showErrorOverlay"
             class="fixed z-[105] inset-0 overflow-y-auto bg-black bg-opacity-70 flex items-center justify-center"
@@ -3853,6 +3863,7 @@
                     showStickyLabel: false,
                     comntoTopic: 'mainPageCD',
                     comntoVisible: false,
+                    backToTopScrollable: false,
                     comntoContext: 'main',
                     comntoWidget: null,
                     lastComntoTopicApplied: null,
@@ -4321,6 +4332,21 @@
                 };
             },
             computed: {
+                /* Back-to-top button: only when the page is scrolled down AND no overlay/badge/modal/popup is showing */
+                backToTopVisible() {
+                    if (!this.backToTopScrollable) return false;
+                    if (this.inactivityModal || this.inactivityCountdown <= 30) return false; // inactivity modal or its badge
+                    if (this.successHintVisible) return false;
+                    if (this.showErrorOverlay) return false;
+                    if (this.searchOpen) return false;
+                    if (this.showModal || this.showDirectWindow || this.showFastingWindow || this.showTrailerModal) return false;
+                    if (this.showStopConfirmation || this.showRetryStopConfirmation) return false;
+                    if (this.showSendInProgressConfirmation || this.showCaptureInProgressConfirmation) return false;
+                    if (this.showLimitModal || this.showMangaSentLogModal || this.showMangaFailedLogModal) return false;
+                    if (this.tabLockModal || this.loadingFromCache) return false;
+                    if (this.comntoVisible) return false;
+                    return true;
+                },
                 isApplePlatform() {
                     try {
                         const p = String(webApp?.platform || '').toLowerCase();
@@ -7848,6 +7874,15 @@
                     // Keyboard activation (Enter/Space) fires click without a prior hold
                     if (dir === 'next') this.nextPage();
                     else this.prevPage();
+                },
+
+                /* ---- Back-to-top floating button ---- */
+                updateBackToTopState() {
+                    // Responsive threshold: half the viewport height (capped at 400px) so it adapts to every screen height
+                    this.backToTopScrollable = window.scrollY > Math.min(400, window.innerHeight * 0.5);
+                },
+                backToTop() {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 },
                 goToPage(page) {
                     this.comntoVisible = false;
@@ -12813,6 +12848,11 @@
 
                 // Comnto script will be loaded on-demand when user opens the comments
 
+                // Back-to-top button: track page scroll/resize (responsive threshold)
+                window.addEventListener('scroll', this.updateBackToTopState, { passive: true });
+                window.addEventListener('resize', this.updateBackToTopState, { passive: true });
+                this.updateBackToTopState();
+
                 // Existing mounted logic
                 // Initialize InstantDB only if this tab is the owner
                 if (this.isTabOwner && !this._db) {
@@ -13000,6 +13040,8 @@
                 this.clearInactivityTracking();
 
                 // Clean up event listener to prevent memory leaks
+                window.removeEventListener('scroll', this.updateBackToTopState);
+                window.removeEventListener('resize', this.updateBackToTopState);
                 document.removeEventListener("click", this.closeMenu);
                 if (this._captureInteractionGuardHandler) {
                     document.removeEventListener('click', this._captureInteractionGuardHandler, true);
