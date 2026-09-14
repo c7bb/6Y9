@@ -2313,10 +2313,10 @@
         </div>
 
         <!-- Table -->
-        <div v-if="!loading">
+        <div v-if="!loading" class="py-6">
             <!-- Fixed-height scrollable table: the table scrolls inside this stable box,
                  so the pagination controls below never move between pages. -->
-            <div class="h-[70vh] overflow-y-auto border border-gray-300">
+            <div class="h-[70vh] overflow-y-auto overflow-x-hidden border border-gray-300">
             <!-- -m-px pulls the table's own border on top of the wrapper's border so
                  there is exactly ONE 1px frame, and the scrollbar sits inside it. -->
             <table class="min-w-full border-collapse border border-gray-300 -m-px">
@@ -3084,6 +3084,10 @@
                 <label class="inline-flex items-center mx-1 transition-all duration-100 active:scale-90">
                     <input type="radio" v-model="pageSize" :value="25" class="form-radio text-blue-500 mx-1" />
                     <span class="ml-2">25</span>
+                </label>
+                <label class="inline-flex items-center mx-1 transition-all duration-100 active:scale-90">
+                    <input type="radio" v-model="pageSize" :value="50" class="form-radio text-blue-500 mx-1" />
+                    <span class="ml-2">50</span>
                 </label>
             </div>
         </div>
@@ -4186,8 +4190,8 @@
                     selectedFilter: 'all',
                     currentPage: 1,
                     lastPage: 1,
-                    pageSize: 15,
-                    oldPageSize: 15,
+                    pageSize: 50,
+                    oldPageSize: 50,
                     showModal: false,
                     showTrailerModal: false,
                     selectedEpisode: null,
