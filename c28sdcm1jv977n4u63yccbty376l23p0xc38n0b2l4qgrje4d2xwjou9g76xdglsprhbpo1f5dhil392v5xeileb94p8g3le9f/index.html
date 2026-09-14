@@ -2314,10 +2314,10 @@
 
         <!-- Table -->
         <div v-if="!loading">
-            <!-- Height stabilization wrapper: freezes the tallest page height seen while paginating,
-                 so the pagination controls below never shift up when a shorter page is shown. -->
-            <div :style="{ minHeight: episodesTableMinHeight + 'px' }">
-            <table ref="episodesTable" class="min-w-full border-collapse border border-gray-300">
+            <!-- Fixed-height scrollable table: the table scrolls inside this stable box,
+                 so the pagination controls below never move between pages. -->
+            <div class="h-[70vh] overflow-y-auto">
+            <table class="min-w-full border-collapse border border-gray-300">
                 <thead>
                     <!-- Top full-width row -->
                     <tr>
@@ -2391,10 +2391,10 @@
 
                     <!-- Existing header row -->
                     <tr class="">
-                        <th class="border border-gray-300 text-xl px-2 py-2 text-center w-1/6">
+                        <th class="sticky top-0 z-10 bg-gray-800 border border-gray-300 text-xl px-2 py-2 text-center w-1/6 shadow-[inset_0_-2px_0_0_#d1d5db]">
                             {{ episodeNumberHeader }}
                         </th>               
-                        <th class="border border-gray-300 text-xl px-4 py-2 text-center w-5/6">
+                        <th class="sticky top-0 z-10 bg-gray-800 border border-gray-300 text-xl px-4 py-2 text-center w-5/6 shadow-[inset_0_-2px_0_0_#d1d5db]">
                             {{ episodeTitleHeader }}
                             <br />
                             <span class="text-base" style="color: rgb(108 255 0); font-weight: 900;">
@@ -4187,7 +4187,6 @@
                     lastPage: 1,
                     pageSize: 15,
                     oldPageSize: 15,
-                    episodesTableMinHeight: 0,
                     showModal: false,
                     showTrailerModal: false,
                     selectedEpisode: null,
@@ -5513,12 +5512,6 @@
                 },
                 pageSize() {
                     this.comntoVisible = false;
-                    this.episodesTableMinHeight = 0;
-                },
-                filteredEpisodes() {
-                    // Dataset/filters/search changed: drop the frozen height so the table
-                    // re-flows naturally instead of keeping a stale maximum.
-                    this.episodesTableMinHeight = 0;
                 },
                 selectedFilter() {
                     this.comntoVisible = false;
@@ -5575,10 +5568,6 @@
                     }
                 },
                 currentPage() {
-                    // Pre-flush: DOM still shows the page being left. Capture its natural
-                    // height so the wrapper reserves it after the new (possibly shorter)
-                    // page renders, keeping the pagination controls under the cursor.
-                    this.stabilizeEpisodesTableHeight();
                     if (this.jumpTargetMode === 'page') {
                         if (!this.jumpInputActive) {
                             this.jumpInput = `${this.displayCurrentPage}/${this.totalPages}`;
@@ -7774,16 +7763,6 @@
                 },
                 trackLastPage() {
                     this.lastPage = this.currentPage;
-                },
-                stabilizeEpisodesTableHeight() {
-                    const table = this.$refs.episodesTable;
-                    if (!table) return;
-                    // Measure the table's own height (unaffected by the wrapper's
-                    // min-height) and only ever grow the frozen reserve, never shrink it.
-                    const height = table.offsetHeight;
-                    if (height > this.episodesTableMinHeight) {
-                        this.episodesTableMinHeight = height;
-                    }
                 },
                 goToFirstPage() {
                     this.comntoVisible = false;
