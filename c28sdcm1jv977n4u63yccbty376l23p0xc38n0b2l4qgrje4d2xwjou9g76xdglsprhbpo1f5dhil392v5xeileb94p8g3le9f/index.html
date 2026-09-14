@@ -1031,7 +1031,7 @@
             </div>
         </div>
             <!-- Updated Menu Button -->
-            <div v-if="loadingModeResolved && !loadingFromCache" class="fixed top-4 right-4 z-50 menu-container">
+            <div v-if="loadingModeResolved && !loadingFromCache" ref="menuContainer" class="fixed top-4 right-4 z-50 menu-container">
                 <button @click.stop="toggleMenu" :disabled="loading" :class="isApplePlatform ? 'liquid-glass liquid-glass-hamburger flex flex-col items-center transition-transform duration-200 disabled:opacity-50 disabled:cursor-not-allowed' : 'bg-yellow-600 text-white p-2 rounded flex flex-col items-center transition-all duration-100 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed'">
                     <span :class="isApplePlatform ? 'bar' : 'block w-6 h-1 bg-white mb-1'"></span>
                     <span :class="isApplePlatform ? 'bar' : 'block w-6 h-1 bg-white mb-1'"></span>
@@ -11168,13 +11168,49 @@
                         document.removeEventListener("click", this.closeSearchOutside);
                         window.removeEventListener("scroll", this.closeSearchOnScroll, true);
                     }
+                    if (this.menuOpen) {
+                        this.$nextTick(() => {
+                            // Close the menu when the user scrolls anywhere (page or any inner container)
+                            window.addEventListener("scroll", this.closeMenuOnScroll, { capture: true, passive: true });
+                            // Close the menu when the user touches outside it (reacts sooner than the synthesized click)
+                            document.addEventListener("touchstart", this.closeMenuOnTouch, { capture: true, passive: true });
+                        });
+                    } else {
+                        this.removeMenuCloseListeners();
+                    }
                 },
 
                 closeMenu(event) {
                     // Check if the click is outside the menu
                     if (!event.target.closest(".menu-container")) {
                         this.menuOpen = false;
+                        this.removeMenuCloseListeners();
                     }
+                },
+                removeMenuCloseListeners() {
+                    window.removeEventListener("scroll", this.closeMenuOnScroll, true);
+                    document.removeEventListener("touchstart", this.closeMenuOnTouch, true);
+                },
+                closeMenuOnScroll(e) {
+                    if (!this.menuOpen) {
+                        this.removeMenuCloseListeners();
+                        return;
+                    }
+                    // Ignore scrolls that happen inside the menu itself
+                    const menu = this.$refs.menuContainer;
+                    if (menu && e.target && e.target.nodeType === 1 && menu.contains(e.target)) return;
+                    this.menuOpen = false;
+                    this.removeMenuCloseListeners();
+                },
+                closeMenuOnTouch(e) {
+                    if (!this.menuOpen) {
+                        this.removeMenuCloseListeners();
+                        return;
+                    }
+                    // touchstart targets the element where the finger went down: keep the menu only if that's inside it
+                    if (e.target && e.target.nodeType === 1 && e.target.closest(".menu-container")) return;
+                    this.menuOpen = false;
+                    this.removeMenuCloseListeners();
                 },
 
                 showSuccessHint(message) {
@@ -11239,6 +11275,7 @@
                     this.selectedCategory = category;
                     this.showDirectWindow = true;
                     this.menuOpen = false;
+                    this.removeMenuCloseListeners();
                     this.comntoVisible = false;
                 },
 
@@ -11247,6 +11284,7 @@
                     this.selectedCategory = category;
                     this.showFastingWindow = true;
                     this.menuOpen = false;
+                    this.removeMenuCloseListeners();
                     this.comntoVisible = false;
                 },
 
@@ -12335,6 +12373,7 @@
                     // Close menu when search is opened
                     if (this.searchOpen && this.menuOpen) {
                         this.menuOpen = false;
+                        this.removeMenuCloseListeners();
                     }
                     if (this.searchOpen) {
                     this.$nextTick(() => {
@@ -13144,6 +13183,7 @@
                 window.removeEventListener('scroll', this.updateBackToTopState, true);
                 window.removeEventListener('resize', this.updateBackToTopState);
                 document.removeEventListener("click", this.closeMenu);
+                this.removeMenuCloseListeners();
                 if (this._captureInteractionGuardHandler) {
                     document.removeEventListener('click', this._captureInteractionGuardHandler, true);
                     this._captureInteractionGuardHandler = null;
