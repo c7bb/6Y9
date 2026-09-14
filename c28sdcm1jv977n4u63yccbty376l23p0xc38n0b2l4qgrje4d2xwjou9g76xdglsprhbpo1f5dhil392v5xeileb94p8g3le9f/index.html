@@ -4360,7 +4360,7 @@
                     if (this.showLimitModal || this.showMangaSentLogModal || this.showMangaFailedLogModal) return false;
                     if (this.tabLockModal || this.loadingFromCache) return false;
                     if (this.comntoVisible) return false;
-                    if (this.jumpInputActive || this.jumpInput) return false; // jump textarea focused/active or has text
+                    if (this.jumpInputActive) return false; // hidden only while the jump textarea is focused/active
                     return true;
                 },
                 isApplePlatform() {
@@ -7893,7 +7893,12 @@
                 },
 
                 /* ---- Back-to-top floating button ---- */
-                updateBackToTopState() {
+                updateBackToTopState(e) {
+                    // Scrolling away from the jump textarea leaves the field (blur), so the Back-to-top button can show again
+                    if (this.jumpInputActive && document.activeElement && document.activeElement !== document.body
+                        && e && e.target !== document.activeElement) {
+                        document.activeElement.blur();
+                    }
                     // Responsive threshold: half the viewport height (capped at 400px) so it adapts to every screen height
                     this.backToTopScrollable = window.scrollY > Math.min(400, window.innerHeight * 0.5);
                 },
@@ -12883,8 +12888,9 @@
 
                 // Comnto script will be loaded on-demand when user opens the comments
 
-                // Back-to-top button: track page scroll/resize (responsive threshold)
-                window.addEventListener('scroll', this.updateBackToTopState, { passive: true });
+                // Back-to-top button: track page scroll/resize (responsive threshold).
+                // Capture phase so scrolls inside inner containers (e.g., the table) are caught too.
+                window.addEventListener('scroll', this.updateBackToTopState, { capture: true, passive: true });
                 window.addEventListener('resize', this.updateBackToTopState, { passive: true });
                 this.updateBackToTopState();
 
@@ -13075,7 +13081,7 @@
                 this.clearInactivityTracking();
 
                 // Clean up event listener to prevent memory leaks
-                window.removeEventListener('scroll', this.updateBackToTopState);
+                window.removeEventListener('scroll', this.updateBackToTopState, true);
                 window.removeEventListener('resize', this.updateBackToTopState);
                 document.removeEventListener("click", this.closeMenu);
                 if (this._captureInteractionGuardHandler) {
