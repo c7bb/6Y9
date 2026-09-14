@@ -971,6 +971,18 @@
             </button>
         </transition>
 
+        <!-- Go to Bottom button (mirrors Back-to-Top, other side) -->
+        <transition name="backtop-fade">
+            <button
+                v-if="goToBottomVisible"
+                @click="goToBottom"
+                class="fixed bottom-4 right-1 z-[100] p-2 transition-all duration-100 active:scale-90"
+                aria-label="الانتقال إلى الأسفل"
+            >
+                <img :src="imageBaseUrl + 'res/down-arrow.png'" alt="الانتقال إلى الأسفل" class="h-10 w-10" />
+            </button>
+        </transition>
+
         <div
             v-if="showErrorOverlay"
             class="fixed z-[105] inset-0 overflow-y-auto bg-black bg-opacity-70 flex items-center justify-center"
@@ -3879,6 +3891,7 @@
                     comntoTopic: 'mainPageCD',
                     comntoVisible: false,
                     backToTopScrollable: false,
+                    canGoDown: false,
                     comntoContext: 'main',
                     comntoWidget: null,
                     lastComntoTopicApplied: null,
@@ -4348,8 +4361,8 @@
             },
             computed: {
                 /* Back-to-top button: only when the page is scrolled down AND no overlay/badge/modal/popup is showing */
-                backToTopVisible() {
-                    if (!this.backToTopScrollable) return false;
+                /* Shared: true when no overlay/badge/modal/popup is showing */
+                floatingOverlayFree() {
                     if (this.inactivityModal || this.inactivityCountdown <= 30) return false; // inactivity modal or its badge
                     if (this.successHintVisible) return false;
                     if (this.showErrorOverlay) return false;
@@ -4362,6 +4375,14 @@
                     if (this.comntoVisible) return false;
                     if (this.jumpInputActive) return false; // hidden only while the jump textarea is focused/active
                     return true;
+                },
+                /* Back-to-top button: past the scroll threshold AND no overlay */
+                backToTopVisible() {
+                    return this.backToTopScrollable && this.floatingOverlayFree;
+                },
+                /* Go-to-bottom button: still in the first part of the page AND there is room below */
+                goToBottomVisible() {
+                    return this.canGoDown && this.floatingOverlayFree;
                 },
                 isApplePlatform() {
                     try {
@@ -5599,14 +5620,22 @@
                 },
             },
                 watch: {
+                episodes() {
+                    // Episodes arrive async: no scroll event fires, so refresh the floating buttons' state
+                    this.$nextTick(() => this.updateBackToTopState());
+                },
                 currentPage() {
                     this.comntoVisible = false;
+                    // Table row count changed: re-measure which floating button should show
+                    this.$nextTick(() => this.updateBackToTopState());
                 },
                 pageSize() {
                     this.comntoVisible = false;
+                    this.$nextTick(() => this.updateBackToTopState());
                 },
                 selectedFilter() {
                     this.comntoVisible = false;
+                    this.$nextTick(() => this.updateBackToTopState());
                 },
                 commentsHeaderText(newVal) {
                     try {
@@ -7907,14 +7936,33 @@
                             document.activeElement.blur();
                         }
                     }
+                    // Smart swap algorithm: measure BOTH the page scroll and the table inner scroll,
+                    // then decide which floating button deserves the screen:
+                    //   - past the threshold (page OR table) -> Back-to-Top takes over
+                    //   - still in the first part + room below -> Go-to-Bottom shows
+                    //   - nothing left to scroll toward in that direction -> that button hides
+                    const pageY = window.scrollY;
+                    const pageMax = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+                    const tbl = this.$refs.episodesScroll;
+                    const tblY = tbl ? tbl.scrollTop : 0;
+                    const tblMax = tbl ? Math.max(0, tbl.scrollHeight - tbl.clientHeight) : 0;
                     // Responsive threshold: half the viewport height (capped at 400px) so it adapts to every screen height
-                    this.backToTopScrollable = window.scrollY > Math.min(400, window.innerHeight * 0.5);
+                    const threshold = Math.min(400, window.innerHeight * 0.5);
+                    this.backToTopScrollable = pageY > threshold || tblY > threshold;
+                    this.canGoDown = !this.backToTopScrollable && (pageY < pageMax || tblY < tblMax);
                 },
                 backToTop() {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                     // Also return the episodes table inner scroll (light-scrollbar) to the start
                     const el = this.$refs.episodesScroll;
                     if (el) el.scrollTo({ top: 0, behavior: 'smooth' });
+                },
+                goToBottom() {
+                    // Smooth-scroll the page all the way down...
+                    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+                    // ...and the episodes table inner scroll (light-scrollbar) to its end
+                    const el = this.$refs.episodesScroll;
+                    if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
                 },
                 goToPage(page) {
                     this.comntoVisible = false;
