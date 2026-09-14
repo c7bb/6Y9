@@ -4363,16 +4363,20 @@
                 /* Back-to-top button: only when the page is scrolled down AND no overlay/badge/modal/popup is showing */
                 /* Shared: true when no overlay/badge/modal/popup is showing */
                 floatingOverlayFree() {
+                    if (this.loading) return false; // initial loading screen (menu/search buttons are disabled then too)
                     if (this.inactivityModal || this.inactivityCountdown <= 30) return false; // inactivity modal or its badge
+                    if (this.isRefreshingSession) return false; // session refresh in progress
                     if (this.successHintVisible) return false;
                     if (this.showErrorOverlay) return false;
-                    if (this.searchOpen) return false;
+                    if (this.searchOpen) return false; // search popup
+                    if (this.menuOpen) return false; // hamburger dropdown menu
+                    if (this.showEmptyPopup) return false; // empty popup window
                     if (this.showModal || this.showDirectWindow || this.showFastingWindow || this.showTrailerModal) return false;
                     if (this.showStopConfirmation || this.showRetryStopConfirmation) return false;
                     if (this.showSendInProgressConfirmation || this.showCaptureInProgressConfirmation) return false;
                     if (this.showLimitModal || this.showMangaSentLogModal || this.showMangaFailedLogModal) return false;
                     if (this.tabLockModal || this.loadingFromCache) return false;
-                    if (this.comntoVisible) return false;
+                    if (this.comntoVisible) return false; // comments bottom sheet
                     if (this.jumpInputActive) return false; // hidden only while the jump textarea is focused/active
                     return true;
                 },
