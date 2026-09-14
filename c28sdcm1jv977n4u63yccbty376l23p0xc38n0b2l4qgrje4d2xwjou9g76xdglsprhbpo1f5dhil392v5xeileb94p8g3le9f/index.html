@@ -2316,8 +2316,10 @@
         <div v-if="!loading">
             <!-- Fixed-height scrollable table: the table scrolls inside this stable box,
                  so the pagination controls below never move between pages. -->
-            <div class="h-[70vh] overflow-y-auto">
-            <table class="min-w-full border-collapse border border-gray-300">
+            <div class="h-[70vh] overflow-y-auto border border-gray-300">
+            <!-- -m-px pulls the table's own border on top of the wrapper's border so
+                 there is exactly ONE 1px frame, and the scrollbar sits inside it. -->
+            <table class="min-w-full border-collapse border border-gray-300 -m-px">
                 <thead>
                     <!-- Top full-width row -->
                     <tr>
@@ -2391,10 +2393,10 @@
 
                     <!-- Existing header row -->
                     <tr class="">
-                        <th class="sticky top-0 z-10 bg-gray-800 border border-gray-300 text-xl px-2 py-2 text-center w-1/6 shadow-[inset_0_-2px_0_0_#d1d5db]">
+                        <th class="sticky -top-px z-10 bg-gray-800 border border-gray-300 text-xl px-2 py-2 text-center w-1/6 shadow-[inset_0_-2px_0_0_#d1d5db]">
                             {{ episodeNumberHeader }}
                         </th>               
-                        <th class="sticky top-0 z-10 bg-gray-800 border border-gray-300 text-xl px-4 py-2 text-center w-5/6 shadow-[inset_0_-2px_0_0_#d1d5db]">
+                        <th class="sticky -top-px z-10 bg-gray-800 border border-gray-300 text-xl px-4 py-2 text-center w-5/6 shadow-[inset_0_-2px_0_0_#d1d5db]">
                             {{ episodeTitleHeader }}
                             <br />
                             <span class="text-base" style="color: rgb(108 255 0); font-weight: 900;">
@@ -2404,8 +2406,7 @@
                     </tr>
                 </thead>
 
-                <div id="app" class="container mx-auto p-4 shadow-lg rounded">
-                    <tbody>
+                <tbody>
                         <template v-for="(episode, index) in paginatedEpisodes" :key="episode.EpisodeNumber">
                             <tr :id="'ep-' + normalizeEpisodeIdentifier(episode.EpisodeNumber)" class="hover:bg-blue-100">
                                 <td :class="[getBackgroundColor(episode), 'border', 'border-gray-300', 'px-2', 'text-lg', 'font-bold', 'py-2', 'text-center']" v-tippy="getEpisodeTypeTooltip(episode)">
