@@ -154,12 +154,13 @@
 
             /* Light vertical scrollbar for the episodes table scroll box */
             .light-scrollbar {
-                scrollbar-width: auto; /* For Firefox */
+                scrollbar-width: thin; /* For Firefox: thin = slimmer + no arrow buttons */
                 scrollbar-color: #d1d5db #374151; /* light thumb, dark track */
             }
 
+            /* Width of the scrollbar (Chrome/Edge/Safari): edit this px value */
             .light-scrollbar::-webkit-scrollbar {
-                width: 12px;
+                width: 8px;
             }
 
             .light-scrollbar::-webkit-scrollbar-track {
@@ -168,8 +169,8 @@
 
             .light-scrollbar::-webkit-scrollbar-thumb {
                 background: #d1d5db; /* gray-300 (light) thumb */
-                border-radius: 6px;
-                border: 3px solid #374151; /* keeps thumb slim inside the track */
+                border-radius: 4px;
+                border: 2px solid #374151; /* keeps thumb slim inside the track */
             }
 
             .light-scrollbar::-webkit-scrollbar-thumb:hover {
@@ -2340,7 +2341,7 @@
         <div v-if="!loading" class="py-6">
             <!-- Fixed-height scrollable table: the table scrolls inside this stable box,
                  so the pagination controls below never move between pages. -->
-            <div class="light-scrollbar h-[70vh] overflow-y-auto -mx-2 overflow-x-hidden border border-gray-300">
+            <div class="light-scrollbar h-[100vh] overflow-y-auto -mx-2 overflow-x-hidden border border-gray-300">
             <!-- -m-px pulls the table's own border on top of the wrapper's border so
                  there is exactly ONE 1px frame, and the scrollbar sits inside it. -->
             <table class="min-w-full border-collapse border border-gray-300 -m-px">
