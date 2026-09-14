@@ -5991,6 +5991,8 @@
                 },
                 onJumpInputFocus() {
                     this.jumpInputActive = true;
+                    // Timestamp: lets the scroll handler ignore focus-induced scrolls (field reveal / mobile keyboard)
+                    this._jumpFocusTs = Date.now();
                     if (this.jumpTargetMode === 'page') {
                         this.jumpInput = String(this.displayCurrentPage);
                     }
@@ -7894,10 +7896,16 @@
 
                 /* ---- Back-to-top floating button ---- */
                 updateBackToTopState(e) {
-                    // Scrolling away from the jump textarea leaves the field (blur), so the Back-to-top button can show again
+                    // Scrolling away from the jump textarea leaves the field (blur), so the Back-to-top button can show again.
+                    // Guards: 1) ignore focus-induced scrolls (browser revealing the field / mobile keyboard) shortly after focus,
+                    //         2) only blur if the field actually scrolled OUT of the viewport.
                     if (this.jumpInputActive && document.activeElement && document.activeElement !== document.body
-                        && e && e.target !== document.activeElement) {
-                        document.activeElement.blur();
+                        && e && e.target !== document.activeElement
+                        && Date.now() - (this._jumpFocusTs || 0) > 300) {
+                        const r = document.activeElement.getBoundingClientRect();
+                        if (r.bottom < 0 || r.top > window.innerHeight) {
+                            document.activeElement.blur();
+                        }
                     }
                     // Responsive threshold: half the viewport height (capped at 400px) so it adapts to every screen height
                     this.backToTopScrollable = window.scrollY > Math.min(400, window.innerHeight * 0.5);
