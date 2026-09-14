@@ -176,6 +176,18 @@
             .light-scrollbar::-webkit-scrollbar-thumb:hover {
                 background: #f3f4f6; /* gray-100 on hover */
             }
+
+            /* Back-to-top button show/hide animation */
+            .backtop-fade-enter-active,
+            .backtop-fade-leave-active {
+                transition: opacity 0.25s ease, transform 0.25s ease;
+            }
+
+            .backtop-fade-enter-from,
+            .backtop-fade-leave-to {
+                opacity: 0;
+                transform: translateY(20px); /* slides up in from below / fades down out */
+            }
         </style>
         <style>
             .zikr-box {
@@ -948,14 +960,16 @@
         </div>
 
         <!-- Back to Top button -->
-        <button
-            v-if="backToTopVisible"
-            @click="backToTop"
-            class="fixed bottom-4 right-1 z-[100] p-2 transition-all duration-100 active:scale-90"
-            aria-label="العودة إلى الأعلى"
-        >
-            <img :src="imageBaseUrl + 'res/up-arrow.png'" alt="العودة إلى الأعلى" class="h-10 w-10" />
-        </button>
+        <transition name="backtop-fade">
+            <button
+                v-if="backToTopVisible"
+                @click="backToTop"
+                class="fixed bottom-4 right-1 z-[100] p-2 transition-all duration-100 active:scale-90"
+                aria-label="العودة إلى الأعلى"
+            >
+                <img :src="imageBaseUrl + 'res/up-arrow.png'" alt="العودة إلى الأعلى" class="h-10 w-10" />
+            </button>
+        </transition>
 
         <div
             v-if="showErrorOverlay"
@@ -1039,6 +1053,7 @@
                 <transition name="fade-slide">
                     <div
                     v-if="searchOpen"
+                    ref="searchPopup"
                     class="relative"
                     >
                         <div
@@ -2361,7 +2376,7 @@
         <div v-if="!loading" class="py-6">
             <!-- Fixed-height scrollable table: the table scrolls inside this stable box,
                  so the pagination controls below never move between pages. -->
-            <div class="light-scrollbar h-[100vh] overflow-y-auto -mx-2 overflow-x-hidden border border-gray-300">
+            <div ref="episodesScroll" class="light-scrollbar h-[100vh] overflow-y-auto -mx-2 overflow-x-hidden border border-gray-300">
             <!-- -m-px pulls the table's own border on top of the wrapper's border so
                  there is exactly ONE 1px frame, and the scrollbar sits inside it. -->
             <table class="min-w-full border-collapse border border-gray-300 -m-px">
@@ -4345,6 +4360,7 @@
                     if (this.showLimitModal || this.showMangaSentLogModal || this.showMangaFailedLogModal) return false;
                     if (this.tabLockModal || this.loadingFromCache) return false;
                     if (this.comntoVisible) return false;
+                    if (this.jumpInputActive || this.jumpInput) return false; // jump textarea focused/active or has text
                     return true;
                 },
                 isApplePlatform() {
@@ -7883,6 +7899,9 @@
                 },
                 backToTop() {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
+                    // Also return the episodes table inner scroll (light-scrollbar) to the start
+                    const el = this.$refs.episodesScroll;
+                    if (el) el.scrollTo({ top: 0, behavior: 'smooth' });
                 },
                 goToPage(page) {
                     this.comntoVisible = false;
@@ -11082,6 +11101,7 @@
                     if (this.menuOpen && this.searchOpen) {
                         this.searchOpen = false;
                         document.removeEventListener("click", this.closeSearchOutside);
+                        window.removeEventListener("scroll", this.closeSearchOnScroll, true);
                     }
                 },
 
@@ -12254,10 +12274,25 @@
                     if (this.searchOpen) {
                     this.$nextTick(() => {
                         document.addEventListener("click", this.closeSearchOutside);
+                        // Close the popup when the user scrolls anywhere (page or any inner container)
+                        window.addEventListener("scroll", this.closeSearchOnScroll, { capture: true, passive: true });
                     });
                     } else {
                     document.removeEventListener("click", this.closeSearchOutside);
+                    window.removeEventListener("scroll", this.closeSearchOnScroll, true);
                     }
+                },
+                closeSearchOnScroll(e) {
+                    if (!this.searchOpen) {
+                        window.removeEventListener("scroll", this.closeSearchOnScroll, true);
+                        return;
+                    }
+                    // Ignore scrolls that happen inside the popup itself (e.g., its textarea)
+                    const popup = this.$refs.searchPopup;
+                    if (popup && e.target && e.target.nodeType === 1 && popup.contains(e.target)) return;
+                    this.searchOpen = false;
+                    document.removeEventListener("click", this.closeSearchOutside);
+                    window.removeEventListener("scroll", this.closeSearchOnScroll, true);
                 },
                 closeSearchOutside(e) {
                     // Check if click is outside the search popup
