@@ -7892,6 +7892,13 @@
                 /* ---- Press-and-hold auto-repeat pagination (mouse + touch) ---- */
                 startPageHold(dir, evt) {
                     this.stopPageHold();
+                    // Suppress the compatibility click that follows a pointer press.
+                    // The page already advances on pointerdown (step() below), and in natural
+                    // table mode the re-render can shift the layout under the finger — without
+                    // this, the browser's synthetic click can land on whatever is now under the
+                    // pointer at release (e.g. the last table row's @click). Keyboard Enter/Space
+                    // still work: they fire @click (guardedPageClick) without any pointerdown.
+                    if (evt && evt.cancelable) evt.preventDefault();
                     // Capture the pointer so releasing outside the button still stops the repeat here
                     try {
                         if (evt && evt.pointerId !== undefined && evt.currentTarget.setPointerCapture) {
