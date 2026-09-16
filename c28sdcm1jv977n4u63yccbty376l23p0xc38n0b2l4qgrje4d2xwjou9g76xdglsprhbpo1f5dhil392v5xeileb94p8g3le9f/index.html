@@ -2386,13 +2386,17 @@
 
         <!-- Table -->
         <div v-if="!loading" class="py-6">
-            <!-- Fixed-height scrollable table: the table scrolls inside this stable box,
-                 so the pagination controls below never move between pages. -->
+            <!-- Table wrapper. Fixed-height mode: the table scrolls inside this stable box,
+                 so the pagination controls below never move between pages.
+                 Natural mode: overflow-x-clip (NOT overflow-x-hidden!) — "hidden" would make
+                 overflow-y compute to "auto", turning this wrapper into a hidden ~2px scroll
+                 container (table -m-px overhang) that lags the first scroll gesture and clips
+                 rows under the top border during long-press. "clip" doesn't create one. -->
             <div
                 ref="episodesScroll"
                 :class="fixedHeightTableEnabled
                     ? 'light-scrollbar h-[100vh] overflow-y-auto -mx-2 overflow-x-hidden border border-gray-300'
-                    : '-mx-2 overflow-x-hidden border border-gray-300'"
+                    : '-mx-2 overflow-x-clip border border-gray-300'"
             >
             <!-- -m-px pulls the table's own border on top of the wrapper's border so
                  there is exactly ONE 1px frame, and the scrollbar sits inside it. -->
