@@ -2388,7 +2388,12 @@
         <div v-if="!loading" class="py-6">
             <!-- Fixed-height scrollable table: the table scrolls inside this stable box,
                  so the pagination controls below never move between pages. -->
-            <div ref="episodesScroll" class="light-scrollbar h-[100vh] overflow-y-auto -mx-2 overflow-x-hidden border border-gray-300">
+            <div
+                ref="episodesScroll"
+                :class="fixedHeightTableEnabled
+                    ? 'light-scrollbar h-[100vh] overflow-y-auto -mx-2 overflow-x-hidden border border-gray-300'
+                    : '-mx-2 overflow-x-hidden border border-gray-300'"
+            >
             <!-- -m-px pulls the table's own border on top of the wrapper's border so
                  there is exactly ONE 1px frame, and the scrollbar sits inside it. -->
             <table class="min-w-full border-collapse border border-gray-300 -m-px">
@@ -2465,10 +2470,10 @@
 
                     <!-- Existing header row -->
                     <tr class="">
-                        <th class="sticky -top-px z-10 bg-gray-800 border border-gray-300 text-xl px-2 py-2 text-center w-1/6 shadow-[inset_0_-2px_0_0_#d1d5db]">
+                        <th :class="fixedHeightTableEnabled ? 'sticky -top-px' : ''" class="z-10 bg-gray-800 border border-gray-300 text-xl px-2 py-2 text-center w-1/6 shadow-[inset_0_-2px_0_0_#d1d5db]">
                             {{ episodeNumberHeader }}
                         </th>               
-                        <th class="sticky -top-px z-10 bg-gray-800 border border-gray-300 text-xl px-4 py-2 text-center w-5/6 shadow-[inset_0_-2px_0_0_#d1d5db]">
+                        <th :class="fixedHeightTableEnabled ? 'sticky -top-px' : ''" class="z-10 bg-gray-800 border border-gray-300 text-xl px-4 py-2 text-center w-5/6 shadow-[inset_0_-2px_0_0_#d1d5db]">
                             {{ episodeTitleHeader }}
                             <br />
                             <span class="text-base" style="color: rgb(108 255 0); font-weight: 900;">
@@ -3147,14 +3152,14 @@
 
             <!-- Page Size Controls (Right) -->
             <div class="text-center font-bold justify-center">
-                <!-- <label class="inline-flex items-center mx-1 transition-all duration-100 active:scale-90">
+                <label v-if="!fixedHeightTableEnabled" class="inline-flex items-center mx-1 transition-all duration-100 active:scale-90">
                     <input type="radio" v-model="pageSize" :value="5" class="form-radio text-blue-500 mx-1" />
                     <span class="ml-2">5</span>
                 </label>
-                <label class="inline-flex items-center mx-1 transition-all duration-100 active:scale-90">
+                <label v-if="!fixedHeightTableEnabled" class="inline-flex items-center mx-1 transition-all duration-100 active:scale-90">
                     <input type="radio" v-model="pageSize" :value="10" class="form-radio text-blue-500 mx-1" />
                     <span class="ml-2">10</span>
-                </label> -->
+                </label>
                 <label class="inline-flex items-center mx-1 transition-all duration-100 active:scale-90">
                     <input type="radio" v-model="pageSize" :value="15" class="form-radio text-blue-500 mx-1" />
                     <span class="ml-2">15</span>
@@ -3167,7 +3172,7 @@
                     <input type="radio" v-model="pageSize" :value="25" class="form-radio text-blue-500 mx-1" />
                     <span class="ml-2">25</span>
                 </label>
-                <label class="inline-flex items-center mx-1 transition-all duration-100 active:scale-90">
+                <label v-if="fixedHeightTableEnabled" class="inline-flex items-center mx-1 transition-all duration-100 active:scale-90">
                     <input type="radio" v-model="pageSize" :value="50" class="form-radio text-blue-500 mx-1" />
                     <span class="ml-2">50</span>
                 </label>
@@ -4274,8 +4279,9 @@
                     selectedFilter: 'all',
                     currentPage: 1,
                     lastPage: 1,
-                    pageSize: 20,
-                    oldPageSize: 20,
+                    fixedHeightTableEnabled: false, // "A. Fixed-height scrollable table" feature flag: false = natural full-height table (page scrolls), true = inner-scroll table
+                    pageSize: 15,
+                    oldPageSize: 15,
                     showModal: false,
                     showTrailerModal: false,
                     selectedEpisode: null,
@@ -6024,8 +6030,6 @@
                 },
                 onJumpInputFocus() {
                     this.jumpInputActive = true;
-                    // Timestamp: lets the scroll handler ignore focus-induced scrolls (field reveal / mobile keyboard)
-                    this._jumpFocusTs = Date.now();
                     if (this.jumpTargetMode === 'page') {
                         this.jumpInput = String(this.displayCurrentPage);
                     }
@@ -7928,18 +7932,7 @@
                 },
 
                 /* ---- Back-to-top floating button ---- */
-                updateBackToTopState(e) {
-                    // Scrolling away from the jump textarea leaves the field (blur), so the Back-to-top button can show again.
-                    // Guards: 1) ignore focus-induced scrolls (browser revealing the field / mobile keyboard) shortly after focus,
-                    //         2) only blur if the field actually scrolled OUT of the viewport.
-                    if (this.jumpInputActive && document.activeElement && document.activeElement !== document.body
-                        && e && e.target !== document.activeElement
-                        && Date.now() - (this._jumpFocusTs || 0) > 300) {
-                        const r = document.activeElement.getBoundingClientRect();
-                        if (r.bottom < 0 || r.top > window.innerHeight) {
-                            document.activeElement.blur();
-                        }
-                    }
+                updateBackToTopState() {
                     // Smart swap algorithm: measure BOTH the page scroll and the table inner scroll,
                     // then decide which floating button deserves the screen:
                     //   - past the threshold (page OR table) -> Back-to-Top takes over
@@ -12987,6 +12980,15 @@
 
                 // Comnto script will be loaded on-demand when user opens the comments
 
+                // Fixed-height scrollable table flag also drives the default page size:
+                // enabled -> 20 (with the "50" option shown), disabled -> 15 (with "5"/"10" shown)
+                if (this.fixedHeightTableEnabled) {
+                    this.pageSize = 20;
+                    this.oldPageSize = 20;
+                } else {
+                    this.pageSize = 15;
+                    this.oldPageSize = 15;
+                }
                 // Back-to-top button: track page scroll/resize (responsive threshold).
                 // Capture phase so scrolls inside inner containers (e.g., the table) are caught too.
                 window.addEventListener('scroll', this.updateBackToTopState, { capture: true, passive: true });
