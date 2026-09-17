@@ -757,7 +757,7 @@
 
         <!-- ═══ App Bar (DESIGN_SPEC §11/§12.1) — consolidates brand + menu + search + view switcher ═══ -->
         <header
-            v-if="loadingModeResolved && !loadingFromCache"
+            v-if="loadingModeResolved && !loadingFromCache && !loading"
             class="sticky top-0 z-40 -mx-4 mb-6 bg-surface-elevated border-b border-hairline shadow-e1"
         >
             <div class="max-w-5xl mx-auto px-4 md:px-6 h-14 flex items-center gap-2">
@@ -900,18 +900,18 @@
                     role="radiogroup"
                     aria-label="طريقة العرض"
                     class="shrink-0 flex items-center gap-0.5 bg-surface border border-hairline rounded-full p-1"
-                    :class="isCapturingEpisodeTableImages ? 'opacity-60 pointer-events-none' : ''"
+                    :class="(loading || isCapturingEpisodeTableImages) ? 'opacity-60 pointer-events-none' : ''"
                 >
                     <label
                         :class="['relative flex items-center gap-1.5 h-8 px-3 rounded-full text-sm font-bold cursor-pointer transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-1', activeView === 'table' ? 'bg-primary text-primary-on' : 'text-muted hover:text-content hover:bg-surface-elevated']"
                     >
-                        <input type="radio" value="table" v-model="activeView" class="sr-only" aria-label="عرض الجدول" :disabled="isCapturingEpisodeTableImages">
+                        <input type="radio" value="table" v-model="activeView" class="sr-only" aria-label="عرض الجدول" :disabled="loading || isCapturingEpisodeTableImages">
                         <span aria-hidden="true">☰</span><span class="max-[479px]:hidden">جدول</span>
                     </label>
                     <label
                         :class="['relative flex items-center gap-1.5 h-8 px-3 rounded-full text-sm font-bold cursor-pointer transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-1', activeView === 'cards' ? 'bg-primary text-primary-on' : 'text-muted hover:text-content hover:bg-surface-elevated']"
                     >
-                        <input type="radio" value="cards" v-model="activeView" class="sr-only" aria-label="عرض البطاقات" :disabled="isCapturingEpisodeTableImages">
+                        <input type="radio" value="cards" v-model="activeView" class="sr-only" aria-label="عرض البطاقات" :disabled="loading || isCapturingEpisodeTableImages">
                         <span aria-hidden="true">▦</span><span class="max-[479px]:hidden">بطاقات</span>
                     </label>
                 </div>
