@@ -2871,7 +2871,7 @@
                                     </div>
                                 </fieldset>
 
-                                <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeSummary !== ''" class="border border-hairline bg-danger-surface p-2 rounded-lg mb-2">
+                                <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeSummary !== ''" class="border border-hairline bg-danger-surface/50 p-2 rounded-lg mb-2">
                                     <legend class="font-bold cursor-pointer transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60" @click="toggleSpoiler">
                                         <span class="text-lg">
                                             <span v-html="highlightSpoilerText()"></span>
@@ -2879,7 +2879,7 @@
                                     </legend>
                                      <!-- Read prompt: centered in the fieldset body, opens only — closing stays the legend's job -->
                                     <span v-if="!spoilerVisible" @click.stop="spoilerVisible = true" class="block w-full text-center text-warning text-lg cursor-pointer select-none py-2 transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97]">أضغط هنا للقراءة</span>
-                                    <p v-if="spoilerVisible" class="text-lg">{{ selectedEpisode.EpisodeSummary }}</p>
+                                    <p v-if="spoilerVisible" class="text-lg text-center">{{ selectedEpisode.EpisodeSummary }}</p>
                                 </fieldset>                                                    
 
                                 <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeNextHint !== ''" class="border border-hairline bg-surface p-2 rounded-lg mb-2">
