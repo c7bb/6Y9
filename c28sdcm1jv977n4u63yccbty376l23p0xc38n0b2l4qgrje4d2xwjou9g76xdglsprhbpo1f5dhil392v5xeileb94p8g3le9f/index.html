@@ -2872,10 +2872,12 @@
                                 </fieldset>
 
                                 <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeSummary !== ''" class="border border-hairline bg-surface p-2 rounded-lg mb-2">
-                                    <legend class="font-bold cursor-pointer transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60" @click="toggleSpoiler">
+                                    <legend class="w-full flex items-center font-bold cursor-pointer transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60" @click="toggleSpoiler">
                                         <span class="text-lg">
                                             <span v-html="highlightSpoilerText()"></span>
                                         </span>
+                                        <!-- Read prompt: centered, opens only — closing stays the legend's job -->
+                                        <span v-if="!spoilerVisible" @click.stop="spoilerVisible = true" class="flex-1 text-center text-warning text-lg">أضغط هنا للقراءة</span>
                                     </legend>
                                     <p v-if="spoilerVisible" class="text-lg">{{ selectedEpisode.EpisodeSummary }}</p>
                                 </fieldset>                                                    
