@@ -2025,7 +2025,7 @@
                     <div ref="emptyPopupScroll" class="overflow-y-auto p-4 flex-1 always-visible-scrollbar">
 
                         <!-- User Guide Section -->
-                        <div class="bg-warning-surface border border-hairline text-content p-4 rounded-lg mb-4">
+                        <div class="bg-warning-surface/70 border border-hairline text-content p-4 rounded-lg mb-4">
                             <h3 class="text-lg font-bold text-warning mb-2">الشرح التوضيحي</h3>
                             <ul class="list-disc pl-5 pr-2 text-base">
                                 <li class="mb-2">استخدم المرشحات الموجودة في الأسفل لتحديد المحتوى الذي ترغب في عرضه وتقييده داخل الجدول.</li>
@@ -2034,7 +2034,7 @@
                             </ul>
                         </div>
                         
-                        <div class="bg-danger-surface border border-hairline p-4 rounded-lg mb-4 text-center">
+                        <div class="bg-danger-surface/70 border border-hairline p-4 rounded-lg mb-4 text-center">
                             <h3 class="text-lg font-bold text-warning mb-2">ملاحظة</h3>
                             <p class="text-base">اسماء الشخصيات بالترتيب الياباني (اسم العائلة + اسم الشخص)</p>
                         </div>
@@ -2871,7 +2871,7 @@
                                     </div>
                                 </fieldset>
 
-                                <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeSummary !== ''" class="border border-hairline bg-danger-surface/50 p-2 rounded-lg mb-2">
+                                <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeSummary !== ''" class="border border-hairline border-danger bg-danger-surface/50 p-2 rounded-lg mb-2">
                                     <legend class="font-bold cursor-pointer transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60" @click="toggleSpoiler">
                                         <span class="text-lg">
                                             <span v-html="highlightSpoilerText()"></span>
@@ -2879,7 +2879,7 @@
                                     </legend>
                                      <!-- Read prompt: centered in the fieldset body, opens only — closing stays the legend's job -->
                                     <span v-if="!spoilerVisible" @click.stop="spoilerVisible = true" class="block w-full text-center text-warning text-lg cursor-pointer select-none py-2 transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97]">أضغط هنا للقراءة</span>
-                                    <p v-if="spoilerVisible" class="text-lg text-center">{{ selectedEpisode.EpisodeSummary }}</p>
+                                    <p v-if="spoilerVisible" class="text-lg text-center text-white/80">{{ selectedEpisode.EpisodeSummary }}</p>
                                 </fieldset>                                                    
 
                                 <fieldset v-if="selectedEpisode && selectedEpisode.EpisodeNextHint !== ''" class="border border-hairline bg-surface p-2 rounded-lg mb-2">
