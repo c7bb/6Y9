@@ -739,101 +739,7 @@
             animation: stripes 1s linear infinite;
         }
     </style>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,100..1000&display=swap');
-        :root {
-            --glass-bg: rgba(255, 255, 255, 0.06);
-            --glass-text: rgba(255, 255, 255, 0.92);
-        }
-        .liquid-glass {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--glass-bg);
-            color: var(--glass-text);
-            backdrop-filter: blur(10px) saturate(140%);
-            -webkit-backdrop-filter: blur(10px) saturate(140%);
-            box-shadow:
-                inset 1px 1px 0 rgba(255, 255, 255, 0.35),
-                inset -2px -2px 2px rgba(255, 255, 255, 0.25),
-                0 4px 12px rgba(0, 0, 0, 0.35),
-                0 12px 24px rgba(0, 0, 0, 0.25);
-            transition: transform 200ms cubic-bezier(0.2, 0.9, 0.3, 1.2), box-shadow 300ms ease;
-            border-radius: 20px;
-            border: 0;
-        }
-        .liquid-glass:hover {
-            transform: scale(1.04);
-            box-shadow:
-                inset 1px 1px 0 rgba(255, 255, 255, 0.4),
-                inset -2px -2px 2px rgba(255, 255, 255, 0.3),
-                0 6px 16px rgba(0, 0, 0, 0.4),
-                0 16px 28px rgba(0, 0, 0, 0.3);
-        }
-        .liquid-glass:active {
-            transform: scale(0.96);
-        }
-        .liquid-glass:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        .liquid-glass::before {
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
-            pointer-events: none;
-        }
-        .liquid-glass::after {
-            position: absolute;
-            left: 0;
-            top: 0;
-            right: 0;
-            height: 55%;
-            border-radius: inherit;
-            background:
-                radial-gradient(80% 120% at 10% 5%, rgba(255, 255, 255, 0.25), transparent 60%),
-                radial-gradient(60% 80% at 90% 0%, rgba(255, 255, 255, 0.15), transparent 60%);
-            pointer-events: none;
-        }
-        .liquid-glass-round {
-            width: 44px;
-            height: 44px;
-            padding: 0;
-            border-radius: 9999px;
-        }
-        .liquid-glass-hamburger {
-            width: 56px;
-            height: 44px;
-            padding: 8px 10px;
-            border-radius: 9999px;
-        }
-        .liquid-glass .bar {
-            display: block;
-            width: 24px;
-            height: 2px;
-            margin: 3px 0;
-            border-radius: 2px;
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow:
-                0 1px 0 rgba(255, 255, 255, 0.25),
-                0 -1px 0 rgba(0, 0, 0, 0.2);
-        }
-        .liquid-glass svg {
-            color: var(--glass-text);
-        }
-        .liquid-glass-white {
-            background: rgba(255, 255, 255, 0.9);
-            color: rgba(0, 0, 0, 0.9);
-            box-shadow:
-                inset 1px 1px 0 rgba(255, 255, 255, 0.6),
-                inset -2px -2px 2px rgba(255, 255, 255, 0.4),
-                0 6px 18px rgba(0, 0, 0, 0.25),
-                0 14px 28px rgba(0, 0, 0, 0.18);
-        }
-        /* .lg-switcher + switcher__* CSS removed — defined but unused in template (DESIGN_SPEC §21 cleanup) */
-    </style>
+    <!-- liquid-glass Apple header styles removed — single app bar for all platforms -->
 </head>
 <body class="bg-ink text-content pb-4 relative"> <!-- pt removed: App Bar must be the topmost element (no gap above it when scrolling back to top) -->
     <!-- Loading spinner - shows before Vue initializes -->
@@ -852,9 +758,7 @@
         <!-- ═══ App Bar (DESIGN_SPEC §11/§12.1) — consolidates brand + menu + search + view switcher ═══ -->
         <header
             v-if="loadingModeResolved && !loadingFromCache"
-            :class="isApplePlatform
-                ? 'sticky top-0 z-40 -mx-4 mb-6 liquid-glass'
-                : 'sticky top-0 z-40 -mx-4 mb-6 bg-surface-elevated border-b border-hairline shadow-e1'"
+            class="sticky top-0 z-40 -mx-4 mb-6 bg-surface-elevated border-b border-hairline shadow-e1"
         >
             <div class="max-w-5xl mx-auto px-4 md:px-6 h-14 flex items-center gap-2">
                 <!-- Menu trigger (moved from fixed top-right; same handlers/dropdown) -->
@@ -863,13 +767,11 @@
                         @click.stop="toggleMenu"
                         :disabled="loading"
                         aria-label="القائمة"
-                        :class="isApplePlatform
-                            ? 'liquid-glass liquid-glass-hamburger flex flex-col items-center justify-center transition-transform duration-200 disabled:opacity-50 disabled:cursor-not-allowed'
-                            : 'h-10 w-10 flex flex-col items-center justify-center rounded-md text-content hover:bg-hairline transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed'"
+                        class="h-10 w-10 flex flex-col items-center justify-center rounded-md text-content hover:bg-hairline transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        <span :class="isApplePlatform ? 'bar' : 'block w-5 h-0.5 bg-content mb-1'"></span>
-                        <span :class="isApplePlatform ? 'bar' : 'block w-5 h-0.5 bg-content mb-1'"></span>
-                        <span :class="isApplePlatform ? 'bar' : 'block w-5 h-0.5 bg-content'"></span>
+                        <span class="block w-5 h-0.5 bg-content mb-1"></span>
+                        <span class="block w-5 h-0.5 bg-content mb-1"></span>
+                        <span class="block w-5 h-0.5 bg-content"></span>
                     </button>
 
                     <div
@@ -897,9 +799,7 @@
                         @click.stop="toggleSearch"
                         :disabled="loading"
                         aria-label="البحث"
-                        :class="isApplePlatform
-                            ? 'liquid-glass liquid-glass-round transition-transform duration-200 disabled:opacity-50 disabled:cursor-not-allowed'
-                            : 'h-10 w-10 flex items-center justify-center rounded-md text-muted hover:text-content hover:bg-hairline transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed'"
+                        class="h-10 w-10 flex items-center justify-center rounded-md text-muted hover:text-content hover:bg-hairline transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
@@ -4576,14 +4476,6 @@
                     if (!this.paginationReached) return false; // user is still above the list
                     return this.floatingOverlayFree; // hide behind any overlay/modal/sheet
                 },
-                isApplePlatform() {
-                    try {
-                        const p = String(webApp?.platform || '').toLowerCase();
-                        return p === 'ios' || p === 'macos';
-                    } catch (_) {
-                        return false;
-                    }
-                },
                 commentsHeaderText() {
                     try {
                         if (this.comntoContext === 'main' || this.comntoTopic === 'mainPageCD') return 'تعليقات الصفحة الرئيسية';
@@ -5752,13 +5644,9 @@
                 cardsRateLocked(locked) {
                     document.body.classList.toggle('cards-rate-locked', locked);
                 },
-                // Persist presentational view mode
+                // Persist presentational view mode (CloudStorage, IndexedDB fallback)
                 activeView(newVal) {
-                    try {
-                        if (newVal === 'table' || newVal === 'cards') {
-                            localStorage.setItem('dcr-view-mode', newVal);
-                        }
-                    } catch (e) {}
+                    this.saveViewMode(newVal);
                     // The sticky pagination bar anchors to the ACTIVE view's list element;
                     // switching views moves nothing, so re-measure explicitly.
                     this.$nextTick(() => this.updateBackToTopState());
@@ -8794,6 +8682,59 @@
                     this.currentPage = 1;
                     if (this.totalPages < 1) return;
                     this.handlePageSelect({ target: { value: 1 } });
+                },
+
+                // Telegram CloudStorage handle — null outside Telegram or on clients
+                // older than Bot API 6.9 (where CloudStorage is unavailable).
+                cloudStorage() {
+                    try {
+                        const tg = window.Telegram && window.Telegram.WebApp;
+                        if (!tg || !tg.CloudStorage) return null;
+                        if (typeof tg.isVersionAtLeast === 'function') {
+                            return tg.isVersionAtLeast('6.9') ? tg.CloudStorage : null;
+                        }
+                        // isVersionAtLeast missing (very old client): compare version string
+                        const parts = String(tg.version || '0').split('.').map(Number);
+                        const major = parts[0] || 0;
+                        const minor = parts[1] || 0;
+                        return (major > 6 || (major === 6 && minor >= 9)) ? tg.CloudStorage : null;
+                    } catch (e) {
+                        return null;
+                    }
+                },
+                // View-mode persistence: CloudStorage when available, IndexedDB otherwise
+                saveViewMode(val) {
+                    if (val !== 'table' && val !== 'cards') return;
+                    const cs = this.cloudStorage();
+                    if (cs) {
+                        try { cs.setItem('dcr-view-mode', val); return; } catch (e) {}
+                    }
+                    this.saveToIDB('dcr-view-mode', val).catch(() => {});
+                },
+                async restoreViewMode() {
+                    const cs = this.cloudStorage();
+                    if (cs) {
+                        const cloudVal = await new Promise((resolve) => {
+                            try {
+                                cs.getItem('dcr-view-mode', (err, value) => resolve(err ? null : value));
+                            } catch (e) { resolve(null); }
+                        });
+                        if (cloudVal === 'cards' || cloudVal === 'table') return cloudVal;
+                    }
+                    try {
+                        const idbVal = await this.loadFromIDB('dcr-view-mode');
+                        if (idbVal === 'cards' || idbVal === 'table') return idbVal;
+                    } catch (e) {}
+                    // One-time migration from the legacy localStorage key (pre-cloud builds)
+                    try {
+                        const legacy = localStorage.getItem('dcr-view-mode');
+                        if (legacy === 'cards' || legacy === 'table') {
+                            this.saveViewMode(legacy);
+                            localStorage.removeItem('dcr-view-mode');
+                            return legacy;
+                        }
+                    } catch (e) {}
+                    return null;
                 },
 
                 // IDB Helper
@@ -13184,8 +13125,8 @@
             async created() {
                 // Restore persisted view mode ('table' | 'cards') — presentational only
                 try {
-                    const savedView = localStorage.getItem('dcr-view-mode');
-                    if (savedView === 'cards' || savedView === 'table') this.activeView = savedView;
+                    const savedView = await this.restoreViewMode();
+                    if (savedView) this.activeView = savedView;
                 } catch (e) {}
                 try {
                     const rawVer = localStorage.getItem('dcrdb-version-state');
