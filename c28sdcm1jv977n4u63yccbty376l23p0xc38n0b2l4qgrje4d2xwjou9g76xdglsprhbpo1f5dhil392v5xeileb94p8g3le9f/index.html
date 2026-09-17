@@ -2159,7 +2159,7 @@
                                     <button
                                         v-if="episodes && episodes.length > 0"
                                         @click="openEpisodeModal(ep)"
-                                        class="w-full h-12 py-2 bg-teal-600 border border-hairline text-content font-bold text-lg rounded-md tnum hover:bg-surface-elevated hover:border-hairline-strong transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
+                                        class="w-full h-12 py-2 bg-teal-600/70 border border-hairline text-content font-bold text-lg rounded-md tnum hover:bg-surface-elevated hover:border-hairline-strong transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
                                         {{ ep }}
                                     </button>
                                     <p v-if="episodeOfWeekTimeAgo || episodeOfWeekTimeAgoEnglish"
@@ -2174,7 +2174,7 @@
                                     <p class="type-h3 text-content text-center mb-4">فيلم السنة الماضية</p>
                                     <button
                                         @click="openEpisodeModal('الفيلم 28')"
-                                        class="w-full h-12 py-2 bg-red-500 border border-hairline text-content font-bold text-lg rounded-md tnum hover:bg-surface-elevated hover:border-hairline-strong transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
+                                        class="w-full h-12 py-2 bg-red-500/70 border border-hairline text-content font-bold text-lg rounded-md tnum hover:bg-surface-elevated hover:border-hairline-strong transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
                                         28
                                     </button>
                                     <p v-if="(movieCountdownArabic || movieTimeAgoArabic)"
@@ -2192,7 +2192,7 @@
                                     <button
                                         v-if="mangas && mangas.length > 0"
                                         @click="openMangaModal(mangaCh)"
-                                        class="w-full h-12 py-2 bg-green-600 border border-hairline text-content font-bold text-lg rounded-md tnum hover:bg-surface-elevated hover:border-hairline-strong transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
+                                        class="w-full h-12 py-2 bg-green-600/70 border border-hairline text-content font-bold text-lg rounded-md tnum hover:bg-surface-elevated hover:border-hairline-strong transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
                                         {{ mangaCh }}
                                     </button>
                                     <p v-if="mangaOfWeekTimeAgo || mangaOfWeekTimeAgoEnglish"
@@ -2704,7 +2704,7 @@
                                         <button
                                             :disabled="manga.status === 'success' || manga.status === 'ratelimiting' || manga.status === 'sending'"
                                             @click="() => { sendMangaWrapper(manga.MangaFileID, manga.MangaNumber, index, false); }"
-                                            class="bg-action-manga text-white px-6 py-2 rounded-md hover:bg-action-manga/85 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-manga/60 focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+                                            class="bg-action-manga/70 text-white px-6 py-2 rounded-md hover:bg-action-manga/85 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-manga/60 focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
                                             dir="ltr"
                                         >
                                             <span v-if="manga.status === 'ratelimiting'">{{ manga.MangaNumber }} ({{ formatFileSize(manga.MangaFileSize) }})</span>
@@ -2900,7 +2900,7 @@
                                     </legend>
                                     <button
                                         @click="openTrailerModal"
-                                        class="w-full bg-action-trailer text-white px-6 py-2 rounded-md hover:bg-action-trailer/85 flex items-center justify-center shadow-md transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-trailer/60 focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+                                        class="w-full bg-action-trailer/70 text-white px-6 py-2 rounded-md hover:bg-action-trailer/85 flex items-center justify-center shadow-md transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-trailer/60 focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
                                     >
                                         {{ trailerMainButtonText }}
                                     </button>
@@ -2919,7 +2919,7 @@
                                                         <button
                                                             :disabled="video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending'"
                                                             @click="() => { sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, video.originalIndex, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime); }"
-                                                            class="w-full bg-action-video text-white px-6 py-2 rounded-md hover:bg-action-video/85 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] disabled:cursor-not-allowed relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-video/60 focus-visible:ring-offset-2 focus-visible:ring-offset-surface">
+                                                            class="w-full bg-action-video/70 text-white px-6 py-2 rounded-md hover:bg-action-video/85 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] disabled:cursor-not-allowed relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-video/60 focus-visible:ring-offset-2 focus-visible:ring-offset-surface">
                                                             <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ formatFileSize(video.Size) }})</span>
                                                             <span v-else-if="video.countdown !== undefined">{{ video.countdown }}</span>
                                                             <span v-else>{{ video.Resolution }} ({{ formatFileSize(video.Size) }})</span>
@@ -2968,7 +2968,7 @@
                                                                 <button
                                                                     :disabled="video.status === 'success' || video.status === 'ratelimiting' || video.status === 'sending'"
                                                                     @click="() => { sendEpisodeToBot(video.VideoID, video.Resolution, video.Size, video.originalIndex, video.IntroductionTime, video.StartStoryTime, video.EpisodeSuspenseTime, video.StartSongTime, video.ChapterOneTime, video.ChapterTwoTime, video.EndSongTime, video.ChapterThreeTime, video.NextEpisodeTeaserTime, video.NextEpisodeHintTime); }"
-                                                                    class="w-full bg-action-video text-white px-6 py-2 rounded-md hover:bg-action-video/85 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] disabled:cursor-not-allowed relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-video/60 focus-visible:ring-offset-2 focus-visible:ring-offset-surface">
+                                                                    class="w-full bg-action-video/70 text-white px-6 py-2 rounded-md hover:bg-action-video/85 flex items-center justify-center shadow-md disabled:opacity-50 transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] disabled:cursor-not-allowed relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-video/60 focus-visible:ring-offset-2 focus-visible:ring-offset-surface">
                                                                     <span v-if="video.status === 'ratelimiting'">{{ video.Resolution }} ({{ formatFileSize(video.Size) }})</span>
                                                                     <span v-else-if="video.countdown !== undefined">{{ video.countdown }}</span>
                                                                     <span v-else>{{ video.Resolution }} ({{ formatFileSize(video.Size) }})</span>
