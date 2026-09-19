@@ -1486,9 +1486,6 @@
                                             <option value="auto">تلقائي (الأفضل المتاح)</option>
                                             <option value="T">محسنة</option>
                                             <option value="F">غير محسنة</option>
-                                            <option value="P">حلقة خاصة</option>
-                                            <option value="TP">محسنة وخاصة</option>
-                                            <option value="FP">غير محسنة وخاصة</option>
                                         </select>
                                     </label>
                                     <label class="flex flex-col gap-1">
@@ -13115,9 +13112,11 @@
                 resolveBulkVariant(episode, prefs, anchor, label) {
                     // Deterministic soft-preference resolver: scores every variant, no hard filtering.
                     // Ranking: preference matches desc -> star-translator bonus desc (auto translator
-                    // only) -> batch-coherence bonus desc -> resolution desc -> size DESC (at equal
-                    // quality the bigger file is the better encode, not the smaller one) ->
-                    // original index asc (final stable tie-break).
+                    // only) -> remastered bonus desc (auto remastered only: T/TP are remastered
+                    // encodes, F/FP are not; P alone is a special-episode mark, not a نسخة type) ->
+                    // batch-coherence bonus desc -> resolution desc -> size DESC (at equal quality
+                    // the bigger file is the better encode, not the smaller one) -> original index
+                    // asc (final stable tie-break).
                     const videos = Array.isArray(episode?.EpisodeVideosIDs) ? episode.EpisodeVideosIDs : [];
                     const cleanLabel = String(label ?? this.parseEpisodeLabel(String(episode?.EpisodeNumber ?? '')).cleanNum).trim();
                     if (!videos.length) {
@@ -13162,11 +13161,17 @@
                         const star = (!prefsSet.translator && translatorNorm &&
                             (INDIVIDUAL_TRANSLATOR_TOKENS.has(translatorNorm) || TEAM_TRANSLATOR_TOKENS.has(translatorNorm))) ? 1 : 0;
 
+                        // Remastered bonus (auto remastered only): تلقائي prefers a محسنة encode —
+                        // T (محسنة) and TP (محسنة وخاصة) count as remastered; F/FP do not; P alone
+                        // is a special-episode mark and stays neutral.
+                        const remastered = (!prefsSet.remastered && (rem === 'T' || rem === 'TP')) ? 1 : 0;
+
                         const candidate = {
                             video,
                             idx,
                             matches,
                             star,
+                            remastered,
                             coherence,
                             resolution: isNaN(res) ? -1 : res,
                             size: (isNaN(size) || size <= 0) ? -1 : size // missing size sorts last (bigger wins)
@@ -13175,10 +13180,11 @@
                             !best ||
                             candidate.matches > best.matches ||
                             (candidate.matches === best.matches && candidate.star > best.star) ||
-                            (candidate.matches === best.matches && candidate.star === best.star && candidate.coherence > best.coherence) ||
-                            (candidate.matches === best.matches && candidate.star === best.star && candidate.coherence === best.coherence && candidate.resolution > best.resolution) ||
-                            (candidate.matches === best.matches && candidate.star === best.star && candidate.coherence === best.coherence && candidate.resolution === best.resolution && candidate.size > best.size) ||
-                            (candidate.matches === best.matches && candidate.star === best.star && candidate.coherence === best.coherence && candidate.resolution === best.resolution && candidate.size === best.size && candidate.idx < best.idx)
+                            (candidate.matches === best.matches && candidate.star === best.star && candidate.remastered > best.remastered) ||
+                            (candidate.matches === best.matches && candidate.star === best.star && candidate.remastered === best.remastered && candidate.coherence > best.coherence) ||
+                            (candidate.matches === best.matches && candidate.star === best.star && candidate.remastered === best.remastered && candidate.coherence === best.coherence && candidate.resolution > best.resolution) ||
+                            (candidate.matches === best.matches && candidate.star === best.star && candidate.remastered === best.remastered && candidate.coherence === best.coherence && candidate.resolution === best.resolution && candidate.size > best.size) ||
+                            (candidate.matches === best.matches && candidate.star === best.star && candidate.remastered === best.remastered && candidate.coherence === best.coherence && candidate.resolution === best.resolution && candidate.size === best.size && candidate.idx < best.idx)
                         ) {
                             best = candidate;
                         }
