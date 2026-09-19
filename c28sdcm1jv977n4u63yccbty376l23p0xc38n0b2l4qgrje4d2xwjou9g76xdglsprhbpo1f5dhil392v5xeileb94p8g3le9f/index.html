@@ -891,7 +891,7 @@
                                     <button
                                     @click="clearSearch"
                                     aria-label="مسح البحث"
-                                    :class="['absolute left-1.5 h-8 w-8 flex items-center justify-center rounded-md text-muted hover:text-content hover:bg-hairline transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary', (searchFilters.title || searchFilters.story || searchFilters.summary) ? 'top-4' : 'top-1']"
+                                    :class="['absolute left-1.5 h-8 w-8 flex items-center justify-center rounded-md text-danger hover:text-danger bg-danger/15 shadow-[0_0_8px_rgba(248,113,113,0.35)] hover:shadow-[0_0_14px_rgba(248,113,113,0.6)] border border-danger/40 transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger', (searchFilters.title || searchFilters.story || searchFilters.summary) ? 'top-5' : 'top-2']"
                                     >
                                     ✕
                                     </button>
