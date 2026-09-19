@@ -4514,6 +4514,7 @@
                     mangaQueueTimeoutId: null,
                     showStopConfirmation: false,
                     showLimitModal: false,
+                    limitModalContext: 'manga', // 'manga' | 'episode' | 'movie' — what hit the daily limit
                     showMangaSentLogModal: false,
                     showMangaFailedLogModal: false,
                     mangaQueueCurrent: {
@@ -5392,11 +5393,19 @@
                     return Math.max(0, this.maxDailyDownloads - (this.dailyDownloads + this.pendingDailyIncrements));
                 },
                 remainingDownloadsLabel() {
+                    // Wording follows what hit the daily limit — manga chapters,
+                    // anime episodes, or movies (the app is no longer manga-only).
+                    const forms = {
+                        manga: ['فصل', 'فصلين', 'فصول'],
+                        episode: ['حلقة', 'حلقتين', 'حلقات'],
+                        movie: ['فيلم', 'فيلمين', 'أفلام'],
+                    };
+                    const [one, two, many] = forms[this.limitModalContext] || forms.manga;
                     const n = this.remainingDownloads;
-                    if (n === 1) return 'فصل';
-                    if (n === 2) return 'فصلين';
-                    if (n >= 3 && n <= 10) return 'فصول';
-                    return 'فصل';
+                    if (n === 1) return one;
+                    if (n === 2) return two;
+                    if (n >= 3 && n <= 10) return many;
+                    return one;
                 },
                 // Frozen module-level image URL map exposed to the template (computed
                 // caches the reference; frozen objects are never made reactive)
@@ -13100,6 +13109,7 @@
                             entry.error = `لقد وصلت للحد اليومي (${this.maxDailyDownloads}). المتبقي: ${this.remainingDownloads}.`;
                             this.retryQueueCurrent.status = 'failed';
                             this.retryQueueCurrent.error = entry.error;
+                            this.limitModalContext = 'manga';
                             this.showLimitModal = true;
                             return;
                         }
@@ -13212,6 +13222,7 @@
 
                     // Check daily limit
                     if (this.failedMangaQueue.length > this.remainingDownloads) {
+                        this.limitModalContext = 'manga';
                         this.showLimitModal = true;
                         return;
                     }
@@ -13252,6 +13263,7 @@
                          // Check daily limit again
                          const canDownload = await this.checkDailyLimit();
                          if (!canDownload) {
+                             this.limitModalContext = 'manga';
                              this.showLimitModal = true;
                              this.isRetryQueueRunning = false;
                              break;
@@ -13657,6 +13669,7 @@
 
                     // Daily limit pre-flight (sendable items only)
                     if (preview.sendable > this.remainingDownloads) {
+                        this.limitModalContext = this.bulkIsMovies ? 'movie' : 'episode';
                         this.showLimitModal = true;
                         return;
                     }
@@ -13749,6 +13762,7 @@
                         if (!canDownload) {
                             this.isBulkQueueSending = false;
                             this.isBulkQueuePauseRequested = true;
+                            this.limitModalContext = this.bulkIsMovies ? 'movie' : 'episode';
                             this.showLimitModal = true;
                             this.bulkQueueTimeoutId = setTimeout(() => processNext(processId), 100);
                             return;
@@ -13950,6 +13964,7 @@
 
                     // Check daily limit
                     if (this.mangaQueue.length > this.remainingDownloads) {
+                        this.limitModalContext = 'manga';
                         this.showLimitModal = true;
                         return;
                     }
