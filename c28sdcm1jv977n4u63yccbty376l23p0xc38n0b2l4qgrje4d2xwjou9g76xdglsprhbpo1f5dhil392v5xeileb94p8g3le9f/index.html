@@ -1475,18 +1475,20 @@
                             <details class="border border-hairline bg-surface rounded-lg">
                                 <summary class="p-2 cursor-pointer text-sm select-none">خيارات الإرسال الذكي (اختياري)</summary>
                                 <div class="p-2 pt-1 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                                    <!-- Episode-type split: movies are all فِلر and mangas are all مانغا — episodes only -->
+                                    <label v-if="selectedCategory === 'episodes'" class="flex flex-col gap-1">
+                                        <span class="text-muted">نوع الحلقة</span>
+                                        <select v-model="bulkPrefs.mangaType" class="p-2 bg-surface-elevated rounded-sm text-white">
+                                            <option value="all">الكل (مانغا + فِلر) ({{ bulkOptionsSource.length }})</option>
+                                            <option value="Manga">مانغا ({{ bulkMangaTypeCounts.Manga }})</option>
+                                            <option value="Filler">فِلر ({{ bulkMangaTypeCounts.Filler }})</option>
+                                        </select>
+                                    </label>
                                     <label class="flex flex-col gap-1">
                                         <span class="text-muted">نوع النسخة</span>
                                         <select v-model="bulkPrefs.category" class="p-2 bg-surface-elevated rounded-sm text-white">
                                             <option value="auto">تلقائي (الأفضل المتاح)</option>
                                             <option v-for="opt in bulkCategoryOptions" :key="opt.value" :value="opt.value">{{ opt.label }} ({{ opt.count }})</option>
-                                        </select>
-                                    </label>
-                                    <label class="flex flex-col gap-1">
-                                        <span class="text-muted">فريق الترجمة</span>
-                                        <select v-model="bulkPrefs.translator" class="p-2 bg-surface-elevated rounded-sm text-white">
-                                            <option value="auto">تلقائي (الأفضل المتاح)</option>
-                                            <option v-for="opt in bulkTranslatorOptions" :key="opt.value" :value="opt.value">{{ opt.label }} ({{ opt.count }})</option>
                                         </select>
                                     </label>
                                     <!-- Movies have no محسنة/غير محسنة variants: hide the section there -->
@@ -1499,19 +1501,17 @@
                                         </select>
                                     </label>
                                     <label class="flex flex-col gap-1">
+                                        <span class="text-muted">فريق الترجمة</span>
+                                        <select v-model="bulkPrefs.translator" class="p-2 bg-surface-elevated rounded-sm text-white">
+                                            <option value="auto">تلقائي (الأفضل المتاح)</option>
+                                            <option v-for="opt in bulkTranslatorOptions" :key="opt.value" :value="opt.value">{{ opt.label }} ({{ opt.count }})</option>
+                                        </select>
+                                    </label>
+                                    <label class="flex flex-col gap-1">
                                         <span class="text-muted">الجودة المفضلة</span>
                                         <select v-model="bulkPrefs.resolution" class="p-2 bg-surface-elevated rounded-sm text-white">
                                             <option value="auto">الأعلى تلقائيًا</option>
                                             <option v-for="opt in bulkResolutionOptions" :key="opt.value" :value="opt.value">{{ opt.label }} ({{ opt.count }})</option>
-                                        </select>
-                                    </label>
-                                    <!-- Episode-type split: movies are all فِلر and mangas are all مانغا — episodes only -->
-                                    <label v-if="selectedCategory === 'episodes'" class="flex flex-col gap-1">
-                                        <span class="text-muted">نوع الحلقة</span>
-                                        <select v-model="bulkPrefs.mangaType" class="p-2 bg-surface-elevated rounded-sm text-white">
-                                            <option value="all">الكل (مانغا + فِلر) ({{ bulkOptionsSource.length }})</option>
-                                            <option value="Manga">مانغا ({{ bulkMangaTypeCounts.Manga }})</option>
-                                            <option value="Filler">فِلر ({{ bulkMangaTypeCounts.Filler }})</option>
                                         </select>
                                     </label>
                                 </div>
