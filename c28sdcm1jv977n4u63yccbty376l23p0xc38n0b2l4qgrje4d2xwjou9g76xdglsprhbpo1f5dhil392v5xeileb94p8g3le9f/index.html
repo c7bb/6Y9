@@ -1547,7 +1547,8 @@
                             <button 
                                 @click="startBulkQueue" 
                                 :disabled="!bulkCanStart || isRetryAllFailedRunning || isMangaQueueRunning"
-                                class="w-full bg-action-video text-white px-6 py-3 rounded-md hover:bg-action-video/85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] font-bold">
+                                :class="bulkIsMovies ? 'bg-primary/70 hover:bg-primary/85' : 'bg-action-video/70 hover:bg-action-video/85'"
+                                class="w-full text-white px-6 py-3 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] font-bold">
                                 إرسال {{ bulkPluralLabel }} ({{ bulkPreview ? bulkPreview.sendable : 0 }})
                             </button>
                         </div>
@@ -1656,7 +1657,8 @@
                                 <button 
                                     @click="resetBulkQueue" 
                                     :disabled="isAnyMangaQueueRunning || isBulkRetryRunning"
-                                    class="w-full bg-action-video text-white px-6 py-3 rounded-md hover:bg-action-video/85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] font-bold">
+                                    :class="bulkIsMovies ? 'bg-primary/70 hover:bg-primary/85' : 'bg-action-video/70 hover:bg-action-video/85'"
+                                    class="w-full text-white px-6 py-3 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] font-bold">
                                     إرسال جديد
                                 </button>
                             </div>
@@ -1723,7 +1725,7 @@
                             <button 
                                 @click="startMangaQueue" 
                                 :disabled="mangaStartNumber === null || mangaStartNumber === undefined || mangaEndNumber === null || mangaEndNumber === undefined || mangaStartNumber > mangaEndNumber || mangaStartNumber < minMangaNumber || mangaEndNumber > maxMangaNumber || isRetryAllFailedRunning"
-                                class="w-full bg-action-manga text-white px-6 py-3 rounded-md hover:bg-action-manga/85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] font-bold">
+                                class="w-full bg-action-manga/70 text-white px-6 py-3 rounded-md hover:bg-action-manga/85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] font-bold">
                                 إرسال المانغا ({{ (mangaStartNumber !== null && mangaStartNumber !== undefined && mangaEndNumber !== null && mangaEndNumber !== undefined && mangaStartNumber <= mangaEndNumber && mangaStartNumber >= minMangaNumber && mangaEndNumber <= maxMangaNumber) ? (mangaEndNumber - mangaStartNumber + 1) : 0 }})
                             </button>
                         </div>
@@ -1832,7 +1834,7 @@
                                 <button 
                                     @click="resetMangaQueue" 
                                     :disabled="isAnyMangaQueueRunning"
-                                    class="w-full bg-action-manga text-white px-6 py-3 rounded-md hover:bg-action-manga/85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] font-bold">
+                                    class="w-full bg-action-manga/70 text-white px-6 py-3 rounded-md hover:bg-action-manga/85 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-[120ms] ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.97] font-bold">
                                     إرسال جديد
                                 </button>
                             </div>
