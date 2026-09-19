@@ -5614,8 +5614,17 @@
                         return !isNaN(num) && isFinite(num);
                     });
                     // مانغا/فِلر preference (episodes only) — same EpisodeType semantics as the
-                    // main episodeTypeFilter chips.
-                    return applyEpisodeTypeFilter(kept, this.bulkPrefs.mangaType)
+                    // main episodeTypeFilter chips, but restricted to plain-numbered episodes:
+                    // قصة قصيرة/أوفا carry the مانغا EpisodeType too, yet their numbering is a
+                    // separate namespace — they only ever appear under الكل.
+                    const type = this.bulkPrefs.mangaType;
+                    const typed = (type === 'Manga' || type === 'Filler')
+                        ? applyEpisodeTypeFilter(
+                            kept.filter(e => /^[0-9]+(\.[0-9]+)?$/.test(String(e.EpisodeNumber ?? '').trim())),
+                            type
+                        )
+                        : kept;
+                    return typed
                         .map(e => {
                             const raw = String(e.EpisodeNumber ?? '').trim();
                             const numStr = /^[0-9]+(\.[0-9]+)?$/.test(raw) ? raw : this.parseEpisodeLabel(raw).cleanNum;
@@ -5692,10 +5701,12 @@
                         .map(r => ({ value: String(r), label: `${r}p`, count: counts[r] }));
                 },
                 bulkMangaTypeCounts() {
-                    // مانغا/فِلر split of the current options source — same EpisodeType
-                    // semantics as the main episodeTypeFilter chips (م/ث/مف vs ف/ث/مف).
+                    // مانغا/فِلر split over plain-numbered episodes in the current source —
+                    // same restriction the bulkCandidates type filter applies (قصة قصيرة/أوفا
+                    // are never counted as مانغا/فِلر; they only appear under الكل).
                     const counts = { Manga: 0, Filler: 0 };
                     this.bulkOptionsSource.forEach(c => {
+                        if (!/^[0-9]+(\.[0-9]+)?$/.test(String(c.episode.EpisodeNumber ?? '').trim())) return;
                         if (applyEpisodeTypeFilter([c.episode], 'Manga').length) counts.Manga++;
                         if (applyEpisodeTypeFilter([c.episode], 'Filler').length) counts.Filler++;
                     });
