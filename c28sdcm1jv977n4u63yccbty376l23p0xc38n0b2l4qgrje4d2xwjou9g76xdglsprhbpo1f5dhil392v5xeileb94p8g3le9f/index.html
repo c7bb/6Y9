@@ -11334,8 +11334,20 @@
                     const payload = new URLSearchParams();
                     payload.append("chat_id", webApp?.initDataUnsafe?.user?.id);
                     payload.append("parse_mode", "MarkdownV2");
-                    
-                    for (const [key, value] of Object.entries(payloadData)) {
+                    // Copyright footer on every media caption (MarkdownV2, all bold):
+                    // BY: @DCRef_bot hyperlinked to the start URL, then a divider.
+                    // Underscore is escaped for MarkdownV2.
+                    payload.append("link_preview_options", JSON.stringify({
+                        url: "https://t.me/DCRef_bot?start=start",
+                        prefer_large_media: true
+                    }));
+
+                    const media = { ...payloadData };
+                    if (media.caption) {
+                        media.caption += "\n\n*BY: [@DCRef\\_bot](https://t.me/DCRef_bot?start=start)*\n*┈┈┈┈┈┈┈┈*";
+                    }
+
+                    for (const [key, value] of Object.entries(media)) {
                         if (value !== undefined && value !== null) {
                             if (typeof value === 'object' && (key === 'reply_markup' || key === 'videoDetails')) {
                                 payload.append(key, JSON.stringify(value));
